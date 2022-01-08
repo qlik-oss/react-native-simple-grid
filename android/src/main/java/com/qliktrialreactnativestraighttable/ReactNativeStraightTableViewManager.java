@@ -30,40 +30,28 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
         return REACT_CLASS;
     }
 
-    public static float dpToPx(float dp) {
-      return  (dp * Resources.getSystem().getDisplayMetrics().density);
-    }
-
     @SuppressLint("NewApi")
     @Override
     @NonNull
     public View createViewInstance(ThemedReactContext reactContext) {
-      LinearLayout linearLayout =  new LinearLayout(reactContext);
-      linearLayout.setBackgroundColor(Color.GREEN);
-      linearLayout.setClipChildren(true);
-      linearLayout.setClipToOutline(true);
-      return linearLayout;
+      TableView tableView =  new TableView(reactContext);
+      return tableView;
     }
 
-    @ReactProp(name = "borderRadius")
-    public void setBorderRadius(View view, float val) {
-
-      Drawable drawable = view.getBackground();
-      PaintDrawable paintDrawable = new PaintDrawable();
-      if(drawable instanceof ColorDrawable) {
-        ColorDrawable colorDrawable = (ColorDrawable) drawable;
-        paintDrawable.setColorFilter(colorDrawable.getColor(), PorterDuff.Mode.SRC_ATOP);
-      }
-      paintDrawable.setCornerRadius(dpToPx(val));
-      view.setBackground(paintDrawable);
+    @ReactProp(name = "theme")
+    public void setTheme(View view, ReadableMap theme) {
+      TableTheme.from(theme);
+      TableView tableView = (TableView) view;
+      tableView.updateTheme();
     }
 
     @ReactProp(name = "cols")
     public void setCols(View view,  @Nullable ReadableArray columns) {
       HeaderViewFactory headerViewFactory = new HeaderViewFactory(columns, view.getContext());
-      ViewGroup vg = (ViewGroup) view;
-      View headerView = headerViewFactory.getHeaderView();
-      headerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
-      vg.addView(headerView);
+      TableView tableView = (TableView) view;
+      LinearLayout headerView = headerViewFactory.getHeaderView();
+      tableView.setHeaderView(headerView);
     }
+
+
 }
