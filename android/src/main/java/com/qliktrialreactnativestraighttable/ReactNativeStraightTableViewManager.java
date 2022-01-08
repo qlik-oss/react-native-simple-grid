@@ -1,15 +1,7 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.annotation.SuppressLint;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.PaintDrawable;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -35,6 +27,7 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
     @NonNull
     public View createViewInstance(ThemedReactContext reactContext) {
       TableView tableView =  new TableView(reactContext);
+      tableView.setOrientation(LinearLayout.VERTICAL);
       return tableView;
     }
 
@@ -51,7 +44,14 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       TableView tableView = (TableView) view;
       LinearLayout headerView = headerViewFactory.getHeaderView();
       tableView.setHeaderView(headerView);
+      tableView.setDataColumns(headerViewFactory.getDataColumns());
     }
 
+    @ReactProp(name = "rows")
+    public void setRows(View view, @Nullable ReadableArray rows) {
+      RowFactory factory = new RowFactory(rows);
+      TableView tableView = (TableView) view;
+      tableView.setRows(factory.getRows());
+    }
 
 }

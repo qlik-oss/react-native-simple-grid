@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HeaderViewFactory {
+  public List<DataColumn> getDataColumns() {
+    return dataColumns;
+  }
+
   List<DataColumn> dataColumns = new ArrayList<>();
 
   public LinearLayout getHeaderView() {
@@ -23,13 +27,7 @@ public class HeaderViewFactory {
     headerView = new LinearLayout(context);
     headerView.setOrientation(LinearLayout.HORIZONTAL);
     headerView.setMinimumWidth(1000);
-//    GradientDrawable drawable = new GradientDrawable();
-//    float radius = TableTheme.borderRadius;
-//
-//    drawable.setCornerRadii(new float[]{radius, radius, radius, radius, 0, 0, 0, 0});
-//    drawable.setColor(TableTheme.headerBackgroundColor);
-//
-//    headerView.setBackground(drawable);
+
     headerView.setBackgroundColor(TableTheme.headerBackgroundColor);
     for(int i = 0; i < readableArray.size(); i++) {
       DataColumn column = new DataColumn(readableArray.getMap(i));
@@ -43,7 +41,6 @@ public class HeaderViewFactory {
       );
       headerView.addView(text);
     }
-//    headerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight));
 
   }
 }
