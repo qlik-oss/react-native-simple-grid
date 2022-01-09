@@ -37,7 +37,7 @@ public class HeaderViewFactory {
       text.setPadding(16, 16, 16, 16);
 
       text.setLayoutParams(new LinearLayout.LayoutParams(
-        (int)PixelUtils.dpToPx((float) (column.width - 50)), TableTheme.rowHeight)
+        (int)PixelUtils.dpToPx((float) (column.width - TableTheme.delta)), TableTheme.headerHeight)
       );
       headerView.addView(text);
     }

@@ -54,5 +54,6 @@ repositories {
 
 dependencies {
     //noinspection GradleDynamicVersion
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "com.facebook.react:react-native:+"
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'// From node_modules
 }
