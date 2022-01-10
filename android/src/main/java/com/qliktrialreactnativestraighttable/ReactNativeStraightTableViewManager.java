@@ -1,6 +1,7 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -55,16 +56,19 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
     public void setCols(View view,  @Nullable ReadableArray columns) {
       HeaderViewFactory headerViewFactory = new HeaderViewFactory(columns, view.getContext());
       TableView tableView = getTableViewFrom(view);
-      LinearLayout headerView = headerViewFactory.getHeaderView();
+      HeaderView headerView = headerViewFactory.getHeaderView();
       tableView.setHeaderView(headerView);
       tableView.setDataColumns(headerViewFactory.getDataColumns());
+      Log.d("rn-table", "setting cols");
     }
 
     @ReactProp(name = "rows")
-    public void setRows(View view, @Nullable ReadableArray rows) {
-      RowFactory factory = new RowFactory(rows);
+    public void setRows(View view, @Nullable ReadableMap rows) {
+      ReadableArray dataRows = rows.getArray("rows");
+      boolean resetData = rows.getBoolean("reset");
+      RowFactory factory = new RowFactory(dataRows);
       TableView tableView = getTableViewFrom(view);
-      tableView.setRows(factory.getRows());
+      tableView.setRows(factory.getRows(), resetData);
     }
 
     @ReactProp(name = "size")

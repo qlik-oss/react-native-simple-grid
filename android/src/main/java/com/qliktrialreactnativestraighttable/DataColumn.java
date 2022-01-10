@@ -20,5 +20,6 @@ public class DataColumn {
     align = source.getString("align");
     sortDirection = source.getString("sortDirection");
     dataColIdx = source.getInt("dataColIdx");
+    width = (int)PixelUtils.dpToPx(width);
   }
 }

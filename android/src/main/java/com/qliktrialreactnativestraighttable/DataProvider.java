@@ -3,6 +3,7 @@ package com.qliktrialreactnativestraighttable;
 import android.graphics.Color;
 import android.graphics.drawable.PaintDrawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +16,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   private final int VIEW_TYPE_ITEM = 0;
   private final int VIEW_TYPE_LOADING = 1;
   List<DataRow> rows = null;
   List<DataColumn> dataColumns = null;
+  List<RecyclerView.ViewHolder> cachedViewHolders = new ArrayList<>();
   DataSize dataSize = null;
+  boolean loading = false;
 
   public boolean isLoading() {
     return loading;
@@ -32,7 +37,9 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     this.loading = loading;
   }
 
-  boolean loading = false;
+  public List<DataColumn> getDataColumns() {
+    return dataColumns;
+  }
 
   public static class SimpleViewHolder extends RecyclerView.ViewHolder {
     private final LinearLayout row;
@@ -44,11 +51,18 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void setBackGroundColor(int color) {
       row.setBackgroundColor(color);
     }
-    public void setData(DataRow dataRow, List<DataColumn> columns) {
+    public void setData(DataRow dataRow) {
       for(int i = 0; i < dataRow.cells.size(); i++) {
         TextView view = (TextView) row.getChildAt(i);
         view.setText(dataRow.cells.get(i).qText);
       }
+    }
+
+    public void updateWidth(float width, int column) {
+      TextView view = (TextView) row.getChildAt(column);
+      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)view.getLayoutParams();
+      params.width += (int)width;
+      view.setLayoutParams(params);
     }
   }
 
@@ -69,22 +83,23 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    RecyclerView.ViewHolder viewHolder = null;
+    RecyclerView.ViewHolder viewHolder;
     if (viewType == VIEW_TYPE_ITEM) {
       LinearLayout rowView = new LinearLayout(parent.getContext());
       rowView.setOrientation(LinearLayout.HORIZONTAL);
       for (int i = 0; i < dataColumns.size(); i++) {
-        int width = (int) PixelUtils.dpToPx(dataColumns.get(i).width - TableTheme.delta);
+        int width = dataColumns.get(i).width;
         TextView view = new TextView(parent.getContext());
         view.setMaxLines(1);
         view.setEllipsize(TextUtils.TruncateAt.END);
         view.setLayoutParams(new LinearLayout.LayoutParams(width, TableTheme.rowHeight));
         rowView.addView(view);
-        int leftPadding = i == 0 ? (int) PixelUtils.dpToPx(16) : 0;
+        int leftPadding = (int)PixelUtils.dpToPx(16);
         view.setPadding(leftPadding, 0, (int) PixelUtils.dpToPx(16), 0);
         view.setGravity(Gravity.CENTER_VERTICAL);
       }
       viewHolder = new SimpleViewHolder(rowView);
+      cachedViewHolders.add(viewHolder);
     } else {
       RelativeLayout rowView = new RelativeLayout(parent.getContext());
       viewHolder = new ProgressHolder(rowView);
@@ -98,7 +113,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       SimpleViewHolder holder = (SimpleViewHolder) viewHolder;
       int color = position % 2 == 0 ? Color.WHITE : 0xFFF7F7F7;
       holder.setBackGroundColor(color);
-      holder.setData(rows.get(position), dataColumns);
+      holder.setData(rows.get(position));
     }
   }
 
@@ -107,11 +122,19 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return rows.size();
   }
 
-  public void setRows(List<DataRow> data) {
-    if (this.rows == null) {
+  public void setRows(List<DataRow> data, boolean resetData) {
+    if (this.rows == null || resetData) {
+      cachedViewHolders.clear();
+      int prevSize = 0;
+      if (this.rows != null) {
+        prevSize = this.rows.size();
+      }
       this.rows = data;
       if (needsMore()) {
         this.rows.add(null);
+      }
+      if (resetData && prevSize != 0) {
+        this.notifyDataSetChanged();
       }
     } else {
       // remove last item
@@ -150,5 +173,13 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       return this.rows.size() < this.dataSize.qcy;
     }
     return false;
+  }
+
+  public void updateWidth(float deltaWidth, int column) {
+    for(RecyclerView.ViewHolder holder : cachedViewHolders) {
+      SimpleViewHolder viewHolder = (SimpleViewHolder) holder;
+      viewHolder.updateWidth(deltaWidth, column);
+    }
+    dataColumns.get(column).width += (int)deltaWidth;
   }
 }

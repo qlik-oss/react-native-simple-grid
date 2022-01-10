@@ -21,4 +21,19 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
     }
     return super.onInterceptTouchEvent(ev);
   }
+
+  public void updateLayout() {
+    super.requestLayout();
+    post(measureAndLayout);
+  }
+
+  private final Runnable measureAndLayout = new Runnable() {
+    @Override
+    public void run() {
+      measure(
+        MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+        MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+      layout(getLeft(), getTop(), getRight(), getBottom());
+    }
+  };
 }
