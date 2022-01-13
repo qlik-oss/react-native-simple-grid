@@ -11,7 +11,7 @@ public class TableTheme {
   static int headerBackgroundColor = Color.parseColor("#F0F0F0");
   @SuppressLint("NewApi")
   static int borderBackgroundColor = Color.argb(0.1f, 0, 0, 0);
-  static int borderRadius = 16;
+  static int borderRadius = 8;
   static public void from(ReadableMap source){
     rowHeight =  (int)PixelUtils.dpToPx(source.getInt("height"));
     headerHeight = (int) PixelUtils.dpToPx(source.getInt("headerHeight"));

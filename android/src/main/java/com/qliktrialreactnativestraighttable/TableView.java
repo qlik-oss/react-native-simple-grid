@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -28,19 +29,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TableView extends FrameLayout {
-  LinearLayout rootView;
+  // TODO: make updatedaldldld
+  RootLayout rootView;
   CustomHorizontalScrollView scrollView;
   HeaderView headerView = null;
   CustomRecyclerView recyclerView = null;
   DataProvider dataProvider = new DataProvider();
   List<GrabberView> grabbers = null;
-  Path path = null;
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   TableView(Context context, CustomHorizontalScrollView scrollView) {
     super(context);
     this.scrollView = scrollView;
-    this.rootView = new LinearLayout(context);
-    rootView.setOrientation(LinearLayout.VERTICAL);
+    this.rootView = new RootLayout(context);
     decorate();
     this.addView(rootView);
   }
@@ -52,13 +52,17 @@ public class TableView extends FrameLayout {
     border.setStroke((int)PixelUtils.dpToPx(1), TableTheme.borderBackgroundColor);
     border.setCornerRadius((int)PixelUtils.dpToPx(TableTheme.borderRadius));
     drawable.setCornerRadius((int)PixelUtils.dpToPx(TableTheme.borderRadius));
-    this.setClipToOutline(true);
-    this.setBackground(drawable);
-    this.setForeground(border);
+    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    layoutParams.rightMargin = (int)PixelUtils.dpToPx(50);
+    rootView.setLayoutParams(layoutParams);
+    rootView.setClipToOutline(true);
+    rootView.setBackground(drawable);
+    rootView.setForeground(border);
   }
 
   public void setHeaderView(HeaderView view) {
     this.headerView = view;
+
     rootView.addView(this.headerView, 0);
   }
 
@@ -97,7 +101,9 @@ public class TableView extends FrameLayout {
       recyclerView = new CustomRecyclerView(this.getContext());
       recyclerView.setLayoutManager(linearLayout);
       recyclerView.setAdapter(dataProvider);
-      recyclerView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+      RelativeLayout.LayoutParams recyclerViewLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+      recyclerViewLayoutParams.topMargin = (TableTheme.headerHeight);
+      recyclerView.setLayoutParams(recyclerViewLayoutParams);
 
       DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
       recyclerView.addItemDecoration(itemDecorator);
@@ -109,6 +115,7 @@ public class TableView extends FrameLayout {
         view.setDataProvider(dataProvider);
         view.setHeaderView(headerView);
         view.setGrabbers(grabbers);
+        view.setRecyclerView(recyclerView);
       }
     }
   }
@@ -146,9 +153,7 @@ public class TableView extends FrameLayout {
         && dataProvider.needsMore()) {
         // start the fetch
         dataProvider.setLoading(true);
-        WritableMap event = Arguments.createMap();
-        ReactContext context = (ReactContext) scrollView.getContext();
-        context.getJSModule(RCTEventEmitter.class).receiveEvent(scrollView.getId(), "onEndReached", event);
+        EventUtils.sendEventToJSFromView(scrollView, "onEndReached");
       }
     }
   }

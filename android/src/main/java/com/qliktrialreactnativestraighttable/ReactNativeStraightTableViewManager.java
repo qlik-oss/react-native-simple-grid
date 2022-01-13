@@ -1,15 +1,18 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -39,9 +42,12 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
     @Override
     @NonNull
     public View createViewInstance(ThemedReactContext reactContext) {
+
       CustomHorizontalScrollView scrollView = new CustomHorizontalScrollView(reactContext);
       TableView tableView =  new TableView(reactContext, scrollView);
+      scrollView.setFillViewport(true);
       scrollView.addView(tableView);
+
       return scrollView;
     }
 
@@ -52,6 +58,7 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       tableView.updateTheme();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @ReactProp(name = "cols")
     public void setCols(View view,  @Nullable ReadableArray columns) {
       HeaderViewFactory headerViewFactory = new HeaderViewFactory(columns, view.getContext());
@@ -81,11 +88,9 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
   @Nullable
   @Override
   public Map getExportedCustomDirectEventTypeConstants() {
-    return MapBuilder.builder().put(
+    return MapBuilder.of(
       "onEndReached",
-      MapBuilder.of(
-        "registrationName", "onEndReached"
-      )
-    ).build();
+      MapBuilder.of("registrationName", "onEndReached")
+    );
   }
 }

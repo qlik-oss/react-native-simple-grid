@@ -22,7 +22,10 @@ public class GrabberView extends LinearLayout {
   DataProvider dataProvider = null;
   HeaderView headerView = null;
   List<GrabberView> grabbers = null;
+  RecyclerView recyclerView = null;
   private final int column;
+  private boolean isLastColumn = false;
+  boolean pressed = false;
 
   class TouchListener implements OnTouchListener {
     float dX = 0;
@@ -32,6 +35,7 @@ public class GrabberView extends LinearLayout {
       int action = motionEvent.getAction();
       switch (action) {
         case MotionEvent.ACTION_DOWN: {
+          GrabberView.this.pressed = true;
           GrabberView.this.scrollView.setDisableIntercept(true);
           lastX = motionEvent.getRawX();
           dX = GrabberView.this.getX() - motionEvent.getRawX();
@@ -44,19 +48,20 @@ public class GrabberView extends LinearLayout {
           GrabberView.this.setTranslationX(x);
 
           motionDx = Math.round(motionDx);
-          for(int i = column + 1; i < grabbers.size(); i++ ) {
-            GrabberView grabberView = grabbers.get(i);
-            grabberView.updateTranslation(motionDx);
-          }
           dataProvider.updateWidth(motionDx, GrabberView.this.column);
           GrabberView.this.updateHeader(motionDx);
           lastX = motionEvent.getRawX();
+          if(column == dataProvider.dataColumns.size() - 1 && motionDx > 0) {
+            GrabberView.this.scrollView.updateLayout();
+          }
           return true;
         }
         case MotionEvent.ACTION_UP: {
+          GrabberView.this.pressed = false;
           GrabberView.this.resetLinePaint(TableTheme.borderBackgroundColor);
           GrabberView.this.scrollView.setDisableIntercept(false);
           GrabberView.this.scrollView.updateLayout();
+          GrabberView.this.recyclerView.requestLayout();
           return  true;
         }
       }
@@ -91,8 +96,12 @@ public class GrabberView extends LinearLayout {
   @Override
   protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
+    if (isLastColumn && !pressed) {
+      return;
+    }
     int width = canvas.getWidth() / 2;
-    canvas.drawLine(width, 0, width, canvas.getHeight(), linePaint);
+    int top = isLastColumn && !pressed ? (TableTheme.headerHeight) : 0;
+    canvas.drawLine(width, top, width, canvas.getHeight() - top, linePaint);
   }
 
   public void setDataProvider(DataProvider provider) {
@@ -105,6 +114,11 @@ public class GrabberView extends LinearLayout {
 
   public void setGrabbers(List<GrabberView> grabbers) {
     this.grabbers = grabbers;
+    isLastColumn = (column == grabbers.size() - 1);
+  }
+
+  public void setRecyclerView(RecyclerView recyclerView) {
+    this.recyclerView = recyclerView;
   }
 
   public void updateHeader(float dxMotion) {
@@ -112,10 +126,15 @@ public class GrabberView extends LinearLayout {
     LinearLayout.LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
     layoutParams.width += dxMotion;
     view.setLayoutParams(layoutParams);
+    updateNeighbour(dxMotion);
   }
 
-  public void updateTranslation(float dx) {
-    float x = this.getX() + dx;
-    this.setTranslationX(x);
+  public void updateNeighbour(float dxMotion) {
+    if(column + 1 < headerView.getChildCount()) {
+      View neighbour = headerView.getChildAt(column + 1);
+      LinearLayout.LayoutParams nlayoutParams = (LayoutParams) neighbour.getLayoutParams();
+      nlayoutParams.width -= dxMotion;
+      neighbour.setLayoutParams(nlayoutParams);
+    }
   }
 }

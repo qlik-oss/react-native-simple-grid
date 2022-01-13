@@ -1,9 +1,7 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.graphics.Color;
-import android.graphics.drawable.PaintDrawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   private final int VIEW_TYPE_ITEM = 0;
@@ -41,7 +37,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return dataColumns;
   }
 
-  public static class SimpleViewHolder extends RecyclerView.ViewHolder {
+  public class SimpleViewHolder extends RecyclerView.ViewHolder {
     private final LinearLayout row;
     public SimpleViewHolder(View view) {
       super(view);
@@ -55,18 +51,30 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       for(int i = 0; i < dataRow.cells.size(); i++) {
         TextView view = (TextView) row.getChildAt(i);
         view.setText(dataRow.cells.get(i).qText);
+        view.setGravity(dataRow.cells.get(i).textGravity | Gravity.CENTER_VERTICAL);
       }
     }
 
     public void updateWidth(float width, int column) {
-      TextView view = (TextView) row.getChildAt(column);
+      View view =  row.getChildAt(column);
       LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)view.getLayoutParams();
-      params.width += (int)width;
+      params.width += width;
       view.setLayoutParams(params);
+
+      updateNeighbour(width, column);
+    }
+
+    private void updateNeighbour(float width, int column) {
+      if (column + 1 < DataProvider.this.dataColumns.size() ) {
+        View neighbour =  row.getChildAt(column + 1);
+        LinearLayout.LayoutParams nparams = (LinearLayout.LayoutParams) neighbour.getLayoutParams();
+        nparams.width -= width;
+        neighbour.setLayoutParams(nparams);
+      }
     }
   }
 
-  public static class ProgressHolder extends RecyclerView.ViewHolder {
+  public  class ProgressHolder extends RecyclerView.ViewHolder {
     private final RelativeLayout row;
     public ProgressHolder(View view) {
       super(view);
@@ -97,6 +105,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         int leftPadding = (int)PixelUtils.dpToPx(16);
         view.setPadding(leftPadding, 0, (int) PixelUtils.dpToPx(16), 0);
         view.setGravity(Gravity.CENTER_VERTICAL);
+
       }
       viewHolder = new SimpleViewHolder(rowView);
       cachedViewHolders.add(viewHolder);
@@ -181,5 +190,9 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       viewHolder.updateWidth(deltaWidth, column);
     }
     dataColumns.get(column).width += (int)deltaWidth;
+    int next = column + 1;
+    if (next < dataColumns.size()) {
+      dataColumns.get(next).width -= (int)deltaWidth;
+    }
   }
 }
