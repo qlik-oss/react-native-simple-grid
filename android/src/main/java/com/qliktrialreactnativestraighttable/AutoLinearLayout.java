@@ -3,8 +3,8 @@ package com.qliktrialreactnativestraighttable;
 import android.content.Context;
 import android.widget.LinearLayout;
 
-public class HeaderView extends LinearLayout {
-  public HeaderView(Context context) {
+public class AutoLinearLayout extends LinearLayout {
+  public AutoLinearLayout(Context context) {
     super(context);
   }
 

@@ -1,29 +1,18 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +21,8 @@ public class TableView extends FrameLayout {
   // TODO: make updatedaldldld
   RootLayout rootView;
   CustomHorizontalScrollView scrollView;
-  HeaderView headerView = null;
+  AutoLinearLayout headerView = null;
+  AutoLinearLayout footerView = null;
   CustomRecyclerView recyclerView = null;
   DataProvider dataProvider = new DataProvider();
   List<GrabberView> grabbers = null;
@@ -60,10 +50,21 @@ public class TableView extends FrameLayout {
     rootView.setForeground(border);
   }
 
-  public void setHeaderView(HeaderView view) {
+  public void setHeaderView(AutoLinearLayout view) {
     this.headerView = view;
 
-    rootView.addView(this.headerView, 0);
+    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight);
+    params.gravity = Gravity.TOP;
+    rootView.addView(this.headerView, params);
+  }
+
+  public void setFooterView(AutoLinearLayout view) {
+    this.footerView = view;
+    if (this.footerView != null) {
+      FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight);
+      params.gravity = Gravity.BOTTOM;
+      rootView.addView(this.footerView, params);
+    }
   }
 
   public void updateTheme() {
@@ -101,22 +102,29 @@ public class TableView extends FrameLayout {
       recyclerView = new CustomRecyclerView(this.getContext());
       recyclerView.setLayoutManager(linearLayout);
       recyclerView.setAdapter(dataProvider);
-      RelativeLayout.LayoutParams recyclerViewLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+      FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
       recyclerViewLayoutParams.topMargin = (TableTheme.headerHeight);
-      recyclerView.setLayoutParams(recyclerViewLayoutParams);
+      recyclerViewLayoutParams.bottomMargin = TableTheme.headerHeight;
+      recyclerViewLayoutParams.gravity = Gravity.CENTER;
 
       DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
       recyclerView.addItemDecoration(itemDecorator);
       recyclerView.setHasFixedSize(true);
       recyclerView.addOnScrollListener( new OnScrollListener(linearLayout) );
-      rootView.addView(recyclerView, 1);
+      rootView.addView(recyclerView, recyclerViewLayoutParams);
 
-      for(GrabberView view : grabbers) {
-        view.setDataProvider(dataProvider);
-        view.setHeaderView(headerView);
-        view.setGrabbers(grabbers);
-        view.setRecyclerView(recyclerView);
-      }
+
+      setupGrabbers();
+    }
+  }
+
+  private void setupGrabbers() {
+    for(GrabberView view : grabbers) {
+      view.setDataProvider(dataProvider);
+      view.setHeaderView(headerView);
+      view.setGrabbers(grabbers);
+      view.setRecyclerView(recyclerView);
+      view.setFooterView(footerView);
     }
   }
 
@@ -137,6 +145,16 @@ public class TableView extends FrameLayout {
       grabberView.setTranslationX(startOffset);
       grabbers.add(grabberView);
       this.addView(grabberView);
+    }
+  }
+
+  public void createScreenGuide(int width) {
+    ScreenGuideView screenGuideView = new ScreenGuideView(this.getContext());
+    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT);
+    params.gravity = Gravity.CENTER_VERTICAL;
+    this.addView(screenGuideView, params);
+    for( GrabberView grabberView : grabbers ) {
+      grabberView.setGreenGuideView(screenGuideView);
     }
   }
 

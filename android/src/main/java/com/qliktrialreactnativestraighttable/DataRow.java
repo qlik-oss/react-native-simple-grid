@@ -18,6 +18,6 @@ public class DataRow {
         cells.add(new DataCell(cellItem));
       }
     }
-    Collections.sort(cells, (a, b) -> a.colIdx - b.colIdx);
+    Collections.sort(cells, (a, b) -> a.rawColIdx - b.rawColIdx);
   }
 }

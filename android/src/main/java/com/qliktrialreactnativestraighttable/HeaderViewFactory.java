@@ -1,12 +1,10 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.PaintDrawable;
 import android.os.Build;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,9 +18,15 @@ import java.util.List;
 
 public class HeaderViewFactory {
   List<DataColumn> dataColumns = new ArrayList<>();
-  HeaderView headerView ;
+  List<TotalsCell> totalsCells = new ArrayList<>();
+  AutoLinearLayout headerView = null ;
+  AutoLinearLayout footerView = null;
 
-  public HeaderView getHeaderView() {
+  public AutoLinearLayout getFooterView() {
+    return footerView;
+  }
+
+  public AutoLinearLayout getHeaderView() {
     return headerView;
   }
 
@@ -31,8 +35,18 @@ public class HeaderViewFactory {
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  public HeaderViewFactory(ReadableArray readableArray, Context context) {
-    headerView = new HeaderView(context);
+  public HeaderViewFactory(ReadableArray readableArray, ReadableArray footerArray, Context context) {
+    if(readableArray != null) {
+      buildHeader(readableArray, context);
+    }
+    if(footerArray != null) {
+      buildFooter(footerArray, context);
+    }
+  }
+
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+  private void buildHeader(ReadableArray readableArray, Context context) {
+    headerView = new AutoLinearLayout(context);
     headerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight));
     headerView.setOrientation(LinearLayout.HORIZONTAL);
     headerView.setElevation((int)PixelUtils.dpToPx(4));
@@ -49,6 +63,48 @@ public class HeaderViewFactory {
       text.setPadding(padding, padding, padding, padding);
       text.setLayoutParams(new LinearLayout.LayoutParams(column.width, TableTheme.headerHeight));
       headerView.addView(text);
+    }
+  }
+
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+  private void buildFooter(ReadableArray readableArray, Context context) {
+
+    buildTotalCells(readableArray);
+
+    footerView = new AutoLinearLayout(context);
+    footerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight));
+    footerView.setOrientation(LinearLayout.HORIZONTAL);
+    footerView.setElevation((int)PixelUtils.dpToPx(4));
+    footerView.setBackgroundColor(TableTheme.headerBackgroundColor);
+    // first add all fillers, then populate with the data
+    int j = 0;
+    for(int i = 0; i < dataColumns.size(); i++ ) {
+      DataColumn column = dataColumns.get(i);
+      TextView text = new TextView(context);
+      int padding = (int) PixelUtils.dpToPx(16);
+      text.setMaxLines(1);
+      text.setTypeface(text.getTypeface(), Typeface.BOLD);
+      text.setEllipsize(TextUtils.TruncateAt.END);
+      if(column.isDim && i == 0) {
+        text.setText("Totals");
+        text.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+      }
+      if (!column.isDim) {
+        if (j < totalsCells.size()) {
+          text.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+          text.setText(totalsCells.get(j++).qText);
+        }
+      }
+      text.setPadding(padding, padding, padding, padding);
+      text.setLayoutParams(new LinearLayout.LayoutParams(column.width, TableTheme.headerHeight));
+      footerView.addView(text);
+    }
+  }
+
+  void buildTotalCells(ReadableArray source) {
+    for(int i = 0; i < source.size(); i++) {
+      TotalsCell cell = new TotalsCell(source.getMap(i));
+      totalsCells.add(cell);
     }
   }
 }

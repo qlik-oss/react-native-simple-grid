@@ -11,8 +11,6 @@ import android.widget.LinearLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.facebook.react.common.MapBuilder;
-
 import java.util.List;
 
 public class GrabberView extends LinearLayout {
@@ -20,9 +18,11 @@ public class GrabberView extends LinearLayout {
   Paint linePaint = new Paint();
   CustomHorizontalScrollView scrollView;
   DataProvider dataProvider = null;
-  HeaderView headerView = null;
+  AutoLinearLayout headerView = null;
+  AutoLinearLayout footerView = null;
   List<GrabberView> grabbers = null;
   RecyclerView recyclerView = null;
+  ScreenGuideView screenGuideView = null;
   private final int column;
   private boolean isLastColumn = false;
   boolean pressed = false;
@@ -40,6 +40,9 @@ public class GrabberView extends LinearLayout {
           lastX = motionEvent.getRawX();
           dX = GrabberView.this.getX() - motionEvent.getRawX();
           GrabberView.this.resetLinePaint(Color.BLACK);
+          if( screenGuideView != null) {
+            screenGuideView.fade(0, 1);
+          }
           return true;
         }
         case MotionEvent.ACTION_MOVE: {
@@ -62,6 +65,9 @@ public class GrabberView extends LinearLayout {
           GrabberView.this.scrollView.setDisableIntercept(false);
           GrabberView.this.scrollView.updateLayout();
           GrabberView.this.recyclerView.requestLayout();
+          if( screenGuideView != null) {
+            screenGuideView.fade(1, 0);
+          }
           return  true;
         }
       }
@@ -108,8 +114,16 @@ public class GrabberView extends LinearLayout {
     this.dataProvider = provider;
   }
 
-  public void setHeaderView(HeaderView headerView) {
+  public void setHeaderView(AutoLinearLayout headerView) {
     this.headerView = headerView;
+  }
+
+  public void setFooterView(AutoLinearLayout footerView) {
+    this.footerView = footerView;
+  }
+
+  public void setGreenGuideView(ScreenGuideView screenGuideView) {
+    this.screenGuideView = screenGuideView;
   }
 
   public void setGrabbers(List<GrabberView> grabbers) {
@@ -123,18 +137,29 @@ public class GrabberView extends LinearLayout {
 
   public void updateHeader(float dxMotion) {
     View view = headerView.getChildAt(column);
+    resizeVew(view, dxMotion);
+    updateNeighbour(headerView, dxMotion);
+
+    updateFooter(dxMotion);
+  }
+
+  public void updateNeighbour(AutoLinearLayout linearLayout, float dxMotion) {
+    if(column + 1 < linearLayout.getChildCount()) {
+      View neighbour = linearLayout.getChildAt(column + 1);
+      resizeVew(neighbour, -dxMotion);
+    }
+  }
+
+  public void updateFooter(float dxMotion) {
+    View view = footerView.getChildAt(column);
+    resizeVew(view, dxMotion);
+    updateNeighbour(footerView, dxMotion);
+
+  }
+
+  public void resizeVew(View view, float dxMotion) {
     LinearLayout.LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
     layoutParams.width += dxMotion;
     view.setLayoutParams(layoutParams);
-    updateNeighbour(dxMotion);
-  }
-
-  public void updateNeighbour(float dxMotion) {
-    if(column + 1 < headerView.getChildCount()) {
-      View neighbour = headerView.getChildAt(column + 1);
-      LinearLayout.LayoutParams nlayoutParams = (LayoutParams) neighbour.getLayoutParams();
-      nlayoutParams.width -= dxMotion;
-      neighbour.setLayoutParams(nlayoutParams);
-    }
   }
 }
