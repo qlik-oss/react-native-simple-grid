@@ -25,18 +25,56 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
     super.init(coder: coder)
   }
   
+  func updateSize(_ translation: CGPoint, withColumn index: Int) {
+    if let cv = self.childCollectionView{
+      let visibleCells = cv.subviews
+        for cell in visibleCells {
+          if let uiCell = cell as? DataCellView {
+            uiCell.updateSize(translation, forColumn: index)
+          }
+        }
+      dataColumns![index].width! += Double(translation.x)
+      if index + 1 < dataColumns!.count {
+        dataColumns![index + 1].width! -= Double(translation.x)
+      }
+    }
+  }
+  
+  func onEndDrag( _ index: Int) {
+    if(index + 1 == dataColumns!.count) {
+      if let cv = self.childCollectionView {
+        // need to resize everyone
+        let oldFrame = self.frame
+        let width = dataColumns!.reduce(0, {$0 + $1.width!})
+        let newFrame = CGRect(x: 0, y: oldFrame.origin.y, width: width, height: oldFrame.height)
+        self.frame = newFrame
+        cv.collectionViewLayout.invalidateLayout()
+      }
+    }
+  }
+  
   fileprivate func setData(columns: [DataColumn], withRows rows: [DataRow]) {
     dataColumns = columns;
     dataRows = rows;
     let flowLayout = UICollectionViewFlowLayout()
-    let frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
-    let uiCollectionView = UICollectionView(frame: frame, collectionViewLayout: flowLayout)
+    let uiCollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+    uiCollectionView.translatesAutoresizingMaskIntoConstraints = false
     
     uiCollectionView.register(DataCellView.self, forCellWithReuseIdentifier: reuseIdentifier)
     uiCollectionView.delegate = self
     uiCollectionView.dataSource = self
     childCollectionView = uiCollectionView
+    uiCollectionView.backgroundColor = UIColor.purple
+    self.backgroundColor = UIColor.yellow
     addSubview(uiCollectionView)
+   
+    uiCollectionView.translatesAutoresizingMaskIntoConstraints = false
+    let top = uiCollectionView.topAnchor.constraint(equalTo: self.topAnchor)
+    let bottom = uiCollectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+    let left = uiCollectionView.leftAnchor.constraint(equalTo: self.leftAnchor)
+    let right = uiCollectionView.rightAnchor.constraint(equalTo: self.rightAnchor)
+    self.addConstraints([top, bottom, left, right])
+
   }
   
   func appendData(rows: [DataRow]) {

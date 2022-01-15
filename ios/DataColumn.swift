@@ -8,7 +8,7 @@
 import Foundation
 struct DataColumn : Decodable {
   let isDim : Bool?
-  let width : Double?
+  var width : Double?
   let label: String?
   let id: String?
   let align: String?

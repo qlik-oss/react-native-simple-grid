@@ -89,16 +89,16 @@ class ContainerView : UIView {
   
   override func layoutSubviews() {
     super.layoutSubviews()
-//    decorate()
     createHeaderView()
     createDataCollectionView()
+    createGrabbers()
   }
   
   fileprivate func decorate(view: UIView) {
     view.layer.borderWidth = 1;
     view.layer.borderColor = ColorParser().fromCSS(cssString: tableTheme?.borderBackgroundColor ?? "black").cgColor
     view.layer.cornerRadius = CGFloat(tableTheme?.borderRadius ?? 8)
-    view.layer.masksToBounds = true
+//    view.layer.masksToBounds = true
   }
   
   fileprivate func createHeaderView() {
@@ -113,9 +113,10 @@ class ContainerView : UIView {
         let scrollView = UIScrollView(frame: self.frame);
         scrollView.contentSize = CGSize(width: newHeaderView.frame.width + 50, height: self.frame.height)
         addSubview(scrollView)
-        decorate(view: newRootView)
         scrollView.addSubview(newRootView)
         rootView = newRootView
+        self.scrollView = scrollView
+        decorate(view: newRootView)
       }
     }
   }
@@ -131,6 +132,34 @@ class ContainerView : UIView {
       dataCollectionView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray");
       collectionView = dataCollectionView
       rootView!.addSubview(dataCollectionView)
+    }
+  }
+  
+  fileprivate func createGrabbers() {
+    if let cols = dataColumns {
+      var x = cols[0].width! - 20
+      for col in cols {
+        let frame = CGRect(x: x, y: 0, width: 40, height: self.frame.height)
+        
+        let grabber = GrabberView(frame: frame, index: col.dataColIdx!)
+        grabber.backgroundColor = UIColor.white.withAlphaComponent(0)
+        grabber.collectionView = self.collectionView
+        grabber.containerView = self
+        rootView!.addSubview(grabber)
+        x += col.width!
+      }
+      
+    }
+  }
+  
+  func onEndDragged(_ index: Int) {
+    if index + 1 == dataColumns!.count {
+      if let view = rootView, let cv = collectionView, let sv = scrollView {
+        let oldFrame = view.frame
+        let newFrame = CGRect(x: 0, y: 0, width: cv.frame.width, height: oldFrame.height)
+        view.frame = newFrame
+        sv.contentSize = CGSize(width: cv.frame.width + 50, height: newFrame.height)
+      }
     }
   }
 }

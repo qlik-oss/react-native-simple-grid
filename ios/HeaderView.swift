@@ -13,6 +13,11 @@ class HeaderView : UIView {
     let frame = CGRect(x: 0, y: 0, width: width, height: Double(theme.headerHeight!))
     super.init(frame: frame)
     addLabels(columns: columns, withTheme: theme)
+    self.layer.shadowColor = UIColor.black.cgColor
+    self.layer.shadowOpacity = 0.25
+    self.layer.shadowOffset = CGSize(width: 0, height: 1)
+    self.layer.shadowRadius = 1
+    self.layer.zPosition = 1
   }
   
   required init?(coder: NSCoder) {
