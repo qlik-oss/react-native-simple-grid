@@ -8,7 +8,7 @@
 import Foundation
 struct TableTheme : Decodable {
   let height: Int?
-  var headerHeight: Int? = 54
+  var headerHeight: Int?
   let borderRadius: Int?
   let headerBackgroundColor: String?
   let borderBackgroundColor: String?

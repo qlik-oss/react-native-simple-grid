@@ -8,6 +8,11 @@
 import Foundation
 @objc(ReactNativeStraightTableViewManager)
 class ReactnativeStraightTableViewManager : RCTViewManager {
+  
+  override static func requiresMainQueueSetup() -> Bool {
+    return true
+  }
+  
   override func view() -> ContainerView {
     return ContainerView()
   }

@@ -52,6 +52,7 @@ class ColorParser {
         let value = (s as NSString).doubleValue
         values.append(value)
       }
+      let alpha = values.count == 4 ? values[3] : 1.0
       
       // divide values by 255 before setting their placeholder variables up...
       let red:Double = (values[0] / 255.0)
@@ -59,7 +60,7 @@ class ColorParser {
       let blue:Double = (values[2] / 255.0)
       
       // instantiate the colour and return it (performing casts of the Doubles to CGFloats as required)
-      return UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 1.0)
+      return UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: alpha)
     } else {
       if let supported = SupportedColors[hex] {
         return supported

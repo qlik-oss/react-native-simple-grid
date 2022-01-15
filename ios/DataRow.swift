@@ -16,6 +16,37 @@ struct DataCell : Decodable {
   var isDim: Bool?
   var rawRowIdx: Double?
   var rawColIdx: Double?
+  enum CodingKeys: String, CodingKey {
+      case qText
+      case qNum
+      case qElemNumber
+      case qState
+      case rowIdx
+      case colIdx
+      case isDim
+      case rawRowIdx
+      case rawColIdx
+  }
+  
+  init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    self.qText = try container.decode(String.self, forKey: .qText)
+    self.qState = try container.decode(String.self, forKey: .qState)
+    self.qElemNumber = try container.decode(Double.self, forKey: .qElemNumber)
+    self.rowIdx = try container.decode(Double.self, forKey: .rowIdx)
+    self.colIdx = try container.decode(Double.self, forKey: .colIdx)
+    self.rawRowIdx = try container.decode(Double.self, forKey: .rawRowIdx)
+    self.rawColIdx = try container.decode(Double.self, forKey: .rawColIdx)
+    self.isDim = try container.decode(Bool.self, forKey: .isDim)
+    
+    if let temp = try? container.decode(Double.self, forKey: .qNum) {
+      self.qNum = temp
+    } else {
+      self.qNum = nil
+    }
+  }
+  
+  
 }
 
 struct DataRow: Decodable {
@@ -39,7 +70,9 @@ struct DataRow: Decodable {
         tempArray.append(decodedCell)
       }
     }
-    cells = tempArray
+    cells = tempArray.sorted{
+      $0.rawColIdx! < $1.rawColIdx!
+    }
   }
 }
 

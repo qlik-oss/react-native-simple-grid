@@ -9,18 +9,34 @@ import Foundation
 @objc
 class ContainerView : UIView {
   var tableTheme: TableTheme?
+  var dataSize: DataSize?
   var dataColumns: [DataColumn]?
   var dataRows: [DataRow]?
-  var rootView = UIStackView()
   weak var headerView: HeaderView? = nil
+  weak var collectionView: DataCollectionView? = nil
+  weak var scrollView: UIScrollView? = nil
+  weak var rootView: UIView? = nil
   
   override init(frame: CGRect) {
     super.init(frame: frame)
-    addSubview(rootView)
   }
   
   required init?(coder: NSCoder) {
     super.init(coder: coder)
+  }
+  
+  @objc var onEndReached: RCTDirectEventBlock?
+  
+  @objc var size: NSDictionary = [:] {
+    didSet {
+      do {
+        let json = try JSONSerialization.data(withJSONObject: size)
+        dataSize = try JSONDecoder().decode(DataSize.self, from: json)
+      }
+      catch{
+        print(error)
+      }
+    }
   }
   
   @objc var theme: NSDictionary = [:] {
@@ -41,7 +57,6 @@ class ContainerView : UIView {
         let json = try JSONSerialization.data(withJSONObject: cols)
         let decodedCols = try JSONDecoder().decode(Cols.self, from: json)
         dataColumns = decodedCols.header
-        
       } catch {
         print(error)
       }
@@ -53,8 +68,19 @@ class ContainerView : UIView {
       do {
         let json = try JSONSerialization.data(withJSONObject: rows)
         let decodedRows = try JSONDecoder().decode(RowsObject.self, from: json)
-        dataRows = decodedRows.rows
-
+        if (dataRows == nil || decodedRows.reset == true) {
+          dataRows = decodedRows.rows
+          if let view = collectionView {
+            view.appendData(rows: dataRows!)
+          }
+        } else {
+          if let newRows = decodedRows.rows {
+            dataRows!.append(contentsOf: newRows)
+            if let view = collectionView {
+              view.appendData(rows: dataRows!)
+            }
+          }
+        }
       } catch {
         print(error)
       }
@@ -63,14 +89,48 @@ class ContainerView : UIView {
   
   override func layoutSubviews() {
     super.layoutSubviews()
-    if (headerView == nil) {
-      let newHeaderView = HeaderView(frame: CGRect(x: 0, y: 0, width: Int(self.frame.width), height: tableTheme?.headerHeight ?? 54))
+//    decorate()
+    createHeaderView()
+    createDataCollectionView()
+  }
+  
+  fileprivate func decorate(view: UIView) {
+    view.layer.borderWidth = 1;
+    view.layer.borderColor = ColorParser().fromCSS(cssString: tableTheme?.borderBackgroundColor ?? "black").cgColor
+    view.layer.cornerRadius = CGFloat(tableTheme?.borderRadius ?? 8)
+    view.layer.masksToBounds = true
+  }
+  
+  fileprivate func createHeaderView() {
+    if( headerView == nil) {
+      let newHeaderView = HeaderView(columns: dataColumns!, withTheme: tableTheme!)
       headerView = newHeaderView;
       newHeaderView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray");
-      addSubview(newHeaderView)
-      let dataCollectionView = DataCollectionView(frame: self.frame)
-      addSubview(dataCollectionView)
-      dataCollectionView.setData(columns: dataColumns!, withRows: dataRows!)
+      if (rootView == nil) {
+        let frame = CGRect(x: 0, y: 0, width: headerView!.frame.width, height: self.frame.height)
+        let newRootView = UIView(frame: frame);
+        newRootView.addSubview(headerView!)
+        let scrollView = UIScrollView(frame: self.frame);
+        scrollView.contentSize = CGSize(width: newHeaderView.frame.width + 50, height: self.frame.height)
+        addSubview(scrollView)
+        decorate(view: newRootView)
+        scrollView.addSubview(newRootView)
+        rootView = newRootView
+      }
+    }
+  }
+  
+  fileprivate func createDataCollectionView() {
+    if(collectionView == nil) {
+      let width = Int(headerView?.frame.width ?? frame.width)
+      let height = tableTheme?.headerHeight ?? 54
+      let frame = CGRect(x: 0, y: height, width: width, height:   Int(self.frame.height) - height)
+      let dataCollectionView = DataCollectionView(frame: frame, withRows: dataRows!, andColumns: dataColumns!)
+      dataCollectionView.onEndReached = self.onEndReached
+      dataCollectionView.dataSize = self.dataSize
+      dataCollectionView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray");
+      collectionView = dataCollectionView
+      rootView!.addSubview(dataCollectionView)
     }
   }
 }

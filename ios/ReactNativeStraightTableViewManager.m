@@ -6,8 +6,9 @@
 #import "React/RCTUIManager.h"
 
 @interface RCT_EXTERN_MODULE(ReactNativeStraightTableViewManager, RCTViewManager)
-RCT_EXPORT_VIEW_PROPERTY(theme,NSDictionary*)
-RCT_EXPORT_VIEW_PROPERTY(cols,NSDictionary*)
-RCT_EXPORT_VIEW_PROPERTY(rows,NSDictionary*)
-
+RCT_EXPORT_VIEW_PROPERTY(theme, NSDictionary*)
+RCT_EXPORT_VIEW_PROPERTY(size, NSDictionary*)
+RCT_EXPORT_VIEW_PROPERTY(cols, NSDictionary*)
+RCT_EXPORT_VIEW_PROPERTY(rows, NSDictionary*)
+RCT_EXPORT_VIEW_PROPERTY(onEndReached, RCTDirectEventBlock)
 @end
