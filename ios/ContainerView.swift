@@ -12,6 +12,7 @@ class ContainerView : UIView {
   var dataSize: DataSize?
   var dataColumns: [DataColumn]?
   var dataRows: [DataRow]?
+  let selectionsEngine = SelectionsEngine()
   weak var headerView: HeaderView? = nil
   weak var collectionView: DataCollectionView? = nil
   weak var scrollView: UIScrollView? = nil
@@ -84,6 +85,9 @@ class ContainerView : UIView {
             }
           }
         }
+        if (decodedRows.reset == true) {
+          selectionsEngine.clear()
+        }
       } catch {
         print(error)
       }
@@ -137,7 +141,7 @@ class ContainerView : UIView {
       let width = Int(headerView?.frame.width ?? frame.width)
       let height = tableTheme?.headerHeight ?? 54
       let frame = CGRect(x: 0, y: height, width: width, height:   Int(self.frame.height) - height)
-      let dataCollectionView = DataCollectionView(frame: frame, withRows: dataRows!, andColumns: dataColumns!, theme: tableTheme!)
+      let dataCollectionView = DataCollectionView(frame: frame, withRows: dataRows!, andColumns: dataColumns!, theme: tableTheme!, selectionsEngine: selectionsEngine)
       dataCollectionView.onEndReached = self.onEndReached
       dataCollectionView.dataSize = self.dataSize
       dataCollectionView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray");

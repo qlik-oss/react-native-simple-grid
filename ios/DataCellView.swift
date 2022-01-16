@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 class DataCellView : UICollectionViewCell {
   var border = UIBezierPath()
+  var dataRow: DataRow?
   override init(frame: CGRect) {
     super.init(frame: frame)
   }
@@ -17,28 +18,45 @@ class DataCellView : UICollectionViewCell {
     super.init(coder: coder)
   }
   
-  func setData(row: DataRow, withColumns cols: [DataColumn], theme: TableTheme) {
-    var views = contentView.subviews
-    if views.count < row.cells.count {
-      var x = 0
-      for col in cols {
-        let label = PaddedLabel(frame: .zero)
-       
-        contentView.addSubview(label)
-        x += Int(col.width!)
-      }
-      views = contentView.subviews
-    }
+  func setData(row: DataRow, withColumns cols: [DataColumn], theme: TableTheme, selectionsEngine: SelectionsEngine) {
+    dataRow = row
+    createCells(row: row, withColumns: cols)
+    
     var x = 0
+    let views = contentView.subviews
     row.cells.enumerated().forEach{(index, element) in
       let col = cols[index]
-      let label = views[index] as! UILabel
+      let label = views[index] as! PaddedLabel
       let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.height!)
       label.textAlignment = element.qNum == nil ? .left : .right
       x += Int(col.width!)
       label.frame = newFrame
       label.text = element.qText
-      
+      label.column = index
+      label.cell = element
+      label.checkSelected(selectionsEngine)
+    }
+  }
+  
+  fileprivate func createCells(row: DataRow, withColumns cols: [DataColumn]) {
+    let views = contentView.subviews
+    if views.count < row.cells.count {
+      var x = 0
+      clearAllCells()
+      for col in cols {
+        let label = PaddedLabel(frame: .zero)
+        if col.isDim ?? false {
+          label.makeSelectable()
+        }
+        contentView.addSubview(label)
+        x += Int(col.width!)
+      }
+    }
+  }
+  
+  fileprivate func clearAllCells() {
+    for view in contentView.subviews {
+      view.removeFromSuperview()
     }
   }
   
@@ -61,7 +79,7 @@ class DataCellView : UICollectionViewCell {
       view.frame = newFrame
     }
   }
-  
+    
   override func draw(_ rect: CGRect) {
     super.draw(rect)
     
