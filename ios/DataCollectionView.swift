@@ -38,9 +38,16 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
         dataColumns![index + 1].width! -= Double(translation.x)
       }
     }
+    
+    resizeFrame(index)
+    
   }
   
   func onEndDrag( _ index: Int) {
+    resizeFrame(index)
+  }
+  
+  fileprivate func resizeFrame(_ index: Int) {
     if(index + 1 == dataColumns!.count) {
       if let cv = self.childCollectionView {
         // need to resize everyone

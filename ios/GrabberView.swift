@@ -53,12 +53,17 @@ class GrabberView : UIView {
     if let cv = collectionView {
       cv.updateSize(translation, withColumn: colIdx)
     }
+    
+    if let container = containerView {
+      container.updateSize(colIdx)
+    }
   }
   
   fileprivate func onEndPan() {
     if let cv = collectionView {
       cv.onEndDrag(colIdx)
     }
+    
     if let container = containerView {
       container.onEndDragged(colIdx)
     }

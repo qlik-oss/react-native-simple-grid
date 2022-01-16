@@ -8,13 +8,9 @@
 import Foundation
 import UIKit
 class DataCellView : UICollectionViewCell {
-  
+  var border = UIBezierPath()
   override init(frame: CGRect) {
     super.init(frame: frame)
-    let border = CALayer()
-    border.frame = CGRect(x: 0.0, y: frame.size.height-1, width: frame.width, height: 1.0)
-    border.backgroundColor = UIColor.black.withAlphaComponent(0.1).cgColor
-    self.layer.addSublayer(border)
   }
   
   required init?(coder: NSCoder) {
@@ -62,5 +58,18 @@ class DataCellView : UICollectionViewCell {
       let newFrame = CGRect(x: oldFrame.origin.x, y: 0, width: width, height: oldFrame.height)
       view.frame = newFrame
     }
+  }
+  
+  override func draw(_ rect: CGRect) {
+    super.draw(rect)
+    
+    border.move(to: CGPoint(x: 0, y: rect.height))
+    border.addLine(to: CGPoint(x: rect.width, y: rect.height))
+    border.close()
+    
+    border.lineWidth = 1
+    UIColor.lightGray.set()
+    border.stroke()
+    
   }
 }
