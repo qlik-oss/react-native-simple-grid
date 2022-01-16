@@ -16,6 +16,7 @@ class ContainerView : UIView {
   weak var collectionView: DataCollectionView? = nil
   weak var scrollView: UIScrollView? = nil
   weak var rootView: UIView? = nil
+  weak var overlayView: OverlayView? = nil
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -26,6 +27,8 @@ class ContainerView : UIView {
   }
   
   @objc var onEndReached: RCTDirectEventBlock?
+  
+  @objc var containerWidth: NSNumber?
   
   @objc var size: NSDictionary = [:] {
     didSet {
@@ -89,6 +92,7 @@ class ContainerView : UIView {
   
   override func layoutSubviews() {
     super.layoutSubviews()
+    
     createHeaderView()
     createDataCollectionView()
     createGrabbers()
@@ -106,14 +110,21 @@ class ContainerView : UIView {
       let newHeaderView = HeaderView(columns: dataColumns!, withTheme: tableTheme!)
       headerView = newHeaderView;
       newHeaderView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray");
+      if (overlayView == nil) {
+        let overlayFrame = CGRect(x: 0, y: 0, width: headerView!.frame.width + 50, height: self.frame.height)
+        let overlayView = OverlayView(frame: overlayFrame, containerWidth: containerWidth?.intValue ?? Int(self.frame.width))
+        addSubview(overlayView)
+        self.overlayView = overlayView
+      }
       if (rootView == nil) {
         let frame = CGRect(x: 0, y: 0, width: headerView!.frame.width, height: self.frame.height)
         let newRootView = UIView(frame: frame);
+        overlayView?.addSubview(newRootView)
         newRootView.addSubview(headerView!)
         let scrollView = UIScrollView(frame: self.frame);
         scrollView.contentSize = CGSize(width: newHeaderView.frame.width + 50, height: self.frame.height)
         addSubview(scrollView)
-        scrollView.addSubview(newRootView)
+        scrollView.addSubview(overlayView!)
         rootView = newRootView
         self.scrollView = scrollView
         decorate(view: newRootView)
@@ -126,7 +137,7 @@ class ContainerView : UIView {
       let width = Int(headerView?.frame.width ?? frame.width)
       let height = tableTheme?.headerHeight ?? 54
       let frame = CGRect(x: 0, y: height, width: width, height:   Int(self.frame.height) - height)
-      let dataCollectionView = DataCollectionView(frame: frame, withRows: dataRows!, andColumns: dataColumns!)
+      let dataCollectionView = DataCollectionView(frame: frame, withRows: dataRows!, andColumns: dataColumns!, theme: tableTheme!)
       dataCollectionView.onEndReached = self.onEndReached
       dataCollectionView.dataSize = self.dataSize
       dataCollectionView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray");
@@ -136,19 +147,18 @@ class ContainerView : UIView {
   }
   
   fileprivate func createGrabbers() {
-    if let cols = dataColumns {
+    if let cols = dataColumns, let tableTheme = tableTheme {
       var x = cols[0].width! - 20
       for col in cols {
         let frame = CGRect(x: x, y: 0, width: 40, height: self.frame.height)
-        
-        let grabber = GrabberView(frame: frame, index: col.dataColIdx!)
-        grabber.backgroundColor = UIColor.blue.withAlphaComponent(0.05)
+        let grabber = GrabberView(frame: frame, index: col.dataColIdx!, theme: tableTheme)
         grabber.collectionView = self.collectionView
         grabber.containerView = self
-        rootView!.addSubview(grabber)
+        grabber.headerView = self.headerView
+        grabber.overlayView = self.overlayView
+        overlayView!.addSubview(grabber)
         x += col.width!
       }
-      
     }
   }
   
@@ -162,10 +172,12 @@ class ContainerView : UIView {
   
   fileprivate func resizeFrame(_ index: Int, updateContent update: Bool) {
     if index + 1 == dataColumns!.count {
-      if let view = rootView, let cv = collectionView, let sv = scrollView {
+      if let view = rootView, let cv = collectionView, let sv = scrollView, let hv = headerView, let ov = overlayView {
         let oldFrame = view.frame
         let newFrame = CGRect(x: 0, y: 0, width: cv.frame.width, height: oldFrame.height)
         view.frame = newFrame
+        ov.frame = CGRect(x: 0, y: 0, width: cv.frame.width + 50, height: oldFrame.height)
+        hv.frame = CGRect(x: 0, y: 0, width: cv.frame.width, height: CGFloat(tableTheme!.headerHeight!))
         if (update) {
           sv.contentSize = CGSize(width: cv.frame.width + 50, height: newFrame.height)
         }

@@ -10,5 +10,7 @@ RCT_EXPORT_VIEW_PROPERTY(theme, NSDictionary*)
 RCT_EXPORT_VIEW_PROPERTY(size, NSDictionary*)
 RCT_EXPORT_VIEW_PROPERTY(cols, NSDictionary*)
 RCT_EXPORT_VIEW_PROPERTY(rows, NSDictionary*)
+RCT_EXPORT_VIEW_PROPERTY(containerWidth, NSNumber*)
+
 RCT_EXPORT_VIEW_PROPERTY(onEndReached, RCTDirectEventBlock)
 @end

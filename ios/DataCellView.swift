@@ -17,12 +17,13 @@ class DataCellView : UICollectionViewCell {
     super.init(coder: coder)
   }
   
-  func setData(row: DataRow, withColumns cols: [DataColumn]) {
+  func setData(row: DataRow, withColumns cols: [DataColumn], theme: TableTheme) {
     var views = contentView.subviews
     if views.count < row.cells.count {
       var x = 0
       for col in cols {
-        let label = UILabel(frame: .zero)
+        let label = PaddedLabel(frame: .zero)
+       
         contentView.addSubview(label)
         x += Int(col.width!)
       }
@@ -32,11 +33,12 @@ class DataCellView : UICollectionViewCell {
     row.cells.enumerated().forEach{(index, element) in
       let col = cols[index]
       let label = views[index] as! UILabel
-      let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: 40)
+      let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.height!)
       label.textAlignment = element.qNum == nil ? .left : .right
       x += Int(col.width!)
       label.frame = newFrame
       label.text = element.qText
+      
     }
   }
   
@@ -47,7 +49,7 @@ class DataCellView : UICollectionViewCell {
     if next < contentView.subviews.count {
       let v = contentView.subviews[next];
       let old = v.frame
-      let new = CGRect(x: old.origin.x + translation.x, y: 0, width: old.width - translation.x, height: 40)
+      let new = CGRect(x: old.origin.x + translation.x, y: 0, width: old.width - translation.x, height: old.height)
       v.frame = new
     }
   }
@@ -68,7 +70,7 @@ class DataCellView : UICollectionViewCell {
     border.close()
     
     border.lineWidth = 1
-    UIColor.lightGray.set()
+    UIColor.black.withAlphaComponent(0.1).set()
     border.stroke()
     
   }

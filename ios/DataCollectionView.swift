@@ -14,10 +14,12 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
   var loading = false
   var onEndReached: RCTDirectEventBlock?
   var childCollectionView: UICollectionView?
+  var tableTheme: TableTheme?
   let reuseIdentifier = "CellIdentifer"
   
-  init(frame: CGRect, withRows rows: [DataRow], andColumns cols: [DataColumn]) {
+  init(frame: CGRect, withRows rows: [DataRow], andColumns cols: [DataColumn], theme: TableTheme) {
     super.init(frame: frame)
+    self.tableTheme = theme
     setData(columns: cols, withRows: rows)
   }
   
@@ -40,7 +42,6 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
     }
     
     resizeFrame(index)
-    
   }
   
   func onEndDrag( _ index: Int) {
@@ -71,8 +72,6 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
     uiCollectionView.delegate = self
     uiCollectionView.dataSource = self
     childCollectionView = uiCollectionView
-    uiCollectionView.backgroundColor = UIColor.purple
-    self.backgroundColor = UIColor.yellow
     addSubview(uiCollectionView)
    
     uiCollectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -98,7 +97,7 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
     cell.backgroundColor = indexPath.row % 2 == 0 ? .white : UIColor(red:0.97, green:0.97, blue:0.97, alpha:1.0)
     if let data = dataRows {
       let dataRow = data[indexPath.row]
-      cell.setData(row: dataRow, withColumns: dataColumns!)
+      cell.setData(row: dataRow, withColumns: dataColumns!, theme: tableTheme!)
     }
     return cell
   }
@@ -109,7 +108,7 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     let width = dataColumns?.reduce(0, {$0 + $1.width!}) ?? frame.width
-    return CGSize(width: width, height: 48)
+    return CGSize(width: width, height: CGFloat(tableTheme!.height!))
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

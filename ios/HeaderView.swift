@@ -28,12 +28,28 @@ class HeaderView : UIView {
     var currentX = 0
     for column in columns {
       let frame = CGRect(x: currentX, y: 0, width: Int(column.width!), height: theme.headerHeight!)
-      let label = UILabel(frame: frame)
+      let label = PaddedLabel(frame: frame)
       label.text = column.label ?? ""
       label.font = UIFont.boldSystemFont(ofSize: label.font.pointSize)
       
       currentX += Int(column.width!)
       addSubview(label)
     }
+  }
+  
+  func updateSize(_ translation: CGPoint, withColumn column: Int) {
+    let view = subviews[column]
+    resizeLabel(view: view, deltaWidth: translation.x, translatingX: 0)
+    let next = column + 1
+    if next < subviews.count {
+      let nextView = subviews[next]
+      resizeLabel(view: nextView, deltaWidth: -translation.x, translatingX: translation.x)
+    }
+  }
+  
+  fileprivate func resizeLabel(view: UIView, deltaWidth: CGFloat, translatingX x: CGFloat) {
+    let oldFrame = view.frame
+    let newFrame = CGRect(x: oldFrame.origin.x + x, y: 0, width: oldFrame.width + deltaWidth, height: oldFrame.height)
+    view.frame = newFrame
   }
 }
