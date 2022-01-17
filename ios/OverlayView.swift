@@ -41,13 +41,12 @@ class OverlayView : UIView {
     let toValue = isPressed ? 1 : 0
     let fromValue = isPressed ? 0 : 1
     let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath: "opacity")
-    pathAnimation.duration = 1.0
+    pathAnimation.duration = 0.5
     pathAnimation.fromValue = fromValue
     pathAnimation.toValue = toValue
     pathAnimation.isRemovedOnCompletion = false
     pathAnimation.fillMode = .both
     shapeLayer.add(pathAnimation, forKey: "opacity")
-    shapeLayer.opacity = isPressed ? 1 : 0
   }
   
 }

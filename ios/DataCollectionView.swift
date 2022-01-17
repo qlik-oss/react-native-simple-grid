@@ -23,10 +23,17 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
     self.tableTheme = theme
     self.selectionsEngine = selectionsEngine
     setData(columns: cols, withRows: rows)
+    
   }
   
   required init?(coder: NSCoder) {
     super.init(coder: coder)
+  }
+  
+  func scrollToTop() {
+    if let childCollectionView = childCollectionView {
+      childCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+    }
   }
   
   func updateSize(_ translation: CGPoint, withColumn index: Int) {
@@ -110,7 +117,7 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     let width = dataColumns?.reduce(0, {$0 + $1.width!}) ?? frame.width
-    return CGSize(width: width, height: CGFloat(tableTheme!.height!))
+    return CGSize(width: width, height: CGFloat(tableTheme!.rowHeight!))
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

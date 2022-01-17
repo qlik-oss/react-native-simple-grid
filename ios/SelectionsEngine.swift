@@ -12,7 +12,8 @@ extension Notification.Name {
 }
 
 class SelectionsEngine : NSObject {
-  var selections: Set = [""]
+  var selections = [String: String]()
+  var onSelectionsChanged: RCTDirectEventBlock?
   
   override init() {
     super.init()
@@ -20,18 +21,55 @@ class SelectionsEngine : NSObject {
   }
   
   @objc func toggleSelected(_ notification: Notification) {
-    dump(notification)
     if let data = notification.object as? String {
-      if (selections.contains(data)) {
-        selections.remove(data)
+      let components = SelectionsEngine.splitSignature(from: data)
+      if selections[components[0]] != nil {
+        selections.removeValue(forKey: components[0])
       } else {
-        selections.insert(data)
+        selections[components[0]] = components[1]
       }
+    }
+    
+    if let onSelectionsChanged = onSelectionsChanged {
+      var event = [String]()
+      for (key, value) in selections {
+        let sel = key + value
+        event.append(sel)
+      }
+      onSelectionsChanged(["selections": event])
     }
   }
   
+  func contains( _ cell: DataCell) -> Bool {
+    let key = SelectionsEngine.signatureKey(from: cell)
+    return selections[key] != nil
+  }
+  
   func clear() {
-    selections = [""]
+    selections = [String: String]()
     NotificationCenter.default.post(name: Notification.Name.CellSelectedClear, object: nil)
+  }
+
+  static func buildSelectionSignator(from: DataCell) -> String {
+    return String(format: "/%d/%d/%d", Int(from.qElemNumber ?? -1), Int(from.colIdx ?? -1), Int(from.rowIdx ?? -1))
+  }
+  
+  static func splitSignature(from: String) -> [String] {
+    let components = from.components(separatedBy: "/")
+    let key = "/" + components[1] + "/" + components[2];
+    let value = "/" + components[3]
+    return [key, value]
+  }
+  
+  static func signatureKey(from: String) -> String {
+    if let index = from.lastIndex(of: "/") {
+      let sub = from[..<index]
+      return String(sub)
+    }
+    return ""
+  }
+  
+  static func signatureKey(from: DataCell) -> String {
+    return String(format: "/%d/%d", Int(from.qElemNumber ?? -1), Int(from.colIdx ?? -1))
   }
 }

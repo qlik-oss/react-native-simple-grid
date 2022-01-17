@@ -16,6 +16,11 @@ struct DataColumn : Decodable {
   let dataColIdx: Double?
 }
 
+struct TotalsCell: Decodable {
+  let qText: String?
+}
+
 struct Cols : Decodable {
   let header: [DataColumn]?
+  let footer: [TotalsCell]?
 }

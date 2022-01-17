@@ -12,12 +12,15 @@ class ContainerView : UIView {
   var dataSize: DataSize?
   var dataColumns: [DataColumn]?
   var dataRows: [DataRow]?
+  var totals: [TotalsCell]?
   let selectionsEngine = SelectionsEngine()
+  var needsGrabbers = true
   weak var headerView: HeaderView? = nil
   weak var collectionView: DataCollectionView? = nil
   weak var scrollView: UIScrollView? = nil
   weak var rootView: UIView? = nil
   weak var overlayView: OverlayView? = nil
+  weak var footerView: FooterView? = nil
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -28,8 +31,23 @@ class ContainerView : UIView {
   }
   
   @objc var onEndReached: RCTDirectEventBlock?
-  
   @objc var containerWidth: NSNumber?
+
+  @objc var onSelectionsChanged: RCTDirectEventBlock? {
+    didSet {
+      selectionsEngine.onSelectionsChanged = onSelectionsChanged
+    }
+  }
+  
+  @objc var clearSelections: NSString? {
+    didSet {
+      if let clearSelections = clearSelections {
+        if clearSelections.compare("yes") == .orderedSame {
+          selectionsEngine.clear()
+        }
+      }
+    }
+  }
   
   @objc var size: NSDictionary = [:] {
     didSet {
@@ -61,6 +79,10 @@ class ContainerView : UIView {
         let json = try JSONSerialization.data(withJSONObject: cols)
         let decodedCols = try JSONDecoder().decode(Cols.self, from: json)
         dataColumns = decodedCols.header
+        totals = decodedCols.footer
+        if let footerView = footerView {
+          footerView.resetTotals(totals)
+        }
       } catch {
         print(error)
       }
@@ -76,6 +98,7 @@ class ContainerView : UIView {
           dataRows = decodedRows.rows
           if let view = collectionView {
             view.appendData(rows: dataRows!)
+            view.scrollToTop()
           }
         } else {
           if let newRows = decodedRows.rows {
@@ -98,6 +121,7 @@ class ContainerView : UIView {
     super.layoutSubviews()
     
     createHeaderView()
+    createFooterView()
     createDataCollectionView()
     createGrabbers()
   }
@@ -136,11 +160,28 @@ class ContainerView : UIView {
     }
   }
   
+  fileprivate func createFooterView() {
+    if let totals = totals {
+      guard let height = tableTheme?.headerHeight else { return }
+      let frame = CGRect(x: 0, y: self.frame.height - CGFloat(height), width: headerView?.frame.width ?? self.frame.width, height: CGFloat(height))
+      let footerView = FooterView(frame: frame, withTotals: totals, dataColumns: dataColumns!, theme: tableTheme!)
+      footerView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "white" )
+      rootView?.addSubview(footerView)
+      self.footerView = footerView
+    }
+
+  }
+  
   fileprivate func createDataCollectionView() {
     if(collectionView == nil) {
       let width = Int(headerView?.frame.width ?? frame.width)
       let height = tableTheme?.headerHeight ?? 54
-      let frame = CGRect(x: 0, y: height, width: width, height:   Int(self.frame.height) - height)
+      var totalHeight = self.frame.height - CGFloat(height)
+      if footerView != nil {
+        totalHeight -= CGFloat(height)
+      }
+      
+      let frame = CGRect(x: 0, y: height, width: width, height: Int(totalHeight))
       let dataCollectionView = DataCollectionView(frame: frame, withRows: dataRows!, andColumns: dataColumns!, theme: tableTheme!, selectionsEngine: selectionsEngine)
       dataCollectionView.onEndReached = self.onEndReached
       dataCollectionView.dataSize = self.dataSize
@@ -151,17 +192,21 @@ class ContainerView : UIView {
   }
   
   fileprivate func createGrabbers() {
-    if let cols = dataColumns, let tableTheme = tableTheme {
-      var x = cols[0].width! - 20
-      for col in cols {
-        let frame = CGRect(x: x, y: 0, width: 40, height: self.frame.height)
-        let grabber = GrabberView(frame: frame, index: col.dataColIdx!, theme: tableTheme)
-        grabber.collectionView = self.collectionView
-        grabber.containerView = self
-        grabber.headerView = self.headerView
-        grabber.overlayView = self.overlayView
-        overlayView!.addSubview(grabber)
-        x += col.width!
+    if needsGrabbers {
+      needsGrabbers = false
+      if let cols = dataColumns, let tableTheme = tableTheme {
+        var x = cols[0].width! - 20
+        for col in cols {
+          let frame = CGRect(x: x, y: 0, width: 40, height: self.frame.height)
+          let grabber = GrabberView(frame: frame, index: col.dataColIdx!, theme: tableTheme)
+          grabber.collectionView = self.collectionView
+          grabber.containerView = self
+          grabber.headerView = self.headerView
+          grabber.overlayView = self.overlayView
+          grabber.footerView = self.footerView
+          overlayView!.addSubview(grabber)
+          x += col.width!
+        }
       }
     }
   }
@@ -176,12 +221,13 @@ class ContainerView : UIView {
   
   fileprivate func resizeFrame(_ index: Int, updateContent update: Bool) {
     if index + 1 == dataColumns!.count {
-      if let view = rootView, let cv = collectionView, let sv = scrollView, let hv = headerView, let ov = overlayView {
+      if let view = rootView, let cv = collectionView, let sv = scrollView, let hv = headerView, let ov = overlayView, let fv = footerView {
         let oldFrame = view.frame
         let newFrame = CGRect(x: 0, y: 0, width: cv.frame.width, height: oldFrame.height)
         view.frame = newFrame
         ov.frame = CGRect(x: 0, y: 0, width: cv.frame.width + 50, height: oldFrame.height)
         hv.frame = CGRect(x: 0, y: 0, width: cv.frame.width, height: CGFloat(tableTheme!.headerHeight!))
+        fv.frame = CGRect(x: 0, y: fv.frame.origin.y, width: cv.frame.width, height: CGFloat(tableTheme!.headerHeight!))
         if (update) {
           sv.contentSize = CGSize(width: cv.frame.width + 50, height: newFrame.height)
         }

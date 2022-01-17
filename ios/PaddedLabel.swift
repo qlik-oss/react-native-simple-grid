@@ -47,12 +47,9 @@ class PaddedLabel : UILabel {
   
   @objc func labelClicked(_ sender: UITapGestureRecognizer) {
     if sender.state == .ended {
-      NotificationCenter.default.post(name: Notification.Name.CellSelectedToggle, object:buildSelectionSignature())
+      let sig = SelectionsEngine.buildSelectionSignator(from: cell!)
+      NotificationCenter.default.post(name: Notification.Name.CellSelectedToggle, object:sig)
     }
-  }
-  
-  fileprivate func buildSelectionSignature() -> String {
-    return String(format: "%d.%d", Int(cell?.qElemNumber ?? -1), Int(cell?.colIdx ?? -1))
   }
   
   @objc func clearSelected(_ notification: Notification) {
@@ -62,8 +59,10 @@ class PaddedLabel : UILabel {
   
   @objc func toggleSelected(_ notification: Notification) {
     if let data = notification.object as? String {
-      let sig = buildSelectionSignature()
-      if sig == data {
+      
+      let sig = SelectionsEngine.signatureKey(from: data)
+      let comp = SelectionsEngine.signatureKey(from: cell!)
+      if sig == comp {
         selected = !selected
         updateBackground()
       }
@@ -71,8 +70,7 @@ class PaddedLabel : UILabel {
   }
   
   func checkSelected(_ selectionsEngine: SelectionsEngine) {
-    let sig = buildSelectionSignature()
-    selected = selectionsEngine.selections.contains(sig)
+    selected = selectionsEngine.contains(cell!);
     updateBackground()
   }
   

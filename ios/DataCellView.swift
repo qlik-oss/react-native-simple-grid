@@ -10,6 +10,7 @@ import UIKit
 class DataCellView : UICollectionViewCell {
   var border = UIBezierPath()
   var dataRow: DataRow?
+  var borderColor = UIColor.black.withAlphaComponent(0.1)
   override init(frame: CGRect) {
     super.init(frame: frame)
   }
@@ -20,6 +21,7 @@ class DataCellView : UICollectionViewCell {
   
   func setData(row: DataRow, withColumns cols: [DataColumn], theme: TableTheme, selectionsEngine: SelectionsEngine) {
     dataRow = row
+    borderColor = ColorParser().fromCSS(cssString: theme.borderBackgroundColor ?? "#F0F0F0")
     createCells(row: row, withColumns: cols)
     
     var x = 0
@@ -27,7 +29,7 @@ class DataCellView : UICollectionViewCell {
     row.cells.enumerated().forEach{(index, element) in
       let col = cols[index]
       let label = views[index] as! PaddedLabel
-      let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.height!)
+      let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.rowHeight!)
       label.textAlignment = element.qNum == nil ? .left : .right
       x += Int(col.width!)
       label.frame = newFrame
@@ -88,7 +90,7 @@ class DataCellView : UICollectionViewCell {
     border.close()
     
     border.lineWidth = 1
-    UIColor.black.withAlphaComponent(0.1).set()
+    borderColor.set()
     border.stroke()
     
   }

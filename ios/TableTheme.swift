@@ -7,10 +7,12 @@
 
 import Foundation
 struct TableTheme : Decodable {
-  let height: Int?
+  let rowHeight: Int?
   var headerHeight: Int?
   let borderRadius: Int?
   let headerBackgroundColor: String?
   let borderBackgroundColor: String?
   let borderSelectedColor: String?
+  let selectedBackground: String?
+  let headerTextColor: String?
 }

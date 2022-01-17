@@ -10,11 +10,13 @@ import Foundation
 class GrabberView : UIView {
 
   var tableTheme: TableTheme?
+  var borderColor = UIColor.gray
   weak var collectionView: DataCollectionView?
   weak var containerView: ContainerView?
   weak var headerView: HeaderView?
   weak var overlayView: OverlayView?
   weak var button: UIView?
+  weak var footerView: FooterView?
   var pressed = false;
   
   var linePath = UIBezierPath()
@@ -23,7 +25,7 @@ class GrabberView : UIView {
     super.init(frame: frame)
     self.tableTheme = theme
     colIdx = Int(i)
-   
+    borderColor = ColorParser().fromCSS(cssString: tableTheme?.borderBackgroundColor ?? "gray")
     self.layer.zPosition = 2
     self.backgroundColor = UIColor.white.withAlphaComponent(0)
     createButton()
@@ -112,9 +114,10 @@ class GrabberView : UIView {
   
   fileprivate func onPan(translation: CGPoint) {
     self.center = CGPoint(x: self.center.x + translation.x, y: self.center.y)
-    if let cv = collectionView, let container = containerView, let headerView = headerView {
+    if let cv = collectionView, let container = containerView, let headerView = headerView, let fv = footerView {
       cv.updateSize(translation, withColumn: colIdx)
       headerView.updateSize(translation, withColumn: colIdx)
+      fv.updateSize(translation, withColumn: colIdx)
       container.updateSize(colIdx)
     }
   }
@@ -137,15 +140,14 @@ class GrabberView : UIView {
   }
   
   override func draw(_ rect: CGRect) {
-    super.draw(rect)
-    guard let ctx = UIGraphicsGetCurrentContext() else { return }
-    ctx.setStrokeColor(UIColor.black.cgColor)
+    super.draw(rect)    
     let x = rect.origin.x + rect.width / 2
     linePath.move(to: CGPoint(x: x, y: 0))
     linePath.addLine(to: CGPoint(x: x, y: rect.height))
     linePath.lineWidth = 1
-    let alpha = pressed ? 1.0 : 0.1
-    UIColor.black.withAlphaComponent(alpha).set()
+ 
+    let color = pressed ? .black : borderColor
+    color.setStroke()
     linePath.stroke()
   }
 }

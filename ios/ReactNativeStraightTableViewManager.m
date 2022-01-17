@@ -11,6 +11,8 @@ RCT_EXPORT_VIEW_PROPERTY(size, NSDictionary*)
 RCT_EXPORT_VIEW_PROPERTY(cols, NSDictionary*)
 RCT_EXPORT_VIEW_PROPERTY(rows, NSDictionary*)
 RCT_EXPORT_VIEW_PROPERTY(containerWidth, NSNumber*)
-
+RCT_EXPORT_VIEW_PROPERTY(clearSelections, NSString*)
 RCT_EXPORT_VIEW_PROPERTY(onEndReached, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onSelectionsChanged, RCTDirectEventBlock)
+
 @end

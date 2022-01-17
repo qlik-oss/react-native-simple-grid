@@ -7,6 +7,8 @@
 
 import Foundation
 class HeaderView : UIView {
+  let labelsFactory = LabelsFactory()
+  
   init(columns: [DataColumn], withTheme theme: TableTheme) {
     // calculate intial total width
     let width = columns.reduce(0, {$0 + $1.width!})
@@ -16,7 +18,7 @@ class HeaderView : UIView {
     self.layer.shadowColor = UIColor.black.cgColor
     self.layer.shadowOpacity = 0.25
     self.layer.shadowOffset = CGSize(width: 0, height: 1)
-    self.layer.shadowRadius = 1
+    self.layer.shadowRadius = 5
     self.layer.zPosition = 1
   }
   
@@ -30,6 +32,7 @@ class HeaderView : UIView {
       let frame = CGRect(x: currentX, y: 0, width: Int(column.width!), height: theme.headerHeight!)
       let label = PaddedLabel(frame: frame)
       label.text = column.label ?? ""
+      label.textColor = ColorParser().fromCSS(cssString: theme.headerTextColor ?? "black")
       label.font = UIFont.boldSystemFont(ofSize: label.font.pointSize)
       
       currentX += Int(column.width!)
@@ -38,18 +41,6 @@ class HeaderView : UIView {
   }
   
   func updateSize(_ translation: CGPoint, withColumn column: Int) {
-    let view = subviews[column]
-    resizeLabel(view: view, deltaWidth: translation.x, translatingX: 0)
-    let next = column + 1
-    if next < subviews.count {
-      let nextView = subviews[next]
-      resizeLabel(view: nextView, deltaWidth: -translation.x, translatingX: translation.x)
-    }
-  }
-  
-  fileprivate func resizeLabel(view: UIView, deltaWidth: CGFloat, translatingX x: CGFloat) {
-    let oldFrame = view.frame
-    let newFrame = CGRect(x: oldFrame.origin.x + x, y: 0, width: oldFrame.width + deltaWidth, height: oldFrame.height)
-    view.frame = newFrame
+    labelsFactory.updateSize(view: self, translation: translation, withColumn: column)
   }
 }
