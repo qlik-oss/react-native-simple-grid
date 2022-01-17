@@ -13,8 +13,10 @@ public class TableTheme {
   static int borderBackgroundColor = Color.argb(0.1f, 0, 0, 0);
   static int borderRadius = 8;
   static public void from(ReadableMap source){
-    rowHeight =  (int)PixelUtils.dpToPx(source.getInt("height"));
+    rowHeight =  (int)PixelUtils.dpToPx(source.getInt("rowHeight"));
     headerHeight = (int) PixelUtils.dpToPx(source.getInt("headerHeight"));
     headerBackgroundColor = Color.parseColor(source.getString("headerBackgroundColor"));
+    borderRadius = (int)PixelUtils.dpToPx(source.getInt("borderRadius"));
+    borderBackgroundColor = Color.parseColor(source.getString("borderBackgroundColor"));
   }
 }

@@ -24,6 +24,7 @@ public class TableView extends FrameLayout {
   AutoLinearLayout headerView = null;
   AutoLinearLayout footerView = null;
   CustomRecyclerView recyclerView = null;
+  ScreenGuideView screenGuideView = null;
   DataProvider dataProvider = new DataProvider();
   List<GrabberView> grabbers = null;
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -40,8 +41,8 @@ public class TableView extends FrameLayout {
     GradientDrawable drawable = new GradientDrawable();
     GradientDrawable border = new GradientDrawable();
     border.setStroke((int)PixelUtils.dpToPx(1), TableTheme.borderBackgroundColor);
-    border.setCornerRadius((int)PixelUtils.dpToPx(TableTheme.borderRadius));
-    drawable.setCornerRadius((int)PixelUtils.dpToPx(TableTheme.borderRadius));
+    border.setCornerRadius(TableTheme.borderRadius);
+    drawable.setCornerRadius(TableTheme.borderRadius);
     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     layoutParams.rightMargin = (int)PixelUtils.dpToPx(50);
     rootView.setLayoutParams(layoutParams);
@@ -51,19 +52,22 @@ public class TableView extends FrameLayout {
   }
 
   public void setHeaderView(AutoLinearLayout view) {
-    this.headerView = view;
-
-    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight);
-    params.gravity = Gravity.TOP;
-    rootView.addView(this.headerView, params);
+    if (this.headerView == null) {
+      this.headerView = view;
+      FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight);
+      params.gravity = Gravity.TOP;
+      rootView.addView(this.headerView, params);
+    }
   }
 
   public void setFooterView(AutoLinearLayout view) {
-    this.footerView = view;
-    if (this.footerView != null) {
-      FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight);
-      params.gravity = Gravity.BOTTOM;
-      rootView.addView(this.footerView, params);
+    if (this.footerView == null) {
+      this.footerView = view;
+      if (this.footerView != null) {
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight);
+        params.gravity = Gravity.BOTTOM;
+        rootView.addView(this.footerView, params);
+      }
     }
   }
 
@@ -74,9 +78,11 @@ public class TableView extends FrameLayout {
   }
 
   public void setDataColumns(List<DataColumn> cols) {
-    dataProvider.setDataColumns(cols);
-    if (dataProvider.ready()) {
-      createRecyclerView();
+    if (dataProvider.getDataColumns() == null) {
+      dataProvider.setDataColumns(cols);
+      if (dataProvider.ready()) {
+        createRecyclerView();
+      }
     }
   }
 
@@ -149,12 +155,14 @@ public class TableView extends FrameLayout {
   }
 
   public void createScreenGuide(int width) {
-    ScreenGuideView screenGuideView = new ScreenGuideView(this.getContext());
-    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT);
-    params.gravity = Gravity.CENTER_VERTICAL;
-    this.addView(screenGuideView, params);
-    for( GrabberView grabberView : grabbers ) {
-      grabberView.setGreenGuideView(screenGuideView);
+    if (screenGuideView == null) {
+      screenGuideView = new ScreenGuideView(this.getContext());
+      FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT);
+      params.gravity = Gravity.CENTER_VERTICAL;
+      this.addView(screenGuideView, params);
+      for (GrabberView grabberView : grabbers) {
+        grabberView.setGreenGuideView(screenGuideView);
+      }
     }
   }
 
