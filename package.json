@@ -17,13 +17,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/qlik-trial/react-native-straight-table",
-  "author": "Qlik <vel@qlik.com> (https://github.com/qlik-trial/react-native-straight-table)",
+  "repository": "https://github.com/qlik-trial/react-native-text-grid",
+  "author": "Qlik <vel@qlik.com> (https://github.com/qlik-trial/react-native-text-grid)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/qlik-trial/react-native-straight-table/issues"
+    "url": "https://github.com/qlik-trial/react-native-text-grid/issues"
   },
-  "homepage": "https://github.com/qlik-trial/react-native-straight-table#readme",
+  "homepage": "https://github.com/qlik-trial/react-native-text-grid#readme",
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
     "@react-native-community/eslint-config": "^2.0.0",
