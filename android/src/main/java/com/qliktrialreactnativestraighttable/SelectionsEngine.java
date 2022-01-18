@@ -2,6 +2,10 @@ package com.qliktrialreactnativestraighttable;
 
 import android.util.Log;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,6 +34,23 @@ public class SelectionsEngine {
     }
     for(SelectionsObserver observer : observers ) {
       observer.onSelectionsChanged(s);
+    }
+    WritableMap args = Arguments.createMap();
+    WritableArray array = Arguments.createArray();
+    for (Map.Entry<String, String> entry : selections.entrySet()) {
+      String selectionsKey = entry.getKey();
+      String selectionsValue = entry.getValue();
+      String selectionsString = selectionsKey + selectionsValue;
+      array.pushString(selectionsString);
+    }
+    args.putArray("selections", array);
+    EventUtils.sendEventToJSFromView("onSelectionsChanged", args);
+  }
+
+  public void clearSelections() {
+    selections.clear();
+    for(SelectionsObserver observer : observers ) {
+      observer.onClear();
     }
   }
 

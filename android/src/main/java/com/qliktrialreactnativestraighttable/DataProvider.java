@@ -105,7 +105,6 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     RecyclerView.ViewHolder viewHolder;
     if (viewType == VIEW_TYPE_ITEM) {
-      Log.d("FOOO", "CREAA!!!!!!!!!!!!!!");
       LinearLayout rowView = new LinearLayout(parent.getContext());
       rowView.setOrientation(LinearLayout.HORIZONTAL);
       for (int i = 0; i < dataColumns.size(); i++) {

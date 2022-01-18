@@ -8,9 +8,20 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 public class EventUtils {
-  public static void sendEventToJSFromView(View view, String eventName) {
-    WritableMap event = Arguments.createMap();
-    ReactContext context = (ReactContext) view.getContext();
-    context.getJSModule(RCTEventEmitter.class).receiveEvent(view.getId(), eventName, event);
+  static View contextView = null;
+  public static void sendEventToJSFromView(String eventName) {
+    if (contextView != null) {
+      WritableMap event = Arguments.createMap();
+      ReactContext context = (ReactContext) contextView.getContext();
+      // here the documentation is still using the old receiveEvent, so not sure what to use????
+      context.getJSModule(RCTEventEmitter.class).receiveEvent(contextView.getId(), eventName, event);
+    }
+  }
+  public static void sendEventToJSFromView(String eventName, WritableMap event) {
+    if (contextView != null) {
+      ReactContext context = (ReactContext) contextView.getContext();
+      // here the documentation is still using the old receiveEvent, so not sure what to use????
+      context.getJSModule(RCTEventEmitter.class).receiveEvent(contextView.getId(), eventName, event);
+    }
   }
 }

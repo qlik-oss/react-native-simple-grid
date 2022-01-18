@@ -72,10 +72,12 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
 
     @ReactProp(name = "rows")
     public void setRows(View view, @Nullable ReadableMap rows) {
+      TableView tableView = getTableViewFrom(view);
       ReadableArray dataRows = rows.getArray("rows");
       boolean resetData = rows.getBoolean("reset");
+
+
       RowFactory factory = new RowFactory(dataRows);
-      TableView tableView = getTableViewFrom(view);
       tableView.setRows(factory.getRows(), resetData);
     }
 
@@ -92,12 +94,22 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       tableView.createScreenGuide((int)PixelUtils.dpToPx(width));
     }
 
+    @ReactProp(name = "clearSelections")
+    public void setClearSelections(View view, String value) {
+      if (value.equalsIgnoreCase("yes")) {
+        TableView tableView = getTableViewFrom(view);
+        tableView.clearSelections();
+      }
+    }
+
   @Nullable
   @Override
   public Map getExportedCustomDirectEventTypeConstants() {
     return MapBuilder.of(
       "onEndReached",
-      MapBuilder.of("registrationName", "onEndReached")
+      MapBuilder.of("registrationName", "onEndReached"),
+      "onSelectionsChanged",
+      MapBuilder.of("registrationName", "onSelectionsChanged")
     );
   }
 }

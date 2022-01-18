@@ -34,6 +34,7 @@ public class TableView extends FrameLayout {
   TableView(Context context, CustomHorizontalScrollView scrollView) {
     super(context);
     this.scrollView = scrollView;
+    EventUtils.contextView = scrollView;
     this.rootView = new RootLayout(context);
     dataProvider.selectionsEngine = selectionsEngine;
     decorate();
@@ -53,6 +54,10 @@ public class TableView extends FrameLayout {
     rootView.setClipToOutline(true);
     rootView.setBackground(drawable);
     rootView.setForeground(border);
+  }
+
+  public void clearSelections() {
+    selectionsEngine.clearSelections();
   }
 
   public void setHeaderView(AutoLinearLayout view) {
@@ -97,6 +102,9 @@ public class TableView extends FrameLayout {
     dataProvider.setRows(rows, resetData);
     if (this.headerView != null && dataProvider.ready()) {
       createRecyclerView();
+    }
+    if (resetData) {
+      selectionsEngine.clearSelections();
     }
   }
 
@@ -186,7 +194,7 @@ public class TableView extends FrameLayout {
         && dataProvider.needsMore()) {
         // start the fetch
         dataProvider.setLoading(true);
-        EventUtils.sendEventToJSFromView(scrollView, "onEndReached");
+        EventUtils.sendEventToJSFromView("onEndReached");
       }
     }
   }
