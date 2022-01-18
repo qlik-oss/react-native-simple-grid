@@ -3,7 +3,7 @@ require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
 Pod::Spec.new do |s|
-  s.name         = "qlik-trial-react-native-straight-table"
+  s.name         = "qlik-trial-react-native-text-grid"
   s.version      = package["version"]
   s.summary      = package["description"]
   s.homepage     = package["homepage"]
