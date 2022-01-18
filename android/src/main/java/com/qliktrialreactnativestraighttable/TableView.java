@@ -25,13 +25,17 @@ public class TableView extends FrameLayout {
   AutoLinearLayout footerView = null;
   CustomRecyclerView recyclerView = null;
   ScreenGuideView screenGuideView = null;
+  SelectionsEngine selectionsEngine = new SelectionsEngine();
   DataProvider dataProvider = new DataProvider();
+
+  TableTheme tableTheme = new TableTheme();
   List<GrabberView> grabbers = null;
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   TableView(Context context, CustomHorizontalScrollView scrollView) {
     super(context);
     this.scrollView = scrollView;
     this.rootView = new RootLayout(context);
+    dataProvider.selectionsEngine = selectionsEngine;
     decorate();
     this.addView(rootView);
   }
@@ -74,6 +78,9 @@ public class TableView extends FrameLayout {
   public void updateTheme() {
     if (headerView != null) {
       headerView.setBackgroundColor(TableTheme.headerBackgroundColor);
+    }
+    if (dataProvider != null) {
+
     }
   }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ public class GrabberView extends LinearLayout {
 
           motionDx = Math.round(motionDx);
           dataProvider.updateWidth(motionDx, GrabberView.this.column);
+
           GrabberView.this.updateHeader(motionDx);
           lastX = motionEvent.getRawX();
           if(column == dataProvider.dataColumns.size() - 1 && motionDx > 0) {
