@@ -1,9 +1,8 @@
 {
   "name": "@qlik-trial/react-native-text-grid",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A straight table component designed for performance",
   "main": "src/index",
-
   "scripts": {
     "test": "jest",
     "typescript": "tsc --noEmit",
