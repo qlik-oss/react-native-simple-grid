@@ -13,6 +13,10 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -216,6 +220,16 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       simpleViewHolder.onRecycled();
       cachedViewHolders.remove(simpleViewHolder);
     }
+  }
+
+  public void onEndPan() {
+    WritableArray widths = Arguments.createArray();
+    for(int i = 0; i < dataColumns.size(); i++) {
+      widths.pushDouble(PixelUtils.pxToDp(dataColumns.get(i).width));
+    }
+    WritableMap event = Arguments.createMap();
+    event.putArray("widths", widths);
+    EventUtils.sendEventToJSFromView("onColumnsResized", event);
   }
 
 }

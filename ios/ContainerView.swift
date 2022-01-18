@@ -31,6 +31,8 @@ class ContainerView : UIView {
   }
   
   @objc var onEndReached: RCTDirectEventBlock?
+  @objc var onColumnsResized: RCTDirectEventBlock?
+  
   @objc var containerWidth: NSNumber?
 
   @objc var onSelectionsChanged: RCTDirectEventBlock? {
@@ -184,6 +186,7 @@ class ContainerView : UIView {
       let frame = CGRect(x: 0, y: height, width: width, height: Int(totalHeight))
       let dataCollectionView = DataCollectionView(frame: frame, withRows: dataRows!, andColumns: dataColumns!, theme: tableTheme!, selectionsEngine: selectionsEngine)
       dataCollectionView.onEndReached = self.onEndReached
+      dataCollectionView.onColumnsResized = self.onColumnsResized
       dataCollectionView.dataSize = self.dataSize
       dataCollectionView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray");
       collectionView = dataCollectionView
@@ -195,8 +198,9 @@ class ContainerView : UIView {
     if needsGrabbers {
       needsGrabbers = false
       if let cols = dataColumns, let tableTheme = tableTheme {
-        var x = cols[0].width! - 20
+        var startX:Double = -20;
         for col in cols {
+          let x = col.width! + startX
           let frame = CGRect(x: x, y: 0, width: 40, height: self.frame.height)
           let grabber = GrabberView(frame: frame, index: col.dataColIdx!, theme: tableTheme)
           grabber.collectionView = self.collectionView
@@ -205,7 +209,7 @@ class ContainerView : UIView {
           grabber.overlayView = self.overlayView
           grabber.footerView = self.footerView
           overlayView!.addSubview(grabber)
-          x += col.width!
+          startX += col.width!
         }
       }
     }

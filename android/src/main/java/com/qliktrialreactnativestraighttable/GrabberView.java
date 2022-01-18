@@ -67,6 +67,7 @@ public class GrabberView extends LinearLayout {
           GrabberView.this.scrollView.setDisableIntercept(false);
           GrabberView.this.scrollView.updateLayout();
           GrabberView.this.recyclerView.requestLayout();
+          GrabberView.this.dataProvider.onEndPan();
           if( screenGuideView != null) {
             screenGuideView.fade(1, 0);
           }

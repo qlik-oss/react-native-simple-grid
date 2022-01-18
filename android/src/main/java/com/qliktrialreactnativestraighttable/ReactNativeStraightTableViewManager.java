@@ -109,7 +109,9 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       "onEndReached",
       MapBuilder.of("registrationName", "onEndReached"),
       "onSelectionsChanged",
-      MapBuilder.of("registrationName", "onSelectionsChanged")
+      MapBuilder.of("registrationName", "onSelectionsChanged"),
+      "onColumnsResized",
+      MapBuilder.of("registrationName", "onColumnsResized")
     );
   }
 }

@@ -13,6 +13,7 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
   var dataSize: DataSize?
   var loading = false
   var onEndReached: RCTDirectEventBlock?
+  var onColumnsResized: RCTDirectEventBlock?
   var childCollectionView: UICollectionView?
   var tableTheme: TableTheme?
   var selectionsEngine: SelectionsEngine?
@@ -55,6 +56,14 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
   
   func onEndDrag( _ index: Int) {
     resizeFrame(index)
+    signalColumnsWidthChanged()
+  }
+  
+  fileprivate func signalColumnsWidthChanged() {
+    if let onColumnsResized = onColumnsResized, let dataColumns = dataColumns {
+      let widths = dataColumns.map{$0.width}
+      onColumnsResized(["widths": widths])
+    }
   }
   
   fileprivate func resizeFrame(_ index: Int) {
