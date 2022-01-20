@@ -6,8 +6,9 @@
 //
 
 import Foundation
-struct DataColumn : Decodable {
-  let isDim : Bool?
+struct DataColumn : Codable {
+  var isDim : Bool = false
+  var active: Bool = false
   var width : Double?
   let label: String?
   let id: String?

@@ -32,6 +32,7 @@ class ContainerView : UIView {
   
   @objc var onEndReached: RCTDirectEventBlock?
   @objc var onColumnsResized: RCTDirectEventBlock?
+  @objc var onHeaderPressed: RCTDirectEventBlock?
   
   @objc var containerWidth: NSNumber?
 
@@ -85,6 +86,9 @@ class ContainerView : UIView {
         if let footerView = footerView {
           footerView.resetTotals(totals)
         }
+        if let headerView = headerView {
+          headerView.updateColumns(dataColumns!)
+        }
       } catch {
         print(error)
       }
@@ -137,20 +141,19 @@ class ContainerView : UIView {
   
   fileprivate func createHeaderView() {
     if( headerView == nil) {
-      let newHeaderView = HeaderView(columns: dataColumns!, withTheme: tableTheme!)
-      headerView = newHeaderView;
+      let newHeaderView = HeaderView(columns: dataColumns!, withTheme: tableTheme!, onHeaderPressed: onHeaderPressed)
       newHeaderView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray");
       if (overlayView == nil) {
-        let overlayFrame = CGRect(x: 0, y: 0, width: headerView!.frame.width + 50, height: self.frame.height)
+        let overlayFrame = CGRect(x: 0, y: 0, width: newHeaderView.frame.width + 50, height: self.frame.height)
         let overlayView = OverlayView(frame: overlayFrame, containerWidth: containerWidth?.intValue ?? Int(self.frame.width))
         addSubview(overlayView)
         self.overlayView = overlayView
       }
       if (rootView == nil) {
-        let frame = CGRect(x: 0, y: 0, width: headerView!.frame.width, height: self.frame.height)
+        let frame = CGRect(x: 0, y: 0, width: newHeaderView.frame.width, height: self.frame.height)
         let newRootView = UIView(frame: frame);
         overlayView?.addSubview(newRootView)
-        newRootView.addSubview(headerView!)
+        newRootView.addSubview(newHeaderView)
         let scrollView = UIScrollView(frame: self.frame);
         scrollView.contentSize = CGSize(width: newHeaderView.frame.width + 50, height: self.frame.height)
         addSubview(scrollView)
@@ -158,6 +161,7 @@ class ContainerView : UIView {
         rootView = newRootView
         self.scrollView = scrollView
         decorate(view: newRootView)
+        headerView = newHeaderView;
       }
     }
   }

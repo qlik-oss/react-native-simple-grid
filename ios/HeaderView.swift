@@ -8,12 +8,14 @@
 import Foundation
 class HeaderView : UIView {
   let labelsFactory = LabelsFactory()
+  var onHeaderPressed: RCTDirectEventBlock?
   
-  init(columns: [DataColumn], withTheme theme: TableTheme) {
+  init(columns: [DataColumn], withTheme theme: TableTheme, onHeaderPressed: RCTDirectEventBlock? ) {
     // calculate intial total width
     let width = columns.reduce(0, {$0 + $1.width!})
     let frame = CGRect(x: 0, y: 0, width: width, height: Double(theme.headerHeight!))
     super.init(frame: frame)
+    self.onHeaderPressed = onHeaderPressed
     addLabels(columns: columns, withTheme: theme)
     self.layer.shadowColor = UIColor.black.cgColor
     self.layer.shadowOpacity = 0.25
@@ -30,10 +32,13 @@ class HeaderView : UIView {
     var currentX = 0
     for column in columns {
       let frame = CGRect(x: currentX, y: 0, width: Int(column.width!), height: theme.headerHeight!)
-      let label = PaddedLabel(frame: frame)
+      let label = HeaderCell(frame: frame, dataColumn: column)
+      label.onHeaderPressed = onHeaderPressed
+      
       label.text = column.label ?? ""
       label.textColor = ColorParser().fromCSS(cssString: theme.headerTextColor ?? "black")
-      label.font = UIFont.boldSystemFont(ofSize: label.font.pointSize)
+      label.font = UIFont.boldSystemFont(ofSize: 14)
+      updateIcon(column, forLabel: label)
       
       currentX += Int(column.width!)
       addSubview(label)
@@ -42,5 +47,26 @@ class HeaderView : UIView {
   
   func updateSize(_ translation: CGPoint, withColumn column: Int) {
     labelsFactory.updateSize(view: self, translation: translation, withColumn: column)
+  }
+  
+  func updateColumns(_ dataColumns: [DataColumn]) {
+    dataColumns.enumerated().forEach{ (index, element) in
+      if let label = subviews[index] as? UILabel {
+        updateIcon(element, forLabel: label)
+        label.layer.backgroundColor = UIColor.clear.cgColor
+      }
+    }
+  }
+  
+  fileprivate func updateIcon(_ column: DataColumn, forLabel: UILabel) {
+    if (column.isDim == true && column.active == true) {
+      if (column.sortDirection == "desc") {
+        forLabel.addSystemImage(imageName: "arrowtriangle.down.fill")
+      } else {
+        forLabel.addSystemImage(imageName: "arrowtriangle.up.fill")
+      }
+    } else {
+      forLabel.removeSystemImage()
+    }
   }
 }
