@@ -35,13 +35,15 @@ class PaddedLabel : UILabel {
     return ctr
   }
   
-  func makeSelectable() {
+  func makeSelectable(failOn: UITapGestureRecognizer?) {
     isUserInteractionEnabled = true
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(labelClicked(_:)))
+    if let failOn = failOn {
+      tapGesture.require(toFail: failOn)
+    }
     addGestureRecognizer(tapGesture)
-    
+
     NotificationCenter.default.addObserver(self, selector: #selector(toggleSelected(_:)), name: Notification.Name.CellSelectedToggle, object: nil)
-    
     NotificationCenter.default.addObserver(self, selector: #selector(clearSelected(_:)), name: Notification.Name.CellSelectedClear, object: nil)
   }
   

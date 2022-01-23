@@ -21,20 +21,32 @@ class ContainerView : UIView {
   weak var rootView: UIView? = nil
   weak var overlayView: OverlayView? = nil
   weak var footerView: FooterView? = nil
+  weak var doubleTapGesture: UITapGestureRecognizer?
+  
+  @objc var onEndReached: RCTDirectEventBlock?
+  @objc var onColumnsResized: RCTDirectEventBlock?
+  @objc var onHeaderPressed: RCTDirectEventBlock?
+  @objc var onDoubleTap: RCTDirectEventBlock?
+  
+  @objc var containerWidth: NSNumber?
   
   override init(frame: CGRect) {
     super.init(frame: frame)
+    let doubleTapGesture = ShortTapGesture(target: self, action: #selector(handleDoubleTap(_:)))
+    doubleTapGesture.numberOfTapsRequired = 2
+    addGestureRecognizer(doubleTapGesture);
+    self.doubleTapGesture = doubleTapGesture
   }
   
   required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
   
-  @objc var onEndReached: RCTDirectEventBlock?
-  @objc var onColumnsResized: RCTDirectEventBlock?
-  @objc var onHeaderPressed: RCTDirectEventBlock?
-  
-  @objc var containerWidth: NSNumber?
+  @objc func handleDoubleTap(_ sender: UITapGestureRecognizer) {
+    if let onDoubleTap = onDoubleTap {
+      onDoubleTap(["doubleTap": "here"])
+    }
+  }
 
   @objc var onSelectionsChanged: RCTDirectEventBlock? {
     didSet {
@@ -191,6 +203,7 @@ class ContainerView : UIView {
       dataCollectionView.onColumnsResized = self.onColumnsResized
       dataCollectionView.dataSize = self.dataSize
       dataCollectionView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray");
+      dataCollectionView.doubleTapGesture = self.doubleTapGesture
       collectionView = dataCollectionView
       rootView!.addSubview(dataCollectionView)
     }

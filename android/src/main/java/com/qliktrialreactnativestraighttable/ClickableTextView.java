@@ -2,19 +2,21 @@ package com.qliktrialreactnativestraighttable;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.View;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 
-public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements View.OnClickListener, SelectionsObserver {
+public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements  SelectionsObserver {
   DataCell cell = null;
   boolean selected = false;
   int defaultTextColor = Color.BLACK;
   final SelectionsEngine selectionsEngine;
+  GestureDetector gestureDetector;
   ClickableTextView(Context context, SelectionsEngine selectionsEngine) {
     super(context);
 
     this.selectionsEngine = selectionsEngine;
     defaultTextColor = getCurrentTextColor();
-    setOnClickListener(this);
+    gestureDetector = new GestureDetector(getContext(), new DoubleTapListener());
   }
 
   public void setData(DataCell cell) {
@@ -27,13 +29,17 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     }
   }
 
-  @Override
-  public void onClick(View view) {
+  public void handleSingleTap() {
     if (cell.isDim) {
       String selection = SelectionsEngine.getSignatureFrom(cell);
       selectionsEngine.selectionsChanged(selection);
     }
+  }
 
+  @Override
+  public boolean onTouchEvent(MotionEvent e) {
+    gestureDetector.onTouchEvent(e);
+    return  true;
   }
 
   public void onSelectionsChanged(String s) {
@@ -63,4 +69,23 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     }
   }
 
+  class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+      handleSingleTap();
+      return true;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent motionEvent) {
+      EventUtils.sendEventToJSFromView("onDoubleTap");
+      return true;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
+      return false;
+    }
+  }
 }

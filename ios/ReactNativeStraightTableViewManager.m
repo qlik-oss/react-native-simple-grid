@@ -16,4 +16,5 @@ RCT_EXPORT_VIEW_PROPERTY(onEndReached, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onSelectionsChanged, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onColumnsResized, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onHeaderPressed, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onDoubleTap, RCTDirectEventBlock)
 @end

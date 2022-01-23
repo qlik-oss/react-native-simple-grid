@@ -18,6 +18,7 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
   var tableTheme: TableTheme?
   var selectionsEngine: SelectionsEngine?
   let reuseIdentifier = "CellIdentifer"
+  weak var doubleTapGesture: UITapGestureRecognizer?
   
   init(frame: CGRect, withRows rows: [DataRow], andColumns cols: [DataColumn], theme: TableTheme, selectionsEngine: SelectionsEngine) {
     super.init(frame: frame)
@@ -113,6 +114,7 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DataCellView
     
     cell.backgroundColor = indexPath.row % 2 == 0 ? .white : UIColor(red:0.97, green:0.97, blue:0.97, alpha:1.0)
+    cell.doubleTapGesture = self.doubleTapGesture
     if let data = dataRows {
       let dataRow = data[indexPath.row]
       cell.setData(row: dataRow, withColumns: dataColumns!, theme: tableTheme!, selectionsEngine: selectionsEngine!)
