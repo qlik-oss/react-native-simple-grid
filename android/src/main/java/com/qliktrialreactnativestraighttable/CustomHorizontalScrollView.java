@@ -9,7 +9,6 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
   public CustomHorizontalScrollView(Context context) {
     super(context);
   }
-
   void setDisableIntercept(boolean value) {
     disableIntercept = value;
   }

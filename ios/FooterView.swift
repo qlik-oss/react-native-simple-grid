@@ -36,7 +36,7 @@ class FooterView : UIView {
       let frame = CGRect(x: currentX, y: 0, width: Int(width), height: theme!.headerHeight!)
       let label = PaddedLabel(frame: frame)
       label.textColor = ColorParser().fromCSS(cssString: theme!.headerTextColor ?? "black")
-      label.font = UIFont.boldSystemFont(ofSize: label.font.pointSize)
+      label.font = UIFont.boldSystemFont(ofSize: 14)
       if (col.isDim == true && index == 0) {
         label.text = "Totals"
       } else if col.isDim == false {

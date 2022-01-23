@@ -114,11 +114,14 @@ class GrabberView : UIView {
   
   fileprivate func onPan(translation: CGPoint) {
     self.center = CGPoint(x: self.center.x + translation.x, y: self.center.y)
-    if let cv = collectionView, let container = containerView, let headerView = headerView, let fv = footerView {
+    if let cv = collectionView, let container = containerView, let headerView = headerView {
       cv.updateSize(translation, withColumn: colIdx)
       headerView.updateSize(translation, withColumn: colIdx)
-      fv.updateSize(translation, withColumn: colIdx)
       container.updateSize(colIdx)
+    }
+        
+    if let footerView = footerView {
+      footerView.updateSize(translation, withColumn: colIdx)
     }
   }
   

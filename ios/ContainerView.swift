@@ -133,8 +133,6 @@ class ContainerView : UIView {
   }
   
   fileprivate func decorate(view: UIView) {
-    view.layer.borderWidth = 1;
-    view.layer.borderColor = ColorParser().fromCSS(cssString: tableTheme?.borderBackgroundColor ?? "black").cgColor
     view.layer.cornerRadius = CGFloat(tableTheme?.borderRadius ?? 8)
     view.layer.masksToBounds = true
   }
@@ -229,13 +227,15 @@ class ContainerView : UIView {
   
   fileprivate func resizeFrame(_ index: Int, updateContent update: Bool) {
     if index + 1 == dataColumns!.count {
-      if let view = rootView, let cv = collectionView, let sv = scrollView, let hv = headerView, let ov = overlayView, let fv = footerView {
+      if let view = rootView, let cv = collectionView, let sv = scrollView, let hv = headerView, let ov = overlayView {
         let oldFrame = view.frame
         let newFrame = CGRect(x: 0, y: 0, width: cv.frame.width, height: oldFrame.height)
         view.frame = newFrame
         ov.frame = CGRect(x: 0, y: 0, width: cv.frame.width + 50, height: oldFrame.height)
         hv.frame = CGRect(x: 0, y: 0, width: cv.frame.width, height: CGFloat(tableTheme!.headerHeight!))
-        fv.frame = CGRect(x: 0, y: fv.frame.origin.y, width: cv.frame.width, height: CGFloat(tableTheme!.headerHeight!))
+        if let fv = footerView {
+          fv.frame = CGRect(x: 0, y: fv.frame.origin.y, width: cv.frame.width, height: CGFloat(tableTheme!.headerHeight!))
+        }
         if (update) {
           sv.contentSize = CGSize(width: cv.frame.width + 50, height: newFrame.height)
         }

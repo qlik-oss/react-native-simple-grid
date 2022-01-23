@@ -38,6 +38,7 @@ public class GrabberView extends LinearLayout {
         case MotionEvent.ACTION_DOWN: {
           GrabberView.this.pressed = true;
           GrabberView.this.scrollView.setDisableIntercept(true);
+          GrabberView.this.scrollView.requestDisallowInterceptTouchEvent(true);
           lastX = motionEvent.getRawX();
           dX = GrabberView.this.getX() - motionEvent.getRawX();
           GrabberView.this.resetLinePaint(Color.BLACK);
@@ -57,7 +58,9 @@ public class GrabberView extends LinearLayout {
           GrabberView.this.updateHeader(motionDx);
           lastX = motionEvent.getRawX();
           if(column == dataProvider.dataColumns.size() - 1 && motionDx > 0) {
+            GrabberView.this.recyclerView.requestLayout();
             GrabberView.this.scrollView.updateLayout();
+
           }
           return true;
         }
@@ -65,6 +68,7 @@ public class GrabberView extends LinearLayout {
           GrabberView.this.pressed = false;
           GrabberView.this.resetLinePaint(TableTheme.borderBackgroundColor);
           GrabberView.this.scrollView.setDisableIntercept(false);
+          GrabberView.this.scrollView.requestDisallowInterceptTouchEvent(false);
           GrabberView.this.scrollView.updateLayout();
           GrabberView.this.recyclerView.requestLayout();
           GrabberView.this.dataProvider.onEndPan();

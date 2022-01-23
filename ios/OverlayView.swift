@@ -14,7 +14,7 @@ class OverlayView : UIView {
   
   init(frame: CGRect, containerWidth: Int) {
     super.init(frame: frame)
-    self.containerWidth = containerWidth
+    self.containerWidth = containerWidth - 2;
     linePath.move(to: CGPoint(x: containerWidth, y: 0))
     linePath.addLine(to: CGPoint(x: containerWidth, y: Int(frame.height)))
     shapeLayer.path = linePath.cgPath
