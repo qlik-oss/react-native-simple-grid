@@ -158,10 +158,11 @@ public class GrabberView extends LinearLayout {
   }
 
   public void updateFooter(float dxMotion) {
-    View view = footerView.getChildAt(column);
-    resizeVew(view, dxMotion);
-    updateNeighbour(footerView, dxMotion);
-
+    if (footerView != null) {
+      View view = footerView.getChildAt(column);
+      resizeVew(view, dxMotion);
+      updateNeighbour(footerView, dxMotion);
+    }
   }
 
   public void resizeVew(View view, float dxMotion) {
