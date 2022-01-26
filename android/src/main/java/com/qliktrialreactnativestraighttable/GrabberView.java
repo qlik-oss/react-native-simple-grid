@@ -50,17 +50,16 @@ public class GrabberView extends LinearLayout {
         case MotionEvent.ACTION_MOVE: {
           float x = motionEvent.getRawX() + dX;
           float motionDx = motionEvent.getRawX() - lastX;
-          GrabberView.this.setTranslationX(x);
 
           motionDx = Math.round(motionDx);
-          dataProvider.updateWidth(motionDx, GrabberView.this.column);
-
-          GrabberView.this.updateHeader(motionDx);
-          lastX = motionEvent.getRawX();
-          if(column == dataProvider.dataColumns.size() - 1 && motionDx > 0) {
-            GrabberView.this.recyclerView.requestLayout();
-            GrabberView.this.scrollView.updateLayout();
-
+          if (dataProvider.updateWidth(motionDx, GrabberView.this.column)) {
+            GrabberView.this.setTranslationX(x);
+            GrabberView.this.updateHeader(motionDx);
+            lastX = motionEvent.getRawX();
+            if(column == dataProvider.dataColumns.size() - 1 && motionDx > 0) {
+              GrabberView.this.recyclerView.requestLayout();
+              GrabberView.this.scrollView.updateLayout();
+            }
           }
           return true;
         }

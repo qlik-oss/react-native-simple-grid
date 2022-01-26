@@ -12,6 +12,7 @@ class DataCellView : UICollectionViewCell {
   var dataRow: DataRow?
   var borderColor = UIColor.black.withAlphaComponent(0.1)
   weak var doubleTapGesture: UITapGestureRecognizer?
+  let minWidth:CGFloat = 40
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -64,16 +65,27 @@ class DataCellView : UICollectionViewCell {
     }
   }
   
-  func updateSize(_ translation: CGPoint, forColumn index: Int) {
+  func updateSize(_ translation: CGPoint, forColumn index: Int) ->Bool {
     let view = contentView.subviews[index]
-    resizeLabel(view: view, width: view.frame.width + translation.x)
+    let newWidth = view.frame.width + translation.x
+    if (newWidth < minWidth) {
+      return false
+    }
     let next = index + 1
     if next < contentView.subviews.count {
       let v = contentView.subviews[next];
       let old = v.frame
-      let new = CGRect(x: old.origin.x + translation.x, y: 0, width: old.width - translation.x, height: old.height)
+      let newNeighbourWidth = old.width - translation.x
+      if (newNeighbourWidth < minWidth) {
+        return false
+      }
+      let new = CGRect(x: old.origin.x + translation.x, y: 0, width: newNeighbourWidth, height: old.height)
       v.frame = new
     }
+    
+    resizeLabel(view: view, width: newWidth)
+
+    return true
   }
   
   fileprivate func resizeLabel(view: UIView, width: CGFloat) {

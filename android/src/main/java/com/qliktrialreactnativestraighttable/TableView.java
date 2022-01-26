@@ -125,8 +125,10 @@ public class TableView extends FrameLayout {
       recyclerView.setAdapter(dataProvider);
       FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
       recyclerViewLayoutParams.topMargin = (TableTheme.headerHeight);
-      recyclerViewLayoutParams.bottomMargin = TableTheme.headerHeight;
-      recyclerViewLayoutParams.gravity = Gravity.CENTER;
+      if (footerView != null) {
+        recyclerViewLayoutParams.bottomMargin = TableTheme.headerHeight;
+      }
+      recyclerViewLayoutParams.gravity = Gravity.TOP;
 
       DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
       recyclerView.addItemDecoration(itemDecorator);

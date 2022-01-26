@@ -38,12 +38,14 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
     }
   }
   
-  func updateSize(_ translation: CGPoint, withColumn index: Int) {
+  func updateSize(_ translation: CGPoint, withColumn index: Int) -> Bool {
     if let cv = self.childCollectionView{
       let visibleCells = cv.subviews
         for cell in visibleCells {
           if let uiCell = cell as? DataCellView {
-            uiCell.updateSize(translation, forColumn: index)
+            if !uiCell.updateSize(translation, forColumn: index) {
+              return false
+            }
           }
         }
       dataColumns![index].width! += Double(translation.x)
@@ -53,6 +55,7 @@ class DataCollectionView : UIView, UICollectionViewDataSource, UICollectionViewD
     }
     
     resizeFrame(index)
+    return true
   }
   
   func onEndDrag( _ index: Int) {

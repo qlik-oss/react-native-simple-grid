@@ -30,6 +30,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   SelectionsEngine selectionsEngine = null;
   DataSize dataSize = null;
   boolean loading = false;
+  public final float minWidth = PixelUtils.dpToPx(40);
 
   public boolean isLoading() {
     return loading;
@@ -71,22 +72,35 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       }
     }
 
-    public void updateWidth(float width, int column) {
+    public boolean updateWidth(float width, int column) {
       View view =  row.getChildAt(column);
       LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)view.getLayoutParams();
-      params.width += width;
+      float newWidth = params.width + width;
+      if(newWidth < minWidth) {
+        return false;
+      }
+
+      if (!updateNeighbour(width, column)) {
+        return false;
+      }
+      params.width = (int) newWidth;
       view.setLayoutParams(params);
 
-      updateNeighbour(width, column);
+      return true;
     }
 
-    private void updateNeighbour(float width, int column) {
+    private boolean updateNeighbour(float width, int column) {
       if (column + 1 < DataProvider.this.dataColumns.size() ) {
         View neighbour =  row.getChildAt(column + 1);
-        LinearLayout.LayoutParams nparams = (LinearLayout.LayoutParams) neighbour.getLayoutParams();
-        nparams.width -= width;
-        neighbour.setLayoutParams(nparams);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) neighbour.getLayoutParams();
+        float newWidth = params.width - width;
+        if (newWidth < minWidth) {
+          return false;
+        }
+        params.width = (int)newWidth;
+        neighbour.setLayoutParams(params);
       }
+      return true;
     }
   }
 
@@ -200,17 +214,22 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return false;
   }
 
-  public void updateWidth(float deltaWidth, int column) {
+  public boolean updateWidth(float deltaWidth, int column) {
     for(RecyclerView.ViewHolder holder : cachedViewHolders) {
       SimpleViewHolder viewHolder = (SimpleViewHolder) holder;
-      viewHolder.updateWidth(deltaWidth, column);
+      if (!viewHolder.updateWidth(deltaWidth, column)) {
+        return false;
+      }
     }
 
-    dataColumns.get(column).width += (int)deltaWidth;
     int next = column + 1;
     if (next < dataColumns.size()) {
       dataColumns.get(next).width -= (int)deltaWidth;
     }
+
+    dataColumns.get(column).width += (int)deltaWidth;
+
+    return true;
   }
 
   @Override
