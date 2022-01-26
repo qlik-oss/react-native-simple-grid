@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct TableTheme : Decodable {
+struct TableTheme: Decodable {
   let rowHeight: Int?
   var headerHeight: Int?
   let borderRadius: Int?

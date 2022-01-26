@@ -6,9 +6,9 @@
 //
 
 import Foundation
-class ShortTapGesture : UITapGestureRecognizer {
+class ShortTapGesture: UITapGestureRecognizer {
   var maximumTapLength: Double = 0.25
-  
+
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
     super.touchesBegan(touches, with: event)
     delay(delay: maximumTapLength) {
@@ -18,8 +18,8 @@ class ShortTapGesture : UITapGestureRecognizer {
       }
     }
   }
-  
-  func delay(delay:Double, closure:@escaping ()->()) {
+
+  func delay(delay: Double, closure:@escaping () -> Void) {
     DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: closure)
   }
 }

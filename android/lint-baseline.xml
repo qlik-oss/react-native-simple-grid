@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="5" by="lint 3.5.3" client="gradle" variant="all" version="3.5.3">
+
+    <issue
+        id="CanvasSize"
+        message="Calling `Canvas.getWidth()` is usually wrong; you should be calling `getWidth()` instead"
+        errorLine1="    int width = canvas.getWidth() / 2;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/GrabberView.java"
+            line="114"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="CanvasSize"
+        message="Calling `Canvas.getHeight()` is usually wrong; you should be calling `getHeight()` instead"
+        errorLine1="    canvas.drawLine(width, top, width, canvas.getHeight() - top, linePaint);"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/GrabberView.java"
+            line="116"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="    return String.format(&quot;/%d/%d/%d&quot;, cell.qElemNumber, cell.colIdx, cell.rowIdx);"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/SelectionsEngine.java"
+            line="63"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="    return String.format(&quot;/%d/%d&quot;, cell.qElemNumber, cell.colIdx);"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/SelectionsEngine.java"
+            line="72"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw operations: Use `Canvas.getClipBounds(Rect)` instead of `Canvas.getClipBounds()` which allocates a temporary `Rect`"
+        errorLine1="    Rect rect = canvas.getClipBounds();"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/ScreenGuideView.java"
+            line="51"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields; this is a memory leak"
+        errorLine1="  static View contextView = null;"
+        errorLine2="  ~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/EventUtils.java"
+            line="11"
+            column="3"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `ClickableTextView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements  SelectionsObserver {"
+        errorLine2="             ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/ClickableTextView.java"
+            line="8"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `GrabberView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class GrabberView extends LinearLayout {"
+        errorLine2="             ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/GrabberView.java"
+            line="17"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `TableView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class TableView extends FrameLayout {"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/TableView.java"
+            line="20"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `ClickableTextView` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="  public boolean onTouchEvent(MotionEvent e) {"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/ClickableTextView.java"
+            line="40"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`TouchListener#onTouch` should call `View#performClick` when a click is detected"
+        errorLine1="    public boolean onTouch(View view, MotionEvent motionEvent) {"
+        errorLine2="                   ~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/GrabberView.java"
+            line="35"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``GrabberButton`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="    grabberButton.setOnTouchListener(new TouchListener());"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/GrabberView.java"
+            line="96"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="        text.setText(&quot;Totals&quot;);"
+        errorLine2="                     ~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/HeaderViewFactory.java"
+            line="89"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`Gravity.START`&quot; instead of &quot;`Gravity.LEFT`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="  int textGravity = Gravity.LEFT;"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/DataCell.java"
+            line="19"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`Gravity.END`&quot; instead of &quot;`Gravity.RIGHT`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="      textGravity = Gravity.RIGHT;"
+        errorLine2="                            ~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/DataCell.java"
+            line="32"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`Gravity.START`&quot; instead of &quot;`Gravity.LEFT`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="        text.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);"
+        errorLine2="                                ~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/HeaderViewFactory.java"
+            line="90"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`Gravity.END`&quot; instead of &quot;`Gravity.RIGHT`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="          text.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);"
+        errorLine2="                                  ~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/HeaderViewFactory.java"
+            line="94"
+            column="35"/>
+    </issue>
+
+</issues>

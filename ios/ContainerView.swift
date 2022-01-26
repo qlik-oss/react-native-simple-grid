@@ -7,7 +7,7 @@
 
 import Foundation
 @objc
-class ContainerView : UIView {
+class ContainerView: UIView {
   var tableTheme: TableTheme?
   var dataSize: DataSize?
   var dataColumns: [DataColumn]?
@@ -15,33 +15,33 @@ class ContainerView : UIView {
   var totals: [TotalsCell]?
   let selectionsEngine = SelectionsEngine()
   var needsGrabbers = true
-  weak var headerView: HeaderView? = nil
-  weak var collectionView: DataCollectionView? = nil
-  weak var scrollView: UIScrollView? = nil
-  weak var rootView: UIView? = nil
-  weak var overlayView: OverlayView? = nil
-  weak var footerView: FooterView? = nil
+  weak var headerView: HeaderView?
+  weak var collectionView: DataCollectionView?
+  weak var scrollView: UIScrollView?
+  weak var rootView: UIView?
+  weak var overlayView: OverlayView?
+  weak var footerView: FooterView?
   weak var doubleTapGesture: UITapGestureRecognizer?
-  
+
   @objc var onEndReached: RCTDirectEventBlock?
   @objc var onColumnsResized: RCTDirectEventBlock?
   @objc var onHeaderPressed: RCTDirectEventBlock?
   @objc var onDoubleTap: RCTDirectEventBlock?
-  
+
   @objc var containerWidth: NSNumber?
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     let doubleTapGesture = ShortTapGesture(target: self, action: #selector(handleDoubleTap(_:)))
     doubleTapGesture.numberOfTapsRequired = 2
-    addGestureRecognizer(doubleTapGesture);
+    addGestureRecognizer(doubleTapGesture)
     self.doubleTapGesture = doubleTapGesture
   }
-  
+
   required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
-  
+
   @objc func handleDoubleTap(_ sender: UITapGestureRecognizer) {
     if let onDoubleTap = onDoubleTap {
       onDoubleTap(["doubleTap": "here"])
@@ -53,7 +53,7 @@ class ContainerView : UIView {
       selectionsEngine.onSelectionsChanged = onSelectionsChanged
     }
   }
-  
+
   @objc var clearSelections: NSString? {
     didSet {
       if let clearSelections = clearSelections {
@@ -63,33 +63,31 @@ class ContainerView : UIView {
       }
     }
   }
-  
+
   @objc var size: NSDictionary = [:] {
     didSet {
       do {
         let json = try JSONSerialization.data(withJSONObject: size)
         dataSize = try JSONDecoder().decode(DataSize.self, from: json)
-      }
-      catch{
+      } catch {
         print(error)
       }
     }
   }
-  
+
   @objc var theme: NSDictionary = [:] {
     didSet {
       do {
         let json = try JSONSerialization.data(withJSONObject: theme)
         tableTheme = try JSONDecoder().decode(TableTheme.self, from: json)
-      }
-      catch{
+      } catch {
         print(error)
       }
     }
   }
-  
+
   @objc var cols: NSDictionary = [:] {
-    didSet{
+    didSet {
       do {
         let json = try JSONSerialization.data(withJSONObject: cols)
         let decodedCols = try JSONDecoder().decode(Cols.self, from: json)
@@ -106,13 +104,13 @@ class ContainerView : UIView {
       }
     }
   }
-  
+
   @objc var rows: NSDictionary = [:] {
-    didSet{
+    didSet {
       do {
         let json = try JSONSerialization.data(withJSONObject: rows)
         let decodedRows = try JSONDecoder().decode(RowsObject.self, from: json)
-        if (dataRows == nil || decodedRows.reset == true) {
+        if dataRows == nil || decodedRows.reset == true {
           dataRows = decodedRows.rows
           if let view = collectionView {
             view.appendData(rows: dataRows!)
@@ -126,7 +124,7 @@ class ContainerView : UIView {
             }
           }
         }
-        if (decodedRows.reset == true) {
+        if decodedRows.reset == true {
           selectionsEngine.clear()
         }
       } catch {
@@ -134,48 +132,48 @@ class ContainerView : UIView {
       }
     }
   }
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
-    
+
     createHeaderView()
     createFooterView()
     createDataCollectionView()
     createGrabbers()
   }
-  
+
   fileprivate func decorate(view: UIView) {
     view.layer.cornerRadius = CGFloat(tableTheme?.borderRadius ?? 8)
     view.layer.masksToBounds = true
   }
-  
+
   fileprivate func createHeaderView() {
-    if( headerView == nil) {
+    if  headerView == nil {
       let newHeaderView = HeaderView(columns: dataColumns!, withTheme: tableTheme!, onHeaderPressed: onHeaderPressed)
-      newHeaderView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray");
-      if (overlayView == nil) {
+      newHeaderView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray")
+      if overlayView == nil {
         let overlayFrame = CGRect(x: 0, y: 0, width: newHeaderView.frame.width + 50, height: self.frame.height)
         let overlayView = OverlayView(frame: overlayFrame, containerWidth: containerWidth?.intValue ?? Int(self.frame.width))
         addSubview(overlayView)
         self.overlayView = overlayView
       }
-      if (rootView == nil) {
+      if rootView == nil {
         let frame = CGRect(x: 0, y: 0, width: newHeaderView.frame.width, height: self.frame.height)
-        let newRootView = UIView(frame: frame);
+        let newRootView = UIView(frame: frame)
         overlayView?.addSubview(newRootView)
         newRootView.addSubview(newHeaderView)
-        let scrollView = UIScrollView(frame: self.frame);
+        let scrollView = UIScrollView(frame: self.frame)
         scrollView.contentSize = CGSize(width: newHeaderView.frame.width + 50, height: self.frame.height)
         addSubview(scrollView)
         scrollView.addSubview(overlayView!)
         rootView = newRootView
         self.scrollView = scrollView
         decorate(view: newRootView)
-        headerView = newHeaderView;
+        headerView = newHeaderView
       }
     }
   }
-  
+
   fileprivate func createFooterView() {
     if let totals = totals {
       guard let height = tableTheme?.headerHeight else { return }
@@ -187,33 +185,33 @@ class ContainerView : UIView {
     }
 
   }
-  
+
   fileprivate func createDataCollectionView() {
-    if(collectionView == nil) {
+    if collectionView == nil {
       let width = Int(headerView?.frame.width ?? frame.width)
       let height = tableTheme?.headerHeight ?? 54
       var totalHeight = self.frame.height - CGFloat(height)
       if footerView != nil {
         totalHeight -= CGFloat(height)
       }
-      
+
       let frame = CGRect(x: 0, y: height, width: width, height: Int(totalHeight))
       let dataCollectionView = DataCollectionView(frame: frame, withRows: dataRows!, andColumns: dataColumns!, theme: tableTheme!, selectionsEngine: selectionsEngine)
       dataCollectionView.onEndReached = self.onEndReached
       dataCollectionView.onColumnsResized = self.onColumnsResized
       dataCollectionView.dataSize = self.dataSize
-      dataCollectionView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray");
+      dataCollectionView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray")
       dataCollectionView.doubleTapGesture = self.doubleTapGesture
       collectionView = dataCollectionView
       rootView!.addSubview(dataCollectionView)
     }
   }
-  
+
   fileprivate func createGrabbers() {
     if needsGrabbers {
       needsGrabbers = false
       if let cols = dataColumns, let tableTheme = tableTheme {
-        var startX:Double = -20;
+        var startX: Double = -20
         for col in cols {
           let x = col.width! + startX
           let frame = CGRect(x: x, y: 0, width: 40, height: self.frame.height)
@@ -229,15 +227,15 @@ class ContainerView : UIView {
       }
     }
   }
-  
+
   func updateSize(_ index: Int) {
     resizeFrame(index, updateContent: false)
   }
-  
+
   func onEndDragged(_ index: Int) {
     resizeFrame(index, updateContent: true)
   }
-  
+
   fileprivate func resizeFrame(_ index: Int, updateContent update: Bool) {
     if index + 1 == dataColumns!.count {
       if let view = rootView, let cv = collectionView, let sv = scrollView, let hv = headerView, let ov = overlayView {
@@ -249,11 +247,10 @@ class ContainerView : UIView {
         if let fv = footerView {
           fv.frame = CGRect(x: 0, y: fv.frame.origin.y, width: cv.frame.width, height: CGFloat(tableTheme!.headerHeight!))
         }
-        if (update) {
+        if update {
           sv.contentSize = CGSize(width: cv.frame.width + 50, height: newFrame.height)
         }
       }
     }
   }
 }
-

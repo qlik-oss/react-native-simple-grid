@@ -1,17 +1,17 @@
-# @qlik-trial/react-native-straight-table
+# @qlik-oss/react-native-simple-grid
 
 A straight table component designed for performance
 
 ## Installation
 
 ```sh
-npm install @qlik-trial/react-native-straight-table
+npm install @qlik-oss/react-native-simple-grid
 ```
 
 ## Usage
 
 ```js
-import ReactNativeStraightTable from "@qlik-trial/react-native-straight-table";
+import ReactNativeStraightTable from "@qlik-oss/react-native-simple-grid";
 
 // ...
 

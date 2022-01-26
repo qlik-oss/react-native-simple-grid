@@ -5,8 +5,8 @@ type ReactNativeStraightTableProps = {
   style: ViewStyle;
 };
 
-export const ReactNativeStraightTableViewManager = requireNativeComponent<ReactNativeStraightTableProps>(
-'ReactNativeStraightTableView'
-);
+export const ReactNativeStraightTableViewManager = requireNativeComponent<
+  ReactNativeStraightTableProps
+>('ReactNativeStraightTableView');
 
 export default ReactNativeStraightTableViewManager;
