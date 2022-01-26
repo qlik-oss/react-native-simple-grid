@@ -6,26 +6,26 @@
 //
 
 import Foundation
-class HeaderCell : PaddedLabel {
+class HeaderCell: PaddedLabel {
   var dataColumn: DataColumn?
   var onHeaderPressed: RCTDirectEventBlock?
-  
+
   init(frame: CGRect, dataColumn: DataColumn) {
     super.init(frame: frame)
     self.dataColumn = dataColumn
     makePressable()
   }
-  
+
   required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
-  
+
   fileprivate func makePressable() {
     isUserInteractionEnabled = true
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onPressedHeader(_:)))
     addGestureRecognizer(tapGesture)
   }
-  
+
   @objc func onPressedHeader(_ sender: UITapGestureRecognizer) {
     setNeedsDisplay()
     if sender.state == .ended, let dataColumn = dataColumn, let onHeaderPressed = onHeaderPressed {
