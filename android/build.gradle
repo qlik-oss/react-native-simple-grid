@@ -34,7 +34,13 @@ android {
         }
     }
     lintOptions {
-        disable 'GradleCompatible'
+        disable 'GradleDependency'
+        baseline file("lint-baseline.xml")
+        checkDependencies true
+        ignoreTestSources true
+        abortOnError true
+        warningsAsErrors true
+        textReport true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

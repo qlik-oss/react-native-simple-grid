@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@qlik-trial/react-native-straight-table": ["./src/index"]
+      "@qlik-oss/react-native-simple-grid": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
