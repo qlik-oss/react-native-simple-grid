@@ -1,6 +1,7 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.text.TextUtils;
@@ -50,8 +51,10 @@ public class HeaderViewFactory {
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void buildHeader(ReadableArray readableArray, Context context) {
+    int padding = (int) PixelUtils.dpToPx(16);
+    int headerHeight = TableTheme.headerHeight;
     headerView = new AutoLinearLayout(context);
-    headerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight));
+    headerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, headerHeight));
     headerView.setOrientation(LinearLayout.HORIZONTAL);
     headerView.setElevation((int)PixelUtils.dpToPx(4));
     headerView.setBackgroundColor(TableTheme.headerBackgroundColor);
@@ -59,13 +62,15 @@ public class HeaderViewFactory {
       DataColumn column = new DataColumn(readableArray.getMap(i));
       dataColumns.add(column);
       TextView text = new TextView(context);
-      int padding = (int) PixelUtils.dpToPx(16);
       text.setMaxLines(1);
       text.setTypeface(text.getTypeface(), Typeface.BOLD);
       text.setEllipsize(TextUtils.TruncateAt.END);
       text.setText(column.label);
-      text.setPadding(padding, padding, padding, padding);
-      text.setLayoutParams(new LinearLayout.LayoutParams(column.width, TableTheme.headerHeight));
+      text.setPadding(padding, 0, 0, 0);
+      LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
+      text.setLayoutParams(layoutParams);
+      text.setGravity(Gravity.CENTER_VERTICAL);
+
       headerView.addView(text);
     }
   }
