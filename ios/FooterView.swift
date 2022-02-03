@@ -6,7 +6,7 @@
 //
 
 import Foundation
-class FooterView: UIView {
+class FooterView : UIView {
   var totals: [TotalsCell]?
   var theme: TableTheme?
   var dataIndex = [Int]()
@@ -22,22 +22,22 @@ class FooterView: UIView {
     self.layer.zPosition = 1
     addLabels(dataColumns)
   }
-
+  
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
+  
   fileprivate func addLabels(_ dataColumns: [DataColumn]) {
     var currentX = 0
     var currentTotalsIdx = 0
-    dataColumns.enumerated().forEach { (index, _) in
+    dataColumns.enumerated().forEach{ (index, element) in
       let col = dataColumns[index]
       let width = col.width ?? 30
       let frame = CGRect(x: currentX, y: 0, width: Int(width), height: theme!.headerHeight!)
       let label = PaddedLabel(frame: frame)
       label.textColor = ColorParser().fromCSS(cssString: theme!.headerTextColor ?? "black")
       label.font = UIFont.boldSystemFont(ofSize: 14)
-      if col.isDim == true && index == 0 {
+      if (col.isDim == true && index == 0) {
         label.text = "Totals"
       } else if col.isDim == false {
         label.text = totals![currentTotalsIdx].qText ?? "NA"
@@ -49,11 +49,11 @@ class FooterView: UIView {
       addSubview(label)
     }
   }
-
+  
   func resetTotals(_ newTotals: [TotalsCell]?) {
     if let nt = newTotals {
       totals = nt
-      nt.enumerated().forEach { (index, element) in
+      nt.enumerated().forEach{ (index, element) in
         let labelIndex = dataIndex[index]
         if let label = subviews[labelIndex] as? PaddedLabel {
           label.text = element.qText
@@ -61,7 +61,7 @@ class FooterView: UIView {
       }
     }
   }
-
+  
   func updateSize(_ translation: CGPoint, withColumn column: Int) {
     labelsFactory.updateSize(view: self, translation: translation, withColumn: column)
   }

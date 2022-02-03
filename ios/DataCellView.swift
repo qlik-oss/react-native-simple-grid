@@ -7,29 +7,29 @@
 
 import Foundation
 import UIKit
-class DataCellView: UICollectionViewCell {
+class DataCellView : UICollectionViewCell {
   var border = UIBezierPath()
   var dataRow: DataRow?
   var borderColor = UIColor.black.withAlphaComponent(0.1)
   weak var doubleTapGesture: UITapGestureRecognizer?
-  let minWidth: CGFloat = 40
-
+  static let minWidth:CGFloat = 40
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
   }
-
+  
   required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
-
+  
   func setData(row: DataRow, withColumns cols: [DataColumn], theme: TableTheme, selectionsEngine: SelectionsEngine) {
     dataRow = row
     borderColor = ColorParser().fromCSS(cssString: theme.borderBackgroundColor ?? "#F0F0F0")
     createCells(row: row, withColumns: cols)
-
+    
     var x = 0
     let views = contentView.subviews
-    row.cells.enumerated().forEach {(index, element) in
+    row.cells.enumerated().forEach{(index, element) in
       let col = cols[index]
       let label = views[index] as! PaddedLabel
       let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.rowHeight!)
@@ -42,7 +42,7 @@ class DataCellView: UICollectionViewCell {
       label.checkSelected(selectionsEngine)
     }
   }
-
+  
   fileprivate func createCells(row: DataRow, withColumns cols: [DataColumn]) {
     let views = contentView.subviews
     if views.count < row.cells.count {
@@ -53,59 +53,60 @@ class DataCellView: UICollectionViewCell {
         if col.isDim == true {
           label.makeSelectable(failOn: doubleTapGesture)
         }
+        label.font = UIFont.systemFont(ofSize: 14)
         contentView.addSubview(label)
         x += Int(col.width!)
       }
     }
   }
-
+  
   fileprivate func clearAllCells() {
     for view in contentView.subviews {
       view.removeFromSuperview()
     }
   }
-
-  func updateSize(_ translation: CGPoint, forColumn index: Int) -> Bool {
+  
+  func updateSize(_ translation: CGPoint, forColumn index: Int) ->Bool {
     let view = contentView.subviews[index]
     let newWidth = view.frame.width + translation.x
-    if newWidth < minWidth {
+    if (newWidth < DataCellView.minWidth) {
       return false
     }
     let next = index + 1
     if next < contentView.subviews.count {
-      let v = contentView.subviews[next]
+      let v = contentView.subviews[next];
       let old = v.frame
       let newNeighbourWidth = old.width - translation.x
-      if newNeighbourWidth < minWidth {
+      if (newNeighbourWidth < DataCellView.minWidth) {
         return false
       }
       let new = CGRect(x: old.origin.x + translation.x, y: 0, width: newNeighbourWidth, height: old.height)
       v.frame = new
     }
-
+    
     resizeLabel(view: view, width: newWidth)
 
     return true
   }
-
+  
   fileprivate func resizeLabel(view: UIView, width: CGFloat) {
-    if view.frame.width != width {
+    if(view.frame.width != width) {
       let oldFrame = view.frame
       let newFrame = CGRect(x: oldFrame.origin.x, y: 0, width: width, height: oldFrame.height)
       view.frame = newFrame
     }
   }
-
+    
   override func draw(_ rect: CGRect) {
     super.draw(rect)
-
+    
     border.move(to: CGPoint(x: 0, y: rect.height))
     border.addLine(to: CGPoint(x: rect.width, y: rect.height))
     border.close()
-
+    
     border.lineWidth = 1
     borderColor.set()
     border.stroke()
-
+    
   }
 }

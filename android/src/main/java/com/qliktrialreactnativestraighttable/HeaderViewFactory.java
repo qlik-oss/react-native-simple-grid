@@ -44,6 +44,10 @@ public class HeaderViewFactory {
     }
   }
 
+  public HeaderViewFactory(AutoLinearLayout headerView) {
+    this.headerView = headerView;
+  }
+
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void buildHeader(ReadableArray readableArray, Context context) {
     headerView = new AutoLinearLayout(context);
@@ -106,5 +110,21 @@ public class HeaderViewFactory {
       TotalsCell cell = new TotalsCell(source.getMap(i));
       totalsCells.add(cell);
     }
+  }
+
+  void readjustLayout(List<DataColumn> dataColumns, Context context) {
+    headerView.removeAllViews();
+    for(DataColumn column: dataColumns) {
+      TextView text = new TextView(context);
+      int padding = (int) PixelUtils.dpToPx(16);
+      text.setMaxLines(1);
+      text.setTypeface(text.getTypeface(), Typeface.BOLD);
+      text.setEllipsize(TextUtils.TruncateAt.END);
+      text.setText(column.label);
+      text.setPadding(padding, padding, padding, padding);
+      text.setLayoutParams(new LinearLayout.LayoutParams(column.width, TableTheme.headerHeight));
+      headerView.addView(text);
+    }
+
   }
 }
