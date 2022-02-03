@@ -7,18 +7,18 @@
 
 import Foundation
 import UIKit
-class OverlayView: UIView {
+class OverlayView : UIView {
   var containerWidth = 0
   var linePath = UIBezierPath()
   var shapeLayer = CAShapeLayer()
-
+  
   init(frame: CGRect, containerWidth: Int) {
     super.init(frame: frame)
-    self.containerWidth = containerWidth - 2
+    self.containerWidth = containerWidth - 2;
     linePath.move(to: CGPoint(x: containerWidth, y: 0))
     linePath.addLine(to: CGPoint(x: containerWidth, y: Int(frame.height)))
     shapeLayer.path = linePath.cgPath
-
+    
     let  dashes: [ CGFloat ] = [ 3, 3 ]
 
     shapeLayer.frame = frame
@@ -31,11 +31,11 @@ class OverlayView: UIView {
     shapeLayer.opacity = 0
     self.layer.addSublayer(shapeLayer)
   }
-
+  
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
+  
   func pressed(isPressed: Bool) {
     shapeLayer.removeAllAnimations()
     let toValue = isPressed ? 1 : 0
@@ -48,5 +48,5 @@ class OverlayView: UIView {
     pathAnimation.fillMode = .both
     shapeLayer.add(pathAnimation, forKey: "opacity")
   }
-
+  
 }

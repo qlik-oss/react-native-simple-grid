@@ -6,10 +6,10 @@
 //
 
 import Foundation
-struct DataColumn: Codable {
-  var isDim: Bool = false
+struct DataColumn : Codable {
+  var isDim : Bool = false
   var active: Bool = false
-  var width: Double?
+  var width : Double?
   let label: String?
   let id: String?
   let align: String?
@@ -21,7 +21,7 @@ struct TotalsCell: Decodable {
   let qText: String?
 }
 
-struct Cols: Decodable {
+struct Cols : Decodable {
   let header: [DataColumn]?
   let footer: [TotalsCell]?
 }

@@ -135,7 +135,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         int leftPadding = (int)PixelUtils.dpToPx(16);
         view.setPadding(leftPadding, 0, (int) PixelUtils.dpToPx(16), 0);
         view.setGravity(Gravity.CENTER_VERTICAL);
-
+        view.setTextSize(14);
       }
       SimpleViewHolder simpleViewHolder = new SimpleViewHolder(rowView);
       viewHolder = simpleViewHolder;
@@ -200,7 +200,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   }
 
   public boolean ready() {
-    return this.rows != null && dataSize != null;
+    return this.rows != null && dataSize != null && this.dataColumns != null;
   }
 
   public int getItemViewType(int position) {
@@ -242,13 +242,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   }
 
   public void onEndPan() {
-    WritableArray widths = Arguments.createArray();
-    for(int i = 0; i < dataColumns.size(); i++) {
-      widths.pushDouble(PixelUtils.pxToDp(dataColumns.get(i).width));
-    }
-    WritableMap event = Arguments.createMap();
-    event.putArray("widths", widths);
-    EventUtils.sendEventToJSFromView("onColumnsResized", event);
+    EventUtils.sendOnColumnResize(dataColumns);
   }
 
 }

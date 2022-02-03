@@ -84,9 +84,6 @@ public class TableView extends FrameLayout {
     if (headerView != null) {
       headerView.setBackgroundColor(TableTheme.headerBackgroundColor);
     }
-    if (dataProvider != null) {
-
-    }
   }
 
   public void setDataColumns(List<DataColumn> cols) {
@@ -117,6 +114,7 @@ public class TableView extends FrameLayout {
 
   void createRecyclerView() {
     if (recyclerView == null) {
+      createDataColumnWidths();
       createGrabbers();
 
       LinearLayoutManager linearLayout = new LinearLayoutManager(this.getContext());
@@ -139,6 +137,14 @@ public class TableView extends FrameLayout {
 
       setupGrabbers();
     }
+  }
+
+  private void createDataColumnWidths() {
+    ColumnWidthFactory columnWidthFactory = new ColumnWidthFactory(dataProvider.dataColumns,
+      dataProvider.rows,
+      this.getContext(), this.headerView);
+
+    columnWidthFactory.autoSize();
   }
 
   private void setupGrabbers() {
