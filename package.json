@@ -21,8 +21,7 @@
     "android/",
     "ios/",
     "src/",
-    "jest/",
-    "RNDeviceInfo.podspec",
+    "react-native-simple-grid.podspec",
     "babel.config.js",
     "jest.config.js",
     "jest.setup.ts"
