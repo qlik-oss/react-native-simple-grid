@@ -1,3 +1,10 @@
+## [0.3.12](https://github.com/qlik-oss/react-native-simple-grid/compare/v0.3.11...v0.3.12) (2022-02-04)
+
+
+### Bug Fixes
+
+* **MD-2928:** adjust layout so header labels are not cut off at baseline ([#19](https://github.com/qlik-oss/react-native-simple-grid/issues/19)) ([dd11ef8](https://github.com/qlik-oss/react-native-simple-grid/commit/dd11ef84cf56890285f2324dd27900335b9f0327))
+
 ## [0.3.11](https://github.com/qlik-oss/react-native-simple-grid/compare/v0.3.10...v0.3.11) (2022-02-03)
 
 
