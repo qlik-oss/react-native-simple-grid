@@ -8,8 +8,8 @@
     "ts-check": "npx tsc",
     "lint": "yarn eslint && yarn swiftlint && yarn javalint",
     "eslint": "npx eslint ./ --ignore-pattern node_modules --fix --quiet",
-    "swiftlint": "swiftlint",
-    "javalint": "cd android && ./gradlew lint",
+    "swiftlint": "cd ios && swiftlint",
+    "javalint": "cd android && ./gradlew lint -x compileDebugJavaWithJavac",
     "ci:install": "yarn install --frozen-lockfile"
   },
   "keywords": [

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct DataSize : Decodable {
+struct DataSize: Decodable {
   let qcx: Int?
   let qcy: Int?
 }

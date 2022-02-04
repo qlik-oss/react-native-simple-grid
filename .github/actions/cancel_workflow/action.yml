@@ -1,0 +1,8 @@
+name: "Cancel workflows"
+description: "Cancel previous workflows of not on master"
+runs:
+  using: "composite"
+  steps:
+      - name: Cancel previous run
+        if: ${{ github.ref != 'refs/heads/master' }}
+        uses: styfle/cancel-workflow-action@0.9.1

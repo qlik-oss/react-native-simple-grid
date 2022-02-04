@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - uses: ./.github/actions/cancel_workflow
       - name: Test using Node.js
         uses: actions/setup-node@v2
         with:

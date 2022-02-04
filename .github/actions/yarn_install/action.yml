@@ -1,4 +1,5 @@
 name: "Yarn install"
+description: "Install dependencies"
 runs:
   using: "composite"
   steps:
