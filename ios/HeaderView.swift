@@ -51,14 +51,14 @@ class HeaderView: UIView {
 
   func updateColumns(_ dataColumns: [DataColumn]) {
     dataColumns.enumerated().forEach { (index, element) in
-      if let label = subviews[index] as? UILabel {
+      if let label = subviews[index] as? PaddedLabel {
         updateIcon(element, forLabel: label)
         label.layer.backgroundColor = UIColor.clear.cgColor
       }
     }
   }
 
-  fileprivate func updateIcon(_ column: DataColumn, forLabel: UILabel) {
+  fileprivate func updateIcon(_ column: DataColumn, forLabel: PaddedLabel) {
     if column.active == true {
       if column.sortDirection == "desc" {
         forLabel.addSystemImage(imageName: "arrowtriangle.down.fill")

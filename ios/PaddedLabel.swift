@@ -9,6 +9,7 @@ import Foundation
 class PaddedLabel: UILabel {
   var column = 0
   var cell: DataCell?
+  var hasSystemImage = false
   static let PaddingSize = 8
   let UIEI = UIEdgeInsets(top: 0, left: CGFloat(PaddingSize), bottom: 0, right: CGFloat(PaddingSize)) // as desired
   let selectedBackgroundColor = ColorParser().fromCSS(cssString: "#009845")
@@ -82,9 +83,6 @@ class PaddedLabel: UILabel {
     textColor = selected ? .white : .black
   }
 
-}
-
-extension UILabel {
   func addSystemImage(imageName: String, afterLabel bolAfterLabel: Bool = false) {
     if #available(iOS 13.0, *) {
       let config = UIImage.SymbolConfiguration(pointSize: 10)
@@ -96,8 +94,19 @@ extension UILabel {
       let completeText = NSMutableAttributedString(string: "")
 
       completeText.append(attachmentString)
-      let textAfterIcon = NSAttributedString(string: self.text ?? "")
-      completeText.append(textAfterIcon)
+      if !hasSystemImage {
+        completeText.append(NSAttributedString(string: " "))
+        hasSystemImage = true
+      }
+      let tempText = self.text
+      if var tempText = tempText {
+        tempText = tempText.trimmingCharacters(in: .whitespaces)
+        let textAfterIcon = NSAttributedString(string: tempText)
+        completeText.append(textAfterIcon)
+      } else {
+        let textAfterIcon = NSAttributedString(string: tempText ?? "")
+        completeText.append(textAfterIcon)
+      }
       self.attributedText = completeText
     } else {
       // no icon :(
@@ -105,8 +114,10 @@ extension UILabel {
   }
 
   func removeSystemImage() {
-    let text = self.text
+    let text = self.text?.trimmingCharacters(in: .whitespaces)
     self.attributedText = nil
     self.text = text
+    self.hasSystemImage = false
   }
+
 }
