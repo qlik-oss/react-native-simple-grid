@@ -1,7 +1,7 @@
 {
-  "name": "@qlik-oss/react-native-simple-grid",
+  "name": "@qlik/react-native-simple-grid",
   "version": "0.3.12",
-  "description": "A straight table component designed for performance",
+  "description": "A react native straight table component designed for performance",
   "main": "src/index",
   "scripts": {
     "test": "jest",
@@ -31,7 +31,7 @@
     "url": "https://github.com/qlik-oss/react-native-simple-grid"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/qlik-oss"
+    "registry": "https://registry.npmjs.org"
   },
   "author": "Qlik <vel@qlik.com> (https://github.com/qlik-oss/react-native-simple-grid)",
   "license": "MIT",
