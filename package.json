@@ -1,6 +1,6 @@
 {
   "name": "@qlik/react-native-simple-grid",
-  "version": "0.3.12",
+  "version": "1.0.0",
   "description": "A react native straight table component designed for performance",
   "main": "src/index",
   "scripts": {
