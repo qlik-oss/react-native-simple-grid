@@ -6,7 +6,9 @@
 //
 
 import Foundation
-class PaddedLabel: UILabel {
+class PaddedLabel: UILabel, SelectionsListener {
+  var id: Int = 0
+
   var column = 0
   var cell: DataCell?
   var hasSystemImage = false
@@ -14,6 +16,7 @@ class PaddedLabel: UILabel {
   let UIEI = UIEdgeInsets(top: 0, left: CGFloat(PaddingSize), bottom: 0, right: CGFloat(PaddingSize)) // as desired
   let selectedBackgroundColor = ColorParser().fromCSS(cssString: "#009845")
   var selected = false
+  var selectionsEngine: SelectionsEngine?
 
   override var intrinsicContentSize: CGSize {
     numberOfLines = 0       // don't forget!
@@ -37,39 +40,35 @@ class PaddedLabel: UILabel {
     return ctr
   }
 
-  func makeSelectable(failOn: UITapGestureRecognizer?) {
+  func makeSelectable(selectionsEngine: SelectionsEngine) {
     isUserInteractionEnabled = true
+    self.selectionsEngine = selectionsEngine
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(labelClicked(_:)))
-    if let failOn = failOn {
-      tapGesture.require(toFail: failOn)
-    }
-    addGestureRecognizer(tapGesture)
 
-    NotificationCenter.default.addObserver(self, selector: #selector(toggleSelected(_:)), name: Notification.Name.CellSelectedToggle, object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(clearSelected(_:)), name: Notification.Name.CellSelectedClear, object: nil)
+    addGestureRecognizer(tapGesture)
+    selectionsEngine.addListener(listener: self)
   }
 
   @objc func labelClicked(_ sender: UITapGestureRecognizer) {
     if sender.state == .ended {
       let sig = SelectionsEngine.buildSelectionSignator(from: cell!)
-      NotificationCenter.default.post(name: Notification.Name.CellSelectedToggle, object: sig)
+      if let selectionsEngine = selectionsEngine {
+        selectionsEngine.toggleSelected(sig)
+      }
     }
   }
 
-  @objc func clearSelected(_ notification: Notification) {
+  func clearSelected() {
     selected = false
     updateBackground()
   }
 
-  @objc func toggleSelected(_ notification: Notification) {
-    if let data = notification.object as? String {
-
-      let sig = SelectionsEngine.signatureKey(from: data)
-      let comp = SelectionsEngine.signatureKey(from: cell!)
-      if sig == comp {
-        selected = !selected
-        updateBackground()
-      }
+  func toggleSelected(data: String) {
+    let sig = SelectionsEngine.signatureKey(from: data)
+    let comp = SelectionsEngine.signatureKey(from: cell!)
+    if sig == comp {
+      selected = !selected
+      updateBackground()
     }
   }
 
@@ -119,5 +118,4 @@ class PaddedLabel: UILabel {
     self.text = text
     self.hasSystemImage = false
   }
-
 }

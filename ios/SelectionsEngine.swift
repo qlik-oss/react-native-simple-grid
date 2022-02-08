@@ -6,28 +6,26 @@
 //
 
 import Foundation
-extension Notification.Name {
-  static var CellSelectedToggle = Notification.Name("CellSelectedToggle")
-  static var CellSelectedClear = Notification.Name("CellSelectedClear")
-}
 
 class SelectionsEngine: NSObject {
   var selections = [String: String]()
   var onSelectionsChanged: RCTDirectEventBlock?
+  var selectionListners = [SelectionsListener]()
 
-  override init() {
-    super.init()
-    NotificationCenter.default.addObserver(self, selector: #selector(toggleSelected(_:)), name: Notification.Name.CellSelectedToggle, object: nil)
+  func addListener(listener: SelectionsListener) {
+    selectionListners.append(listener)
   }
 
-  @objc func toggleSelected(_ notification: Notification) {
-    if let data = notification.object as? String {
-      let components = SelectionsEngine.splitSignature(from: data)
-      if selections[components[0]] != nil {
-        selections.removeValue(forKey: components[0])
-      } else {
-        selections[components[0]] = components[1]
-      }
+  func toggleSelected(_ data: String) {
+    let components = SelectionsEngine.splitSignature(from: data)
+    if selections[components[0]] != nil {
+      selections.removeValue(forKey: components[0])
+    } else {
+      selections[components[0]] = components[1]
+    }
+
+    for listner in selectionListners {
+      listner.toggleSelected(data: data)
     }
 
     if let onSelectionsChanged = onSelectionsChanged {
@@ -47,7 +45,9 @@ class SelectionsEngine: NSObject {
 
   func clear() {
     selections = [String: String]()
-    NotificationCenter.default.post(name: Notification.Name.CellSelectedClear, object: nil)
+    for listner in selectionListners {
+      listner.clearSelected()
+    }
   }
 
   static func buildSelectionSignator(from: DataCell) -> String {

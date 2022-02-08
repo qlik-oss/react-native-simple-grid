@@ -21,7 +21,6 @@ class ContainerView: UIView {
   weak var rootView: UIView?
   weak var overlayView: OverlayView?
   weak var footerView: FooterView?
-  weak var doubleTapGesture: UITapGestureRecognizer?
 
   @objc var onEndReached: RCTDirectEventBlock?
   @objc var onColumnsResized: RCTDirectEventBlock?
@@ -35,7 +34,6 @@ class ContainerView: UIView {
     let doubleTapGesture = ShortTapGesture(target: self, action: #selector(handleDoubleTap(_:)))
     doubleTapGesture.numberOfTapsRequired = 2
     addGestureRecognizer(doubleTapGesture)
-    self.doubleTapGesture = doubleTapGesture
   }
 
   required init?(coder: NSCoder) {
@@ -204,6 +202,7 @@ class ContainerView: UIView {
         overlayView?.addSubview(newRootView)
         newRootView.addSubview(newHeaderView)
         let scrollView = UIScrollView(frame: self.frame)
+        scrollView.indicatorStyle = .black
         scrollView.contentSize = CGSize(width: newHeaderView.frame.width + 50, height: self.frame.height)
         addSubview(scrollView)
         scrollView.addSubview(overlayView!)
@@ -242,7 +241,7 @@ class ContainerView: UIView {
       dataCollectionView.onColumnsResized = self.onColumnsResized
       dataCollectionView.dataSize = self.dataSize
       dataCollectionView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray")
-      dataCollectionView.doubleTapGesture = self.doubleTapGesture
+
       collectionView = dataCollectionView
       rootView!.addSubview(dataCollectionView)
     }
