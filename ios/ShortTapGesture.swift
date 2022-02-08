@@ -19,7 +19,7 @@ class ShortTapGesture: UITapGestureRecognizer {
     }
   }
 
-  func delay(delay: Double, closure:@escaping ()->Void) {
+  func delay(delay: Double, closure:@escaping () -> Void) {
     DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: closure)
   }
 }

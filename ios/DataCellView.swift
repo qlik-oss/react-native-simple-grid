@@ -11,7 +11,7 @@ class DataCellView: UICollectionViewCell {
   var border = UIBezierPath()
   var dataRow: DataRow?
   var borderColor = UIColor.black.withAlphaComponent(0.1)
-  weak var doubleTapGesture: UITapGestureRecognizer?
+  var selectionsEngine: SelectionsEngine?
   static let minWidth: CGFloat = 40
 
   override init(frame: CGRect) {
@@ -51,7 +51,9 @@ class DataCellView: UICollectionViewCell {
       for col in cols {
         let label = PaddedLabel(frame: .zero)
         if col.isDim == true {
-          label.makeSelectable(failOn: doubleTapGesture)
+          if let selectionsEngine = selectionsEngine {
+              label.makeSelectable(selectionsEngine: selectionsEngine)
+          }
         }
         label.font = UIFont.systemFont(ofSize: 14)
         contentView.addSubview(label)
