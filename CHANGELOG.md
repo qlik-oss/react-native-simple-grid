@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.2...v1.0.3) (2022-02-10)
+
+
+### Bug Fixes
+
+* update license ([727a3db](https://github.com/qlik-oss/react-native-simple-grid/commit/727a3db4abbce13b43ec9c9ff0c746b416962aa9))
+
 ## [1.0.2](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.1...v1.0.2) (2022-02-10)
 
 
