@@ -11,12 +11,13 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   int defaultTextColor = Color.BLACK;
   final SelectionsEngine selectionsEngine;
   GestureDetector gestureDetector;
-  ClickableTextView(Context context, SelectionsEngine selectionsEngine) {
+  final CustomHorizontalScrollView scrollView;
+  ClickableTextView(Context context, SelectionsEngine selectionsEngine, CustomHorizontalScrollView scrollView) {
     super(context);
-
+    this.scrollView = scrollView;
     this.selectionsEngine = selectionsEngine;
     defaultTextColor = getCurrentTextColor();
-    gestureDetector = new GestureDetector(getContext(), new DoubleTapListener());
+    gestureDetector = new GestureDetector(getContext(), new SingleTapListener());
   }
 
   public void setData(DataCell cell) {
@@ -32,7 +33,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   public void handleSingleTap() {
     if (cell.isDim) {
       String selection = SelectionsEngine.getSignatureFrom(cell);
-      selectionsEngine.selectionsChanged(selection);
+      selectionsEngine.selectionsChanged(this.scrollView, selection);
     }
   }
 
@@ -69,23 +70,11 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     }
   }
 
-  class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
-
+  class SingleTapListener extends GestureDetector.SimpleOnGestureListener {
     @Override
     public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
       handleSingleTap();
       return true;
-    }
-
-    @Override
-    public boolean onDoubleTap(MotionEvent motionEvent) {
-      EventUtils.sendEventToJSFromView("onDoubleTap");
-      return true;
-    }
-
-    @Override
-    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
-      return false;
     }
   }
 }

@@ -1,6 +1,7 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.util.Log;
+import android.view.View;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
@@ -24,7 +25,7 @@ public class SelectionsEngine {
     observers.remove(observer);
   }
 
-  public void selectionsChanged(String s) {
+  public void selectionsChanged(CustomHorizontalScrollView contextView, String s) {
     String key = getKeyFrom(s);
     if(selections.containsKey(key)) {
       selections.remove(key);
@@ -44,7 +45,7 @@ public class SelectionsEngine {
       array.pushString(selectionsString);
     }
     args.putArray("selections", array);
-    EventUtils.sendEventToJSFromView("onSelectionsChanged", args);
+    EventUtils.sendEventToJSFromView(contextView, "onSelectionsChanged", args);
   }
 
   public void clearSelections() {

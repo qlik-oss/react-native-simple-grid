@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -21,7 +22,7 @@ public class TableView extends FrameLayout {
   // TODO: make updatedaldldld
   RootLayout rootView;
   CustomHorizontalScrollView scrollView;
-  AutoLinearLayout headerView = null;
+  HeaderView headerView = null;
   AutoLinearLayout footerView = null;
   CustomRecyclerView recyclerView = null;
   ScreenGuideView screenGuideView = null;
@@ -34,9 +35,9 @@ public class TableView extends FrameLayout {
   TableView(Context context, CustomHorizontalScrollView scrollView) {
     super(context);
     this.scrollView = scrollView;
-    EventUtils.contextView = scrollView;
     this.rootView = new RootLayout(context);
     dataProvider.selectionsEngine = selectionsEngine;
+    dataProvider.scrollView = scrollView;
     decorate();
     this.addView(rootView);
   }
@@ -60,13 +61,17 @@ public class TableView extends FrameLayout {
     selectionsEngine.clearSelections();
   }
 
-  public void setHeaderView(AutoLinearLayout view) {
+  public void setHeaderView(HeaderView view) {
     if (this.headerView == null) {
       this.headerView = view;
       FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight);
       params.gravity = Gravity.TOP;
       rootView.addView(this.headerView, params);
     }
+  }
+
+  public HeaderView getHeaderView() {
+    return this.headerView;
   }
 
   public void setFooterView(AutoLinearLayout view) {
@@ -97,6 +102,10 @@ public class TableView extends FrameLayout {
 
   public void setRows(List<DataRow> rows, boolean resetData) {
     dataProvider.setRows(rows, resetData);
+    if (this.recyclerView != null) {
+      this.requestLayout();
+      this.recyclerView.requestLayout();
+    }
     if (this.headerView != null && dataProvider.ready()) {
       createRecyclerView();
     }
@@ -121,7 +130,7 @@ public class TableView extends FrameLayout {
       recyclerView = new CustomRecyclerView(this.getContext());
       recyclerView.setLayoutManager(linearLayout);
       recyclerView.setAdapter(dataProvider);
-      FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+      LayoutParams recyclerViewLayoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
       recyclerViewLayoutParams.topMargin = (TableTheme.headerHeight);
       if (footerView != null) {
         recyclerViewLayoutParams.bottomMargin = TableTheme.headerHeight;
@@ -132,8 +141,13 @@ public class TableView extends FrameLayout {
       recyclerView.addItemDecoration(itemDecorator);
       recyclerView.setHasFixedSize(true);
       recyclerView.addOnScrollListener( new OnScrollListener(linearLayout) );
+      recyclerView.setVerticalScrollBarEnabled(true);
+      recyclerView.setScrollbarFadingEnabled(true);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        recyclerView.setVerticalScrollbarThumbDrawable(new ScrollBarDrawable());
+      }
+      recyclerView.setBackgroundColor(Color.WHITE);
       rootView.addView(recyclerView, recyclerViewLayoutParams);
-
 
       setupGrabbers();
     }
@@ -142,9 +156,11 @@ public class TableView extends FrameLayout {
   private void createDataColumnWidths() {
     ColumnWidthFactory columnWidthFactory = new ColumnWidthFactory(dataProvider.dataColumns,
       dataProvider.rows,
-      this.getContext(), this.headerView);
+      this.getContext(),
+      this.headerView,
+      this.scrollView);
 
-    columnWidthFactory.autoSize();
+    columnWidthFactory.autoSize(scrollView);
   }
 
   private void setupGrabbers() {
@@ -189,6 +205,19 @@ public class TableView extends FrameLayout {
     }
   }
 
+  @Override
+  public void requestLayout() {
+    super.requestLayout();
+    post(measureAndLayout);
+  }
+
+  private final Runnable measureAndLayout = () -> {
+    measure(
+      MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+      MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+    layout(getLeft(), getTop(), getRight(), getBottom());
+  };
+
   class OnScrollListener extends RecyclerView.OnScrollListener {
     LinearLayoutManager linearLayoutManager;
     public OnScrollListener(LinearLayoutManager layoutManager) {
@@ -202,7 +231,7 @@ public class TableView extends FrameLayout {
         && dataProvider.needsMore()) {
         // start the fetch
         dataProvider.setLoading(true);
-        EventUtils.sendEventToJSFromView("onEndReached");
+        EventUtils.sendEventToJSFromView(scrollView, "onEndReached");
       }
     }
   }
