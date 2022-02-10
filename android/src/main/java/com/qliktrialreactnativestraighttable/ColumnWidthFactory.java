@@ -2,6 +2,7 @@ package com.qliktrialreactnativestraighttable;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.List;
@@ -10,16 +11,18 @@ public class ColumnWidthFactory {
   final List<DataColumn> columnList;
   final List<DataRow> rowList;
   final Context parentContext;
-  final AutoLinearLayout headerView;
+  final HeaderView headerView;
+  final CustomHorizontalScrollView scrollView;
 
-  ColumnWidthFactory(List<DataColumn> columnList, List<DataRow> rowList, Context parentContext, AutoLinearLayout headerView) {
+  ColumnWidthFactory(List<DataColumn> columnList, List<DataRow> rowList, Context parentContext, HeaderView headerView, CustomHorizontalScrollView scrollView) {
     this.columnList = columnList;
     this.rowList = rowList;
     this.parentContext = parentContext;
     this.headerView = headerView;
+    this.scrollView = scrollView;
   }
 
-  public void autoSize() {
+  public void autoSize(CustomHorizontalScrollView contextView) {
     boolean resized = false;
     for(int columnIndex = 0; columnIndex < columnList.size(); columnIndex++ ) {
       DataColumn column = columnList.get(columnIndex);
@@ -28,10 +31,10 @@ public class ColumnWidthFactory {
         resized = true;
       }
     }
-    
+
     if (resized) {
       requestLayoutHeaderView();
-      EventUtils.sendOnColumnResize(this.columnList);
+      EventUtils.sendOnColumnResize(contextView, this.columnList);
     }
   }
 
@@ -53,7 +56,7 @@ public class ColumnWidthFactory {
 
   private void requestLayoutHeaderView() {
     if (this.headerView != null) {
-     HeaderViewFactory headerViewFactory = new HeaderViewFactory(this.headerView);
+     HeaderViewFactory headerViewFactory = new HeaderViewFactory(this.headerView, this.scrollView);
      headerViewFactory.readjustLayout(columnList, this.parentContext);
     }
   }

@@ -35,6 +35,11 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       return tableView;
     }
 
+  CustomHorizontalScrollView getHorizontaScrllView(View view) {
+    CustomHorizontalScrollView horizontalScrollView = (CustomHorizontalScrollView) view;
+    return horizontalScrollView;
+  }
+
     @SuppressLint("NewApi")
     @Override
     @NonNull
@@ -60,12 +65,20 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
     public void setCols(View view,  @Nullable ReadableMap source) {
       ReadableArray columns = source.getArray("header");
       ReadableArray footer = source.getArray("footer");
-      HeaderViewFactory headerViewFactory = new HeaderViewFactory(columns, footer, view.getContext());
       TableView tableView = getTableViewFrom(view);
-      AutoLinearLayout headerView = headerViewFactory.getHeaderView();
-      AutoLinearLayout footerView = headerViewFactory.getFooterView();
-      tableView.setHeaderView(headerView);
-      tableView.setFooterView(footerView);
+      HeaderView headerView = tableView.getHeaderView();
+      HeaderViewFactory headerViewFactory;
+      if (headerView != null && columns != null) {
+        headerViewFactory = new HeaderViewFactory(columns, getHorizontaScrllView(view));
+        headerView.update(headerViewFactory.getDataColumns());
+      } else {
+        headerViewFactory = new HeaderViewFactory(columns, footer, tableView.getContext(), getHorizontaScrllView(view));
+        headerView = headerViewFactory.getHeaderView();
+        AutoLinearLayout footerView = headerViewFactory.getFooterView();
+        tableView.setHeaderView(headerView);
+        tableView.setFooterView(footerView);
+      }
+
       tableView.setDataColumns(headerViewFactory.getDataColumns());
 
     }
@@ -75,7 +88,6 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       TableView tableView = getTableViewFrom(view);
       ReadableArray dataRows = rows.getArray("rows");
       boolean resetData = rows.getBoolean("reset");
-
 
       RowFactory factory = new RowFactory(dataRows);
       tableView.setRows(factory.getRows(), resetData);
@@ -112,8 +124,8 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       MapBuilder.of("registrationName", "onSelectionsChanged"),
       "onColumnsResized",
       MapBuilder.of("registrationName", "onColumnsResized"),
-      "onDoubleTap",
-      MapBuilder.of("registrationName", "onDoubleTap")
+      "onHeaderPressed",
+      MapBuilder.of("registrationName", "onHeaderPressed")
     );
   }
 }

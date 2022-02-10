@@ -30,6 +30,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   SelectionsEngine selectionsEngine = null;
   DataSize dataSize = null;
   boolean loading = false;
+  CustomHorizontalScrollView scrollView;
   public final float minWidth = PixelUtils.dpToPx(40);
 
   public boolean isLoading() {
@@ -127,7 +128,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       rowView.setOrientation(LinearLayout.HORIZONTAL);
       for (int i = 0; i < dataColumns.size(); i++) {
         int width = dataColumns.get(i).width;
-        ClickableTextView view = new ClickableTextView(parent.getContext(), this.selectionsEngine);
+        ClickableTextView view = new ClickableTextView(parent.getContext(), this.selectionsEngine, this.scrollView);
         view.setMaxLines(1);
         view.setEllipsize(TextUtils.TruncateAt.END);
         view.setLayoutParams(new LinearLayout.LayoutParams(width, TableTheme.rowHeight));
@@ -241,8 +242,8 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
   }
 
-  public void onEndPan() {
-    EventUtils.sendOnColumnResize(dataColumns);
+  public void onEndPan(CustomHorizontalScrollView contextView) {
+    EventUtils.sendOnColumnResize(contextView, dataColumns);
   }
 
 }

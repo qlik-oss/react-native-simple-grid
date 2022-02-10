@@ -1,6 +1,12 @@
 package com.qliktrialreactnativestraighttable;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class DataColumn {
 
@@ -11,6 +17,7 @@ public class DataColumn {
   public String align;
   public String sortDirection;
   public int dataColIdx = 0;
+  public boolean active = false;
 
   public DataColumn(ReadableMap source) {
     isDim = source.getBoolean("isDim");
@@ -21,5 +28,21 @@ public class DataColumn {
     sortDirection = source.getString("sortDirection");
     dataColIdx = source.getInt("dataColIdx");
     width = (int)PixelUtils.dpToPx(width);
+    if (source.hasKey("active")) {
+      active = source.getBoolean("active");
+    }
+  }
+
+  public String toEvent() throws JSONException {
+    JSONObject column = new JSONObject();
+    column.put("isDim", isDim);
+    column.put("width", width);
+    column.put("label", label);
+    column.put("id", id);
+    column.put("align", align);
+    column.put("sortDirection", sortDirection);
+    column.put("dataColIdx", dataColIdx);
+    column.put("active", active);
+    return column.toString();
   }
 }
