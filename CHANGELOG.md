@@ -1,3 +1,11 @@
+## [1.0.2](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.1...v1.0.2) (2022-02-10)
+
+
+### Bug Fixes
+
+* **MD-2944:** move system image out of extenstion and into PaddedLabel ([e845b02](https://github.com/qlik-oss/react-native-simple-grid/commit/e845b0244ba3958dc2fdd046adbfa33029aa53f7))
+* **MD-2955:** repace notification center with protocol ([0d4a638](https://github.com/qlik-oss/react-native-simple-grid/commit/0d4a638680ed67e58ab73b094f34703700d5e722))
+
 ## [1.0.1](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.0...v1.0.1) (2022-02-07)
 
 
