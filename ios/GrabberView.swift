@@ -86,27 +86,21 @@ class GrabberView: UIView {
     case .began:
       pressed = true
       self.setNeedsDisplay()
-      break
     case .changed:
       let point = sender.translation(in: self)
       onPan(translation: point)
       sender.setTranslation(.zero, in: self)
-      break
     case.ended:
       onEndPan()
-      break
     case .possible:
       pressed = true
       self.setNeedsDisplay()
-      break
     case .cancelled:
       pressed = false
       self.setNeedsDisplay()
-      break
     case .failed:
       pressed = false
       self.setNeedsDisplay()
-      break
     @unknown default:
       break
     }

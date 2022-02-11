@@ -63,11 +63,10 @@ struct DataRow: Decodable {
   init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
     var tempArray = [DataCell]()
-    for key in container.allKeys {
-      if  key.stringValue != "key" {
-        let decodedCell = try container.decode(DataCell.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
-        tempArray.append(decodedCell)
-      }
+
+    for key in container.allKeys where key.stringValue != "key" {
+      let decodedCell = try container.decode(DataCell.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
+      tempArray.append(decodedCell)
     }
     cells = tempArray.sorted {
       $0.rawColIdx! < $1.rawColIdx!

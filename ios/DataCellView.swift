@@ -31,17 +31,18 @@ class DataCellView: UICollectionViewCell {
     let views = contentView.subviews
     row.cells.enumerated().forEach {(index, element) in
       let col = cols[index]
-      // swiftlint:disable:next force_cast
-      let label = views[index] as! PaddedLabel
-      let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.rowHeight!)
-      label.textAlignment = element.qNum == nil ? .left : .right
-      x += Int(col.width!)
-      label.frame = newFrame.integral
-      label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
-      label.text = element.qText
-      label.column = index
-      label.cell = element
-      label.checkSelected(selectionsEngine)
+
+      if let label = views[index] as? PaddedLabel {
+        let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.rowHeight!)
+        label.textAlignment = element.qNum == nil ? .left : .right
+        x += Int(col.width!)
+        label.frame = newFrame.integral
+        label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
+        label.text = element.qText
+        label.column = index
+        label.cell = element
+        label.checkSelected(selectionsEngine)
+      }
     }
   }
 

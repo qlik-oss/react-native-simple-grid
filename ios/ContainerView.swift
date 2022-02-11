@@ -146,11 +146,9 @@ class ContainerView: UIView {
     var resized = false
     if dataColumns != nil {
       let columns = dataColumns!.count - 1
-      for i in 0...columns {
-        if dataColumns![i].width == 0 {
-          dataColumns![i].width = calculateAverageWidthForColumn(i)
-          resized = true
-         }
+      for dataColumn in dataColumns where dataColumn.width == 0 {
+        dataColumns.width = calculateAverageWidthForColumn(i)
+        resized = true
        }
 
       if resized {
