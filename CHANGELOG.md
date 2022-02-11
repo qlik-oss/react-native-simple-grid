@@ -1,3 +1,14 @@
+## [1.0.4](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.3...v1.0.4) (2022-02-11)
+
+
+### Bug Fixes
+
+* **MD-2954:** draw custom scrollbar ([92881c6](https://github.com/qlik-oss/react-native-simple-grid/commit/92881c6b65f089f7d891a39937219e9ecdbea9dc))
+* **MD-2954:** draw custom scrollbar ([62bdfd2](https://github.com/qlik-oss/react-native-simple-grid/commit/62bdfd24e455957998361993ea81c2879cbba5fe))
+* **MD-2971:** scale ios text ([2865a52](https://github.com/qlik-oss/react-native-simple-grid/commit/2865a52e8d27e74fcf76f22d3a4c94ec9baac5fa))
+* resolve linting ([e644293](https://github.com/qlik-oss/react-native-simple-grid/commit/e6442938e9b87c6b81aee406cdfa1e9f587e6a56))
+* resolve linting errors ([b45d22e](https://github.com/qlik-oss/react-native-simple-grid/commit/b45d22edc33fb1c45c6c80d34d9bc9591cef5c40))
+
 ## [1.0.3](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.2...v1.0.3) (2022-02-10)
 
 
