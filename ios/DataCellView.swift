@@ -31,6 +31,7 @@ class DataCellView: UICollectionViewCell {
     let views = contentView.subviews
     row.cells.enumerated().forEach {(index, element) in
       let col = cols[index]
+      // swiftlint:disable:next force_cast
       let label = views[index] as! PaddedLabel
       let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.rowHeight!)
       label.textAlignment = element.qNum == nil ? .left : .right
