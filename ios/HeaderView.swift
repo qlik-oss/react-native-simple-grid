@@ -37,7 +37,8 @@ class HeaderView: UIView {
 
       label.text = column.label ?? ""
       label.textColor = ColorParser().fromCSS(cssString: theme.headerTextColor ?? "black")
-      label.font = UIFont.boldSystemFont(ofSize: 14)
+      label.font = UIFont.preferredFont(forTextStyle: .headline)
+      label.adjustsFontForContentSizeCategory = true
       updateIcon(column, forLabel: label)
 
       currentX += Int(column.width!)

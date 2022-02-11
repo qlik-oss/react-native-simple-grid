@@ -15,11 +15,12 @@ class HeaderCell: PaddedLabel {
     self.dataColumn = dataColumn
     makePressable()
   }
-
+  
   required init?(coder: NSCoder) {
-    super.init(coder: coder)
+    fatalError("init(coder:) has not been implemented")
   }
-
+  
+ 
   fileprivate func makePressable() {
     isUserInteractionEnabled = true
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onPressedHeader(_:)))

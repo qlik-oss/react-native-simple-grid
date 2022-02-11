@@ -35,7 +35,8 @@ class DataCellView: UICollectionViewCell {
       let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.rowHeight!)
       label.textAlignment = element.qNum == nil ? .left : .right
       x += Int(col.width!)
-      label.frame = newFrame
+      label.frame = newFrame.integral
+      label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
       label.text = element.qText
       label.column = index
       label.cell = element
@@ -55,7 +56,8 @@ class DataCellView: UICollectionViewCell {
               label.makeSelectable(selectionsEngine: selectionsEngine)
           }
         }
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.adjustsFontForContentSizeCategory = true
         contentView.addSubview(label)
         x += Int(col.width!)
       }
