@@ -29,8 +29,10 @@ class PaddedLabel: UILabel, SelectionsListener {
   override var intrinsicContentSize: CGSize {
     numberOfLines = 0       // don't forget!
     var s = super.intrinsicContentSize
+    // swiftlint:disable all
     s.height = s.height + UIEI.top + UIEI.bottom
     s.width = s.width + UIEI.left + UIEI.right
+    // swiftlint:disable all
     return s
   }
 
