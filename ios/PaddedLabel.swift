@@ -17,7 +17,15 @@ class PaddedLabel: UILabel, SelectionsListener {
   let selectedBackgroundColor = ColorParser().fromCSS(cssString: "#009845")
   var selected = false
   var selectionsEngine: SelectionsEngine?
-
+  
+  override init(frame: CGRect) {
+    super.init(frame: frame.integral)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   override var intrinsicContentSize: CGSize {
     numberOfLines = 0       // don't forget!
     var s = super.intrinsicContentSize
