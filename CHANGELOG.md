@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.4...v1.0.5) (2022-02-14)
+
+
+### Bug Fixes
+
+* fixed swift lint ([#29](https://github.com/qlik-oss/react-native-simple-grid/issues/29)) ([7997c01](https://github.com/qlik-oss/react-native-simple-grid/commit/7997c01769b2f8ae11c2b8b3f2e4a80ab428523a))
+
 ## [1.0.4](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.3...v1.0.4) (2022-02-11)
 
 
