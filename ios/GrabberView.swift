@@ -127,9 +127,9 @@ class GrabberView: UIView {
     if let footerView = footerView {
       footerView.updateSize(translation, withColumn: colIdx)
     }
-        
+
     if let scrollView = scrollView {
-      if (isLast && translation.x > 0) {
+      if isLast && translation.x > 0 {
         var currentOffset = scrollView.contentOffset
         currentOffset.x += translation.x
         scrollView.setContentOffset(currentOffset, animated: false)

@@ -168,7 +168,7 @@ class ContainerView: UIView {
       let tempLabel = UILabel()
       tempLabel.text = String(repeating: "M", count: average)
       tempLabel.sizeToFit()
-      let newWidth = max(tempLabel.frame.width + Double(PaddedLabel.PaddingSize * 2), DataCellView.minWidth)
+      let newWidth = max(tempLabel.frame.width + (Double(PaddedLabel.PaddingSize) * 2.5), DataCellView.minWidth)
       return newWidth
     }
     return 100

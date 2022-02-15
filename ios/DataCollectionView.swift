@@ -8,6 +8,10 @@
 import Foundation
 import UIKit
 class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+  enum DataCollectionViewError: Error {
+      case noCellForIdentifier
+  }
+
   var dataColumns: [DataColumn]?
   var dataRows: [DataRow]?
   var dataSize: DataSize?
@@ -17,7 +21,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   var childCollectionView: UICollectionView?
   var tableTheme: TableTheme?
   var selectionsEngine: SelectionsEngine?
-  let reuseIdentifier = "CellIdentifer"
+  let reuseIdentifier = "CellIdentifier"
 
   init(frame: CGRect, withRows rows: [DataRow], andColumns cols: [DataColumn], theme: TableTheme, selectionsEngine: SelectionsEngine) {
     super.init(frame: frame)
@@ -115,6 +119,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   }
 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
     // swiftlint:disable:next force_cast
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DataCellView
 
