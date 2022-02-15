@@ -1,3 +1,10 @@
+## [1.0.9](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.8...v1.0.9) (2022-02-15)
+
+
+### Bug Fixes
+
+* scaling ios font ([14ada10](https://github.com/qlik-oss/react-native-simple-grid/commit/14ada100154c075b5709450c52e176763f90e794))
+
 ## [1.0.8](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.7...v1.0.8) (2022-02-15)
 
 
