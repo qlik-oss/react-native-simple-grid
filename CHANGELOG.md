@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.5...v1.0.6) (2022-02-15)
+
+
+### Bug Fixes
+
+* **MD-2902:** decrease white space at end of scrollview ([010c5ed](https://github.com/qlik-oss/react-native-simple-grid/commit/010c5ed6fa002fdfebcb2f52851a7e1ba0fe70a0))
+
 ## [1.0.5](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.4...v1.0.5) (2022-02-14)
 
 
