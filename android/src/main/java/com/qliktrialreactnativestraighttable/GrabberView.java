@@ -59,6 +59,7 @@ public class GrabberView extends LinearLayout {
             if(column == dataProvider.dataColumns.size() - 1 && motionDx > 0) {
               GrabberView.this.recyclerView.requestLayout();
               GrabberView.this.scrollView.updateLayout();
+              GrabberView.this.scrollView.scrollBy((int) motionDx, 0);
             }
           }
           return true;
