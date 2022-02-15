@@ -143,19 +143,22 @@ class ContainerView: UIView {
   }
 
   func calculateDefaultColWidth() {
-    var resized = false
-    if dataColumns != nil {
-      let columns = dataColumns!.count - 1
-      for dataColumn in dataColumns where dataColumn.width == 0 {
-        dataColumns.width = calculateAverageWidthForColumn(i)
-        resized = true
-       }
+      var resized = false
+      if var dataColumns = dataColumns {
+        let columns = dataColumns.count - 1
+        for i in 0...columns {
+          if dataColumns[i].width == 0 {
+            dataColumns[i].width = calculateAverageWidthForColumn(i)
+            resized = true
+           }
+         }
+        self.dataColumns = dataColumns
 
-      if resized {
-        signalOnColumnsResized()
+        if resized {
+          signalOnColumnsResized()
+        }
       }
     }
-  }
 
   func calculateAverageWidthForColumn(_ i: Int) -> Double {
     if let dataRows = dataRows {
