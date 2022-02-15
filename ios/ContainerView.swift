@@ -144,9 +144,10 @@ class ContainerView: UIView {
 
   func calculateDefaultColWidth() {
       var resized = false
-      if let dataColumns = dataColumns {
+      if var dataColumns = dataColumns {
         for (i, var dataColumn) in dataColumns.enumerated() where dataColumn.width == 0 {
           dataColumn.width = calculateAverageWidthForColumn(i)
+          dataColumns[i] = dataColumn
           resized = true
          }
         self.dataColumns = dataColumns
