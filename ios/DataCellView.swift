@@ -58,7 +58,8 @@ class DataCellView: UICollectionViewCell {
               label.makeSelectable(selectionsEngine: selectionsEngine)
           }
         }
-        label.font = UIFont.preferredFont(forTextStyle: .body)
+        let sizedFont = UIFont.systemFont(ofSize: 14)
+        label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: sizedFont)
         label.adjustsFontForContentSizeCategory = true
         contentView.addSubview(label)
         x += Int(col.width!)
