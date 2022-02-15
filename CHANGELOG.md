@@ -1,3 +1,10 @@
+## [1.0.8](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.7...v1.0.8) (2022-02-15)
+
+
+### Bug Fixes
+
+* improper assignment ([981c8a0](https://github.com/qlik-oss/react-native-simple-grid/commit/981c8a0f2ea3809636427e5226da2af70bd621c8))
+
 ## [1.0.7](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.6...v1.0.7) (2022-02-15)
 
 
