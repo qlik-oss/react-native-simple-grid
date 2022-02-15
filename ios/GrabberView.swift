@@ -88,27 +88,21 @@ class GrabberView: UIView {
     case .began:
       pressed = true
       self.setNeedsDisplay()
-      break
     case .changed:
       let point = sender.translation(in: self)
       onPan(translation: point)
       sender.setTranslation(.zero, in: self)
-      break
     case.ended:
       onEndPan()
-      break
     case .possible:
       pressed = true
       self.setNeedsDisplay()
-      break
     case .cancelled:
       pressed = false
       self.setNeedsDisplay()
-      break
     case .failed:
       pressed = false
       self.setNeedsDisplay()
-      break
     @unknown default:
       break
     }
@@ -126,6 +120,15 @@ class GrabberView: UIView {
 
     if let footerView = footerView {
       footerView.updateSize(translation, withColumn: colIdx)
+    }
+        
+    if let scrollView = scrollView {
+      if (isLast && translation.x > 0) {
+        var currentOffset = scrollView.contentOffset
+        currentOffset.x += translation.x
+        scrollView.setContentOffset(currentOffset, animated: false)
+        scrollView.flashScrollIndicators()
+      }
     }
 
     if let scrollView = scrollView {
