@@ -203,7 +203,7 @@ class ContainerView: UIView {
         newRootView.addSubview(newHeaderView)
         let scrollView = UIScrollView(frame: self.frame)
         scrollView.indicatorStyle = .black
-        scrollView.contentSize = CGSize(width: newHeaderView.frame.width + 50, height: self.frame.height)
+        scrollView.contentSize = CGSize(width: newHeaderView.frame.width + 25, height: self.frame.height)
         addSubview(scrollView)
         scrollView.addSubview(overlayView!)
         rootView = newRootView
@@ -256,11 +256,13 @@ class ContainerView: UIView {
           let x = col.width! + startX
           let frame = CGRect(x: x, y: 0, width: 40, height: self.frame.height)
           let grabber = GrabberView(frame: frame, index: col.dataColIdx!, theme: tableTheme)
+          grabber.isLast = Int(col.dataColIdx!) == cols.count - 1
           grabber.collectionView = self.collectionView
           grabber.containerView = self
           grabber.headerView = self.headerView
           grabber.overlayView = self.overlayView
           grabber.footerView = self.footerView
+          grabber.scrollView = self.scrollView
           overlayView!.addSubview(grabber)
           startX += col.width!
         }

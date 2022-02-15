@@ -17,10 +17,12 @@ class GrabberView: UIView {
   weak var overlayView: OverlayView?
   weak var button: UIView?
   weak var footerView: FooterView?
+  weak var scrollView: UIScrollView?
   var pressed = false
 
   var linePath = UIBezierPath()
   var colIdx = 0
+  var isLast = false
   init(frame: CGRect, index i: Double, theme: TableTheme) {
     super.init(frame: frame)
     self.tableTheme = theme
@@ -124,6 +126,15 @@ class GrabberView: UIView {
 
     if let footerView = footerView {
       footerView.updateSize(translation, withColumn: colIdx)
+    }
+        
+    if let scrollView = scrollView {
+      if (isLast && translation.x > 0) {
+        var currentOffset = scrollView.contentOffset
+        currentOffset.x += translation.x
+        scrollView.setContentOffset(currentOffset, animated: false)
+        scrollView.flashScrollIndicators()
+      }
     }
 
     self.center = point
