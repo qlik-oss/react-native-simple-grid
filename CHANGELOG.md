@@ -1,3 +1,10 @@
+## [1.0.10](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.9...v1.0.10) (2022-02-16)
+
+
+### Bug Fixes
+
+* **MD-2989:** handle null sort direction ([8c8c0af](https://github.com/qlik-oss/react-native-simple-grid/commit/8c8c0af4cf7a6758b939da995973c2eed36efe12))
+
 ## [1.0.9](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.8...v1.0.9) (2022-02-15)
 
 
