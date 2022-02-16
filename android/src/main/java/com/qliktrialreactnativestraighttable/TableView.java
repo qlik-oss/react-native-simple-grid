@@ -143,9 +143,7 @@ public class TableView extends FrameLayout {
       recyclerView.addOnScrollListener( new OnScrollListener(linearLayout) );
       recyclerView.setVerticalScrollBarEnabled(true);
       recyclerView.setScrollbarFadingEnabled(true);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        recyclerView.setVerticalScrollbarThumbDrawable(new ScrollBarDrawable());
-      }
+      recyclerView.setVerticalScrollbarThumbDrawable(new ScrollBarDrawable());
       recyclerView.setBackgroundColor(Color.WHITE);
       rootView.addView(recyclerView, recyclerViewLayoutParams);
 
