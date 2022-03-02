@@ -131,15 +131,6 @@ class GrabberView: UIView {
       }
     }
 
-    if let scrollView = scrollView {
-      if isLast && translation.x > 0 {
-        var currentOffset = scrollView.contentOffset
-        currentOffset.x += translation.x
-        scrollView.setContentOffset(currentOffset, animated: false)
-        scrollView.flashScrollIndicators()
-      }
-    }
-
     self.center = point
 
   }
