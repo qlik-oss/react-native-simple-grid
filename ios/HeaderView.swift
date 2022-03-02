@@ -37,11 +37,11 @@ class HeaderView: UIView {
 
       label.text = column.label ?? ""
       label.textColor = ColorParser().fromCSS(cssString: theme.headerTextColor ?? "black")
-      
+
       let sizedFont = UIFont.systemFont(ofSize: 14)
       label.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: sizedFont)
       label.adjustsFontForContentSizeCategory = true
-      
+
       updateIcon(column, forLabel: label)
 
       currentX += Int(column.width!)

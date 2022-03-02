@@ -251,11 +251,12 @@ class ContainerView: UIView {
       needsGrabbers = false
       if let cols = dataColumns, let tableTheme = tableTheme {
         var startX: Double = -20
+        var colIdx = 0
         for col in cols {
           let x = col.width! + startX
           let frame = CGRect(x: x, y: 0, width: 40, height: self.frame.height)
-          let grabber = GrabberView(frame: frame, index: col.dataColIdx!, theme: tableTheme)
-          grabber.isLast = Int(col.dataColIdx!) == cols.count - 1
+          let grabber = GrabberView(frame: frame, index: Double(colIdx), theme: tableTheme)
+          grabber.isLast = colIdx == cols.count - 1
           grabber.collectionView = self.collectionView
           grabber.containerView = self
           grabber.headerView = self.headerView
@@ -264,6 +265,7 @@ class ContainerView: UIView {
           grabber.scrollView = self.scrollView
           overlayView!.addSubview(grabber)
           startX += col.width!
+          colIdx += 1
         }
       }
     }

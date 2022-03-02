@@ -30,14 +30,14 @@ struct DataCell: Decodable {
 
   init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    self.qText = try container.decode(String.self, forKey: .qText)
-    self.qState = try container.decode(String.self, forKey: .qState)
-    self.qElemNumber = try container.decode(Double.self, forKey: .qElemNumber)
-    self.rowIdx = try container.decode(Double.self, forKey: .rowIdx)
-    self.colIdx = try container.decode(Double.self, forKey: .colIdx)
-    self.rawRowIdx = try container.decode(Double.self, forKey: .rawRowIdx)
-    self.rawColIdx = try container.decode(Double.self, forKey: .rawColIdx)
-    self.isDim = try container.decode(Bool.self, forKey: .isDim)
+    self.qText = try container.decodeIfPresent(String.self, forKey: .qText) ?? ""
+    self.qState = try container.decodeIfPresent(String.self, forKey: .qState) ?? ""
+    self.qElemNumber = try container.decodeIfPresent(Double.self, forKey: .qElemNumber) ?? -1
+    self.rowIdx = try container.decodeIfPresent(Double.self, forKey: .rowIdx) ?? -1
+    self.colIdx = try container.decodeIfPresent(Double.self, forKey: .colIdx) ?? -1
+    self.rawRowIdx = try container.decodeIfPresent(Double.self, forKey: .rawRowIdx) ?? -1
+    self.rawColIdx = try container.decodeIfPresent(Double.self, forKey: .rawColIdx) ?? -1
+    self.isDim = try container.decodeIfPresent(Bool.self, forKey: .isDim) ?? false
 
     if let temp = try? container.decode(Double.self, forKey: .qNum) {
       self.qNum = temp
