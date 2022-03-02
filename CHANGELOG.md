@@ -1,3 +1,10 @@
+## [1.0.11](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.10...v1.0.11) (2022-03-02)
+
+
+### Bug Fixes
+
+* **QB-9336:** use decodeIfPreset ([#43](https://github.com/qlik-oss/react-native-simple-grid/issues/43)) ([3c8f6f2](https://github.com/qlik-oss/react-native-simple-grid/commit/3c8f6f2b9edfb35618622891d47e3091611dfd80))
+
 ## [1.0.10](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.9...v1.0.10) (2022-02-16)
 
 
