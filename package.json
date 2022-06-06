@@ -46,7 +46,7 @@
     "@types/jest": "27.4.0",
     "@types/react": "17.0.39",
     "@types/react-native": "0.66.15",
-    "eslint": "7.2.0",
+    "eslint": "8.17.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "3.4.1",
     "jest": "27.5.1",
