@@ -12,4 +12,5 @@ struct CellContentStyle: Decodable {
   var color: String?
   var fontFamily: String?
   var fontSize: Int?
+  var rowHeight: Int?
 }

@@ -23,12 +23,14 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   var selectionsEngine: SelectionsEngine?
   let reuseIdentifier = "CellIdentifier"
   var cellColor = UIColor.black
+  var cellStyle = CellContentStyle()
 
   init(frame: CGRect, withRows rows: [DataRow], andColumns cols: [DataColumn], theme: TableTheme, selectionsEngine: SelectionsEngine, cellStyle: CellContentStyle) {
     super.init(frame: frame)
     self.tableTheme = theme
     self.selectionsEngine = selectionsEngine
     let colorParser = ColorParser()
+    self.cellStyle = cellStyle
     if let colorString = cellStyle.color {
       cellColor = colorParser.fromCSS(cssString: colorString)
     }
@@ -129,6 +131,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
 
     cell.backgroundColor = indexPath.row % 2 == 0 ? .white : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0)
     cell.cellColor = cellColor
+    cell.numberOfLines = cellStyle.rowHeight ?? 1
     if let data = dataRows {
       let dataRow = data[indexPath.row]
       cell.selectionsEngine = self.selectionsEngine
@@ -143,7 +146,8 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
 
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     let width = dataColumns?.reduce(0, {$0 + $1.width!}) ?? frame.width
-    return CGSize(width: width, height: CGFloat(tableTheme!.rowHeight!))
+    let height = cellStyle.rowHeight ?? 1
+    return CGSize(width: width, height: CGFloat(tableTheme!.rowHeight! * height))
   }
 
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

@@ -26,26 +26,31 @@ class PaddedLabel: UILabel, SelectionsListener {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override var intrinsicContentSize: CGSize {
-    numberOfLines = 0       // don't forget!
-    var s = super.intrinsicContentSize
-    s.height += UIEI.top + UIEI.bottom
-    s.width += UIEI.left + UIEI.right
-    return s
-  }
+//  override var intrinsicContentSize: CGSize {
+//    numberOfLines = 0       // don't forget!
+//    var s = super.intrinsicContentSize
+//    s.height += UIEI.top + UIEI.bottom
+//    s.width += UIEI.left + UIEI.right
+//    return s
+//  }
 
   override func drawText(in rect: CGRect) {
-    let r = rect.inset(by: UIEI)
-    super.drawText(in: r)
+    if(numberOfLines != 1) {
+      let r = self.textRect(forBounds: rect.inset(by: UIEI), limitedToNumberOfLines: self.numberOfLines)
+      super.drawText(in: r)
+    } else {
+      let r = rect.inset(by: UIEI)
+      super.drawText(in: r)
+    }
   }
 
   override func textRect(forBounds bounds: CGRect,
                          limitedToNumberOfLines n: Int) -> CGRect {
-    let b = bounds
-    let tr = b.inset(by: UIEI)
-    let ctr = super.textRect(forBounds: tr, limitedToNumberOfLines: 0)
-    // that line of code MUST be LAST in this function, NOT first
-    return ctr
+
+    let ctr = super.textRect(forBounds: bounds, limitedToNumberOfLines: n)
+    let xOffset = self.textAlignment == .left ? PaddedLabel.PaddingSize : -PaddedLabel.PaddingSize
+    return CGRect(x: ctr.origin.x + CGFloat(xOffset), y: ctr.origin.y + 8, width: ctr.size.width, height: ctr.size.height)
+
   }
 
   func makeSelectable(selectionsEngine: SelectionsEngine) {

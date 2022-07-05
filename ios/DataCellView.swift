@@ -13,6 +13,7 @@ class DataCellView: UICollectionViewCell {
   var borderColor = UIColor.black.withAlphaComponent(0.1)
   var selectionsEngine: SelectionsEngine?
   var cellColor: UIColor?
+  var numberOfLines = 1;
   static let minWidth: CGFloat = 40
 
   override init(frame: CGRect) {
@@ -34,7 +35,7 @@ class DataCellView: UICollectionViewCell {
       let col = cols[index]
 
       if let label = views[index] as? PaddedLabel {
-        let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.rowHeight!)
+        let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.rowHeight! * numberOfLines)
         label.textAlignment = element.qNum == nil ? .left : .right
         x += Int(col.width!)
         label.frame = newFrame.integral
@@ -44,7 +45,7 @@ class DataCellView: UICollectionViewCell {
         label.cell = element
         label.checkSelected(selectionsEngine)
         label.textColor = cellColor!
-        
+        label.numberOfLines = numberOfLines
       }
     }
   }
