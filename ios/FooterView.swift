@@ -9,12 +9,14 @@ import Foundation
 class FooterView: UIView {
   var totals: [TotalsCell]?
   var theme: TableTheme?
+  var cellStyle: CellContentStyle?
   var dataIndex = [Int]()
   let labelsFactory = LabelsFactory()
-  init(frame: CGRect, withTotals totals: [TotalsCell], dataColumns: [DataColumn], theme: TableTheme) {
+  init(frame: CGRect, withTotals totals: [TotalsCell], dataColumns: [DataColumn], theme: TableTheme, cellStyle: CellContentStyle) {
     super.init(frame: frame)
     self.totals = totals
     self.theme = theme
+    self.cellStyle = cellStyle
     self.backgroundColor = .white
     self.layer.shadowOpacity = 0.25
     self.layer.shadowOffset = CGSize(width: 0, height: 1)
@@ -35,7 +37,7 @@ class FooterView: UIView {
       let width = col.width ?? 30
       let frame = CGRect(x: currentX, y: 0, width: Int(width), height: theme!.headerHeight!)
       let label = PaddedLabel(frame: frame)
-      label.textColor = ColorParser().fromCSS(cssString: theme!.headerTextColor ?? "black")
+      label.textColor = ColorParser().fromCSS(cssString: cellStyle?.color ?? "black")
       label.font = UIFont.boldSystemFont(ofSize: 14)
       if col.isDim == true && index == 0 {
         label.text = "Totals"

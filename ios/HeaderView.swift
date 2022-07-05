@@ -10,13 +10,13 @@ class HeaderView: UIView {
   let labelsFactory = LabelsFactory()
   var onHeaderPressed: RCTDirectEventBlock?
 
-  init(columns: [DataColumn], withTheme theme: TableTheme, onHeaderPressed: RCTDirectEventBlock? ) {
+  init(columns: [DataColumn], withTheme theme: TableTheme, onHeaderPressed: RCTDirectEventBlock?, headerStyle: HeaderContentStyle ) {
     // calculate intial total width
     let width = columns.reduce(0, {$0 + $1.width!})
     let frame = CGRect(x: 0, y: 0, width: width, height: Double(theme.headerHeight!))
     super.init(frame: frame)
     self.onHeaderPressed = onHeaderPressed
-    addLabels(columns: columns, withTheme: theme)
+    addLabels(columns: columns, withTheme: theme, andHeaderStyle: headerStyle)
     self.layer.shadowColor = UIColor.black.cgColor
     self.layer.shadowOpacity = 0.25
     self.layer.shadowOffset = CGSize(width: 0, height: 1)
@@ -28,7 +28,7 @@ class HeaderView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  func addLabels(columns: [DataColumn], withTheme theme: TableTheme) {
+  func addLabels(columns: [DataColumn], withTheme theme: TableTheme, andHeaderStyle headerStyle: HeaderContentStyle) {
     var currentX = 0
     for column in columns {
       let frame = CGRect(x: currentX, y: 0, width: Int(column.width!), height: theme.headerHeight!)
@@ -36,7 +36,7 @@ class HeaderView: UIView {
       label.onHeaderPressed = onHeaderPressed
 
       label.text = column.label ?? ""
-      label.textColor = ColorParser().fromCSS(cssString: theme.headerTextColor ?? "black")
+      label.textColor = ColorParser().fromCSS(cssString: headerStyle.color ?? "black")
 
       let sizedFont = UIFont.systemFont(ofSize: 14)
       label.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: sizedFont)

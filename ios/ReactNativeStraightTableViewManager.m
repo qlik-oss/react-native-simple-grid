@@ -17,4 +17,7 @@ RCT_EXPORT_VIEW_PROPERTY(onSelectionsChanged, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onColumnsResized, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onHeaderPressed, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onDoubleTap, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(freezeFirstColumn, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(cellContentStyle, NSDictionary*)
+RCT_EXPORT_VIEW_PROPERTY(headerContentStyle, NSDictionary*)
 @end

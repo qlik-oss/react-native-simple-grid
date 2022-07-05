@@ -12,6 +12,7 @@ class DataCellView: UICollectionViewCell {
   var dataRow: DataRow?
   var borderColor = UIColor.black.withAlphaComponent(0.1)
   var selectionsEngine: SelectionsEngine?
+  var cellColor: UIColor?
   static let minWidth: CGFloat = 40
 
   override init(frame: CGRect) {
@@ -42,6 +43,8 @@ class DataCellView: UICollectionViewCell {
         label.column = index
         label.cell = element
         label.checkSelected(selectionsEngine)
+        label.textColor = cellColor!
+        
       }
     }
   }

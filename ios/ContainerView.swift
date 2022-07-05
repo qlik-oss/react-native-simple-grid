@@ -15,6 +15,8 @@ class ContainerView: UIView {
   var totals: [TotalsCell]?
   let selectionsEngine = SelectionsEngine()
   var needsGrabbers = true
+  var cellStyle: CellContentStyle?
+  var headerStyle: HeaderContentStyle?
   weak var headerView: HeaderView?
   weak var collectionView: DataCollectionView?
   weak var scrollView: UIScrollView?
@@ -26,8 +28,8 @@ class ContainerView: UIView {
   @objc var onColumnsResized: RCTDirectEventBlock?
   @objc var onHeaderPressed: RCTDirectEventBlock?
   @objc var onDoubleTap: RCTDirectEventBlock?
-
   @objc var containerWidth: NSNumber?
+  @objc var freezeFirstColumn: Bool = false
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -131,6 +133,30 @@ class ContainerView: UIView {
       }
     }
   }
+  
+  @objc var cellContentStyle: NSDictionary = [:] {
+    didSet {
+      do {
+        let json = try JSONSerialization.data(withJSONObject: cellContentStyle)
+        let decodedCellStyle = try JSONDecoder().decode(CellContentStyle.self, from: json)
+        cellStyle = decodedCellStyle
+      } catch {
+        print(error)
+      }
+    }
+  }
+  
+  @objc var headerContentStyle: NSDictionary = [:] {
+    didSet {
+      do {
+        let json = try JSONSerialization.data(withJSONObject: headerContentStyle)
+        let decodedHeaderStyle = try JSONDecoder().decode(HeaderContentStyle.self, from: json)
+        headerStyle = decodedHeaderStyle
+      } catch {
+        print(error)
+      }
+    }
+  }
 
   override func layoutSubviews() {
     super.layoutSubviews()
@@ -187,7 +213,7 @@ class ContainerView: UIView {
 
   fileprivate func createHeaderView() {
     if  headerView == nil {
-      let newHeaderView = HeaderView(columns: dataColumns!, withTheme: tableTheme!, onHeaderPressed: onHeaderPressed)
+      let newHeaderView = HeaderView(columns: dataColumns!, withTheme: tableTheme!, onHeaderPressed: onHeaderPressed, headerStyle: headerStyle!)
       newHeaderView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray")
       if overlayView == nil {
         let overlayFrame = CGRect(x: 0, y: 0, width: newHeaderView.frame.width + 50, height: self.frame.height)
@@ -200,13 +226,13 @@ class ContainerView: UIView {
         let newRootView = UIView(frame: frame)
         overlayView?.addSubview(newRootView)
         newRootView.addSubview(newHeaderView)
-        let scrollView = UIScrollView(frame: self.frame)
-        scrollView.indicatorStyle = .black
-        scrollView.contentSize = CGSize(width: newHeaderView.frame.width + 25, height: self.frame.height)
-        addSubview(scrollView)
-        scrollView.addSubview(overlayView!)
+        let horizontalScrollView = UIScrollView(frame: self.frame)
+        horizontalScrollView.indicatorStyle = .black
+        horizontalScrollView.contentSize = CGSize(width: newHeaderView.frame.width + 25, height: self.frame.height)
+        addSubview(horizontalScrollView)
+        horizontalScrollView.addSubview(overlayView!)
         rootView = newRootView
-        self.scrollView = scrollView
+        self.scrollView = horizontalScrollView
         decorate(view: newRootView)
         headerView = newHeaderView
       }
@@ -217,7 +243,7 @@ class ContainerView: UIView {
     if let totals = totals {
       guard let height = tableTheme?.headerHeight else { return }
       let frame = CGRect(x: 0, y: self.frame.height - CGFloat(height), width: headerView?.frame.width ?? self.frame.width, height: CGFloat(height))
-      let footerView = FooterView(frame: frame, withTotals: totals, dataColumns: dataColumns!, theme: tableTheme!)
+      let footerView = FooterView(frame: frame, withTotals: totals, dataColumns: dataColumns!, theme: tableTheme!, cellStyle: cellStyle!)
       footerView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "white" )
       rootView?.addSubview(footerView)
       self.footerView = footerView
@@ -235,7 +261,7 @@ class ContainerView: UIView {
       }
 
       let frame = CGRect(x: 0, y: height, width: width, height: Int(totalHeight))
-      let dataCollectionView = DataCollectionView(frame: frame, withRows: dataRows!, andColumns: dataColumns!, theme: tableTheme!, selectionsEngine: selectionsEngine)
+      let dataCollectionView = DataCollectionView(frame: frame, withRows: dataRows!, andColumns: dataColumns!, theme: tableTheme!, selectionsEngine: selectionsEngine, cellStyle: cellStyle!)
       dataCollectionView.onEndReached = self.onEndReached
       dataCollectionView.onColumnsResized = self.onColumnsResized
       dataCollectionView.dataSize = self.dataSize
