@@ -1,3 +1,10 @@
+# [1.1.0-alpha.2](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.1...v1.1.0-alpha.2) (2022-07-05)
+
+
+### Bug Fixes
+
+* add numberOflines ([d77beeb](https://github.com/qlik-oss/react-native-simple-grid/commit/d77beebf41b3a31ad31def35e577c48ced298243))
+
 # [1.1.0-alpha.1](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.11...v1.1.0-alpha.1) (2022-07-05)
 
 
