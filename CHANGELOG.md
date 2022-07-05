@@ -1,3 +1,10 @@
+# [1.1.0-alpha.1](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.11...v1.1.0-alpha.1) (2022-07-05)
+
+
+### Features
+
+* **MD-3360:** colors ([9fb117e](https://github.com/qlik-oss/react-native-simple-grid/commit/9fb117e7e9b93affe7348ffe517247540aedb480))
+
 ## [1.0.11](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.10...v1.0.11) (2022-03-02)
 
 
