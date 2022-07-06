@@ -1,3 +1,10 @@
+# [1.1.0-alpha.3](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.2...v1.1.0-alpha.3) (2022-07-06)
+
+
+### Bug Fixes
+
+* handle null isDim ([eb90ded](https://github.com/qlik-oss/react-native-simple-grid/commit/eb90dedf6b9a6da2665ec0eee5041aa1887e6e0a))
+
 # [1.1.0-alpha.2](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.1...v1.1.0-alpha.2) (2022-07-05)
 
 
