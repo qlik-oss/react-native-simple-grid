@@ -1,3 +1,10 @@
+# [1.1.0-alpha.4](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.3...v1.1.0-alpha.4) (2022-07-06)
+
+
+### Bug Fixes
+
+* (iOS) add text wrapping only if not number ([a2ee707](https://github.com/qlik-oss/react-native-simple-grid/commit/a2ee7077a28bb4d78ab6a1842000e92553baddb0))
+
 # [1.1.0-alpha.3](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.2...v1.1.0-alpha.3) (2022-07-06)
 
 
