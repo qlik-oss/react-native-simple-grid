@@ -12,11 +12,20 @@ class PaddedLabel: UILabel, SelectionsListener {
   var column = 0
   var cell: DataCell?
   var hasSystemImage = false
-  static let PaddingSize = 8
-  let UIEI = UIEdgeInsets(top: 0, left: CGFloat(PaddingSize), bottom: 0, right: CGFloat(PaddingSize)) // as desired
+  static let PaddingSize = CGFloat(8)
+  let UIEI = UIEdgeInsets(top: 0, left: PaddingSize, bottom: 0, right: PaddingSize) // as desired
   let selectedBackgroundColor = ColorParser().fromCSS(cssString: "#009845")
   var selected = false
   var selectionsEngine: SelectionsEngine?
+  
+  private static let numberFormatter = NumberFormatter()
+  
+  override var intrinsicContentSize: CGSize {
+      var s = super.intrinsicContentSize
+      s.height += UIEI.top + UIEI.bottom
+      s.width += UIEI.left + UIEI.right
+      return s
+    }
 
   override init(frame: CGRect) {
     super.init(frame: frame.integral)
@@ -26,31 +35,24 @@ class PaddedLabel: UILabel, SelectionsListener {
     fatalError("init(coder:) has not been implemented")
   }
 
-//  override var intrinsicContentSize: CGSize {
-//    numberOfLines = 0       // don't forget!
-//    var s = super.intrinsicContentSize
-//    s.height += UIEI.top + UIEI.bottom
-//    s.width += UIEI.left + UIEI.right
-//    return s
-//  }
-
   override func drawText(in rect: CGRect) {
     if(numberOfLines != 1) {
-      let r = self.textRect(forBounds: rect.inset(by: UIEI), limitedToNumberOfLines: self.numberOfLines)
+      let numLines = Self.numberFormatter.number(from: self.text ?? "") == nil ? numberOfLines : 1
+      let r = self.textRect(forBounds: rect.inset(by: UIEI), limitedToNumberOfLines: numLines)
       super.drawText(in: r)
     } else {
       let r = rect.inset(by: UIEI)
       super.drawText(in: r)
     }
+    
   }
 
   override func textRect(forBounds bounds: CGRect,
                          limitedToNumberOfLines n: Int) -> CGRect {
 
     let ctr = super.textRect(forBounds: bounds, limitedToNumberOfLines: n)
-    let xOffset = self.textAlignment == .left ? PaddedLabel.PaddingSize : -PaddedLabel.PaddingSize
-    return CGRect(x: ctr.origin.x + CGFloat(xOffset), y: ctr.origin.y + 8, width: ctr.size.width, height: ctr.size.height)
-
+    let xOffset = self.textAlignment == .right ?  -PaddedLabel.PaddingSize : 0
+    return CGRect(x: ctr.origin.x + xOffset, y: ctr.origin.y + PaddedLabel.PaddingSize, width: ctr.size.width, height: ctr.size.height)
   }
 
   func makeSelectable(selectionsEngine: SelectionsEngine) {
