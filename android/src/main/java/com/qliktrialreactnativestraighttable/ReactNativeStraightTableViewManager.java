@@ -74,9 +74,7 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       } else {
         headerViewFactory = new HeaderViewFactory(columns, footer, tableView.getContext(), getHorizontaScrllView(view));
         headerView = headerViewFactory.getHeaderView();
-        AutoLinearLayout footerView = headerViewFactory.getFooterView();
         tableView.setHeaderView(headerView);
-        tableView.setFooterView(footerView);
       }
 
       tableView.setDataColumns(headerViewFactory.getDataColumns());

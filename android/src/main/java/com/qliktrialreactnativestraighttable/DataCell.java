@@ -12,7 +12,7 @@ public class DataCell {
   String  qState;
   int  rowIdx;
   int  colIdx;
-  boolean  isDim;
+  boolean  isDim = false;
   int rawRowIdx;
   int  rawColIdx;
   boolean isNumber;
@@ -23,13 +23,15 @@ public class DataCell {
     qState =  source.getString("qState");
     rowIdx =  source.getInt("rowIdx");
     colIdx =  source.getInt("colIdx");
-    isDim =  source.getBoolean("isDim");
     rawRowIdx =  source.getInt("rawRowIdx");
     rawColIdx =  source.getInt("rawColIdx");
     ReadableType qNumType = source.getType("qNum");
     isNumber = qNumType == ReadableType.Number;
     if (isNumber) {
       textGravity = Gravity.RIGHT;
+    }
+    if (source.hasKey("isDim")) {
+      isDim =  source.getBoolean("isDim");
     }
   }
 
