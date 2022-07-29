@@ -1,3 +1,10 @@
+# [1.1.0-alpha.6](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.5...v1.1.0-alpha.6) (2022-07-29)
+
+
+### Bug Fixes
+
+* add initial total rows ([82cd504](https://github.com/qlik-oss/react-native-simple-grid/commit/82cd5044f898574714154a4f610907f75261dc43))
+
 # [1.1.0-alpha.5](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.4...v1.1.0-alpha.5) (2022-07-29)
 
 
