@@ -19,6 +19,7 @@ class GrabberView: UIView {
   weak var footerView: FooterView?
   weak var scrollView: UIScrollView?
   var pressed = false
+  var trim:CGFloat = 0;
 
   var linePath = UIBezierPath()
   var colIdx = 0
@@ -156,7 +157,7 @@ class GrabberView: UIView {
     super.draw(rect)
     let x = rect.origin.x + rect.width / 2
     linePath.move(to: CGPoint(x: x, y: 0))
-    linePath.addLine(to: CGPoint(x: x, y: rect.height))
+    linePath.addLine(to: CGPoint(x: x, y: rect.height - trim))
     linePath.lineWidth = 1
 
     let color = pressed ? .black : borderColor

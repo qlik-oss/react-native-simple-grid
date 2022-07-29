@@ -23,9 +23,11 @@ class ContainerView: UIView {
   weak var rootView: UIView?
   weak var overlayView: OverlayView?
   weak var footerView: FooterView?
+  weak var totalCellsView: TotalCellsView?
 
   @objc var onEndReached: RCTDirectEventBlock?
   @objc var onColumnsResized: RCTDirectEventBlock?
+  @objc var onVerticalScrollEnded: RCTDirectEventBlock?
   @objc var onHeaderPressed: RCTDirectEventBlock?
   @objc var onDoubleTap: RCTDirectEventBlock?
   @objc var containerWidth: NSNumber?
@@ -166,6 +168,7 @@ class ContainerView: UIView {
     createFooterView()
     createDataCollectionView()
     createGrabbers()
+    createTotalCellsView()
   }
 
   func calculateDefaultColWidth() {
@@ -242,7 +245,7 @@ class ContainerView: UIView {
   fileprivate func createFooterView() {
     if let totals = totals {
       guard let height = tableTheme?.headerHeight else { return }
-      let frame = CGRect(x: 0, y: self.frame.height - CGFloat(height), width: headerView?.frame.width ?? self.frame.width, height: CGFloat(height))
+      let frame = CGRect(x: 0, y: self.frame.height - CGFloat(height * 2), width: headerView?.frame.width ?? self.frame.width, height: CGFloat(height))
       let footerView = FooterView(frame: frame, withTotals: totals, dataColumns: dataColumns!, theme: tableTheme!, cellStyle: cellStyle!)
       footerView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "white" )
       rootView?.addSubview(footerView)
@@ -255,7 +258,7 @@ class ContainerView: UIView {
     if collectionView == nil {
       let width = Int(headerView?.frame.width ?? frame.width)
       let height = tableTheme?.headerHeight ?? 54
-      var totalHeight = self.frame.height - CGFloat(height)
+      var totalHeight = self.frame.height - CGFloat(height * 2) // 2 is header + totals
       if footerView != nil {
         totalHeight -= CGFloat(height)
       }
@@ -270,6 +273,24 @@ class ContainerView: UIView {
       collectionView = dataCollectionView
       rootView!.addSubview(dataCollectionView)
     }
+  }
+  
+  fileprivate func createTotalCellsView() {
+    if(totalCellsView == nil) {
+      guard let height = tableTheme?.headerHeight else { return }
+      let frame = CGRect(x: 0, y: self.frame.height - CGFloat(height), width: self.frame.width, height: CGFloat(height))
+      let view = TotalCellsView(frame: frame)
+      view.backgroundColor = .white
+      view.bounds = frame.insetBy(dx: 8, dy: 8)
+      view.createTextView()
+      addSubview(view)
+      self.totalCellsView = view
+      collectionView?.totalCellsView = view
+      if let dataSize = dataSize {
+        view.totalRows = dataSize.qcy ?? 0
+      }
+    }
+    
   }
 
   fileprivate func createGrabbers() {
@@ -289,6 +310,7 @@ class ContainerView: UIView {
           grabber.overlayView = self.overlayView
           grabber.footerView = self.footerView
           grabber.scrollView = self.scrollView
+          grabber.trim = CGFloat(tableTheme.headerHeight ?? 54)
           overlayView!.addSubview(grabber)
           startX += col.width!
           colIdx += 1

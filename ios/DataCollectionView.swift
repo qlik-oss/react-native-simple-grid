@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
   enum DataCollectionViewError: Error {
       case noCellForIdentifier
   }
@@ -24,6 +24,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   let reuseIdentifier = "CellIdentifier"
   var cellColor = UIColor.black
   var cellStyle = CellContentStyle()
+  weak var totalCellsView: TotalCellsView?
 
   init(frame: CGRect, withRows rows: [DataRow], andColumns cols: [DataColumn], theme: TableTheme, selectionsEngine: SelectionsEngine, cellStyle: CellContentStyle) {
     super.init(frame: frame)
@@ -103,6 +104,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     uiCollectionView.register(DataCellView.self, forCellWithReuseIdentifier: reuseIdentifier)
     uiCollectionView.delegate = self
     uiCollectionView.dataSource = self
+//    uiCollectionView.sco
     uiCollectionView.indicatorStyle = .black
     uiCollectionView.backgroundColor = .white
     childCollectionView = uiCollectionView
@@ -172,6 +174,29 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
           self.loading = true
           requestOnEndReached(nil)
         }
+      }
+    }
+  }
+  
+  public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    signalVisibleRows()
+  }
+ 
+  public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    signalVisibleRows();
+  }
+  
+  public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    signalVisibleRows();
+  }
+  
+  public func signalVisibleRows() {
+    if let childCollectionView = childCollectionView {
+      let arrayOfVisibleItems = childCollectionView.indexPathsForVisibleItems.sorted()
+      let firstItem = arrayOfVisibleItems.first;
+      let lastItem = arrayOfVisibleItems.last;
+      if let totalCellsView = totalCellsView, let first = firstItem, let last = lastItem {
+        totalCellsView.updateTotals(first: first, last: last)
       }
     }
   }
