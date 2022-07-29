@@ -104,7 +104,6 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     uiCollectionView.register(DataCellView.self, forCellWithReuseIdentifier: reuseIdentifier)
     uiCollectionView.delegate = self
     uiCollectionView.dataSource = self
-//    uiCollectionView.sco
     uiCollectionView.indicatorStyle = .black
     uiCollectionView.backgroundColor = .white
     childCollectionView = uiCollectionView
@@ -116,6 +115,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     let left = uiCollectionView.leftAnchor.constraint(equalTo: self.leftAnchor)
     let right = uiCollectionView.rightAnchor.constraint(equalTo: self.rightAnchor)
     self.addConstraints([top, bottom, left, right])
+    signalVisibleRows()
 
   }
 

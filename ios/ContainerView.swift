@@ -288,6 +288,12 @@ class ContainerView: UIView {
       collectionView?.totalCellsView = view
       if let dataSize = dataSize {
         view.totalRows = dataSize.qcy ?? 0
+        if let collectionView = collectionView {
+          DispatchQueue.main.async {
+              // your stuff here executing after collectionView has been layouted
+            collectionView.signalVisibleRows()
+          }
+        }
       }
     }
     

@@ -36,10 +36,11 @@ class TotalCellsView : UIView {
     addSubview(view)
     self.textView = view;
   }
+  
   func updateTotals(first:IndexPath, last: IndexPath) {
     if let textView = textView {
       if let f = first.last, let l = last.last {
-        textView.text = " \(f) - \(l) of \(totalRows)"
+        textView.text = "\(f) - \(l) of \(totalRows)"
       }
     }
   }
