@@ -1,3 +1,10 @@
+# [1.1.0-alpha.5](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.4...v1.1.0-alpha.5) (2022-07-29)
+
+
+### Features
+
+* **MD-3363:** total rows cound ios ([fa0bbbd](https://github.com/qlik-oss/react-native-simple-grid/commit/fa0bbbd30fffa1c5f0e908e2754e6cff8958de1e))
+
 # [1.1.0-alpha.4](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.3...v1.1.0-alpha.4) (2022-07-06)
 
 
