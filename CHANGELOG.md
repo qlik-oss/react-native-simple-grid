@@ -1,3 +1,10 @@
+# [1.1.0-alpha.9](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.8...v1.1.0-alpha.9) (2022-08-04)
+
+
+### Bug Fixes
+
+* add more horizontal padding ([47c3975](https://github.com/qlik-oss/react-native-simple-grid/commit/47c39751212d88be6eab8b8ea7c20e8940e57fdf))
+
 # [1.1.0-alpha.8](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.7...v1.1.0-alpha.8) (2022-08-04)
 
 
