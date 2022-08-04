@@ -39,6 +39,7 @@ class DataCellView: UICollectionViewCell {
           if let miniChart = views[index] as? MiniChartView {
             miniChart.frame = newFrame.integral
             miniChart.setChartData(data: element, representedAs: representation)
+            miniChart.setNeedsDisplay()
           }
         }
         else {
