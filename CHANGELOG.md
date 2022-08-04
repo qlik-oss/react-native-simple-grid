@@ -1,3 +1,10 @@
+# [1.1.0-alpha.7](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.6...v1.1.0-alpha.7) (2022-08-04)
+
+
+### Features
+
+* add mini-charts for ios ([7f7ee13](https://github.com/qlik-oss/react-native-simple-grid/commit/7f7ee13c8b79371a4936526fcaa737750d87c5fd))
+
 # [1.1.0-alpha.6](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.5...v1.1.0-alpha.6) (2022-07-29)
 
 
