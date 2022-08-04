@@ -1,3 +1,10 @@
+# [1.1.0-alpha.10](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.9...v1.1.0-alpha.10) (2022-08-04)
+
+
+### Features
+
+* conditional coloring ioS ([0892713](https://github.com/qlik-oss/react-native-simple-grid/commit/0892713069484ebfb25cc0f860fc7d864414f134))
+
 # [1.1.0-alpha.9](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.8...v1.1.0-alpha.9) (2022-08-04)
 
 
