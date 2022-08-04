@@ -69,9 +69,9 @@ class MiniChartRenderer {
   }
   
   func getBandWidth(rect: CGRect, data: Matrix) {
+    horizontalPadding = 10;
     let count = data.qMatrix?.count ?? 1
-    horizontalPadding = rect.width * 0.05;
-    let width = rect.width * 0.95;
+    let width = rect.width - horizontalPadding;
     let totalBandWidth =  width / CGFloat(count)
     bandWidth = totalBandWidth * 0.8
     padding = totalBandWidth * 0.1
