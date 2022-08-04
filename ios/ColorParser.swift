@@ -26,6 +26,9 @@ class ColorParser {
     "teal": .systemTeal]
 
   func fromCSS(cssString: String) -> UIColor {
+    if(cssString == "none") {
+      return UIColor.clear
+    }
     let hex = cssString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
     if cssString.hasPrefix("#") {
       var int = UInt64()

@@ -6,6 +6,16 @@
 //
 
 import Foundation
+struct MatrixCell: Decodable {
+  let qNum: Double?
+}
+
+struct Matrix: Decodable {
+  let qMatrix: [[MatrixCell]]?
+  let qMax: Double?
+  let qMin: Double?
+}
+
 struct DataCell: Decodable {
   var qText: String?
   var qNum: Double?
@@ -16,6 +26,8 @@ struct DataCell: Decodable {
   var isDim: Bool?
   var rawRowIdx: Double?
   var rawColIdx: Double?
+  var qMiniChart: Matrix?
+  
   enum CodingKeys: String, CodingKey {
       case qText
       case qNum
@@ -26,6 +38,7 @@ struct DataCell: Decodable {
       case isDim
       case rawRowIdx
       case rawColIdx
+      case qMiniChart
   }
 
   init(from decoder: Decoder) throws {
@@ -38,6 +51,7 @@ struct DataCell: Decodable {
     self.rawRowIdx = try container.decodeIfPresent(Double.self, forKey: .rawRowIdx) ?? -1
     self.rawColIdx = try container.decodeIfPresent(Double.self, forKey: .rawColIdx) ?? -1
     self.isDim = try container.decodeIfPresent(Bool.self, forKey: .isDim) ?? false
+    self.qMiniChart = try container.decodeIfPresent(Matrix.self, forKey: .qMiniChart) ?? nil
 
     if let temp = try? container.decode(Double.self, forKey: .qNum) {
       self.qNum = temp

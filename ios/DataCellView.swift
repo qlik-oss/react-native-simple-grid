@@ -33,20 +33,31 @@ class DataCellView: UICollectionViewCell {
     let views = contentView.subviews
     row.cells.enumerated().forEach {(index, element) in
       let col = cols[index]
-
-      if let label = views[index] as? PaddedLabel {
-        let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.rowHeight! * numberOfLines)
-        label.textAlignment = element.qNum == nil ? .left : .right
-        x += Int(col.width!)
-        label.frame = newFrame.integral
-        label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
-        label.text = element.qText
-        label.column = index
-        label.cell = element
-        label.checkSelected(selectionsEngine)
-        label.textColor = cellColor!
-        label.numberOfLines = numberOfLines
+      let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.rowHeight! * numberOfLines)
+      if let representation = col.representation {
+        if representation.type == "miniChart" {
+          if let miniChart = views[index] as? MiniChartView {
+            miniChart.frame = newFrame.integral
+            miniChart.setChartData(data: element, representedAs: representation)
+          }
+        }
+        else {
+          if let label = views[index] as? PaddedLabel {
+            
+            label.textAlignment = element.qNum == nil ? .left : .right
+            label.frame = newFrame.integral
+            label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
+            label.text = element.qText
+            label.column = index
+            label.cell = element
+            label.checkSelected(selectionsEngine)
+            label.textColor = cellColor!
+            label.numberOfLines = numberOfLines
+          }
+        }
       }
+      x += Int(col.width!)
+      
     }
   }
 
@@ -56,16 +67,26 @@ class DataCellView: UICollectionViewCell {
       var x = 0
       clearAllCells()
       for col in cols {
-        let label = PaddedLabel(frame: .zero)
-        if col.isDim == true {
-          if let selectionsEngine = selectionsEngine {
-              label.makeSelectable(selectionsEngine: selectionsEngine)
+       
+        if let representation = col.representation {
+          if(representation.type == "miniChart") {
+            let miniChartView = MiniChartView(frame: .zero)
+            contentView.addSubview(miniChartView)
+          }
+          else {
+            let label = PaddedLabel(frame: .zero)
+            if col.isDim == true {
+              if let selectionsEngine = selectionsEngine {
+                  label.makeSelectable(selectionsEngine: selectionsEngine)
+              }
+            }
+            let sizedFont = UIFont.systemFont(ofSize: 14)
+            label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: sizedFont)
+            label.adjustsFontForContentSizeCategory = true
+            contentView.addSubview(label)
           }
         }
-        let sizedFont = UIFont.systemFont(ofSize: 14)
-        label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: sizedFont)
-        label.adjustsFontForContentSizeCategory = true
-        contentView.addSubview(label)
+        
         x += Int(col.width!)
       }
     }
@@ -93,19 +114,22 @@ class DataCellView: UICollectionViewCell {
       }
       let new = CGRect(x: old.origin.x + translation.x, y: 0, width: newNeighbourWidth, height: old.height)
       v.frame = new
+      v.setNeedsDisplay()
     }
 
-    resizeLabel(view: view, width: newWidth)
-
+    resizeContentView(view: view, width: newWidth)
+    
     return true
   }
 
-  fileprivate func resizeLabel(view: UIView, width: CGFloat) {
+  fileprivate func resizeContentView(view: UIView, width: CGFloat) {
     if view.frame.width != width {
       let oldFrame = view.frame
       let newFrame = CGRect(x: oldFrame.origin.x, y: 0, width: width, height: oldFrame.height)
       view.frame = newFrame
+      view.setNeedsDisplay()
     }
+   
   }
 
   override func draw(_ rect: CGRect) {
