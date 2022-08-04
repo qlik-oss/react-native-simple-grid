@@ -1,3 +1,10 @@
+# [1.1.0-alpha.8](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.7...v1.1.0-alpha.8) (2022-08-04)
+
+
+### Bug Fixes
+
+* call .setNeedsDisplay when view is recycled ([5591a96](https://github.com/qlik-oss/react-native-simple-grid/commit/5591a962fc5e1927fe34585726b9d5cb529aa93c))
+
 # [1.1.0-alpha.7](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.6...v1.1.0-alpha.7) (2022-08-04)
 
 
