@@ -6,14 +6,38 @@
 //
 
 import Foundation
+
+struct StylingInfo {
+  var backgroundColorIdx = 0
+  var foregroundColorIdx = 0
+}
+
 struct MatrixCell: Decodable {
   let qNum: Double?
+  let qText: String?
+  enum CodingKeys: String, CodingKey {
+    case qNum, qText
+  }
+  
+  init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    self.qText = try container.decodeIfPresent(String.self, forKey: .qText) ?? nil
+    if let temp = try? container.decode(Double.self, forKey: .qNum) {
+      self.qNum = temp
+    } else {
+      self.qNum = nil
+    }
+  }
 }
 
 struct Matrix: Decodable {
   let qMatrix: [[MatrixCell]]?
   let qMax: Double?
   let qMin: Double?
+}
+
+struct AttriExpr: Decodable {
+  let qValues: [MatrixCell]?
 }
 
 struct DataCell: Decodable {
@@ -27,20 +51,22 @@ struct DataCell: Decodable {
   var rawRowIdx: Double?
   var rawColIdx: Double?
   var qMiniChart: Matrix?
+  var qAttrExps: AttriExpr?
   
   enum CodingKeys: String, CodingKey {
-      case qText
-      case qNum
-      case qElemNumber
-      case qState
-      case rowIdx
-      case colIdx
-      case isDim
-      case rawRowIdx
-      case rawColIdx
-      case qMiniChart
+    case qText
+    case qNum
+    case qElemNumber
+    case qState
+    case rowIdx
+    case colIdx
+    case isDim
+    case rawRowIdx
+    case rawColIdx
+    case qMiniChart
+    case qAttrExps
   }
-
+  
   init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     self.qText = try container.decodeIfPresent(String.self, forKey: .qText) ?? ""
@@ -52,14 +78,15 @@ struct DataCell: Decodable {
     self.rawColIdx = try container.decodeIfPresent(Double.self, forKey: .rawColIdx) ?? -1
     self.isDim = try container.decodeIfPresent(Bool.self, forKey: .isDim) ?? false
     self.qMiniChart = try container.decodeIfPresent(Matrix.self, forKey: .qMiniChart) ?? nil
-
+    self.qAttrExps = try container.decodeIfPresent(AttriExpr.self, forKey: .qAttrExps) ?? nil
+    
     if let temp = try? container.decode(Double.self, forKey: .qNum) {
       self.qNum = temp
     } else {
       self.qNum = nil
     }
   }
-
+  
 }
 
 struct DataRow: Decodable {
@@ -77,7 +104,7 @@ struct DataRow: Decodable {
   init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
     var tempArray = [DataCell]()
-
+    
     for key in container.allKeys where key.stringValue != "key" {
       let decodedCell = try container.decode(DataCell.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
       tempArray.append(decodedCell)

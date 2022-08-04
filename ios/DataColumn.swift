@@ -51,8 +51,7 @@ struct DataColumn: Codable {
   let sortDirection: String?
   let dataColIdx: Double?
   let representation: Representation?
-  let max: Double?
-  let min: Double?
+  let stylingInfo: [String]?
 }
 
 struct TotalsCell: Decodable {

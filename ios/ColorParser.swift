@@ -47,8 +47,12 @@ class ColorParser {
       return UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
     } else if hex.hasPrefix("rgb") {
       var rgbString = hex.replacingOccurrences(of: "rgb(", with: "")
-      rgbString = hex.replacingOccurrences(of: "rgba(", with: "")
-      rgbString = hex.replacingOccurrences(of: ")", with: "")
+      if(hex.hasPrefix("rgba")) {
+        rgbString = hex.replacingOccurrences(of: "rgba(", with: "")
+      } else {
+        rgbString = hex.replacingOccurrences(of: "rgb(", with: "")
+      }
+      rgbString = rgbString.replacingOccurrences(of: ")", with: "")
       let split = rgbString.split(separator: ",")
       var values: [Double] = [Double]()
       for s in split {

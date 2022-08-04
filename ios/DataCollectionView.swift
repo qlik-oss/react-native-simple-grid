@@ -12,6 +12,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       case noCellForIdentifier
   }
 
+  var stylingInfo = StylingInfo()
   var dataColumns: [DataColumn]?
   var dataRows: [DataRow]?
   var dataSize: DataSize?
@@ -97,6 +98,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   fileprivate func setData(columns: [DataColumn], withRows rows: [DataRow]) {
     dataColumns = columns
     dataRows = rows
+    setupDataCols()
     let flowLayout = UICollectionViewFlowLayout()
     let uiCollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
     uiCollectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -118,6 +120,26 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     signalVisibleRows()
 
   }
+  
+  fileprivate func setupDataCols() {
+    guard let dataColumns = dataColumns else {
+      return
+    }
+    
+    for col in dataColumns {
+      if let stylingInfo = col.stylingInfo {
+        var index = 0
+        for style in stylingInfo {
+          if( style == "cellBackgroundColor") {
+            self.stylingInfo.backgroundColorIdx = index;
+          } else if (style == "cellForegroundColor") {
+            self.stylingInfo.foregroundColorIdx = index
+          }
+          index += 1
+        }
+      }
+    }
+  }
 
   func appendData(rows: [DataRow]) {
     DispatchQueue.main.async {
@@ -137,7 +159,10 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     if let data = dataRows {
       let dataRow = data[indexPath.row]
       cell.selectionsEngine = self.selectionsEngine
-      cell.setData(row: dataRow, withColumns: dataColumns!, theme: tableTheme!, selectionsEngine: selectionsEngine!)
+      cell.setData(row: dataRow, withColumns: dataColumns!,
+                   theme: tableTheme!,
+                   selectionsEngine: selectionsEngine!,
+                   withStyle: self.stylingInfo)
     }
     return cell
   }

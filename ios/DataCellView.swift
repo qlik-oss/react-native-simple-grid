@@ -7,6 +7,18 @@
 
 import Foundation
 import UIKit
+
+func isDarkColor(color: UIColor) -> Bool {
+  if color == .clear {
+    return false
+  }
+  var r, g, b, a: CGFloat
+  (r, g, b, a) = (0, 0, 0, 0)
+  color.getRed(&r, green: &g, blue: &b, alpha: &a)
+  let lum = 0.2126 * r + 0.7152 * g + 0.0722 * b
+  return  lum < 0.50
+}
+
 class DataCellView: UICollectionViewCell {
   var border = UIBezierPath()
   var dataRow: DataRow?
@@ -14,21 +26,22 @@ class DataCellView: UICollectionViewCell {
   var selectionsEngine: SelectionsEngine?
   var cellColor: UIColor?
   var numberOfLines = 1;
+  
   static let minWidth: CGFloat = 40
-
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
   }
-
+  
   required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
-
-  func setData(row: DataRow, withColumns cols: [DataColumn], theme: TableTheme, selectionsEngine: SelectionsEngine) {
+  
+  func setData(row: DataRow, withColumns cols: [DataColumn], theme: TableTheme, selectionsEngine: SelectionsEngine, withStyle styleInfo: StylingInfo) {
     dataRow = row
     borderColor = ColorParser().fromCSS(cssString: theme.borderBackgroundColor ?? "#F0F0F0")
     createCells(row: row, withColumns: cols)
-
+    
     var x = 0
     let views = contentView.subviews
     row.cells.enumerated().forEach {(index, element) in
@@ -52,7 +65,9 @@ class DataCellView: UICollectionViewCell {
             label.column = index
             label.cell = element
             label.checkSelected(selectionsEngine)
-            label.textColor = cellColor!
+            let backgroundColor = getBackgroundColor(col: col, element: element, withStyle: styleInfo)
+            label.backgroundColor = backgroundColor
+            label.textColor = isDarkColor(color: backgroundColor) ? .white : getForgroundColor(col: col, element: element, withStyle: styleInfo)
             label.numberOfLines = numberOfLines
           }
         }
@@ -61,14 +76,32 @@ class DataCellView: UICollectionViewCell {
       
     }
   }
-
+  
+  fileprivate func getBackgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
+    guard let attributes = element.qAttrExps else {return .clear}
+    guard let values = attributes.qValues else {return .clear}
+    let colorString = values[styleInfo.backgroundColorIdx].qText ?? "none"
+    let colorValue = ColorParser().fromCSS(cssString: colorString.lowercased())
+    return colorValue
+  }
+  
+  fileprivate func getForgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
+    guard let attributes = element.qAttrExps else {return cellColor!}
+    guard let values = attributes.qValues else {return cellColor!}
+    if let qText = values[styleInfo.foregroundColorIdx].qText {
+      let colorValue = ColorParser().fromCSS(cssString: qText.lowercased())
+      return colorValue
+    }
+    return cellColor!
+  }
+  
   fileprivate func createCells(row: DataRow, withColumns cols: [DataColumn]) {
     let views = contentView.subviews
     if views.count < row.cells.count {
       var x = 0
       clearAllCells()
       for col in cols {
-       
+        
         if let representation = col.representation {
           if(representation.type == "miniChart") {
             let miniChartView = MiniChartView(frame: .zero)
@@ -78,7 +111,7 @@ class DataCellView: UICollectionViewCell {
             let label = PaddedLabel(frame: .zero)
             if col.isDim == true {
               if let selectionsEngine = selectionsEngine {
-                  label.makeSelectable(selectionsEngine: selectionsEngine)
+                label.makeSelectable(selectionsEngine: selectionsEngine)
               }
             }
             let sizedFont = UIFont.systemFont(ofSize: 14)
@@ -92,13 +125,13 @@ class DataCellView: UICollectionViewCell {
       }
     }
   }
-
+  
   fileprivate func clearAllCells() {
     for view in contentView.subviews {
       view.removeFromSuperview()
     }
   }
-
+  
   func updateSize(_ translation: CGPoint, forColumn index: Int) -> Bool {
     let view = contentView.subviews[index]
     let newWidth = view.frame.width + translation.x
@@ -117,12 +150,12 @@ class DataCellView: UICollectionViewCell {
       v.frame = new
       v.setNeedsDisplay()
     }
-
+    
     resizeContentView(view: view, width: newWidth)
     
     return true
   }
-
+  
   fileprivate func resizeContentView(view: UIView, width: CGFloat) {
     if view.frame.width != width {
       let oldFrame = view.frame
@@ -130,19 +163,19 @@ class DataCellView: UICollectionViewCell {
       view.frame = newFrame
       view.setNeedsDisplay()
     }
-   
+    
   }
-
+  
   override func draw(_ rect: CGRect) {
     super.draw(rect)
-
+    
     border.move(to: CGPoint(x: 0, y: rect.height))
     border.addLine(to: CGPoint(x: rect.width, y: rect.height))
     border.close()
-
+    
     border.lineWidth = 1
     borderColor.set()
     border.stroke()
-
+    
   }
 }
