@@ -1,3 +1,10 @@
+# [1.1.0-alpha.11](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.10...v1.1.0-alpha.11) (2022-08-05)
+
+
+### Bug Fixes
+
+* handle links for ios ([71f7c4e](https://github.com/qlik-oss/react-native-simple-grid/commit/71f7c4e0ebd1170242beb387f0907ffa579f2ec3))
+
 # [1.1.0-alpha.10](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.9...v1.1.0-alpha.10) (2022-08-04)
 
 
