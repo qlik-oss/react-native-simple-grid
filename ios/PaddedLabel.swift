@@ -8,7 +8,7 @@
 import Foundation
 class PaddedLabel: UILabel, SelectionsListener {
   var id: Int = 0
-
+  
   var column = 0
   var cell: DataCell?
   var hasSystemImage = false
@@ -17,24 +17,25 @@ class PaddedLabel: UILabel, SelectionsListener {
   let selectedBackgroundColor = ColorParser().fromCSS(cssString: "#009845")
   var selected = false
   var selectionsEngine: SelectionsEngine?
+  var url: URL?
   
   private static let numberFormatter = NumberFormatter()
   
   override var intrinsicContentSize: CGSize {
-      var s = super.intrinsicContentSize
-      s.height += UIEI.top + UIEI.bottom
-      s.width += UIEI.left + UIEI.right
-      return s
-    }
-
+    var s = super.intrinsicContentSize
+    s.height += UIEI.top + UIEI.bottom
+    s.width += UIEI.left + UIEI.right
+    return s
+  }
+  
   override init(frame: CGRect) {
     super.init(frame: frame.integral)
   }
-
+  
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
+  
   override func drawText(in rect: CGRect) {
     if(numberOfLines != 1) {
       let numLines = Self.numberFormatter.number(from: self.text ?? "") == nil ? numberOfLines : 1
@@ -46,38 +47,42 @@ class PaddedLabel: UILabel, SelectionsListener {
     }
     
   }
-
+  
   override func textRect(forBounds bounds: CGRect,
                          limitedToNumberOfLines n: Int) -> CGRect {
-
+    
     let ctr = super.textRect(forBounds: bounds, limitedToNumberOfLines: n)
     let xOffset = self.textAlignment == .right ?  -PaddedLabel.PaddingSize : 0
     return CGRect(x: ctr.origin.x + xOffset, y: ctr.origin.y + PaddedLabel.PaddingSize, width: ctr.size.width, height: ctr.size.height)
   }
-
+  
   func makeSelectable(selectionsEngine: SelectionsEngine) {
     isUserInteractionEnabled = true
     self.selectionsEngine = selectionsEngine
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(labelClicked(_:)))
-
+    
     addGestureRecognizer(tapGesture)
     selectionsEngine.addListener(listener: self)
   }
-
+  
   @objc func labelClicked(_ sender: UITapGestureRecognizer) {
     if sender.state == .ended {
-      let sig = SelectionsEngine.buildSelectionSignator(from: cell!)
-      if let selectionsEngine = selectionsEngine {
-        selectionsEngine.toggleSelected(sig)
+      if let url = url {
+        UIApplication.shared.open(url)
+      } else {
+        let sig = SelectionsEngine.buildSelectionSignator(from: cell!)
+        if let selectionsEngine = selectionsEngine {
+          selectionsEngine.toggleSelected(sig)
+        }
       }
     }
   }
-
+  
   func clearSelected() {
     selected = false
     updateBackground()
   }
-
+  
   func toggleSelected(data: String) {
     let sig = SelectionsEngine.signatureKey(from: data)
     let comp = SelectionsEngine.signatureKey(from: cell!)
@@ -86,17 +91,17 @@ class PaddedLabel: UILabel, SelectionsListener {
       updateBackground()
     }
   }
-
+  
   func checkSelected(_ selectionsEngine: SelectionsEngine) {
     selected = selectionsEngine.contains(cell!)
     updateBackground()
   }
-
+  
   fileprivate func updateBackground() {
     backgroundColor = selected ? selectedBackgroundColor     : .clear
     textColor = selected ? .white : .black
   }
-
+  
   func addSystemImage(imageName: String, afterLabel bolAfterLabel: Bool = false) {
     if #available(iOS 13.0, *) {
       let config = UIImage.SymbolConfiguration(pointSize: 10)
@@ -106,7 +111,7 @@ class PaddedLabel: UILabel, SelectionsListener {
       imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageAttachment.image!.size.width, height: imageAttachment.image!.size.height)
       let attachmentString = NSAttributedString(attachment: imageAttachment)
       let completeText = NSMutableAttributedString(string: "")
-
+      
       completeText.append(attachmentString)
       if !hasSystemImage {
         completeText.append(NSAttributedString(string: " "))
@@ -126,11 +131,36 @@ class PaddedLabel: UILabel, SelectionsListener {
       // no icon :(
     }
   }
-
+  
   func removeSystemImage() {
     let text = self.text?.trimmingCharacters(in: .whitespaces)
     self.attributedText = nil
     self.text = text
     self.hasSystemImage = false
+  }
+  
+  func checkForUrls() {
+    let urls = checkForUrls(text: self.text ?? "")
+    if(urls.count > 0) {
+      self.text = urls[0].absoluteString
+      self.url = urls[0]
+      self.textColor = UIColor.systemBlue
+    }
+  }
+  
+  fileprivate func checkForUrls(text: String) -> [URL] {
+    let types: NSTextCheckingResult.CheckingType = .link
+    
+    do {
+      let detector = try NSDataDetector(types: types.rawValue)
+      
+      let matches = detector.matches(in: text, options: .reportCompletion, range: NSMakeRange(0, text.count))
+      
+      return matches.compactMap({$0.url})
+    } catch let error {
+      debugPrint(error.localizedDescription)
+    }
+    
+    return []
   }
 }

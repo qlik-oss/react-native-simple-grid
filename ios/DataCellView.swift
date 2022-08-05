@@ -69,6 +69,7 @@ class DataCellView: UICollectionViewCell {
             label.backgroundColor = backgroundColor
             label.textColor = isDarkColor(color: backgroundColor) ? .white : getForgroundColor(col: col, element: element, withStyle: styleInfo)
             label.numberOfLines = numberOfLines
+            label.checkForUrls()
           }
         }
       }
@@ -76,6 +77,8 @@ class DataCellView: UICollectionViewCell {
       
     }
   }
+  
+ 
   
   fileprivate func getBackgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
     guard let attributes = element.qAttrExps else {return .clear}
