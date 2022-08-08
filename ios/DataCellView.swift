@@ -54,6 +54,12 @@ class DataCellView: UICollectionViewCell {
             miniChart.setChartData(data: element, representedAs: representation)
             miniChart.setNeedsDisplay()
           }
+        } else if(representation.type == "image") {
+          if let imageView = views[index] as? ImageCell {
+            imageView.frame = newFrame.integral
+            imageView.setData(data: element, representedAs: representation)
+            imageView.setNeedsDisplay()
+          }
         }
         else {
           if let label = views[index] as? PaddedLabel {
@@ -89,6 +95,11 @@ class DataCellView: UICollectionViewCell {
   }
   
   fileprivate func getForgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
+    if let indicator = element.indicator {
+      if let color = indicator.color {
+        return ColorParser().fromCSS(cssString: color.lowercased())
+      }
+    }
     guard let attributes = element.qAttrExps else {return cellColor!}
     guard let values = attributes.qValues else {return cellColor!}
     if let qText = values[styleInfo.foregroundColorIdx].qText {
@@ -109,6 +120,9 @@ class DataCellView: UICollectionViewCell {
           if(representation.type == "miniChart") {
             let miniChartView = MiniChartView(frame: .zero)
             contentView.addSubview(miniChartView)
+          } else if (representation.type == "image") {
+            let imageCell = ImageCell(frame: .zero)
+            contentView.addSubview(imageCell)
           }
           else {
             let label = PaddedLabel(frame: .zero)

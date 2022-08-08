@@ -39,6 +39,7 @@ struct Representation: Codable {
   let miniChart: MiniChart?
   let globalMax: Double?
   let globalMin: Double?
+  let imageSize: String?
 }
 
 struct DataColumn: Codable {

@@ -12,6 +12,11 @@ struct StylingInfo {
   var foregroundColorIdx = 0
 }
 
+struct Indicator: Decodable {
+  var color: String?
+  var icon: String?
+}
+
 struct MatrixCell: Decodable {
   let qNum: Double?
   let qText: String?
@@ -52,6 +57,7 @@ struct DataCell: Decodable {
   var rawColIdx: Double?
   var qMiniChart: Matrix?
   var qAttrExps: AttriExpr?
+  var indicator: Indicator?
   
   enum CodingKeys: String, CodingKey {
     case qText
@@ -65,6 +71,7 @@ struct DataCell: Decodable {
     case rawColIdx
     case qMiniChart
     case qAttrExps
+    case indicator
   }
   
   init(from decoder: Decoder) throws {
@@ -79,6 +86,7 @@ struct DataCell: Decodable {
     self.isDim = try container.decodeIfPresent(Bool.self, forKey: .isDim) ?? false
     self.qMiniChart = try container.decodeIfPresent(Matrix.self, forKey: .qMiniChart) ?? nil
     self.qAttrExps = try container.decodeIfPresent(AttriExpr.self, forKey: .qAttrExps) ?? nil
+    self.indicator = try container.decodeIfPresent(Indicator.self, forKey: .indicator) ?? nil
     
     if let temp = try? container.decode(Double.self, forKey: .qNum) {
       self.qNum = temp
