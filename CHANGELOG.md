@@ -1,3 +1,10 @@
+# [1.1.0-alpha.12](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.11...v1.1.0-alpha.12) (2022-08-08)
+
+
+### Features
+
+* support images in table ios ([91b9180](https://github.com/qlik-oss/react-native-simple-grid/commit/91b9180c4691c6e8e391c88e9d2f066154b6f674))
+
 # [1.1.0-alpha.11](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.10...v1.1.0-alpha.11) (2022-08-05)
 
 
