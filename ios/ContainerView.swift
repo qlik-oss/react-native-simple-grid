@@ -243,13 +243,15 @@ class ContainerView: UIView {
   }
 
   fileprivate func createFooterView() {
-    if let totals = totals {
-      guard let height = tableTheme?.headerHeight else { return }
-      let frame = CGRect(x: 0, y: self.frame.height - CGFloat(height * 2), width: headerView?.frame.width ?? self.frame.width, height: CGFloat(height))
-      let footerView = FooterView(frame: frame, withTotals: totals, dataColumns: dataColumns!, theme: tableTheme!, cellStyle: cellStyle!)
-      footerView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "white" )
-      rootView?.addSubview(footerView)
-      self.footerView = footerView
+    if( self.footerView == nil) {
+      if let totals = totals {
+        guard let height = tableTheme?.headerHeight else { return }
+        let frame = CGRect(x: 0, y: self.frame.height - CGFloat(height * 2), width: headerView?.frame.width ?? self.frame.width, height: CGFloat(height))
+        let footerView = FooterView(frame: frame, withTotals: totals, dataColumns: dataColumns!, theme: tableTheme!, cellStyle: cellStyle!)
+        footerView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "white" )
+        rootView?.addSubview(footerView)
+        self.footerView = footerView
+      }
     }
 
   }
