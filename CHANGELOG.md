@@ -1,3 +1,10 @@
+# [1.1.0-alpha.13](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.12...v1.1.0-alpha.13) (2022-08-10)
+
+
+### Bug Fixes
+
+* ios memory leak ([4e59b2f](https://github.com/qlik-oss/react-native-simple-grid/commit/4e59b2ff1073aa8e87a3267c7cd51308d9589016))
+
 # [1.1.0-alpha.12](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.11...v1.1.0-alpha.12) (2022-08-08)
 
 
