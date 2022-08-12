@@ -1,3 +1,10 @@
+# [1.1.0-alpha.14](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.13...v1.1.0-alpha.14) (2022-08-12)
+
+
+### Bug Fixes
+
+* resize on stretch ([5b31618](https://github.com/qlik-oss/react-native-simple-grid/commit/5b31618aae025dbd7d6c5ca22a7f2f0ce0d13c69))
+
 # [1.1.0-alpha.13](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.12...v1.1.0-alpha.13) (2022-08-10)
 
 
