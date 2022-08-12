@@ -25,6 +25,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   let reuseIdentifier = "CellIdentifier"
   var cellColor = UIColor.black
   var cellStyle = CellContentStyle()
+  var isDataView = false
   weak var totalCellsView: TotalCellsView?
 
   init(frame: CGRect, withRows rows: [DataRow], andColumns cols: [DataColumn], theme: TableTheme, selectionsEngine: SelectionsEngine, cellStyle: CellContentStyle) {
@@ -152,7 +153,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     // swiftlint:disable:next force_cast
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DataCellView
-
+    cell.isDataView = self.isDataView
     cell.backgroundColor = indexPath.row % 2 == 0 ? .white : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0)
     cell.cellColor = cellColor
     cell.numberOfLines = cellStyle.rowHeight ?? 1

@@ -20,4 +20,6 @@ RCT_EXPORT_VIEW_PROPERTY(onDoubleTap, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(freezeFirstColumn, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(cellContentStyle, NSDictionary*)
 RCT_EXPORT_VIEW_PROPERTY(headerContentStyle, NSDictionary*)
+RCT_EXPORT_VIEW_PROPERTY(isDataView, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(isPercent, BOOL)
 @end

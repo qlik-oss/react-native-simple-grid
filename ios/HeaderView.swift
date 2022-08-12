@@ -9,11 +9,13 @@ import Foundation
 class HeaderView: UIView {
   let labelsFactory = LabelsFactory()
   var onHeaderPressed: RCTDirectEventBlock?
+  var headerFrame = CGRect.zero
 
   init(columns: [DataColumn], withTheme theme: TableTheme, onHeaderPressed: RCTDirectEventBlock?, headerStyle: HeaderContentStyle ) {
     // calculate intial total width
     let width = columns.reduce(0, {$0 + $1.width!})
     let frame = CGRect(x: 0, y: 0, width: width, height: Double(theme.headerHeight!))
+    headerFrame = frame;
     super.init(frame: frame)
     self.onHeaderPressed = onHeaderPressed
     addLabels(columns: columns, withTheme: theme, andHeaderStyle: headerStyle)

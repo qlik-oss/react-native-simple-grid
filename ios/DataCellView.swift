@@ -26,6 +26,7 @@ class DataCellView: UICollectionViewCell {
   var selectionsEngine: SelectionsEngine?
   var cellColor: UIColor?
   var numberOfLines = 1;
+  var isDataView  = true;
   
   static let minWidth: CGFloat = 40
   
@@ -47,14 +48,14 @@ class DataCellView: UICollectionViewCell {
     row.cells.enumerated().forEach {(index, element) in
       let col = cols[index]
       let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.rowHeight! * numberOfLines)
-      if let representation = col.representation {
-        if representation.type == "miniChart" {
+      if let representation = col.representation{
+        if representation.type == "miniChart" && !isDataView {
           if let miniChart = views[index] as? MiniChartView {
             miniChart.frame = newFrame.integral
             miniChart.setChartData(data: element, representedAs: representation)
             miniChart.setNeedsDisplay()
           }
-        } else if(representation.type == "image") {
+        } else if(representation.type == "image" && !isDataView) {
           if let imageView = views[index] as? ImageCell {
             imageView.frame = newFrame.integral
             imageView.setData(data: element, representedAs: representation)
@@ -87,6 +88,9 @@ class DataCellView: UICollectionViewCell {
  
   
   fileprivate func getBackgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
+    if isDataView {
+      return .clear
+    }
     guard let attributes = element.qAttrExps else {return .clear}
     guard let values = attributes.qValues else {return .clear}
     let colorString = values[styleInfo.backgroundColorIdx].qText ?? "none"
@@ -95,6 +99,9 @@ class DataCellView: UICollectionViewCell {
   }
   
   fileprivate func getForgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
+    if(isDataView) {
+      return cellColor!
+    }
     if let indicator = element.indicator {
       if let color = indicator.color {
         return ColorParser().fromCSS(cssString: color.lowercased())

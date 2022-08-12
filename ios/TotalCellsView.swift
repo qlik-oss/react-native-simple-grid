@@ -30,6 +30,9 @@ class TotalCellsView : UIView {
   }
   
   func createTextView() {
+    if let textView = textView {
+      textView.removeFromSuperview()
+    }
     let view = UITextView(frame: self.bounds)
     view.text = "NA"
     view.textAlignment = .right

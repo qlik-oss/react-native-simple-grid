@@ -53,6 +53,7 @@ struct DataColumn: Codable {
   let dataColIdx: Double?
   let representation: Representation?
   let stylingInfo: [String]?
+  let widthPercent: Double?
 }
 
 struct TotalsCell: Decodable {
