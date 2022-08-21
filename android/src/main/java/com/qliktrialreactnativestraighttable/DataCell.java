@@ -33,6 +33,9 @@ public class DataCell {
     if (source.hasKey("isDim")) {
       isDim =  source.getBoolean("isDim");
     }
+    if(source.hasKey("isSelectable")) {
+      isDim = source.getBoolean("isSelectable");
+    }
   }
 
 }
