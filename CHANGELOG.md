@@ -1,3 +1,10 @@
+# [1.1.0-alpha.15](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.14...v1.1.0-alpha.15) (2022-08-21)
+
+
+### Bug Fixes
+
+* check for isSelectable in Android ([ff128d2](https://github.com/qlik-oss/react-native-simple-grid/commit/ff128d207a953bb97d22e87956126d8a03fe795e))
+
 # [1.1.0-alpha.14](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.13...v1.1.0-alpha.14) (2022-08-12)
 
 
