@@ -1,3 +1,10 @@
+# [1.1.0-alpha.16](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.15...v1.1.0-alpha.16) (2022-09-08)
+
+
+### Bug Fixes
+
+* resize on rotation ([f79c86e](https://github.com/qlik-oss/react-native-simple-grid/commit/f79c86ef8e1cff84389fad110ce8e69fee3580e5))
+
 # [1.1.0-alpha.15](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.14...v1.1.0-alpha.15) (2022-08-21)
 
 
