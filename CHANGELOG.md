@@ -1,3 +1,10 @@
+# [1.1.0-alpha.18](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.17...v1.1.0-alpha.18) (2022-09-08)
+
+
+### Bug Fixes
+
+* check for isDataView ([601a2d3](https://github.com/qlik-oss/react-native-simple-grid/commit/601a2d3c4fcb1e6ad955a4885cf6265c792f8416))
+
 # [1.1.0-alpha.17](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.16...v1.1.0-alpha.17) (2022-09-08)
 
 
