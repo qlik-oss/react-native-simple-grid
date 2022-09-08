@@ -14,13 +14,14 @@ class GrabberView: UIView {
   weak var containerView: ContainerView?
   weak var headerView: HeaderView?
   weak var button: UIView?
-  weak var footerView: FooterView?
+  weak var totalsView: TotalsView?
   weak var scrollView: UIScrollView?
   weak var guideLineView: GuideLineView?
   var pressed = false
   var trim:CGFloat = 0;
   var timer: Timer?
   var currentTranslation = CGPoint.zero
+  var shouldExpand = false
 
   var linePath = UIBezierPath()
   var guidePath = UIBezierPath()
@@ -84,6 +85,7 @@ class GrabberView: UIView {
     switch sender.state {
     case .began:
       currentTranslation = CGPoint.zero
+      shouldExpand = true
       pressed = true
       if let guideLineView = guideLineView {
         guideLineView.pressed(isPressed: true)
@@ -120,8 +122,8 @@ class GrabberView: UIView {
       container.updateSize(colIdx)
     }
     
-    if let footerView = footerView {
-      footerView.updateSize(translation, withColumn: colIdx)
+    if let totalsView = totalsView {
+      totalsView.updateSize(translation, withColumn: colIdx)
     }
     return true
   }
@@ -136,7 +138,6 @@ class GrabberView: UIView {
           currentOffset.x += translation.x
           scrollView.setContentOffset(currentOffset, animated: false)
           scrollView.flashScrollIndicators()
-          broadcastUpdate()
           currentTranslation = translation;
           if let containerView = containerView {
             if scrollView.contentSize.width > containerView.frame.width {
@@ -147,6 +148,7 @@ class GrabberView: UIView {
             }
           }
         } else if isLast && translation.x < -0.01 {
+          shouldExpand = false
           endTimer()
         }
       }
@@ -198,6 +200,9 @@ class GrabberView: UIView {
     }
     if let guideLineView = guideLineView {
       guideLineView.pressed(isPressed: true)
+    }
+    if !shouldExpand {
+      return
     }
     timer = Timer.scheduledTimer(withTimeInterval: 0.0016, repeats: true) { t in
       self.currentTranslation.x = 1
