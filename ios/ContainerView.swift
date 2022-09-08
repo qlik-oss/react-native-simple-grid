@@ -36,7 +36,7 @@ class ContainerView: UIView {
   @objc var freezeFirstColumn: Bool = false
   @objc var isDataView: Bool = false
   @objc var isPercent: Bool = false
- 
+  
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -85,6 +85,12 @@ class ContainerView: UIView {
       do {
         let json = try JSONSerialization.data(withJSONObject: size)
         dataSize = try JSONDecoder().decode(DataSize.self, from: json)
+        guard let collectionView = collectionView else {
+          return
+        }
+        DispatchQueue.main.async {
+          collectionView.signalVisibleRows()
+        }
       } catch {
         print(error)
       }
@@ -186,17 +192,17 @@ class ContainerView: UIView {
       guard let dataRows = dataRows else {
         return
       }
-
+      
       if let dataColumns = dataColumns {
         columnWidths.loadDefaultWidths(bounds, columnCount: dataColumns.count, dataRows: dataRows)
       }
       
       createHScrollView()
       createHeaderView()
-      createTotalsView()
       createDataCollectionView()
       createGrabbers()
       createTotalCellsView()
+      createTotalsView()
     }
   }
   
@@ -223,6 +229,9 @@ class ContainerView: UIView {
     collectionView.resizeCells(withFrame: getCollectionViewFrame())
     repositionGrabbers()
     repositionTotalCellsView()
+    DispatchQueue.main.async {
+      collectionView.signalVisibleRows()
+    }
   }
   
   fileprivate func createHScrollView() {
@@ -281,7 +290,7 @@ class ContainerView: UIView {
       guard let dataColumns = dataColumns else {
         return
       }
-
+      
       guard let cellStyle = cellStyle else {
         return
       }
@@ -341,7 +350,7 @@ class ContainerView: UIView {
     guard let headerView = headerView else {
       return CGRect.zero
     }
-        
+    
     let headerHeight = tableTheme?.headerHeight ?? 54
     var y = headerHeight
     let width = Int(headerView.frame.width)
@@ -350,7 +359,7 @@ class ContainerView: UIView {
       totalHeight -= CGFloat(headerHeight)
       if let totals = totals {
         if totals.position != "bottom" {
-            y += headerHeight
+          y += headerHeight
         }
       }
     }
@@ -358,6 +367,15 @@ class ContainerView: UIView {
   }
   
   fileprivate func createTotalCellsView() {
+    guard let collectionView = collectionView else {
+      return
+    }
+    
+    guard let dataSize = dataSize else {
+      return
+    }
+
+    
     if(totalCellsView == nil) {
       guard let height = tableTheme?.headerHeight else { return }
       let frame = CGRect(x: 0, y: self.frame.height - CGFloat(height), width: self.frame.width, height: CGFloat(height))
@@ -367,15 +385,12 @@ class ContainerView: UIView {
       view.createTextView()
       addSubview(view)
       self.totalCellsView = view
-      collectionView?.totalCellsView = view
-      if let dataSize = dataSize {
-        view.totalRows = dataSize.qcy ?? 0
-        if let collectionView = collectionView {
-          DispatchQueue.main.async {
-            collectionView.signalVisibleRows()
-          }
-        }
+      collectionView.totalCellsView = view
+      view.totalRows = dataSize.qcy ?? 0
+      DispatchQueue.main.async {
+        collectionView.signalVisibleRows()
       }
+      
     }
   }
   
