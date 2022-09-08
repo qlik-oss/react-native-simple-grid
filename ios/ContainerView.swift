@@ -294,6 +294,10 @@ class ContainerView: UIView {
         return
       }
       
+      if (isDataView) {
+        return
+      }
+      
       let y = totals.position == "bottom" ? self.frame.height - headerView.frame.height * 2  : headerView.frame.height
       let frame = CGRect(x: 0.0, y: y, width: headerView.frame.width, height: headerView.frame.height)
       let view = TotalsView(frame: frame, withTotals: totals, dataColumns: dataColumns, theme: tableTheme, cellStyle: cellStyle, columnWidths: self.columnWidths)
