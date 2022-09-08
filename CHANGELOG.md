@@ -1,3 +1,10 @@
+# [1.1.0-alpha.17](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.16...v1.1.0-alpha.17) (2022-09-08)
+
+
+### Bug Fixes
+
+* remove jank ([793e12a](https://github.com/qlik-oss/react-native-simple-grid/commit/793e12a80296ea0cd1c047ad95ea10925c29f685))
+
 # [1.1.0-alpha.16](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.15...v1.1.0-alpha.16) (2022-09-08)
 
 
