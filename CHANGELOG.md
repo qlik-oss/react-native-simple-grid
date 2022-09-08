@@ -1,3 +1,10 @@
+# [1.1.0-alpha.19](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.18...v1.1.0-alpha.19) (2022-09-08)
+
+
+### Bug Fixes
+
+* notify total cells on repaint ([d715608](https://github.com/qlik-oss/react-native-simple-grid/commit/d715608a552f332f48d4bdfda10800ed54a6bb0e))
+
 # [1.1.0-alpha.18](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.17...v1.1.0-alpha.18) (2022-09-08)
 
 
