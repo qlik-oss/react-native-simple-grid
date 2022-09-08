@@ -38,16 +38,15 @@ class DataCellView: UICollectionViewCell {
     super.init(coder: coder)
   }
   
-  func setData(row: DataRow, withColumns cols: [DataColumn], theme: TableTheme, selectionsEngine: SelectionsEngine, withStyle styleInfo: StylingInfo) {
+  func setData(row: DataRow, withColumns cols: [DataColumn], columnWidths: [Double], theme: TableTheme, selectionsEngine: SelectionsEngine, withStyle styleInfo: StylingInfo) {
     dataRow = row
     borderColor = ColorParser().fromCSS(cssString: theme.borderBackgroundColor ?? "#F0F0F0")
-    createCells(row: row, withColumns: cols)
-    
+    createCells(row: row, withColumns: cols, columnWidths: columnWidths)
     var x = 0
     let views = contentView.subviews
     row.cells.enumerated().forEach {(index, element) in
       let col = cols[index]
-      let newFrame = CGRect(x: x, y: 0, width: Int(col.width!), height: theme.rowHeight! * numberOfLines)
+      let newFrame = CGRect(x: x, y: 0, width: Int(columnWidths[index]), height: theme.rowHeight! * numberOfLines)
       if let representation = col.representation{
         if representation.type == "miniChart" && !isDataView {
           if let miniChart = views[index] as? MiniChartView {
@@ -64,7 +63,7 @@ class DataCellView: UICollectionViewCell {
         }
         else {
           if let label = views[index] as? PaddedLabel {
-            
+
             label.textAlignment = element.qNum == nil ? .left : .right
             label.frame = newFrame.integral
             label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
@@ -80,12 +79,10 @@ class DataCellView: UICollectionViewCell {
           }
         }
       }
-      x += Int(col.width!)
-      
+      x += Int(columnWidths[index])
+
     }
   }
-  
- 
   
   fileprivate func getBackgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
     if isDataView {
@@ -116,11 +113,12 @@ class DataCellView: UICollectionViewCell {
     return cellColor!
   }
   
-  fileprivate func createCells(row: DataRow, withColumns cols: [DataColumn]) {
+  fileprivate func createCells(row: DataRow, withColumns cols: [DataColumn], columnWidths: [Double]) {
     let views = contentView.subviews
     if views.count < row.cells.count {
       var x = 0
       clearAllCells()
+      var index = 0
       for col in cols {
         
         if let representation = col.representation {
@@ -145,7 +143,8 @@ class DataCellView: UICollectionViewCell {
           }
         }
         
-        x += Int(col.width!)
+        x += Int(columnWidths[index])
+        index += 1
       }
     }
   }
@@ -180,11 +179,30 @@ class DataCellView: UICollectionViewCell {
     return true
   }
   
+  func updateLayout(withColumns cols: [DataColumn], columnWidths: [Double]) {
+    var x = 0.0
+    contentView.subviews.enumerated().forEach{ (index, view) in
+      let width = Double(columnWidths[index])
+      let newFrame = CGRect(x: x, y: self.frame.origin.y, width: Double(width), height: self.frame.size.height)
+      view.frame = newFrame
+      x += width
+      view.setNeedsDisplay()
+    }
+   
+  }
+  
+  func resizeLastCol(_ width: Double) {
+    guard let lastView = contentView.subviews.last else {return}
+    resizeContentView(view: lastView, width: width)
+    return
+  }
+  
   fileprivate func resizeContentView(view: UIView, width: CGFloat) {
     if view.frame.width != width {
       let oldFrame = view.frame
       let newFrame = CGRect(x: oldFrame.origin.x, y: 0, width: width, height: oldFrame.height)
       view.frame = newFrame
+      
       view.setNeedsDisplay()
     }
     

@@ -45,7 +45,6 @@ struct Representation: Codable {
 struct DataColumn: Codable {
   var isDim: Bool = false
   var active: Bool = false
-  var width: Double?
   let label: String?
   let id: String?
   let align: String?
@@ -60,7 +59,14 @@ struct TotalsCell: Decodable {
   let qText: String?
 }
 
+struct Totals: Decodable {
+  var label: String?
+  var position: String?
+  var show: Bool?
+  var rows: [TotalsCell]?
+}
+
 struct Cols: Decodable {
   let header: [DataColumn]?
-  let footer: [TotalsCell]?
+  let totals: Totals?
 }

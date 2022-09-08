@@ -8,20 +8,22 @@
 import Foundation
 
 class GrabberView: UIView {
-
   var tableTheme: TableTheme?
   var borderColor = UIColor.gray
   weak var collectionView: DataCollectionView?
   weak var containerView: ContainerView?
   weak var headerView: HeaderView?
-  weak var overlayView: OverlayView?
   weak var button: UIView?
   weak var footerView: FooterView?
   weak var scrollView: UIScrollView?
+  weak var guideLineView: GuideLineView?
   var pressed = false
   var trim:CGFloat = 0;
+  var timer: Timer?
+  var currentTranslation = CGPoint.zero
 
   var linePath = UIBezierPath()
+  var guidePath = UIBezierPath()
   var colIdx = 0
   var isLast = false
   init(frame: CGRect, index i: Double, theme: TableTheme) {
@@ -53,9 +55,6 @@ class GrabberView: UIView {
       if touch.view == self.button {
         pressed = true
         setNeedsDisplay()
-        if let overlayView = overlayView {
-          overlayView.pressed(isPressed: true)
-        }
       }
     }
   }
@@ -66,9 +65,6 @@ class GrabberView: UIView {
       if touch.view == self.button {
         pressed = false
         setNeedsDisplay()
-        if let overlayView = overlayView {
-          overlayView.pressed(isPressed: false)
-        }
       }
     }
   }
@@ -87,7 +83,11 @@ class GrabberView: UIView {
   @objc func handleGesture(_ sender: UIPanGestureRecognizer) {
     switch sender.state {
     case .began:
+      currentTranslation = CGPoint.zero
       pressed = true
+      if let guideLineView = guideLineView {
+        guideLineView.pressed(isPressed: true)
+      }
       self.setNeedsDisplay()
     case .changed:
       let point = sender.translation(in: self)
@@ -100,43 +100,71 @@ class GrabberView: UIView {
       self.setNeedsDisplay()
     case .cancelled:
       pressed = false
+      endTimer()
       self.setNeedsDisplay()
     case .failed:
       pressed = false
+      endTimer()
       self.setNeedsDisplay()
     @unknown default:
       break
     }
   }
 
-  fileprivate func onPan(translation: CGPoint) {
-    let point =  CGPoint(x: self.center.x + translation.x, y: self.center.y)
+  fileprivate func broadcastTranslation(_ translation: CGPoint) -> Bool {
     if let cv = collectionView, let container = containerView, let headerView = headerView {
       if !cv.updateSize(translation, withColumn: colIdx) {
-        return
+        return false
       }
       headerView.updateSize(translation, withColumn: colIdx)
       container.updateSize(colIdx)
     }
-
+    
     if let footerView = footerView {
       footerView.updateSize(translation, withColumn: colIdx)
     }
-
-    if let scrollView = scrollView {
-      if isLast && translation.x > 0 {
-        var currentOffset = scrollView.contentOffset
-        currentOffset.x += translation.x
-        scrollView.setContentOffset(currentOffset, animated: false)
-        scrollView.flashScrollIndicators()
+    return true
+  }
+  
+  fileprivate func onPan(translation: CGPoint) {
+    let point =  CGPoint(x: self.center.x + translation.x, y: self.center.y)
+    
+    if broadcastTranslation(translation) {
+      if let scrollView = scrollView {
+        if isLast && translation.x > 0 {
+          var currentOffset = scrollView.contentOffset
+          currentOffset.x += translation.x
+          scrollView.setContentOffset(currentOffset, animated: false)
+          scrollView.flashScrollIndicators()
+          broadcastUpdate()
+          currentTranslation = translation;
+          if let containerView = containerView {
+            if scrollView.contentSize.width > containerView.frame.width {
+              startTimer()
+            }
+            else {
+              endTimer()
+            }
+          }
+        } else if isLast && translation.x < -0.01 {
+          endTimer()
+        }
       }
+      self.center = point
     }
-
-    self.center = point
-
   }
 
   fileprivate func onEndPan() {
+    broadcastUpdate()
+    endTimer()
+    pressed = false
+    if let guideLineView = guideLineView {
+      guideLineView.pressed(isPressed: false)
+    }
+    self.setNeedsDisplay()
+  }
+  
+  fileprivate func broadcastUpdate() {
     if let cv = collectionView {
       cv.onEndDrag(colIdx)
     }
@@ -144,13 +172,12 @@ class GrabberView: UIView {
     if let container = containerView {
       container.onEndDragged(colIdx)
     }
-
-    pressed = false
+  }
+  
+  func repositionTo(_ x: Double) {
+    let point =  CGPoint(x: x, y: self.center.y)
+    self.center = point
     self.setNeedsDisplay()
-
-    if let overlayView = overlayView {
-      overlayView.pressed(isPressed: false)
-    }
   }
 
   override func draw(_ rect: CGRect) {
@@ -163,5 +190,34 @@ class GrabberView: UIView {
     let color = pressed ? .black : borderColor
     color.setStroke()
     linePath.stroke()
+  }
+  
+  fileprivate func startTimer() {
+    if timer != nil {
+      return
+    }
+    if let guideLineView = guideLineView {
+      guideLineView.pressed(isPressed: true)
+    }
+    timer = Timer.scheduledTimer(withTimeInterval: 0.0016, repeats: true) { t in
+      self.currentTranslation.x = 1
+      let _ = self.broadcastTranslation(self.currentTranslation)
+      if self.isLast, let scrollView = self.scrollView  {
+        var currentOffset = scrollView.contentOffset
+        currentOffset.x += self.currentTranslation.x
+        scrollView.setContentOffset(currentOffset, animated: false)
+        scrollView.flashScrollIndicators()
+      }
+      self.center = CGPoint(x: self.center.x + self.currentTranslation.x, y: self.center.y)
+      self.setNeedsDisplay()
+    }
+  }
+  
+  fileprivate func endTimer() {
+    if let timer = timer {
+      timer.invalidate()
+      self.timer = nil
+    }
+    currentTranslation = CGPoint.zero
   }
 }
