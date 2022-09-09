@@ -229,13 +229,32 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
           }
         }
       }
-    
+      
       let arrayOfVisibleItems = childCollectionView.indexPathsForVisibleItems.sorted()
       let firstItem = arrayOfVisibleItems.first;
       let lastItem = arrayOfVisibleItems.last;
       if let totalCellsView = totalCellsView, let first = firstItem, let last = lastItem {
         totalCellsView.updateTotals(first: first, last: last)
       }
+    }
+  }
+  
+  
+  public func initialSignalVisibleRows() {
+    guard let childCollectionView = childCollectionView else {
+      return
+    }
+    
+    guard let totalCellsView = totalCellsView else {
+      return
+    }
+
+    let arrayOfVisibleItems = childCollectionView.indexPathsForVisibleItems.sorted()
+    let firstItem = arrayOfVisibleItems.first;
+    let lastItem = arrayOfVisibleItems.last;
+    
+    if let firstItem = firstItem, let lastItem = lastItem {
+      totalCellsView.updateTotals(first: firstItem, last: lastItem)
     }
   }
   
