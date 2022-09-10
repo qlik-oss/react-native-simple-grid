@@ -1,3 +1,10 @@
+# [1.1.0-alpha.21](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.20...v1.1.0-alpha.21) (2022-09-10)
+
+
+### Bug Fixes
+
+* add icons ([4f795d5](https://github.com/qlik-oss/react-native-simple-grid/commit/4f795d5746b5077a11722033822971d25120710c))
+
 # [1.1.0-alpha.20](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.19...v1.1.0-alpha.20) (2022-09-09)
 
 
