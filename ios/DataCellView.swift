@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+// tick \u{59451}
 
 func isDarkColor(color: UIColor) -> Bool {
   if color == .clear {
@@ -18,7 +19,26 @@ func isDarkColor(color: UIColor) -> Bool {
   let lum = 0.2126 * r + 0.7152 * g + 0.0722 * b
   return  lum < 0.50
 }
-
+//icon  String?  "ï"  some
+/*
+ { key: 'm', value: 'lui-icon--tick' },
+  { key: 'ï', value: 'lui-icon--star' },
+  { key: 'R', value: 'lui-icon--triangle-top' },
+  { key: 'S', value: 'lui-icon--triangle-bottom' },
+  { key: 'T', value: 'lui-icon--triangle-left' },
+  { key: 'U', value: 'lui-icon--triangle-right' },
+  { key: 'P', value: 'lui-icon--plus' },
+  { key: 'Q', value: 'lui-icon--minus' },
+  { key: 'è', value: 'lui-icon--warning-triangle' },
+  { key: '¢', value: 'lui-icon--hand' },
+  { key: '©', value: 'lui-icon--flag' },
+  { key: '23F4', value: 'lui-icon--lightbulb' },
+  { key: '2013', value: 'lui-icon--stop' },
+  { key: '&', value: 'lui-icon--pie-chart' },
+  { key: 'add', value: 'lui-icon--add' },
+  { key: 'minus-2', value: 'lui-icon--minus-2' },
+  { key: 'dot', value: 'lui-icon--dot' },
+ */
 class DataCellView: UICollectionViewCell {
   var border = UIBezierPath()
   var dataRow: DataRow?
@@ -27,6 +47,24 @@ class DataCellView: UICollectionViewCell {
   var cellColor: UIColor?
   var numberOfLines = 1;
   var isDataView  = true;
+  static let iconMap : [String:UniChar] =  ["m":0xe96c,
+                                            "è":0xe997,
+                                            "ï":0xe951,
+                                            "R":0xe97f,
+                                            "S":0xe97c,
+                                            "T":0xe97d,
+                                            "U":0xe97e,
+                                            "P":0xe906,
+                                            "Q":0xe8e4,
+                                            "¢":0xe8a8,
+                                            "©":0xe894,
+                                            "23F4":0xe8c7,
+                                            "2013":0xe954,
+                                            "&":0xe8ff,
+                                            "add":0xe802,
+                                            "minus-2":0xe8e3,
+                                            "dot":0xe878
+                                            ]
   
   static let minWidth: CGFloat = 40
   
@@ -44,6 +82,9 @@ class DataCellView: UICollectionViewCell {
     createCells(row: row, withColumns: cols, columnWidths: columnWidths)
     var x = 0
     let views = contentView.subviews
+    if row.cells.count != cols.count {
+      return
+    }
     row.cells.enumerated().forEach {(index, element) in
       let col = cols[index]
       let newFrame = CGRect(x: x, y: 0, width: Int(columnWidths[index]), height: theme.rowHeight! * numberOfLines)
@@ -63,11 +104,16 @@ class DataCellView: UICollectionViewCell {
         }
         else {
           if let label = views[index] as? PaddedLabel {
-
+            
             label.textAlignment = element.qNum == nil ? .left : .right
             label.frame = newFrame.integral
             label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
-            label.text = element.qText
+            if let indicator = element.indicator, let uniChar = DataCellView.iconMap[indicator.icon ?? "m"] {
+              label.setAttributedText(element.qText ?? "", withIcon: uniChar)
+            } else {
+              label.text = element.qText
+            }
+            
             label.column = index
             label.cell = element
             label.checkSelected(selectionsEngine)
@@ -80,7 +126,7 @@ class DataCellView: UICollectionViewCell {
         }
       }
       x += Int(columnWidths[index])
-
+      
     }
   }
   
@@ -188,7 +234,7 @@ class DataCellView: UICollectionViewCell {
       x += width
       view.setNeedsDisplay()
     }
-   
+    
   }
   
   func resizeLastCol(_ width: Double) {

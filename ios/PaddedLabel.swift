@@ -163,4 +163,17 @@ class PaddedLabel: UILabel, SelectionsListener {
     
     return []
   }
+  
+  func setAttributedText(_ t: String, withIcon: UniChar) {
+    // First part with font size 10
+    let firstPartInfo = [NSAttributedString.Key.font: self.font]
+    let attributedString = NSMutableAttributedString(string:t, attributes: firstPartInfo as [NSAttributedString.Key : Any])
+    let iconFont = UIFont.init(name: "fontello", size: font.pointSize)
+    // Second part with font size 20
+    let secondPartInfo = [NSAttributedString.Key.font: iconFont]
+    attributedString.append(
+      NSAttributedString(string: String(format: " %C", withIcon), attributes: secondPartInfo as [NSAttributedString.Key : Any]))
+
+    self.attributedText = attributedString
+  }
 }

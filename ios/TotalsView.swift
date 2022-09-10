@@ -107,6 +107,9 @@ class TotalsView: UIView {
     if let nt = newTotals {
       totals = nt
       guard let rows = nt.rows else {return}
+      if rows.count != dataIndex.count {
+        return
+      }
       rows.enumerated().forEach { (index, element) in
         let labelIndex = dataIndex[index]
         if let label = subviews[labelIndex] as? PaddedLabel {

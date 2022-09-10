@@ -17,7 +17,7 @@ class ColumnWidths {
   }
   
   func loadDefaultWidths(_ frame: CGRect, columnCount: Int, dataRows: [DataRow]) {
-    if(!loadFromStorage()) {
+    if(!loadFromStorage(columnCount)) {
       let defaultWidth = frame.width / Double(columnCount)
       let widths = [Double](repeating: defaultWidth, count: columnCount)
       resetColumnWidths(widths: widths)
@@ -25,10 +25,13 @@ class ColumnWidths {
     }
   }
   
-  fileprivate func loadFromStorage() -> Bool {
+  fileprivate func loadFromStorage(_ columnCount: Int) -> Bool {
     let storageKey = getStorageKey()
     let defaults = UserDefaults.standard
     if let data = defaults.array(forKey: storageKey)  as? [Double] {
+      if(data.count != columnCount) {
+        return false
+      }
       resetColumnWidths(widths: data)
       return true
     }
@@ -68,7 +71,7 @@ class ColumnWidths {
     for row in dataRows {
       let fontAttribute = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16.0)]
       let text = row.cells[index].qText ?? ""
-      let width = text.size(withAttributes: fontAttribute).width + (Double(PaddedLabel.PaddingSize) * 2)
+      let width = text.size(withAttributes: fontAttribute).width + (Double(PaddedLabel.PaddingSize) * 4)
       maxWidth = max(maxWidth, max(width, DataCellView.minWidth))
     }
     return maxWidth
