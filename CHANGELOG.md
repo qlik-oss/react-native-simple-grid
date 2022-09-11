@@ -1,3 +1,10 @@
+# [1.1.0-alpha.22](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.21...v1.1.0-alpha.22) (2022-09-11)
+
+
+### Features
+
+* icons for ios ([101878f](https://github.com/qlik-oss/react-native-simple-grid/commit/101878f609ea473ea843c073e5b9c9cb98c2d0af))
+
 # [1.1.0-alpha.21](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.20...v1.1.0-alpha.21) (2022-09-10)
 
 
