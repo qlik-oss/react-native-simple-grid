@@ -108,20 +108,22 @@ class DataCellView: UICollectionViewCell {
             label.textAlignment = element.qNum == nil ? .left : .right
             label.frame = newFrame.integral
             label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
-            if let indicator = element.indicator, let uniChar = DataCellView.iconMap[indicator.icon ?? "m"] {
-              label.setAttributedText(element.qText ?? "", withIcon: uniChar)
-            } else {
-              label.text = element.qText
-            }
-            
+            let backgroundColor = getBackgroundColor(col: col, element: element, withStyle: styleInfo)
+            label.backgroundColor = backgroundColor
+            label.numberOfLines = numberOfLines
             label.column = index
             label.cell = element
             label.checkSelected(selectionsEngine)
-            let backgroundColor = getBackgroundColor(col: col, element: element, withStyle: styleInfo)
-            label.backgroundColor = backgroundColor
-            label.textColor = isDarkColor(color: backgroundColor) ? .white : getForgroundColor(col: col, element: element, withStyle: styleInfo)
-            label.numberOfLines = numberOfLines
+            
             label.checkForUrls()
+            if representation.type == "indicator", let indicator = element.indicator, let uniChar = DataCellView.iconMap[indicator.icon ?? "m"] {
+              label.setAttributedText(element.qText ?? "", withIcon: uniChar, element: element)
+            } else {
+              label.text = element.qText
+              label.textColor = isDarkColor(color: backgroundColor) ? .white : getForgroundColor(col: col, element: element, withStyle: styleInfo)
+            }
+            
+           
           }
         }
       }
@@ -144,11 +146,6 @@ class DataCellView: UICollectionViewCell {
   fileprivate func getForgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
     if(isDataView) {
       return cellColor!
-    }
-    if let indicator = element.indicator {
-      if let color = indicator.color {
-        return ColorParser().fromCSS(cssString: color.lowercased())
-      }
     }
     guard let attributes = element.qAttrExps else {return cellColor!}
     guard let values = attributes.qValues else {return cellColor!}

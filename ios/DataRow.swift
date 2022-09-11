@@ -15,6 +15,9 @@ struct StylingInfo {
 struct Indicator: Decodable {
   var color: String?
   var icon: String?
+  var applySegmentColors: Bool?
+  var position: String?
+  var showTextValues: Bool?
 }
 
 struct MatrixCell: Decodable {

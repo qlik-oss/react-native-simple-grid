@@ -111,7 +111,7 @@ class PaddedLabel: UILabel, SelectionsListener {
       imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageAttachment.image!.size.width, height: imageAttachment.image!.size.height)
       let attachmentString = NSAttributedString(attachment: imageAttachment)
       let completeText = NSMutableAttributedString(string: "")
-      
+           
       completeText.append(attachmentString)
       if !hasSystemImage {
         completeText.append(NSAttributedString(string: " "))
@@ -164,16 +164,39 @@ class PaddedLabel: UILabel, SelectionsListener {
     return []
   }
   
-  func setAttributedText(_ t: String, withIcon: UniChar) {
-    // First part with font size 10
-    let firstPartInfo = [NSAttributedString.Key.font: self.font]
-    let attributedString = NSMutableAttributedString(string:t, attributes: firstPartInfo as [NSAttributedString.Key : Any])
+  func setAttributedText(_ t: String, withIcon: UniChar, element: DataCell) {
+    var iconColor = UIColor.black// self.textColor;
+    var applyTextColor = false
+    var showTextValues = false
+    var right = false;
     let iconFont = UIFont.init(name: "fontello", size: font.pointSize)
-    // Second part with font size 20
-    let secondPartInfo = [NSAttributedString.Key.font: iconFont]
-    attributedString.append(
-      NSAttributedString(string: String(format: " %C", withIcon), attributes: secondPartInfo as [NSAttributedString.Key : Any]))
+    if let indicator = element.indicator {
+      if let indicatorColor = indicator.color {
+        iconColor = ColorParser().fromCSS(cssString: indicatorColor.lowercased())
+        applyTextColor = indicator.applySegmentColors == true
+      }
+      showTextValues = indicator.showTextValues == true
+      right = indicator.position != "left" // because it could be nil
+    }
+    let textAttributes = [NSAttributedString.Key.font: self.font, NSAttributedString.Key.foregroundColor: applyTextColor ? iconColor : self.textColor ]
+    let iconAttributes = [NSAttributedString.Key.font: iconFont, NSAttributedString.Key.foregroundColor: iconColor]
 
-    self.attributedText = attributedString
+   
+    if showTextValues {
+      if(right) {
+        let attributedString1 = NSMutableAttributedString(string:t, attributes:textAttributes as [NSAttributedString.Key : Any])
+        let attributedString2 = NSMutableAttributedString(string:String(format: " %C", withIcon), attributes:iconAttributes as [NSAttributedString.Key : Any])
+        attributedString1.append(attributedString2)
+        self.attributedText = attributedString1
+      } else {
+        let attributedString1 = NSMutableAttributedString(string:String(format: "%C ", withIcon), attributes:iconAttributes as [NSAttributedString.Key : Any])
+        let attributedString2 = NSMutableAttributedString(string:t, attributes:textAttributes as [NSAttributedString.Key : Any])
+        attributedString1.append(attributedString2)
+        self.attributedText = attributedString1
+      }
+    } else {
+      let attributedString1 = NSMutableAttributedString(string:String(format: "%C", withIcon), attributes:iconAttributes as [NSAttributedString.Key : Any])
+      self.attributedText = attributedString1
+    }
   }
 }
