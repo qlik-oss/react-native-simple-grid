@@ -151,8 +151,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
     if(viewHolder instanceof SimpleViewHolder) {
       SimpleViewHolder holder = (SimpleViewHolder) viewHolder;
-      int color = position % 2 == 0 ? Color.WHITE : 0xFFF7F7F7;
-      holder.setBackGroundColor(color);
+      holder.setBackGroundColor(Color.WHITE);
       holder.setData(rows.get(position));
       cachedViewHolders.add(holder);
     }
