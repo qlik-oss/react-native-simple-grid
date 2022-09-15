@@ -81,6 +81,12 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
 
     }
 
+    @ReactProp(name = "isDataView")
+    public void setDataView(View view, boolean isDataView) {
+      TableView tableView = getTableViewFrom(view);
+      tableView.setDataView(isDataView);
+    }
+
     @ReactProp(name = "rows")
     public void setRows(View view, @Nullable ReadableMap rows) {
       TableView tableView = getTableViewFrom(view);

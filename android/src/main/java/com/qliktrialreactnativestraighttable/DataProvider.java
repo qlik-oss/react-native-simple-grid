@@ -24,6 +24,7 @@ import java.util.Set;
 public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   private final int VIEW_TYPE_ITEM = 0;
   private final int VIEW_TYPE_LOADING = 1;
+  boolean isDataView = false;
   List<DataRow> rows = null;
   List<DataColumn> dataColumns = null;
   Set<SimpleViewHolder> cachedViewHolders = new HashSet<>();
@@ -151,7 +152,10 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
     if(viewHolder instanceof SimpleViewHolder) {
       SimpleViewHolder holder = (SimpleViewHolder) viewHolder;
-      holder.setBackGroundColor(Color.WHITE);
+      if (this.isDataView) {
+        int color = position % 2 == 0 ? Color.WHITE : 0xFFF7F7F7;
+        holder.setBackGroundColor(color);
+      }
       holder.setData(rows.get(position));
       cachedViewHolders.add(holder);
     }
@@ -162,6 +166,9 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return rows.size();
   }
 
+  public void setDataView(boolean isDataView) {
+    this.isDataView = isDataView;
+  }
   public void setRows(List<DataRow> data, boolean resetData) {
     if (this.rows == null || resetData) {
       int prevSize = 0;
