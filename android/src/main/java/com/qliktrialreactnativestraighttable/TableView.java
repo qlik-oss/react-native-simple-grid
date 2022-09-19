@@ -100,6 +100,10 @@ public class TableView extends FrameLayout {
     }
   }
 
+  public void setDataView(boolean isDataView) {
+    dataProvider.setDataView(isDataView);
+  }
+
   public void setRows(List<DataRow> rows, boolean resetData) {
     dataProvider.setRows(rows, resetData);
     if (this.recyclerView != null) {
