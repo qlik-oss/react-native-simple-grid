@@ -1,3 +1,10 @@
+# [1.1.0-alpha.23](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.22...v1.1.0-alpha.23) (2022-09-19)
+
+
+### Features
+
+* **md-3608:** remove alternating colors ([#81](https://github.com/qlik-oss/react-native-simple-grid/issues/81)) ([c64f09a](https://github.com/qlik-oss/react-native-simple-grid/commit/c64f09a1d60c7cb1a4e42725f9bd50b260fb2642))
+
 # [1.1.0-alpha.22](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.21...v1.1.0-alpha.22) (2022-09-11)
 
 
