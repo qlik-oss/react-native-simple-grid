@@ -12,20 +12,24 @@ class TotalsView: UIView {
   var cellStyle: CellContentStyle?
   var dataIndex = [Int]()
   let labelsFactory = LabelsFactory()
+  var dataRange:CountableRange<Int> = 0..<1
   weak var columnWidths: ColumnWidths?
   weak var borderLayer: CALayer?
   
-  init(frame: CGRect, withTotals totals: Totals, dataColumns: [DataColumn], theme: TableTheme, cellStyle: CellContentStyle, columnWidths: ColumnWidths) {
+  init(frame: CGRect,
+       withTotals totals: Totals,
+       dataColumns: [DataColumn],
+       theme: TableTheme,
+       cellStyle: CellContentStyle,
+       columnWidths: ColumnWidths,
+       withRange range: CountableRange<Int>) {
     super.init(frame: frame)
     self.columnWidths = columnWidths
     self.totals = totals
     self.theme = theme
     self.cellStyle = cellStyle
+    self.dataRange = range
     self.backgroundColor = .white
-    self.layer.shadowOpacity = 0.1
-    self.layer.shadowOffset = CGSize(width: 0, height: totals.position == "bottom" ? -1 : 1)
-    self.layer.shadowRadius = 2
-    self.layer.zPosition = 1
     
     addLabels(dataColumns)
     addBorder()
@@ -83,9 +87,9 @@ class TotalsView: UIView {
     
     var currentX = 0
     var currentTotalsIdx = 0
-    dataColumns.enumerated().forEach { (index, _) in
-      let col = dataColumns[index]
-      let width = columnWidths.columnWidths[index]
+    dataColumns[dataRange].enumerated().forEach { (index, _) in
+      let col = dataColumns[index + dataRange.lowerBound]
+      let width = columnWidths.columnWidths[index + dataRange.lowerBound]
       let frame = CGRect(x: currentX, y: 0, width: Int(width), height: theme!.headerHeight!)
       let label = PaddedLabel(frame: frame)
       label.textColor = ColorParser().fromCSS(cssString: cellStyle?.color ?? "black")

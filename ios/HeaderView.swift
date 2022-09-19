@@ -11,22 +11,24 @@ class HeaderView: UIView {
   let labelsFactory = LabelsFactory()
   var onHeaderPressed: RCTDirectEventBlock?
   var headerFrame = CGRect.zero
+  var dataRange:CountableRange<Int> = 0..<1
   weak var columnWidths: ColumnWidths?
   weak var bottomBorder: CALayer?
   
-  init(columns: [DataColumn], withTheme theme: TableTheme, onHeaderPressed: RCTDirectEventBlock?, headerStyle: HeaderContentStyle, columnWidths: ColumnWidths ) {
+  init(columns: [DataColumn],
+       withTheme theme: TableTheme,
+       onHeaderPressed: RCTDirectEventBlock?,
+       headerStyle: HeaderContentStyle,
+       columnWidths: ColumnWidths,
+       withRange dataRange: CountableRange<Int> ) {
     self.columnWidths = columnWidths
-    let width = columnWidths.getTotalWidth()
+    self.dataRange = dataRange
+    let width = columnWidths.getTotalWidth(range: dataRange)
     let frame = CGRect(x: 0, y: 0, width: width, height: Double(theme.headerHeight!))
     headerFrame = frame;
     super.init(frame: frame)
     self.onHeaderPressed = onHeaderPressed
     addLabels(columns: columns, withTheme: theme, andHeaderStyle: headerStyle)
-    self.layer.shadowColor = UIColor.black.cgColor
-    self.layer.shadowOpacity = 0.15
-    self.layer.shadowOffset = CGSize(width: 0, height: 1)
-    self.layer.shadowRadius = 2
-    self.layer.zPosition = 1
     addBottomBorder()
    
   }
@@ -49,7 +51,7 @@ class HeaderView: UIView {
   
   func addLabels(columns: [DataColumn], withTheme theme: TableTheme, andHeaderStyle headerStyle: HeaderContentStyle) {
     var currentX = 0
-    for column in columns {
+    for column in columns[dataRange] {
       let frame = CGRect(x: currentX, y: 0, width: 200, height: theme.headerHeight!)
       let label = HeaderCell(frame: frame, dataColumn: column)
       label.onHeaderPressed = onHeaderPressed
@@ -100,7 +102,7 @@ class HeaderView: UIView {
 
     var currentX = 0.0
     subviews.enumerated().forEach{ (index, value) in
-      let width = columnWidths.columnWidths[index]
+      let width = columnWidths.columnWidths[index + dataRange.lowerBound]
       let newFrame = CGRect(x: currentX, y: 0, width: width , height: value.frame.height)
       value.frame = newFrame
       currentX += width
