@@ -25,21 +25,43 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   var cellColor = UIColor.black
   var cellStyle = CellContentStyle()
   var isDataView = false
+  var dataRange: CountableRange = 0..<2
   weak var totalCellsView: TotalCellsView?
   weak var columnWidths: ColumnWidths?
+  weak var slave: DataCollectionView?
   
-  init(frame: CGRect, withRows rows: [DataRow], andColumns cols: [DataColumn], theme: TableTheme, selectionsEngine: SelectionsEngine, cellStyle: CellContentStyle, columnWidths: ColumnWidths) {
+  init(frame: CGRect, withRows rows: [DataRow],
+       andColumns cols: [DataColumn],
+       theme: TableTheme,
+       selectionsEngine: SelectionsEngine,
+       cellStyle: CellContentStyle,
+       columnWidths: ColumnWidths,
+       range: CountableRange<Int>) {
     super.init(frame: frame)
     self.columnWidths = columnWidths
     self.tableTheme = theme
     self.selectionsEngine = selectionsEngine
     let colorParser = ColorParser()
     self.cellStyle = cellStyle
+    self.dataRange = range
     if let colorString = cellStyle.color {
       cellColor = colorParser.fromCSS(cssString: colorString)
     }
     setData(columns: cols, withRows: rows)
-    
+    fitToFrame()
+  }
+  
+  fileprivate func fitToFrame() {
+    guard let childCollectionView = childCollectionView else {
+      return
+    }
+    childCollectionView.translatesAutoresizingMaskIntoConstraints = false
+    let top = childCollectionView.topAnchor.constraint(equalTo: self.topAnchor)
+    let bottom = childCollectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+    let left = childCollectionView.leftAnchor.constraint(equalTo: self.leftAnchor)
+    let right = childCollectionView.rightAnchor.constraint(equalTo: self.rightAnchor)
+    NSLayoutConstraint.activate([top, bottom, left, right])
+    self.addConstraints([top, bottom, left, right])
   }
   
   required init?(coder: NSCoder) {
@@ -51,6 +73,8 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       childCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
     }
   }
+  
+ 
   
   func updateSize(_ translation: CGPoint, withColumn index: Int) -> Bool {
     if let cv = self.childCollectionView {
@@ -73,11 +97,24 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     return true
   }
   
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    syncScrolling()
+  }
+  
+  func syncScrolling() {
+    if let slave = slave, let childCollectionView = childCollectionView  {
+      if let slaveChild = slave.childCollectionView {
+        let y = childCollectionView.contentOffset.y
+        slaveChild.contentOffset.y = y
+      }
+    }
+  }
+  
   func onEndDrag( _ index: Int) {
     resizeFrame(index)
   }
   
-  fileprivate func resizeFrame(_ index: Int) {
+  func resizeFrame(_ index: Int) {
     if index + 1 == dataColumns!.count {
       if let cv = self.childCollectionView, let columnWidths = columnWidths {
         // need to resize everyone
@@ -90,7 +127,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     }
   }
   
-  fileprivate func setData(columns: [DataColumn], withRows rows: [DataRow]) {
+  func setData(columns: [DataColumn], withRows rows: [DataRow]) {
     dataColumns = columns
     dataRows = rows
     setupDataCols()
@@ -105,16 +142,6 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     uiCollectionView.backgroundColor = .white
     childCollectionView = uiCollectionView
     addSubview(uiCollectionView)
-    
-    uiCollectionView.translatesAutoresizingMaskIntoConstraints = false
-    let top = uiCollectionView.topAnchor.constraint(equalTo: self.topAnchor)
-    let bottom = uiCollectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-    let left = uiCollectionView.leftAnchor.constraint(equalTo: self.leftAnchor)
-    let right = uiCollectionView.rightAnchor.constraint(equalTo: self.rightAnchor)
-    NSLayoutConstraint.activate([top, bottom, left, right])
-    self.addConstraints([top, bottom, left, right])
-    signalVisibleRows()
-    
   }
   
   fileprivate func setupDataCols() {
@@ -122,7 +149,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       return
     }
     
-    for col in dataColumns {
+    for col in dataColumns[dataRange] {
       if let stylingInfo = col.stylingInfo {
         var index = 0
         for style in stylingInfo {
@@ -152,14 +179,15 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     cell.backgroundColor = isDataView ? indexPath.row % 2 == 0 ? .white : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0) : .white
     cell.cellColor = cellColor
     cell.numberOfLines = cellStyle.rowHeight ?? 1
-    if let data = dataRows, let columnWidths = columnWidths {
+    if let data = dataRows, let columnWidths = columnWidths, let dataColumns = dataColumns {
       let dataRow = data[indexPath.row]
       cell.selectionsEngine = self.selectionsEngine
-      cell.setData(row: dataRow, withColumns: dataColumns!,
+      cell.setData(row: dataRow, withColumns: dataColumns[dataRange],
                    columnWidths: columnWidths.columnWidths,
                    theme: tableTheme!,
                    selectionsEngine: selectionsEngine!,
-                   withStyle: self.stylingInfo)
+                   withStyle: self.stylingInfo,
+                   withRange: dataRange)
     }
     return cell
   }
@@ -169,7 +197,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    let width = columnWidths?.getTotalWidth() ?? 400.0
+    let width = columnWidths?.getTotalWidth(range: dataRange) ?? 400.0
     let height = cellStyle.rowHeight ?? 1
     return CGSize(width: width, height: CGFloat(tableTheme!.rowHeight! * height))
   }
@@ -197,64 +225,6 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
           requestOnEndReached(nil)
         }
       }
-    }
-  }
-  
-  public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    signalVisibleRows()
-  }
-  
-  public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    signalVisibleRows();
-  }
-  
-  public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-    signalVisibleRows();
-  }
-  
-  public func signalVisibleRows() {
-    if let childCollectionView = childCollectionView {
-      var min = Int.max
-      var max = Int.min
-      for cell in childCollectionView.visibleCells {
-        let indexPath = childCollectionView.indexPath(for: cell)
-        if let indexPath = indexPath {
-          if let last  = indexPath.last {
-            if last < min {
-              min = last
-            }
-            if last > max {
-              max = last
-            }
-          }
-        }
-      }
-      
-      let arrayOfVisibleItems = childCollectionView.indexPathsForVisibleItems.sorted()
-      let firstItem = arrayOfVisibleItems.first;
-      let lastItem = arrayOfVisibleItems.last;
-      if let totalCellsView = totalCellsView, let first = firstItem, let last = lastItem {
-        totalCellsView.updateTotals(first: first, last: last)
-      }
-    }
-  }
-  
-  
-  public func initialSignalVisibleRows() {
-    guard let childCollectionView = childCollectionView else {
-      return
-    }
-    
-    guard let totalCellsView = totalCellsView else {
-      return
-    }
-
-    let arrayOfVisibleItems = childCollectionView.indexPathsForVisibleItems.sorted()
-    let firstItem = arrayOfVisibleItems.first;
-    let lastItem = arrayOfVisibleItems.last;
-    
-    if let firstItem = firstItem, let lastItem = lastItem {
-      totalCellsView.updateTotals(first: firstItem, last: lastItem)
     }
   }
   

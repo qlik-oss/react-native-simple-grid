@@ -180,19 +180,17 @@ class PaddedLabel: UILabel, SelectionsListener {
     }
     let textAttributes = [NSAttributedString.Key.font: self.font, NSAttributedString.Key.foregroundColor: applyTextColor ? iconColor : self.textColor ]
     let iconAttributes = [NSAttributedString.Key.font: iconFont, NSAttributedString.Key.foregroundColor: iconColor]
-
    
     if showTextValues {
+      let attributedString = NSMutableAttributedString(string:t, attributes:textAttributes as [NSAttributedString.Key : Any])
       if(right) {
-        let attributedString1 = NSMutableAttributedString(string:t, attributes:textAttributes as [NSAttributedString.Key : Any])
-        let attributedString2 = NSMutableAttributedString(string:String(format: " %C", withIcon), attributes:iconAttributes as [NSAttributedString.Key : Any])
-        attributedString1.append(attributedString2)
-        self.attributedText = attributedString1
+        let attributedIcon = NSMutableAttributedString(string:String(format: " %C", withIcon), attributes:iconAttributes as [NSAttributedString.Key : Any])
+        attributedString.append(attributedIcon)
+        self.attributedText = attributedString
       } else {
-        let attributedString1 = NSMutableAttributedString(string:String(format: "%C ", withIcon), attributes:iconAttributes as [NSAttributedString.Key : Any])
-        let attributedString2 = NSMutableAttributedString(string:t, attributes:textAttributes as [NSAttributedString.Key : Any])
-        attributedString1.append(attributedString2)
-        self.attributedText = attributedString1
+        let attributedIcon = NSMutableAttributedString(string:String(format: "%C ", withIcon), attributes:iconAttributes as [NSAttributedString.Key : Any])
+        attributedIcon.append(attributedString)
+        self.attributedText = attributedIcon
       }
     } else {
       let attributedString1 = NSMutableAttributedString(string:String(format: "%C", withIcon), attributes:iconAttributes as [NSAttributedString.Key : Any])

@@ -19,7 +19,8 @@ func isDarkColor(color: UIColor) -> Bool {
   let lum = 0.2126 * r + 0.7152 * g + 0.0722 * b
   return  lum < 0.50
 }
-//icon  String?  "ï"  some
+// icon  String?  "ï"  some
+// these are from sense-client
 /*
  { key: 'm', value: 'lui-icon--tick' },
   { key: 'ï', value: 'lui-icon--star' },
@@ -76,18 +77,22 @@ class DataCellView: UICollectionViewCell {
     super.init(coder: coder)
   }
   
-  func setData(row: DataRow, withColumns cols: [DataColumn], columnWidths: [Double], theme: TableTheme, selectionsEngine: SelectionsEngine, withStyle styleInfo: StylingInfo) {
+  func setData(row: DataRow,
+               withColumns cols: ArraySlice<DataColumn>,
+               columnWidths: [Double],
+               theme: TableTheme,
+               selectionsEngine: SelectionsEngine,
+               withStyle styleInfo: StylingInfo,
+               withRange dataRange: CountableRange<Int>) {
     dataRow = row
     borderColor = ColorParser().fromCSS(cssString: theme.borderBackgroundColor ?? "#F0F0F0")
-    createCells(row: row, withColumns: cols, columnWidths: columnWidths)
-    var x = 0
+    createCells(row: row, withColumns: cols, columnWidths: columnWidths, withRange: dataRange)
+    var x = 0.0
     let views = contentView.subviews
-    if row.cells.count != cols.count {
-      return
-    }
-    row.cells.enumerated().forEach {(index, element) in
-      let col = cols[index]
-      let newFrame = CGRect(x: x, y: 0, width: Int(columnWidths[index]), height: theme.rowHeight! * numberOfLines)
+
+    row.cells[dataRange].enumerated().forEach {(index, element) in
+      let col = cols[index + dataRange.lowerBound]
+      let newFrame = CGRect(x: x, y: 0.0, width: (columnWidths[index + dataRange.lowerBound]), height: Double(theme.rowHeight!) * Double(numberOfLines))
       if let representation = col.representation{
         if representation.type == "miniChart" && !isDataView {
           if let miniChart = views[index] as? MiniChartView {
@@ -104,7 +109,6 @@ class DataCellView: UICollectionViewCell {
         }
         else {
           if let label = views[index] as? PaddedLabel {
-            
             label.textAlignment = element.qNum == nil ? .left : .right
             label.frame = newFrame.integral
             label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
@@ -122,13 +126,10 @@ class DataCellView: UICollectionViewCell {
               label.text = element.qText
               label.textColor = isDarkColor(color: backgroundColor) ? .white : getForgroundColor(col: col, element: element, withStyle: styleInfo)
             }
-            
-           
           }
         }
       }
-      x += Int(columnWidths[index])
-      
+      x += columnWidths[index + dataRange.lowerBound]
     }
   }
   
@@ -156,9 +157,9 @@ class DataCellView: UICollectionViewCell {
     return cellColor!
   }
   
-  fileprivate func createCells(row: DataRow, withColumns cols: [DataColumn], columnWidths: [Double]) {
+  fileprivate func createCells(row: DataRow, withColumns cols: ArraySlice<DataColumn>, columnWidths: [Double], withRange: CountableRange<Int>) {
     let views = contentView.subviews
-    if views.count < row.cells.count {
+    if views.count < row.cells[withRange].count {
       var x = 0
       clearAllCells()
       var index = 0
@@ -186,7 +187,7 @@ class DataCellView: UICollectionViewCell {
           }
         }
         
-        x += Int(columnWidths[index])
+        x += Int(columnWidths[index + withRange.lowerBound])
         index += 1
       }
     }
@@ -231,13 +232,6 @@ class DataCellView: UICollectionViewCell {
       x += width
       view.setNeedsDisplay()
     }
-    
-  }
-  
-  func resizeLastCol(_ width: Double) {
-    guard let lastView = contentView.subviews.last else {return}
-    resizeContentView(view: lastView, width: width)
-    return
   }
   
   fileprivate func resizeContentView(view: UIView, width: CGFloat) {
