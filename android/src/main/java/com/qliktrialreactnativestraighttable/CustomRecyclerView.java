@@ -1,28 +1,53 @@
 package com.qliktrialreactnativestraighttable;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
+import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CustomRecyclerView extends RecyclerView {
+  final LinearLayoutManager linearLayout;
+  final DataProvider dataProvider;
+  final CustomHorizontalScrollView scrollView;
+  public boolean firstColumnOnly = false;
+  public boolean active = false;
+  public CustomRecyclerView scrollCoupledView = null;
 
-  public CustomRecyclerView(Context context) {
+  public CustomRecyclerView(Context context, boolean onlyFirstColumn, DataProvider dp, CustomHorizontalScrollView sv, LinearLayoutManager ll) {
     super(context);
+    firstColumnOnly = onlyFirstColumn;
+    dataProvider = dp;
+    scrollView = sv;
+    linearLayout = ll;
+
+    DividerItemDecoration itemDecorator = new CustomDividerItemDecorator(getContext(), DividerItemDecoration.VERTICAL);
+//    RecyclerView.ItemDecoration itemDecorator = new CustomDividerItemDecorator(getContext(), DividerItemDecoration.VERTICAL);
+    OnScrollListener sharedScrollListener = new OnScrollListener(linearLayout);
+
+    this.setLayoutManager(linearLayout);
+    this.setAdapter(dataProvider);
+    this.addItemDecoration(itemDecorator);
+    this.setHasFixedSize(true);
+    this.setBackgroundColor(Color.WHITE);
+    this.addOnScrollListener(sharedScrollListener);
+    if(onlyFirstColumn) {
+      return;
+    }
+    this.setVerticalScrollBarEnabled(true);
+    this.setScrollbarFadingEnabled(true);
+    this.setVerticalScrollbarThumbDrawable(new ScrollBarDrawable());
   }
 
-  public CustomRecyclerView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
-
-  public CustomRecyclerView(Context context, AttributeSet attrs, int defStyle) {
-    super(context, attrs, defStyle);
+  public void setViewToScrollCouple(CustomRecyclerView viewToScroll) {
+    scrollCoupledView = viewToScroll;
   }
 
   @Override
@@ -31,11 +56,68 @@ public class CustomRecyclerView extends RecyclerView {
     post(measureAndLayout);
   }
 
+  @Override
+  protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
+    super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+  }
+
+  class OnScrollListener extends RecyclerView.OnScrollListener {
+    LinearLayoutManager linearLayoutManager;
+    public OnScrollListener(LinearLayoutManager layoutManager) {
+      linearLayoutManager = layoutManager;
+    }
+
+    @Override
+    public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
+      super.onScrolled(rv, dx, dy);
+      if(active) {
+        scrollCoupledView.scrollBy(dx, dy);
+      }
+
+      if(linearLayoutManager.findLastCompletelyVisibleItemPosition() >= dataProvider.getItemCount() - 50
+        && !dataProvider.isLoading()
+        && dataProvider.needsMore()) {
+        // start the fetch
+        dataProvider.setLoading(true);
+        EventUtils.sendEventToJSFromView(scrollView, "onEndReached");
+      }
+    }
+  }
+
+  @Override
+  public void onScrollStateChanged(int state) {
+    super.onScrollStateChanged(state);
+
+    active = true;
+    if(state == SCROLL_STATE_IDLE) {
+      active = false;
+    }
+
+  }
+
+  public class CustomDividerItemDecorator extends DividerItemDecoration {
+    public CustomDividerItemDecorator(@NonNull android.content.Context context, int orientation) {
+      super(context, orientation);
+    }
+    @Override
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+      int position = parent.getChildAdapterPosition(view);
+      if(position == 0) {
+        outRect.setEmpty();
+        return;
+      }
+      if (position > state.getItemCount() - 10) {
+        outRect.setEmpty();
+        return;
+      }
+      super.getItemOffsets(outRect, view, parent, state);
+    }
+  }
+
   private final Runnable measureAndLayout = () -> {
     measure(
       MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
       MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
     layout(getLeft(), getTop(), getRight(), getBottom());
   };
-
 }

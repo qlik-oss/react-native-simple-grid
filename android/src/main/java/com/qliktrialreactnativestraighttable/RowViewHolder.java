@@ -12,21 +12,25 @@ import android.widget.RelativeLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RowViewHolder extends RecyclerView.ViewHolder  {
-
+  private int startIndex, numColumns;
   private final LinearLayout row;
-  private DataProvider dataProvider;
+  private final DataProvider dataProvider;
 
-  public RowViewHolder(View view, DataProvider dp) {
+  public RowViewHolder(View view, DataProvider dp, boolean firstColumnOnly) {
     super(view);
     row = (LinearLayout) view;
     dataProvider = dp;
+    numColumns = dataProvider.dataColumns.size();
+    if(firstColumnOnly) {
+      numColumns = 1;
+    }
   }
 
   public void setBackGroundColor(int color) {
     row.setBackgroundColor(color);
   }
   public void setData(DataRow dataRow) {
-    for(int i = 0; i < dataRow.cells.size(); i++) {
+    for(int i = 0; i < numColumns; i++) {
       DataCell cell = dataRow.cells.get(i);
       int columnIndex = cell.colIdx;
       DataColumn column = dataProvider.dataColumns.get(columnIndex);
@@ -87,7 +91,10 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
   }
 
   public boolean updateWidth(float width, int column) {
-    View view =  row.getChildAt(column);
+    if(column > numColumns - 1) {
+      return true;
+    }
+    View view = row.getChildAt(column);
     LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)view.getLayoutParams();
     float newWidth = params.width + width;
     if(newWidth < dataProvider.minWidth) {
@@ -104,7 +111,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
   }
 
   private boolean updateNeighbour(float width, int column) {
-    if (column + 1 < dataProvider.dataColumns.size() ) {
+    if (column + 1 < numColumns ) {
       View neighbour =  row.getChildAt(column + 1);
       LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) neighbour.getLayoutParams();
       float newWidth = params.width - width;

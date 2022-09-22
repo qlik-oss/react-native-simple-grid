@@ -1,9 +1,14 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,10 +22,10 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 public class ReactNativeStraightTableViewManager extends SimpleViewManager<View> {
     public static final String REACT_CLASS = "ReactNativeStraightTableView";
-
     @Override
     @NonNull
     public String getName() {
@@ -28,27 +33,45 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
     }
 
     TableView getTableViewFrom(View view) {
-      HorizontalScrollView horizontalScrollView = (HorizontalScrollView) view;
+      HorizontalScrollView horizontalScrollView = (HorizontalScrollView) ((FrameLayout) view).getChildAt(0);
       TableView tableView = (TableView) horizontalScrollView.getChildAt(0);
       return tableView;
     }
 
-  CustomHorizontalScrollView getHorizontaScrllView(View view) {
-    CustomHorizontalScrollView horizontalScrollView = (CustomHorizontalScrollView) view;
-    return horizontalScrollView;
-  }
+    CustomHorizontalScrollView getHorizontalScrollView(View view) {
+      CustomHorizontalScrollView horizontalScrollView = (CustomHorizontalScrollView) ((FrameLayout) view).getChildAt(0);
+      return horizontalScrollView;
+    }
 
     @SuppressLint("NewApi")
     @Override
     @NonNull
     public View createViewInstance(ThemedReactContext reactContext) {
+      FrameLayout rootView = new FrameLayout(reactContext);
+      FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT);
+      rootView.setLayoutParams(layoutParams);
+      ScrollView overlayScrollView = new ScrollView(reactContext);
 
       CustomHorizontalScrollView scrollView = new CustomHorizontalScrollView(reactContext);
-      TableView tableView =  new TableView(reactContext, scrollView);
+      TableView tableView =  new TableView(reactContext, scrollView, rootView);
+      RelativeLayout.LayoutParams scrollLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+      scrollLayoutParams.bottomMargin = TableView.SCROLL_THUMB_HEIGHT;
       scrollView.setFillViewport(true);
-      scrollView.addView(tableView);
+      tableView.setLayoutParams(scrollLayoutParams);
 
-      return scrollView;
+
+      RelativeLayout.LayoutParams overlayScrollLayoutParams = new RelativeLayout.LayoutParams(15, RelativeLayout.LayoutParams.MATCH_PARENT);
+
+
+      scrollView.addView(tableView, scrollLayoutParams);
+      rootView.addView(scrollView);
+      rootView.addView(overlayScrollView,overlayScrollLayoutParams);
+
+//      int width = scrollView.getMeasuredWidth();
+//      int height = scrollView.getMeasuredHeight();
+      overlayScrollView.layout(0, 0, 100, 100);
+      overlayScrollView.setBackgroundColor(Color.MAGENTA);
+      return rootView;
     }
 
     @ReactProp(name = "theme")
@@ -56,6 +79,12 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       TableTheme.from(theme);
       TableView tableView = getTableViewFrom(view);
       tableView.updateTheme();
+    }
+
+    @ReactProp(name = "freezeFirstColumn")
+    public void setFreezeFirstColumn(View view, Boolean value) {
+        TableView tableView = getTableViewFrom(view);
+        tableView.setFirstColumnFrozen(value);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -68,10 +97,10 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       HeaderView headerView = tableView.getHeaderView();
       HeaderViewFactory headerViewFactory;
       if (headerView != null && columns != null) {
-        headerViewFactory = new HeaderViewFactory(columns, getHorizontaScrllView(view));
+        headerViewFactory = new HeaderViewFactory(columns, getHorizontalScrollView(view), (FrameLayout) view, tableView);
         headerView.update(headerViewFactory.getDataColumns());
       } else {
-        headerViewFactory = new HeaderViewFactory(columns, footer, tableView.getContext(), getHorizontaScrllView(view));
+        headerViewFactory = new HeaderViewFactory(columns, footer, getHorizontalScrollView(view),  (FrameLayout) view, tableView);
         headerView = headerViewFactory.getHeaderView();
         tableView.setHeaderView(headerView);
       }

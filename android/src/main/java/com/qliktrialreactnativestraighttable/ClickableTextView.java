@@ -68,7 +68,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   }
 
   public void onRecycled() {
-    if (cell.isDim) {
+    if (cell != null && cell.isDim) {
       selectionsEngine.remove(this);
     }
   }

@@ -4,16 +4,21 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import okhttp3.internal.http2.Header;
 
 public class GrabberView extends LinearLayout {
   GrabberButton grabberButton;
@@ -23,7 +28,8 @@ public class GrabberView extends LinearLayout {
   AutoLinearLayout headerView = null;
   AutoLinearLayout footerView = null;
   List<GrabberView> grabbers = null;
-  RecyclerView recyclerView = null;
+  CustomRecyclerView recyclerView;
+  final FrameLayout rootView;
   ScreenGuideView screenGuideView = null;
   private final int column;
   private boolean isLastColumn = false;
@@ -56,6 +62,19 @@ public class GrabberView extends LinearLayout {
           if (dataProvider.updateWidth(motionDx, GrabberView.this.column)) {
             GrabberView.this.setTranslationX(x);
             GrabberView.this.updateHeader(motionDx);
+
+            if(rootView != null) {
+              HeaderCell firstColumnHeader = (HeaderCell) rootView.getChildAt(1);
+              CustomRecyclerView firstColumnRecyclerView = (CustomRecyclerView) rootView.getChildAt(3);
+
+              int headerHeight = firstColumnHeader.getMeasuredHeight();
+              int rootHeight = rootView.getMeasuredHeight();
+              firstColumnRecyclerView.layout(0, 0, dataProvider.dataColumns.get(0).width - 5, rootHeight - TableView.SCROLL_THUMB_HEIGHT);
+              firstColumnHeader.layout(0, 0, dataProvider.dataColumns.get(0).width, headerHeight);
+              firstColumnHeader.setEllipsize(TextUtils.TruncateAt.END);
+            }
+
+
             lastX = motionEvent.getRawX();
             if(column == dataProvider.dataColumns.size() - 1 && motionDx > 0) {
               GrabberView.this.recyclerView.requestLayout();
@@ -73,7 +92,7 @@ public class GrabberView extends LinearLayout {
           GrabberView.this.scrollView.updateLayout();
           GrabberView.this.recyclerView.requestLayout();
           GrabberView.this.dataProvider.onEndPan(scrollView);
-          if( screenGuideView != null) {
+          if(screenGuideView != null) {
             screenGuideView.fade(1, 0);
           }
           return  true;
@@ -88,10 +107,11 @@ public class GrabberView extends LinearLayout {
     }
   }
 
-  public GrabberView(int column, Context context, CustomHorizontalScrollView scrollView) {
+  public GrabberView(int column, Context context, CustomHorizontalScrollView scrollView, FrameLayout rootView) {
     super(context);
     this.column = column;
     this.scrollView = scrollView;
+    this.rootView = rootView;
     grabberButton = new GrabberButton(this);
     grabberButton.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight));
     this.addView(grabberButton);
@@ -140,34 +160,45 @@ public class GrabberView extends LinearLayout {
   }
 
   public void setRecyclerView(RecyclerView recyclerView) {
-    this.recyclerView = recyclerView;
+    this.recyclerView = (CustomRecyclerView) recyclerView;
   }
 
   public void updateHeader(float dxMotion) {
+    if(column == 0 && rootView != null) {
+      View view = rootView.getChildAt(column);
+      resizeView(view, dxMotion);
+      updateChildren(rootView, dxMotion);
+    }
     View view = headerView.getChildAt(column);
-    resizeVew(view, dxMotion);
+    resizeView(view, dxMotion);
     updateNeighbour(headerView, dxMotion);
-
     updateFooter(dxMotion);
   }
 
-  public void updateNeighbour(AutoLinearLayout linearLayout, float dxMotion) {
-    if(column + 1 < linearLayout.getChildCount()) {
-      View neighbour = linearLayout.getChildAt(column + 1);
-      resizeVew(neighbour, -dxMotion);
+  public void updateChildren(ViewGroup container, float dxMotion) {
+    for(int i = 0; i < container.getChildCount(); i++) {
+      View neighbour = container.getChildAt(i);
+      resizeView(neighbour, -dxMotion);
+    }
+  }
+
+  public void updateNeighbour(LinearLayout container, float dxMotion) {
+    if(column + 1 < container.getChildCount()) {
+      View neighbour = container.getChildAt(column + 1);
+      resizeView(neighbour, -dxMotion);
     }
   }
 
   public void updateFooter(float dxMotion) {
     if (footerView != null) {
       View view = footerView.getChildAt(column);
-      resizeVew(view, dxMotion);
+      resizeView(view, dxMotion);
       updateNeighbour(footerView, dxMotion);
     }
   }
 
-  public void resizeVew(View view, float dxMotion) {
-    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+  public void resizeView(View view, float dxMotion) {
+    ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) view.getLayoutParams();
     layoutParams.width += dxMotion;
     view.setLayoutParams(layoutParams);
   }

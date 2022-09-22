@@ -21,7 +21,6 @@ public class HeaderView extends AutoLinearLayout{
       DataColumn column = this.dataColumns.get(i);
       HeaderCell headerCell = (HeaderCell) this.getChildAt(i);
       headerCell.setColumn(column);
-
     }
   }
 }

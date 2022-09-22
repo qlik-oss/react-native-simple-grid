@@ -8,6 +8,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -19,28 +22,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TableView extends FrameLayout {
-  // TODO: make updatedaldldld
-  RootLayout rootView;
+  public final static int SCROLL_THUMB_HEIGHT = 12;
+  final FrameLayout rootView;
+  final RootLayout layoutView;
   CustomHorizontalScrollView scrollView;
   HeaderView headerView = null;
   AutoLinearLayout footerView = null;
   CustomRecyclerView recyclerView = null;
+  CustomRecyclerView firstColumnView = null;
   ScreenGuideView screenGuideView = null;
   SelectionsEngine selectionsEngine = new SelectionsEngine();
   DataProvider dataProvider = new DataProvider();
+  boolean isFirstColumnFrozen = false;
 
   TableTheme tableTheme = new TableTheme();
   List<GrabberView> grabbers = null;
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  TableView(Context context, CustomHorizontalScrollView scrollView) {
+  TableView(Context context, CustomHorizontalScrollView scrollView, FrameLayout rootView) {
     super(context);
     this.scrollView = scrollView;
-    this.rootView = new RootLayout(context);
+    this.rootView = rootView;
+    this.layoutView = new RootLayout(context);
     dataProvider.selectionsEngine = selectionsEngine;
     dataProvider.scrollView = scrollView;
     decorate();
-    this.addView(rootView);
+    this.addView(layoutView);
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -67,7 +74,15 @@ public class TableView extends FrameLayout {
       this.headerView = view;
       FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight);
       params.gravity = Gravity.TOP;
-      rootView.addView(this.headerView, params);
+      layoutView.addView(this.headerView, params);
+    }
+  }
+
+  public void setFirstColumnFrozen(boolean shouldFreeze) {
+    isFirstColumnFrozen = shouldFreeze;
+    dataProvider.setFirstColumnFrozen(shouldFreeze);
+    if (dataProvider.ready()) {
+      createRecyclerView();
     }
   }
 
@@ -81,7 +96,7 @@ public class TableView extends FrameLayout {
       if (this.footerView != null) {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight);
         params.gravity = Gravity.BOTTOM;
-        rootView.addView(this.footerView, params);
+        layoutView.addView(this.footerView, params);
       }
     }
   }
@@ -114,6 +129,7 @@ public class TableView extends FrameLayout {
     if (this.recyclerView != null) {
       this.requestLayout();
       this.recyclerView.requestLayout();
+      this.firstColumnView.requestLayout();
     }
 
     if (resetData) {
@@ -136,26 +152,34 @@ public class TableView extends FrameLayout {
       createDataColumnWidths();
       createGrabbers();
 
+      DataColumn firstColumn = dataProvider.dataColumns.get(0);
       LinearLayoutManager linearLayout = new LinearLayoutManager(this.getContext());
-      recyclerView = new CustomRecyclerView(this.getContext());
-      recyclerView.setLayoutManager(linearLayout);
-      recyclerView.setAdapter(dataProvider);
+
+      recyclerView = new CustomRecyclerView(this.getContext(), false, dataProvider, scrollView, linearLayout);
       LayoutParams recyclerViewLayoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-      recyclerViewLayoutParams.topMargin = (TableTheme.headerHeight);
+      recyclerViewLayoutParams.topMargin = TableTheme.headerHeight;
+
       if (footerView != null) {
         recyclerViewLayoutParams.bottomMargin = TableTheme.headerHeight;
       }
-      recyclerViewLayoutParams.gravity = Gravity.TOP;
 
-      DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-      recyclerView.addItemDecoration(itemDecorator);
-      recyclerView.setHasFixedSize(true);
-      recyclerView.addOnScrollListener( new OnScrollListener(linearLayout) );
-      recyclerView.setVerticalScrollBarEnabled(true);
-      recyclerView.setScrollbarFadingEnabled(true);
-      recyclerView.setVerticalScrollbarThumbDrawable(new ScrollBarDrawable());
-      recyclerView.setBackgroundColor(Color.WHITE);
-      rootView.addView(recyclerView, recyclerViewLayoutParams);
+      LinearLayoutManager firstColumnLinearLayout = new LinearLayoutManager(this.getContext());
+      firstColumnView = new CustomRecyclerView(this.getContext(), true, dataProvider, scrollView, firstColumnLinearLayout);
+      LayoutParams firstColumnViewLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+      firstColumnViewLayoutParams.topMargin = TableTheme.headerHeight;
+      firstColumnViewLayoutParams.bottomMargin = SCROLL_THUMB_HEIGHT;
+
+      if (footerView != null) {
+        firstColumnViewLayoutParams.bottomMargin = SCROLL_THUMB_HEIGHT + TableTheme.headerHeight;
+      }
+
+      firstColumnView.setViewToScrollCouple(recyclerView);
+      recyclerView.setViewToScrollCouple(firstColumnView);
+
+      layoutView.addView(recyclerView, recyclerViewLayoutParams);
+      if (rootView != null && isFirstColumnFrozen) {
+        rootView.addView(firstColumnView, firstColumnViewLayoutParams);
+      }
 
       setupGrabbers();
     }
@@ -166,12 +190,14 @@ public class TableView extends FrameLayout {
       dataProvider.rows,
       this.getContext(),
       this.headerView,
-      this.scrollView);
+      this.scrollView,
+      this);
 
     columnWidthFactory.autoSize(scrollView);
   }
 
   private void setupGrabbers() {
+    //req frozen column layout
     for(GrabberView view : grabbers) {
       view.setDataProvider(dataProvider);
       view.setHeaderView(headerView);
@@ -188,7 +214,7 @@ public class TableView extends FrameLayout {
     int offset = dragWidth / 2;
     int startOffset = 0;
     for(int i = 0; i < dataColumns.size(); i++) {
-      GrabberView grabberView = new GrabberView(i, getContext(), scrollView);
+      GrabberView grabberView = new GrabberView(i, getContext(), scrollView, rootView);
       LayoutParams layoutParams = new LayoutParams(dragWidth, ViewGroup.LayoutParams.MATCH_PARENT);
       startOffset += (dataColumns.get(i).width) - offset;
       offset = 0;
@@ -197,16 +223,20 @@ public class TableView extends FrameLayout {
       grabberView.setBackgroundColor(Color.TRANSPARENT);
       grabberView.setTranslationX(startOffset);
       grabbers.add(grabberView);
+      if (i == 0 && isFirstColumnFrozen) {
+        rootView.addView(grabberView);
+        continue;
+      }
       this.addView(grabberView);
     }
   }
 
   public void createScreenGuide(int width) {
-    if (screenGuideView == null) {
+    if (screenGuideView == null && grabbers != null) {
       screenGuideView = new ScreenGuideView(this.getContext());
       FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT);
       params.gravity = Gravity.CENTER_VERTICAL;
-      this.addView(screenGuideView, params);
+      rootView.addView(screenGuideView, params);
       for (GrabberView grabberView : grabbers) {
         grabberView.setGreenGuideView(screenGuideView);
       }
@@ -225,22 +255,4 @@ public class TableView extends FrameLayout {
       MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
     layout(getLeft(), getTop(), getRight(), getBottom());
   };
-
-  class OnScrollListener extends RecyclerView.OnScrollListener {
-    LinearLayoutManager linearLayoutManager;
-    public OnScrollListener(LinearLayoutManager layoutManager) {
-      linearLayoutManager = layoutManager;
-    }
-    @Override
-    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-      super.onScrolled(recyclerView, dx, dy);
-      if(linearLayoutManager.findLastCompletelyVisibleItemPosition() >= dataProvider.getItemCount() - 50
-        && !dataProvider.isLoading()
-        && dataProvider.needsMore()) {
-        // start the fetch
-        dataProvider.setLoading(true);
-        EventUtils.sendEventToJSFromView(scrollView, "onEndReached");
-      }
-    }
-  }
 }

@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,8 +34,12 @@ import okhttp3.Response;
 public class HeaderViewFactory {
   List<DataColumn> dataColumns = new ArrayList<>();
   List<TotalsCell> totalsCells = new ArrayList<>();
-  HeaderView headerView = null ;
+  HeaderView headerView = null;
+  HeaderCell fixedFirstHeaderCell = null;
   AutoLinearLayout footerView = null;
+  FrameLayout rootView;
+  CustomHorizontalScrollView scrollView;
+  final TableView tableView;
 
   public AutoLinearLayout getFooterView() {
     return footerView;
@@ -48,9 +53,10 @@ public class HeaderViewFactory {
     return dataColumns;
   }
 
-  CustomHorizontalScrollView scrollView;
-  HeaderViewFactory(ReadableArray readableArray, CustomHorizontalScrollView scrollView) {
+  HeaderViewFactory(ReadableArray readableArray, CustomHorizontalScrollView scrollView, FrameLayout rootView, TableView tableView) {
     this.scrollView = scrollView;
+    this.rootView = rootView;
+    this.tableView = tableView;
     if (readableArray != null) {
       for(int i = 0; i < readableArray.size(); i++) {
         DataColumn column = new DataColumn(readableArray.getMap(i));
@@ -60,8 +66,11 @@ public class HeaderViewFactory {
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  public HeaderViewFactory(ReadableArray readableArray, ReadableArray footerArray, Context context,  CustomHorizontalScrollView scrollView) {
+  public HeaderViewFactory(ReadableArray readableArray, ReadableArray footerArray,  CustomHorizontalScrollView scrollView, FrameLayout rootView, TableView tableView) {
+    Context context = tableView.getContext();
     this.scrollView = scrollView;
+    this.rootView = rootView;
+    this.tableView = tableView;
     if(readableArray != null) {
       buildHeader(readableArray, context);
     }
@@ -70,9 +79,10 @@ public class HeaderViewFactory {
     }
   }
 
-  public HeaderViewFactory(HeaderView headerView, CustomHorizontalScrollView scrollView) {
+  public HeaderViewFactory(HeaderView headerView, CustomHorizontalScrollView scrollView, TableView tableView) {
     this.scrollView = scrollView;
     this.headerView = headerView;
+    this.tableView = tableView;
   }
 
 
@@ -88,9 +98,25 @@ public class HeaderViewFactory {
     for(int i = 0; i < readableArray.size(); i++) {
       ReadableMap columnMap = readableArray.getMap(i);
       DataColumn column = new DataColumn(columnMap);
-      ReadableMap representation = columnMap.getMap("representation");
-      String type = representation.getString("type");
       dataColumns.add(column);
+
+      if(i == 0 && rootView != null) { // && this.tableView.isFirstColumnFrozen
+        fixedFirstHeaderCell = new HeaderCell(rootView.getContext(), column, this.scrollView);
+        fixedFirstHeaderCell.setMaxLines(1);
+        fixedFirstHeaderCell.setTypeface(fixedFirstHeaderCell.getTypeface(), Typeface.BOLD);
+        fixedFirstHeaderCell.setEllipsize(TextUtils.TruncateAt.END);
+        fixedFirstHeaderCell.setTextColor(Color.BLACK);
+        fixedFirstHeaderCell.setText(column.label);
+        fixedFirstHeaderCell.setPadding(padding, 0, padding, 0);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, headerHeight);
+        fixedFirstHeaderCell.setTop(0);
+        fixedFirstHeaderCell.setLeft(0);
+        fixedFirstHeaderCell.setLayoutParams(layoutParams);
+        fixedFirstHeaderCell.setGravity(Gravity.CENTER_VERTICAL);
+        fixedFirstHeaderCell.setBackgroundColor(TableTheme.headerBackgroundColor);
+        fixedFirstHeaderCell.setElevation((int)PixelUtils.dpToPx(4));
+        rootView.addView(fixedFirstHeaderCell);
+      }
       TextView text = new HeaderCell(headerView.getContext(), column, this.scrollView);
       text.setMaxLines(1);
       text.setTypeface(text.getTypeface(), Typeface.BOLD);
