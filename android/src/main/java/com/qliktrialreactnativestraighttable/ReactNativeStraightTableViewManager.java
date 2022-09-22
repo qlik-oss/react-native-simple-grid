@@ -2,7 +2,6 @@ package com.qliktrialreactnativestraighttable;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 
@@ -17,7 +16,6 @@ import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-import java.util.List;
 import java.util.Map;
 
 public class ReactNativeStraightTableViewManager extends SimpleViewManager<View> {
@@ -65,6 +63,7 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
     public void setCols(View view,  @Nullable ReadableMap source) {
       ReadableArray columns = source.getArray("header");
       ReadableArray footer = source.getArray("footer");
+
       TableView tableView = getTableViewFrom(view);
       HeaderView headerView = tableView.getHeaderView();
       HeaderViewFactory headerViewFactory;
@@ -78,7 +77,6 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       }
 
       tableView.setDataColumns(headerViewFactory.getDataColumns());
-
     }
 
     @ReactProp(name = "isDataView")

@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements  SelectionsObserver {
+public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements SelectionsObserver {
   DataCell cell = null;
   boolean selected = false;
   int defaultTextColor = Color.BLACK;
@@ -40,7 +40,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   @Override
   public boolean onTouchEvent(MotionEvent e) {
     gestureDetector.onTouchEvent(e);
-    return  true;
+    return true;
   }
 
   public void onSelectionsChanged(String s) {

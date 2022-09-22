@@ -44,8 +44,9 @@ public class EventUtils {
   public static void sendOnHeaderTapped(CustomHorizontalScrollView contextView, DataColumn column) {
     WritableMap event = Arguments.createMap();
     try {
-      Log.d("foo", column.toEvent());
-      event.putString("column", column.toEvent());
+      String columnJSONString = column.toEvent();
+      Log.d("foo", columnJSONString);
+      event.putString("column", columnJSONString);
       EventUtils.sendEventToJSFromView(contextView, "onHeaderPressed", event);
     } catch (JSONException e) {
       e.printStackTrace();

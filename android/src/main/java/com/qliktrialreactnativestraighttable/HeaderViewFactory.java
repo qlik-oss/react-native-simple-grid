@@ -16,9 +16,19 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class HeaderViewFactory {
   List<DataColumn> dataColumns = new ArrayList<>();
@@ -37,6 +47,7 @@ public class HeaderViewFactory {
   public List<DataColumn> getDataColumns() {
     return dataColumns;
   }
+
   CustomHorizontalScrollView scrollView;
   HeaderViewFactory(ReadableArray readableArray, CustomHorizontalScrollView scrollView) {
     this.scrollView = scrollView;
@@ -75,21 +86,24 @@ public class HeaderViewFactory {
     headerView.setElevation((int)PixelUtils.dpToPx(4));
     headerView.setBackgroundColor(TableTheme.headerBackgroundColor);
     for(int i = 0; i < readableArray.size(); i++) {
-      DataColumn column = new DataColumn(readableArray.getMap(i));
+      ReadableMap columnMap = readableArray.getMap(i);
+      DataColumn column = new DataColumn(columnMap);
+      ReadableMap representation = columnMap.getMap("representation");
+      String type = representation.getString("type");
       dataColumns.add(column);
       TextView text = new HeaderCell(headerView.getContext(), column, this.scrollView);
       text.setMaxLines(1);
       text.setTypeface(text.getTypeface(), Typeface.BOLD);
       text.setEllipsize(TextUtils.TruncateAt.END);
+      text.setTextColor(Color.BLACK);
       text.setText(column.label);
       text.setPadding(padding, 0, padding, 0);
       LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
       text.setLayoutParams(layoutParams);
       text.setGravity(Gravity.CENTER_VERTICAL);
-
       headerView.addView(text);
     }
-    headerView.setDatColumns(dataColumns);
+    headerView.setDataColumns(dataColumns);
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

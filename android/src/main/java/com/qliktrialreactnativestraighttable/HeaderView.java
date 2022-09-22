@@ -11,7 +11,7 @@ public class HeaderView extends AutoLinearLayout{
     super(context);
   }
 
-  public void setDatColumns(List<DataColumn> dataColumns) {
+  public void setDataColumns(List<DataColumn> dataColumns) {
     this.dataColumns = dataColumns;
   }
 

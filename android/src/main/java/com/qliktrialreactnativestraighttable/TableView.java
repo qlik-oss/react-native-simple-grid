@@ -31,6 +31,7 @@ public class TableView extends FrameLayout {
 
   TableTheme tableTheme = new TableTheme();
   List<GrabberView> grabbers = null;
+
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   TableView(Context context, CustomHorizontalScrollView scrollView) {
     super(context);
@@ -110,11 +111,12 @@ public class TableView extends FrameLayout {
       this.requestLayout();
       this.recyclerView.requestLayout();
     }
-    if (this.headerView != null && dataProvider.ready()) {
-      createRecyclerView();
-    }
+
     if (resetData) {
-      selectionsEngine.clearSelections();
+      if (this.headerView != null && dataProvider.ready()) {
+        createRecyclerView();
+      }
+//      selectionsEngine.clearSelections();
     }
   }
 
@@ -126,7 +128,7 @@ public class TableView extends FrameLayout {
   }
 
   void createRecyclerView() {
-    if (recyclerView == null) {
+//    if (recyclerView == null) {
       createDataColumnWidths();
       createGrabbers();
 
@@ -152,7 +154,7 @@ public class TableView extends FrameLayout {
       rootView.addView(recyclerView, recyclerViewLayoutParams);
 
       setupGrabbers();
-    }
+//    }
   }
 
   private void createDataColumnWidths() {
