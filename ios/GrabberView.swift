@@ -22,14 +22,16 @@ class GrabberView: UIView {
   var timer: Timer?
   var currentTranslation = CGPoint.zero
   var shouldExpand = false
-
+  var dataRange: CountableRange = 0..<2
   var linePath = UIBezierPath()
   var guidePath = UIBezierPath()
   var colIdx = 0
   var isLast = false
-  init(frame: CGRect, index i: Double, theme: TableTheme) {
+  
+  init(frame: CGRect, index i: Double, theme: TableTheme, withRange range: CountableRange<Int>) {
     super.init(frame: frame)
     self.tableTheme = theme
+    self.dataRange = range
     colIdx = Int(i)
     borderColor = ColorParser().fromCSS(cssString: tableTheme?.borderBackgroundColor ?? "gray")
     self.layer.zPosition = 2
@@ -114,16 +116,17 @@ class GrabberView: UIView {
   }
 
   fileprivate func broadcastTranslation(_ translation: CGPoint) -> Bool {
+    let abosluteColIdx = colIdx - dataRange.lowerBound
     if let cv = collectionView, let container = containerView, let headerView = headerView {
-      if !cv.updateSize(translation, withColumn: colIdx) {
+      if !cv.updateSize(translation, withColumn: abosluteColIdx) {
         return false
       }
-      headerView.updateSize(translation, withColumn: colIdx)
+      headerView.updateSize(translation, withColumn: abosluteColIdx)
       container.updateSize(colIdx)
     }
     
     if let totalsView = totalsView {
-      totalsView.updateSize(translation, withColumn: colIdx)
+      totalsView.updateSize(translation, withColumn: abosluteColIdx)
     }
     return true
   }
@@ -167,10 +170,6 @@ class GrabberView: UIView {
   }
   
   fileprivate func broadcastUpdate() {
-    if let cv = collectionView {
-      cv.onEndDrag(colIdx)
-    }
-
     if let container = containerView {
       container.onEndDragged(colIdx)
     }

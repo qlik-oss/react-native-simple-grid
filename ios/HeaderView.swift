@@ -7,26 +7,25 @@
 
 import Foundation
 
-class HeaderView: UIView {
-  let labelsFactory = LabelsFactory()
+class HeaderView: HeaderStyleView {
   var onHeaderPressed: RCTDirectEventBlock?
   var headerFrame = CGRect.zero
   weak var columnWidths: ColumnWidths?
   weak var bottomBorder: CALayer?
   
-  init(columns: [DataColumn], withTheme theme: TableTheme, onHeaderPressed: RCTDirectEventBlock?, headerStyle: HeaderContentStyle, columnWidths: ColumnWidths ) {
-    self.columnWidths = columnWidths
-    let width = columnWidths.getTotalWidth()
-    let frame = CGRect(x: 0, y: 0, width: width, height: Double(theme.headerHeight!))
-    headerFrame = frame;
+  init(frame: CGRect,
+       columns: [DataColumn],
+       withTheme theme: TableTheme,
+       onHeaderPressed: RCTDirectEventBlock?,
+       headerStyle: HeaderContentStyle,
+       columnWidths: ColumnWidths,
+       withRange dataRange: CountableRange<Int> ) {
     super.init(frame: frame)
+    self.columnWidths = columnWidths
+    self.dataRange = dataRange
     self.onHeaderPressed = onHeaderPressed
+    headerFrame = frame;
     addLabels(columns: columns, withTheme: theme, andHeaderStyle: headerStyle)
-    self.layer.shadowColor = UIColor.black.cgColor
-    self.layer.shadowOpacity = 0.15
-    self.layer.shadowOffset = CGSize(width: 0, height: 1)
-    self.layer.shadowRadius = 2
-    self.layer.zPosition = 1
     addBottomBorder()
    
   }
@@ -49,7 +48,7 @@ class HeaderView: UIView {
   
   func addLabels(columns: [DataColumn], withTheme theme: TableTheme, andHeaderStyle headerStyle: HeaderContentStyle) {
     var currentX = 0
-    for column in columns {
+    for column in columns[dataRange] {
       let frame = CGRect(x: currentX, y: 0, width: 200, height: theme.headerHeight!)
       let label = HeaderCell(frame: frame, dataColumn: column)
       label.onHeaderPressed = onHeaderPressed
@@ -66,10 +65,6 @@ class HeaderView: UIView {
       currentX += 200//Int(column.widths[widthIndex])
       addSubview(label)
     }
-  }
-  
-  func updateSize(_ translation: CGPoint, withColumn column: Int) {
-    labelsFactory.updateSize(view: self, translation: translation, withColumn: column)
   }
   
   func updateColumns(_ dataColumns: [DataColumn]) {
@@ -100,7 +95,7 @@ class HeaderView: UIView {
 
     var currentX = 0.0
     subviews.enumerated().forEach{ (index, value) in
-      let width = columnWidths.columnWidths[index]
+      let width = columnWidths.columnWidths[index + dataRange.lowerBound]
       let newFrame = CGRect(x: currentX, y: 0, width: width , height: value.frame.height)
       value.frame = newFrame
       currentX += width
@@ -109,15 +104,10 @@ class HeaderView: UIView {
  
   }
   
-  override func layoutSubviews() {
-    super.layoutSubviews()
+  override func updateLayer() {
     if let bottomBorder = bottomBorder {
-      CATransaction.begin()
-      CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-      
       bottomBorder.frame = CGRect(origin: bottomBorder.frame.origin, size: CGSize(width: self.frame.width, height: 1))
-      
-      CATransaction.commit()
     }
   }
+  
 }

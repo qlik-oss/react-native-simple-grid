@@ -12,8 +12,13 @@ class ColumnWidths {
   var columnWidths = [Double]();
   var key: String?
   
+  
   func resetColumnWidths(widths: [Double]) {
     columnWidths = widths
+  }
+  
+  func count() -> Int {
+    return columnWidths.count
   }
   
   func loadDefaultWidths(_ frame: CGRect, columnCount: Int, dataRows: [DataRow]) {
@@ -79,6 +84,10 @@ class ColumnWidths {
   
   func getTotalWidth() -> Double {
     return columnWidths.reduce(0, { $0 + $1 })
+  }
+  
+  func getTotalWidth(range: CountableRange<Int>) -> Double {
+    return columnWidths[range].reduce(0, { $0 + $1 })
   }
   
   func resize(index: Int, by: CGPoint) {

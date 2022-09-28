@@ -8,35 +8,30 @@
 import Foundation
 class MasterColumnCollectionView : DataCollectionView {
   
-  override init(frame: CGRect, withRows rows: [DataRow],
+  init(frame: CGRect,
+       withRows rows: [DataRow],
        andColumns cols: [DataColumn],
        theme: TableTheme,
        selectionsEngine: SelectionsEngine,
        cellStyle: CellContentStyle,
        columnWidths: ColumnWidths) {
-    super.init(frame: frame, withRows: rows, andColumns: cols, theme: theme, selectionsEngine: selectionsEngine, cellStyle: cellStyle, columnWidths: columnWidths)
-    fitToFrame()
+    super.init(frame: frame,
+               withRows: rows,
+               andColumns: cols,
+               theme: theme,
+               selectionsEngine: selectionsEngine,
+               cellStyle: cellStyle,
+               columnWidths: columnWidths,
+               range: 0..<1)
+    signalVisibleRows()
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
-  fileprivate func fitToFrame() {
-    guard let childCollectionView = childCollectionView else {
-      return
-    }
-    childCollectionView.translatesAutoresizingMaskIntoConstraints = false
-    let top = childCollectionView.topAnchor.constraint(equalTo: self.topAnchor)
-    let bottom = childCollectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-    let left = childCollectionView.leftAnchor.constraint(equalTo: self.leftAnchor)
-    let right = childCollectionView.rightAnchor.constraint(equalTo: self.rightAnchor)
-    NSLayoutConstraint.activate([top, bottom, left, right])
-    self.addConstraints([top, bottom, left, right])
-    signalVisibleRows()
-  }
-  
-  public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+  override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    syncScrolling()
     signalVisibleRows()
   }
   
@@ -83,7 +78,7 @@ class MasterColumnCollectionView : DataCollectionView {
     guard let totalCellsView = totalCellsView else {
       return
     }
-
+    
     let arrayOfVisibleItems = childCollectionView.indexPathsForVisibleItems.sorted()
     let firstItem = arrayOfVisibleItems.first;
     let lastItem = arrayOfVisibleItems.last;
@@ -92,5 +87,53 @@ class MasterColumnCollectionView : DataCollectionView {
       totalCellsView.updateTotals(first: firstItem, last: lastItem)
     }
   }
-
+  
+  override func updateSize(_ translation: CGPoint, withColumn index: Int) -> Bool {
+    guard let columnWidths = columnWidths else { return true }
+    guard let childCollectionView = childCollectionView else { return true }
+    
+    if(!updateCellSize(translation, withColumn: index)) {
+      return false
+    }
+       
+    let oldFrame = self.frame
+    let width = columnWidths.getTotalWidth(range: dataRange)
+    let newFrame = CGRect(x: oldFrame.origin.x, y: oldFrame.origin.y, width: width, height: oldFrame.height)
+    let delta = newFrame.width - oldFrame.width
+    
+    if let slave = slave {
+      if(freezeFirstColumn) {
+        if(!slave.resizeFrozenFirstCell(width)) {
+          let inverse = CGPoint(x: -translation.x, y: 0)
+          let _ = updateCellSize(inverse, withColumn: index)
+          return false
+        }
+      } else {
+        if(!slave.resizeFirstCell(delta)) {
+          let inverse = CGPoint(x: -translation.x, y: 0)
+          let _ = updateCellSize(inverse, withColumn: index)
+          return false
+        }
+      }
+      self.frame = newFrame
+      
+      childCollectionView.collectionViewLayout.invalidateLayout()
+    }
+    
+    if let headerView = headerView {
+      resizeHeaderStyleView(headerView, width: newFrame.width)
+      headerView.resizeLabels()
+    }
+    
+    if let totalsView = totalsView {
+      resizeHeaderStyleView(totalsView, width: newFrame.width)
+    }
+        
+    return true
+  }
+  
+  func resizeHeaderStyleView(_ view: HeaderStyleView, width: Double) {
+    view.frame = CGRect(origin: view.frame.origin, size: CGSize(width: width, height: view.frame.height))
+  }
+  
 }
