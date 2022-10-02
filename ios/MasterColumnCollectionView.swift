@@ -127,6 +127,7 @@ class MasterColumnCollectionView : DataCollectionView {
     
     if let totalsView = totalsView {
       resizeHeaderStyleView(totalsView, width: newFrame.width)
+      totalsView.resizeLabels(withFrame: newFrame)
     }
         
     return true
