@@ -44,7 +44,7 @@ struct Representation: Codable {
 
 struct DataColumn: Codable {
   var isDim: Bool = false
-  var active: Bool = false
+  var active: Bool?
   let label: String?
   let id: String?
   let align: String?

@@ -23,7 +23,7 @@ class LabelsFactory {
     let newFrame = CGRect(x: oldFrame.origin.x + x, y: 0, width: oldFrame.width + deltaWidth, height: oldFrame.height)
     view.frame = newFrame
   }
-  
+
   func updateFirstCell(view: UIView, translation: CGPoint) {
     let label = view.subviews[0]
     resizeLabel(view: label, deltaWidth: translation.x, translatingX: 0)

@@ -18,7 +18,7 @@ class GrabberView: UIView {
   weak var scrollView: UIScrollView?
   weak var guideLineView: GuideLineView?
   var pressed = false
-  var trim:CGFloat = 0;
+  var trim: CGFloat = 0
   var timer: Timer?
   var currentTranslation = CGPoint.zero
   var shouldExpand = false
@@ -27,7 +27,7 @@ class GrabberView: UIView {
   var guidePath = UIBezierPath()
   var colIdx = 0
   var isLast = false
-  
+
   init(frame: CGRect, index i: Double, theme: TableTheme, withRange range: CountableRange<Int>) {
     super.init(frame: frame)
     self.tableTheme = theme
@@ -124,16 +124,16 @@ class GrabberView: UIView {
       headerView.updateSize(translation, withColumn: abosluteColIdx)
       container.updateSize(colIdx)
     }
-    
+
     if let totalsView = totalsView {
       totalsView.updateSize(translation, withColumn: abosluteColIdx)
     }
     return true
   }
-  
+
   fileprivate func onPan(translation: CGPoint) {
     let point =  CGPoint(x: self.center.x + translation.x, y: self.center.y)
-    
+
     if broadcastTranslation(translation) {
       if let scrollView = scrollView {
         if isLast && translation.x > 0 {
@@ -141,12 +141,11 @@ class GrabberView: UIView {
           currentOffset.x += translation.x
           scrollView.setContentOffset(currentOffset, animated: false)
           scrollView.flashScrollIndicators()
-          currentTranslation = translation;
+          currentTranslation = translation
           if let containerView = containerView {
             if scrollView.contentSize.width > containerView.frame.width {
               startTimer()
-            }
-            else {
+            } else {
               endTimer()
             }
           }
@@ -168,13 +167,13 @@ class GrabberView: UIView {
     }
     self.setNeedsDisplay()
   }
-  
+
   fileprivate func broadcastUpdate() {
     if let container = containerView {
       container.onEndDragged(colIdx)
     }
   }
-  
+
   func repositionTo(_ x: Double) {
     let point =  CGPoint(x: x, y: self.center.y)
     self.center = point
@@ -192,7 +191,7 @@ class GrabberView: UIView {
     color.setStroke()
     linePath.stroke()
   }
-  
+
   fileprivate func startTimer() {
     if timer != nil {
       return
@@ -203,10 +202,10 @@ class GrabberView: UIView {
     if !shouldExpand {
       return
     }
-    timer = Timer.scheduledTimer(withTimeInterval: 0.0016, repeats: true) { t in
+    timer = Timer.scheduledTimer(withTimeInterval: 0.0016, repeats: true) { _ in
       self.currentTranslation.x = 1
-      let _ = self.broadcastTranslation(self.currentTranslation)
-      if self.isLast, let scrollView = self.scrollView  {
+      _ = self.broadcastTranslation(self.currentTranslation)
+      if self.isLast, let scrollView = self.scrollView {
         var currentOffset = scrollView.contentOffset
         currentOffset.x += self.currentTranslation.x
         scrollView.setContentOffset(currentOffset, animated: false)
@@ -216,7 +215,7 @@ class GrabberView: UIView {
       self.setNeedsDisplay()
     }
   }
-  
+
   fileprivate func endTimer() {
     if let timer = timer {
       timer.invalidate()

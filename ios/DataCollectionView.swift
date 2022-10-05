@@ -11,7 +11,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   enum DataCollectionViewError: Error {
     case noCellForIdentifier
   }
-  
+
   var stylingInfo = StylingInfo()
   var dataColumns: [DataColumn]?
   var dataRows: [DataRow]?
@@ -35,7 +35,6 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   weak var totalsView: TotalsView?
   weak var hScrollView: UIScrollView?
 
-  
   init(frame: CGRect, withRows rows: [DataRow],
        andColumns cols: [DataColumn],
        theme: TableTheme,
@@ -56,7 +55,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     setData(columns: cols, withRows: rows)
     fitToFrame()
   }
-  
+
   fileprivate func fitToFrame() {
     guard let childCollectionView = childCollectionView else {
       return
@@ -69,11 +68,11 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     NSLayoutConstraint.activate([top, bottom, left, right])
     self.addConstraints([top, bottom, left, right])
   }
-  
+
   required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
-  
+
   func scrollToTop() {
     if let childCollectionView = childCollectionView {
       childCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
@@ -81,25 +80,25 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   }
 
   func updateSize(_ translation: CGPoint, withColumn index: Int) -> Bool {
-    if(!updateCellSize(translation, withColumn: index)) {
-      return false;
-    }
-    
-    return true
-  }
-  
-  func updateCellSize(_ translation: CGPoint, withColumn index: Int) -> Bool {
-    if(!updateCell(translation, withColum: index)) {
+    if !updateCellSize(translation, withColumn: index) {
       return false
     }
-    
+
+    return true
+  }
+
+  func updateCellSize(_ translation: CGPoint, withColumn index: Int) -> Bool {
+    if !updateCell(translation, withColum: index) {
+      return false
+    }
+
     if let columnWidths = columnWidths {
       columnWidths.resize(index: index + dataRange.lowerBound, by: translation)
     }
-    
-    return true;
+
+    return true
   }
-  
+
   func updateCell(_ translation: CGPoint, withColum index: Int) -> Bool {
     if let cv = self.childCollectionView {
       let visibleCells = cv.subviews
@@ -113,7 +112,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     }
     return true
   }
-  
+
   func updateFirstCell(_ translation: CGPoint) -> Bool {
     if let cv = self.childCollectionView {
       let visibleCells = cv.subviews
@@ -127,20 +126,20 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     }
     return true
   }
-  
+
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     syncScrolling()
   }
-  
+
   func syncScrolling() {
-    if let slave = slave, let childCollectionView = childCollectionView  {
+    if let slave = slave, let childCollectionView = childCollectionView {
       if let slaveChild = slave.childCollectionView {
         let y = childCollectionView.contentOffset.y
         slaveChild.contentOffset.y = y
       }
     }
   }
-   
+
   func setData(columns: [DataColumn], withRows rows: [DataRow]) {
     dataColumns = columns
     dataRows = rows
@@ -148,7 +147,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     let flowLayout = UICollectionViewFlowLayout()
     let uiCollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
     uiCollectionView.translatesAutoresizingMaskIntoConstraints = false
-    
+
     uiCollectionView.register(DataCellView.self, forCellWithReuseIdentifier: reuseIdentifier)
     uiCollectionView.delegate = self
     uiCollectionView.dataSource = self
@@ -157,19 +156,19 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     childCollectionView = uiCollectionView
     addSubview(uiCollectionView)
   }
-  
+
   fileprivate func setupDataCols() {
     guard let dataColumns = dataColumns else {
       return
     }
-    
+
     for col in dataColumns[dataRange] {
       if let stylingInfo = col.stylingInfo {
         var index = 0
         for style in stylingInfo {
-          if( style == "cellBackgroundColor") {
-            self.stylingInfo.backgroundColorIdx = index;
-          } else if (style == "cellForegroundColor") {
+          if  style == "cellBackgroundColor" {
+            self.stylingInfo.backgroundColorIdx = index
+          } else if style == "cellForegroundColor" {
             self.stylingInfo.foregroundColorIdx = index
           }
           index += 1
@@ -177,7 +176,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       }
     }
   }
-  
+
   func appendData(rows: [DataRow]) {
     DispatchQueue.main.async {
       self.dataRows = rows
@@ -185,8 +184,8 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       self.loading = false
     }
   }
-  
-  //MARK: collectionview
+
+  // MARK: collectionview
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     // swiftlint:disable:next force_cast
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DataCellView
@@ -204,10 +203,10 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
                    withStyle: self.stylingInfo,
                    withRange: dataRange)
     }
-    
+
     return cell
   }
-  
+
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return dataRows?.count ?? 0
   }
@@ -217,22 +216,22 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     let height = cellStyle.rowHeight ?? 1
     return CGSize(width: width, height: CGFloat(tableTheme!.rowHeight! * height))
   }
-  
+
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
     return 0
   }
-  
+
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
     return 0
   }
-  
+
   func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
     let rowCount = dataRows!.count
     if indexPath.row == rowCount - 50 && !loading {
       loadMoreData()
     }
   }
-  
+
   func loadMoreData() {
     DispatchQueue.global(qos: .userInitiated).async {
       if let requestOnEndReached = self.onEndReached, let size = self.dataSize, let rows = self.dataRows {
@@ -243,7 +242,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       }
     }
   }
-  
+
   public func resizeCells (withFrame frame: CGRect) {
     guard let childCollectionView = childCollectionView else {
       return
@@ -251,11 +250,11 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     guard let dataColumns = dataColumns else {
       return
     }
-    
+
     guard let columnWidths = columnWidths else {
       return
     }
-    
+
     self.frame = frame
     for visibleRow in childCollectionView.subviews {
       if let dataCellView = visibleRow as? DataCellView {
@@ -265,37 +264,37 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     childCollectionView.collectionViewLayout.invalidateLayout()
     childCollectionView.reloadData()
   }
-  
+
   func resizeFirstCell(_ delta: Double) -> Bool {
     guard let childCollectionView = childCollectionView else { return false }
     let translation = CGPoint(x: -delta, y: 0)
-    if(!updateFirstCell(translation)) {
+    if !updateFirstCell(translation) {
       return false
     }
-    
+
     let oldFrame = self.frame
     let newFrame = CGRect(x: oldFrame.origin.x + delta, y: oldFrame.origin.y, width: oldFrame.width - delta, height: oldFrame.height)
-    self.frame = newFrame;
-    
+    self.frame = newFrame
+
     if let headerView = headerView {
       resizeHeaderStyleView(headerView, delta: delta)
     }
-    
+
     if let totalsView = totalsView {
       resizeHeaderStyleView(totalsView, delta: delta)
     }
-    
+
     childCollectionView.collectionViewLayout.invalidateLayout()
     return true
   }
-  
+
   func resizeHeaderStyleView(_ view: HeaderStyleView, delta: Double) {
     let oldFrame = view.frame
     let newFrame =  CGRect(x: oldFrame.origin.x + delta, y: oldFrame.origin.y, width: oldFrame.width - delta, height: oldFrame.height)
     view.frame = newFrame
     view.updateFirstCell(CGPoint(x: -delta, y: 0))
   }
-  
+
   func resizeLastCell() {
     guard let columnWidths = columnWidths else { return }
     guard let childCollectionView = childCollectionView else { return }
@@ -306,43 +305,43 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     self.frame = CGRect(origin: self.frame.origin, size: CGSize(width: totalWidth, height: self.frame.height))
     childCollectionView.collectionViewLayout.invalidateLayout()
   }
-  
+
   func resizeFrozenFirstCell(_ width: Double) -> Bool {
     guard let childCollectionView = childCollectionView else { return false }
     guard let hScrollView = hScrollView else {return false }
-    
+
     /// only first column should be resized not all the other ones.
-    let newX = width;
+    let newX = width
     let delta = hScrollView.frame.origin.x - newX
     let translation = CGPoint(x: delta, y: 0)
-    if(!updateFirstCell(translation)) {
+    if !updateFirstCell(translation) {
       return false
     }
-    
+
     if let headerView = headerView {
       shiftHeaderStyleView(headerView, translation: translation)
     }
-    
+
     if let totalsView = totalsView {
       shiftHeaderStyleView(totalsView, translation: translation)
     }
-    
+
     repositionGrabbers()
-    
+
     hScrollView.frame = CGRect(x: newX, y: hScrollView.frame.origin.y, width: hScrollView.frame.width + delta, height: hScrollView.frame.height)
     self.frame = CGRect(origin: self.frame.origin, size: CGSize(width: self.frame.width + delta, height: self.frame.height))
     childCollectionView.collectionViewLayout.invalidateLayout()
-    
+
     return true
   }
- 
+
   func shiftHeaderStyleView(_ view: HeaderStyleView, translation: CGPoint) {
     let oldFrame = view.frame
     let newFrame =  CGRect(origin: oldFrame.origin, size: CGSize(width: oldFrame.width + translation.x, height: oldFrame.height))
     view.frame = newFrame
     view.updateFirstCell(translation)
   }
-  
+
   func repositionGrabbers() {
     guard let columnWidths = columnWidths else { return }
     guard let grabbers = grabbers else { return }

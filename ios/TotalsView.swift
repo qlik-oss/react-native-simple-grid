@@ -14,7 +14,7 @@ class TotalsView: HeaderStyleView {
   var dataIndex = [Int]()
   weak var columnWidths: ColumnWidths?
   weak var borderLayer: CALayer?
-  
+
   init(frame: CGRect,
        withTotals totals: Totals,
        dataColumns: [DataColumn],
@@ -32,9 +32,9 @@ class TotalsView: HeaderStyleView {
     addLabels(dataColumns)
     addBorder()
   }
-  
+
   func addBorder() {
-    
+
     if let borderLayer = borderLayer {
       borderLayer.removeFromSuperlayer()
     }
@@ -44,41 +44,40 @@ class TotalsView: HeaderStyleView {
     self.borderLayer = border
     updateLayer()
   }
-  
+
   override func updateLayer() {
     guard let borderLayer = borderLayer else {   return  }
     guard let totals = totals else { return   }
     guard let columnWidths = columnWidths else { return }
-    
+
     let width = columnWidths.getTotalWidth(range: dataRange)
-    
+
     if totals.position == "bottom" {
       let topBorder = CGRect(x: 0.0, y: 0.0, width: width, height: 1.0)
       borderLayer.frame = topBorder
     } else {
-      let bottomBorder = CGRect(x: 0.0, y:  self.frame.height - 1.0, width: width, height: 1.0)
+      let bottomBorder = CGRect(x: 0.0, y: self.frame.height - 1.0, width: width, height: 1.0)
       borderLayer.frame = bottomBorder
     }
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   fileprivate func addLabels(_ dataColumns: [DataColumn]) {
     guard let columnWidths = columnWidths else {
       return
     }
-    
+
     guard let totals = totals else {
       return
     }
-    
+
     guard let rows = totals.rows else {
       return
     }
-    
-    
+
     var currentX = 0
     var currentTotalsIdx = 0
     dataColumns[dataRange].enumerated().forEach { (index, _) in
@@ -100,7 +99,7 @@ class TotalsView: HeaderStyleView {
       addSubview(label)
     }
   }
-  
+
   func resetTotals(_ newTotals: Totals?) {
     if let nt = newTotals {
       totals = nt
@@ -116,30 +115,29 @@ class TotalsView: HeaderStyleView {
       }
     }
   }
-  
-  
+
   func resizeLabels(withFrame: CGRect) {
     guard let columnWidths = columnWidths else {
       return
     }
-    
+
     guard let totals = totals else {
       return
     }
-    
+
     if subviews.count > columnWidths.columnWidths.count {
       return
     }
     var currentX = 0.0
-    subviews.enumerated().forEach{ (index, value) in
+    subviews.enumerated().forEach { (index, value) in
       let width = columnWidths.columnWidths[index + dataRange.lowerBound]
-      let newFrame = CGRect(x: currentX, y: 0, width: width , height: value.frame.height)
+      let newFrame = CGRect(x: currentX, y: 0, width: width, height: value.frame.height)
       value.frame = newFrame
       currentX += width
     }
-    
+
     let y = totals.position == "bottom" ? withFrame.height - self.frame.height * 2 : self.frame.origin.y
     self.frame = CGRect(origin: CGPoint(x: self.frame.origin.x, y: y), size: CGSize(width: currentX, height: self.frame.height))
   }
-  
+
 }

@@ -6,11 +6,11 @@
 //
 
 import Foundation
-class GuideLineView : UIView {
+class GuideLineView: UIView {
   var containerWidth = 0
   var linePath = UIBezierPath()
   var shapeLayer = CAShapeLayer()
-  
+
   init(frame: CGRect, containerWidth: Int) {
     super.init(frame: frame)
     self.containerWidth = containerWidth - 2
@@ -18,9 +18,9 @@ class GuideLineView : UIView {
     linePath.move(to: CGPoint(x: containerWidth, y: 0))
     linePath.addLine(to: CGPoint(x: containerWidth, y: Int(frame.height)))
     shapeLayer.path = linePath.cgPath
-    
+
     let  dashes: [ CGFloat ] = [ 3, 3 ]
-    
+
     shapeLayer.frame = frame
     shapeLayer.strokeColor = UIColor(red: 176/255, green: 0, blue: 32/255, alpha: 1).cgColor
     shapeLayer.fillColor = nil
@@ -31,7 +31,7 @@ class GuideLineView : UIView {
     shapeLayer.opacity = 0
     self.layer.addSublayer(shapeLayer)
   }
-  
+
   func resize(withFrame frame: CGRect) {
     linePath = UIBezierPath()
     self.containerWidth = Int(frame.width - 2)
@@ -39,11 +39,11 @@ class GuideLineView : UIView {
     linePath.addLine(to: CGPoint(x: containerWidth, y: Int(frame.height)))
     shapeLayer.path = linePath.cgPath
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   func pressed(isPressed: Bool) {
     shapeLayer.removeAllAnimations()
     let toValue = isPressed ? 1 : 0

@@ -8,19 +8,19 @@
 import Foundation
 import QuartzCore
 
-class MiniChartView : UIView {
+class MiniChartView: UIView {
   var miniChart = MiniChartRenderer()
-  
+
   func setChartData(data: DataCell, representedAs rep: Representation) {
     self.backgroundColor = UIColor.clear
     self.layer.contentsScale = UIScreen.main.scale
     if rep.miniChart?.type == "bars" {
       miniChart = MiniBarChart(rep: rep)
-    } else if(rep.miniChart?.type == "sparkline") {
+    } else if rep.miniChart?.type == "sparkline" {
       miniChart = MiniSparkLineChart(rep: rep)
-    } else if(rep.miniChart?.type == "dots") {
+    } else if rep.miniChart?.type == "dots" {
       miniChart = MiniDotGraph(rep: rep)
-    } else if(rep.miniChart?.type == "posNeg") {
+    } else if rep.miniChart?.type == "posNeg" {
       miniChart = PositiveNegativeChart(rep: rep)
     }
     miniChart.data = data.qMiniChart
@@ -29,11 +29,11 @@ class MiniChartView : UIView {
     miniChart.globalMaxValue = rep.globalMax ?? Double.infinity
     miniChart.globalMinValue = rep.globalMin ?? -Double.infinity
     miniChart.yScale = miniChart.maxValue
-    if(rep.miniChart?.yAxis?.scale == "global") {
+    if rep.miniChart?.yAxis?.scale == "global" {
       miniChart.yScale = miniChart.globalMaxValue
     }
   }
-  
+
   override func draw(_ rect: CGRect) {
     guard let ctx = UIGraphicsGetCurrentContext() else { return }
     miniChart.render(ctx, rect: rect)

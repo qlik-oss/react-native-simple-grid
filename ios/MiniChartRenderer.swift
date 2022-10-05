@@ -27,11 +27,11 @@ class MiniChartRenderer {
   var verticalPadding = 0.0
   var horizontalPadding = 0.0
   var showDots = false
-  
+
   init() {
-    
+
   }
-  
+
   init(rep: Representation) {
     self.representation = rep
     mainColor = ColorParser().fromCSS(cssString: rep.miniChart?.colors?.main?.color ?? "black")
@@ -43,45 +43,45 @@ class MiniChartRenderer {
     minColor = ColorParser().fromCSS(cssString: rep.miniChart?.colors?.min?.color ?? "black")
     showDots = rep.miniChart?.showDots ?? false
   }
-  
+
   func setColor(_ index: Int, value: Double, count: Int) {
-    if(value == maxValue && maxColor != .clear) {
+    if value == maxValue && maxColor != .clear {
       maxColor.set()
       return
     }
-    
-    if(value == minValue && minColor != .clear) {
+
+    if value == minValue && minColor != .clear {
       minColor.set()
       return
     }
-    
-    if(index == 0 && firstColor != .clear) {
+
+    if index == 0 && firstColor != .clear {
       firstColor.set()
       return
     }
-    
-    if(index == count - 1 && lastColor != .clear) {
+
+    if index == count - 1 && lastColor != .clear {
       lastColor.set()
-      return;
+      return
     }
-    
+
     mainColor.set()
   }
-  
+
   func getBandWidth(rect: CGRect, data: Matrix) {
-    horizontalPadding = 10;
+    horizontalPadding = 10
     let count = data.qMatrix?.count ?? 1
-    let width = rect.width - horizontalPadding;
+    let width = rect.width - horizontalPadding
     let totalBandWidth =  width / CGFloat(count)
     bandWidth = totalBandWidth * 0.8
     padding = totalBandWidth * 0.1
   }
-  
+
   func getScale(rect: CGRect, data: Matrix) {
-    let height = rect.height  - 8;
+    let height = rect.height  - 8
     verticalPadding = 8
     scale =   height / yScale
   }
-  
-  func render(_ ctx: CGContext, rect: CGRect){}
+
+  func render(_ ctx: CGContext, rect: CGRect) {}
 }
