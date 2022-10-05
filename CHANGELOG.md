@@ -1,3 +1,10 @@
+# [1.1.0-alpha.24](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.23...v1.1.0-alpha.24) (2022-10-05)
+
+
+### Features
+
+* freeze first column - iOS ([#87](https://github.com/qlik-oss/react-native-simple-grid/issues/87)) ([81203c0](https://github.com/qlik-oss/react-native-simple-grid/commit/81203c0dfe16b4aa527706ca69e7d2986149cbaf))
+
 # [1.1.0-alpha.23](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.22...v1.1.0-alpha.23) (2022-09-19)
 
 
