@@ -6,14 +6,14 @@
 //
 
 import Foundation
-class ImageCell : UIImageView {
+class ImageCell: UIImageView {
   func setData(data: DataCell, representedAs rep: Representation) {
     self.backgroundColor = .clear
-    guard let qAttrExps = data.qAttrExps else {return};
-    guard let qValues = qAttrExps.qValues else {return};
+    guard let qAttrExps = data.qAttrExps else {return}
+    guard let qValues = qAttrExps.qValues else {return}
     if qValues.count > 0 {
-      guard let urlString = qValues[0].qText else {return};
-      guard let url = URL(string: urlString) else {return};
+      guard let urlString = qValues[0].qText else {return}
+      guard let url = URL(string: urlString) else {return}
       DispatchQueue.global(qos: .background).async {
         do {
           let data = try Data.init(contentsOf: url)
@@ -27,10 +27,10 @@ class ImageCell : UIImageView {
       }
     }
   }
-  
+
   func displayImage(rep: Representation) {
     let cm = self.contentMode
-    if(rep.imageSize == "fitToHeight") {
+    if rep.imageSize == "fitToHeight" {
       self.contentMode = .center
     } else {
       self.contentMode = .scaleToFill

@@ -26,7 +26,7 @@ class ColorParser {
     "teal": .systemTeal]
 
   func fromCSS(cssString: String) -> UIColor {
-    if(cssString == "none") {
+    if cssString == "none" {
       return UIColor.clear
     }
     let hex = cssString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
@@ -47,7 +47,7 @@ class ColorParser {
       return UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
     } else if hex.hasPrefix("rgb") {
       var rgbString = hex.replacingOccurrences(of: "rgb(", with: "")
-      if(hex.hasPrefix("rgba")) {
+      if hex.hasPrefix("rgba") {
         rgbString = hex.replacingOccurrences(of: "rgba(", with: "")
       } else {
         rgbString = hex.replacingOccurrences(of: "rgb(", with: "")

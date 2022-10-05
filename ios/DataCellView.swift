@@ -19,7 +19,8 @@ func isDarkColor(color: UIColor) -> Bool {
   let lum = 0.2126 * r + 0.7152 * g + 0.0722 * b
   return  lum < 0.50
 }
-//icon  String?  "ï"  some
+// icon  String?  "ï"  some
+// these are from sense-client
 /*
  { key: 'm', value: 'lui-icon--tick' },
   { key: 'ï', value: 'lui-icon--star' },
@@ -45,66 +46,68 @@ class DataCellView: UICollectionViewCell {
   var borderColor = UIColor.black.withAlphaComponent(0.1)
   var selectionsEngine: SelectionsEngine?
   var cellColor: UIColor?
-  var numberOfLines = 1;
-  var isDataView  = true;
-  static let iconMap : [String:UniChar] =  ["m":0xe96c,
-                                            "è":0xe997,
-                                            "ï":0xe951,
-                                            "R":0xe97f,
-                                            "S":0xe97c,
-                                            "T":0xe97d,
-                                            "U":0xe97e,
-                                            "P":0xe906,
-                                            "Q":0xe8e4,
-                                            "¢":0xe8a8,
-                                            "©":0xe894,
-                                            "23F4":0xe8c7,
-                                            "2013":0xe954,
-                                            "&":0xe8ff,
-                                            "add":0xe802,
-                                            "minus-2":0xe8e3,
-                                            "dot":0xe878
+  var numberOfLines = 1
+  var isDataView  = true
+  static let iconMap: [String: UniChar] =  ["m": 0xe96c,
+                                            "è": 0xe997,
+                                            "ï": 0xe951,
+                                            "R": 0xe97f,
+                                            "S": 0xe97c,
+                                            "T": 0xe97d,
+                                            "U": 0xe97e,
+                                            "P": 0xe906,
+                                            "Q": 0xe8e4,
+                                            "¢": 0xe8a8,
+                                            "©": 0xe894,
+                                            "23F4": 0xe8c7,
+                                            "2013": 0xe954,
+                                            "&": 0xe8ff,
+                                            "add": 0xe802,
+                                            "minus-2": 0xe8e3,
+                                            "dot": 0xe878
                                             ]
-  
+
   static let minWidth: CGFloat = 40
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
   }
-  
+
   required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
-  
-  func setData(row: DataRow, withColumns cols: [DataColumn], columnWidths: [Double], theme: TableTheme, selectionsEngine: SelectionsEngine, withStyle styleInfo: StylingInfo) {
+
+  func setData(row: DataRow,
+               withColumns cols: ArraySlice<DataColumn>,
+               columnWidths: [Double],
+               theme: TableTheme,
+               selectionsEngine: SelectionsEngine,
+               withStyle styleInfo: StylingInfo,
+               withRange dataRange: CountableRange<Int>) {
     dataRow = row
     borderColor = ColorParser().fromCSS(cssString: theme.borderBackgroundColor ?? "#F0F0F0")
-    createCells(row: row, withColumns: cols, columnWidths: columnWidths)
-    var x = 0
+    createCells(row: row, withColumns: cols, columnWidths: columnWidths, withRange: dataRange)
+    var x = 0.0
     let views = contentView.subviews
-    if row.cells.count != cols.count {
-      return
-    }
-    row.cells.enumerated().forEach {(index, element) in
-      let col = cols[index]
-      let newFrame = CGRect(x: x, y: 0, width: Int(columnWidths[index]), height: theme.rowHeight! * numberOfLines)
-      if let representation = col.representation{
+
+    row.cells[dataRange].enumerated().forEach {(index, element) in
+      let col = cols[index + dataRange.lowerBound]
+      let newFrame = CGRect(x: x, y: 0.0, width: (columnWidths[index + dataRange.lowerBound]), height: Double(theme.rowHeight!) * Double(numberOfLines))
+      if let representation = col.representation {
         if representation.type == "miniChart" && !isDataView {
           if let miniChart = views[index] as? MiniChartView {
             miniChart.frame = newFrame.integral
             miniChart.setChartData(data: element, representedAs: representation)
             miniChart.setNeedsDisplay()
           }
-        } else if(representation.type == "image" && !isDataView) {
+        } else if representation.type == "image" && !isDataView {
           if let imageView = views[index] as? ImageCell {
             imageView.frame = newFrame.integral
             imageView.setData(data: element, representedAs: representation)
             imageView.setNeedsDisplay()
           }
-        }
-        else {
+        } else {
           if let label = views[index] as? PaddedLabel {
-            
             label.textAlignment = element.qNum == nil ? .left : .right
             label.frame = newFrame.integral
             label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
@@ -114,7 +117,7 @@ class DataCellView: UICollectionViewCell {
             label.column = index
             label.cell = element
             label.checkSelected(selectionsEngine)
-            
+
             label.checkForUrls()
             if representation.type == "indicator", let indicator = element.indicator, let uniChar = DataCellView.iconMap[indicator.icon ?? "m"] {
               label.setAttributedText(element.qText ?? "", withIcon: uniChar, element: element)
@@ -122,16 +125,13 @@ class DataCellView: UICollectionViewCell {
               label.text = element.qText
               label.textColor = isDarkColor(color: backgroundColor) ? .white : getForgroundColor(col: col, element: element, withStyle: styleInfo)
             }
-            
-           
           }
         }
       }
-      x += Int(columnWidths[index])
-      
+      x += columnWidths[index + dataRange.lowerBound]
     }
   }
-  
+
   fileprivate func getBackgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
     if isDataView {
       return .clear
@@ -142,9 +142,9 @@ class DataCellView: UICollectionViewCell {
     let colorValue = ColorParser().fromCSS(cssString: colorString.lowercased())
     return colorValue
   }
-  
+
   fileprivate func getForgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
-    if(isDataView) {
+    if isDataView {
       return cellColor!
     }
     guard let attributes = element.qAttrExps else {return cellColor!}
@@ -155,24 +155,22 @@ class DataCellView: UICollectionViewCell {
     }
     return cellColor!
   }
-  
-  fileprivate func createCells(row: DataRow, withColumns cols: [DataColumn], columnWidths: [Double]) {
+
+  fileprivate func createCells(row: DataRow, withColumns cols: ArraySlice<DataColumn>, columnWidths: [Double], withRange: CountableRange<Int>) {
     let views = contentView.subviews
-    if views.count < row.cells.count {
+    if views.count < row.cells[withRange].count {
       var x = 0
       clearAllCells()
       var index = 0
       for col in cols {
-        
         if let representation = col.representation {
-          if(representation.type == "miniChart") {
+          if representation.type == "miniChart" {
             let miniChartView = MiniChartView(frame: .zero)
             contentView.addSubview(miniChartView)
-          } else if (representation.type == "image") {
+          } else if representation.type == "image" {
             let imageCell = ImageCell(frame: .zero)
             contentView.addSubview(imageCell)
-          }
-          else {
+          } else {
             let label = PaddedLabel(frame: .zero)
             if col.isDim == true {
               if let selectionsEngine = selectionsEngine {
@@ -185,19 +183,20 @@ class DataCellView: UICollectionViewCell {
             contentView.addSubview(label)
           }
         }
-        
-        x += Int(columnWidths[index])
+
+        x += Int(columnWidths[index + withRange.lowerBound])
         index += 1
       }
     }
+
   }
-  
+
   fileprivate func clearAllCells() {
     for view in contentView.subviews {
       view.removeFromSuperview()
     }
   }
-  
+
   func updateSize(_ translation: CGPoint, forColumn index: Int) -> Bool {
     let view = contentView.subviews[index]
     let newWidth = view.frame.width + translation.x
@@ -216,51 +215,65 @@ class DataCellView: UICollectionViewCell {
       v.frame = new
       v.setNeedsDisplay()
     }
-    
+
     resizeContentView(view: view, width: newWidth)
-    
+
     return true
   }
-  
+
+  func updateFirstCell(_ translation: CGPoint) -> Bool {
+    // this only moves the neighbour cell, it does not resize
+    let view = contentView.subviews[0]
+    let newWidth = view.frame.width + translation.x
+    if newWidth < DataCellView.minWidth {
+      return false
+    }
+
+    for index in 1..<contentView.subviews.count {
+      let v = contentView.subviews[index]
+      let old = v.frame
+      let new = CGRect(x: old.origin.x + translation.x, y: 0, width: old.width, height: old.height)
+      v.frame = new
+      v.setNeedsDisplay()
+    }
+
+    resizeContentView(view: view, width: newWidth)
+
+    return true
+  }
+
   func updateLayout(withColumns cols: [DataColumn], columnWidths: [Double]) {
     var x = 0.0
-    contentView.subviews.enumerated().forEach{ (index, view) in
+    contentView.subviews.enumerated().forEach { (index, view) in
       let width = Double(columnWidths[index])
       let newFrame = CGRect(x: x, y: self.frame.origin.y, width: Double(width), height: self.frame.size.height)
       view.frame = newFrame
       x += width
       view.setNeedsDisplay()
     }
-    
   }
-  
-  func resizeLastCol(_ width: Double) {
-    guard let lastView = contentView.subviews.last else {return}
-    resizeContentView(view: lastView, width: width)
-    return
-  }
-  
+
   fileprivate func resizeContentView(view: UIView, width: CGFloat) {
     if view.frame.width != width {
       let oldFrame = view.frame
       let newFrame = CGRect(x: oldFrame.origin.x, y: 0, width: width, height: oldFrame.height)
       view.frame = newFrame
-      
+
       view.setNeedsDisplay()
     }
-    
+
   }
-  
+
   override func draw(_ rect: CGRect) {
     super.draw(rect)
-    
+
     border.move(to: CGPoint(x: 0, y: rect.height))
     border.addLine(to: CGPoint(x: rect.width, y: rect.height))
     border.close()
-    
+
     border.lineWidth = 1
     borderColor.set()
     border.stroke()
-    
+
   }
 }

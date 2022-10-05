@@ -26,7 +26,7 @@ struct MatrixCell: Decodable {
   enum CodingKeys: String, CodingKey {
     case qNum, qText
   }
-  
+
   init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     self.qText = try container.decodeIfPresent(String.self, forKey: .qText) ?? nil
@@ -61,7 +61,7 @@ struct DataCell: Decodable {
   var qMiniChart: Matrix?
   var qAttrExps: AttriExpr?
   var indicator: Indicator?
-  
+
   enum CodingKeys: String, CodingKey {
     case qText
     case qNum
@@ -76,7 +76,7 @@ struct DataCell: Decodable {
     case qAttrExps
     case indicator
   }
-  
+
   init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     self.qText = try container.decodeIfPresent(String.self, forKey: .qText) ?? ""
@@ -90,14 +90,14 @@ struct DataCell: Decodable {
     self.qMiniChart = try container.decodeIfPresent(Matrix.self, forKey: .qMiniChart) ?? nil
     self.qAttrExps = try container.decodeIfPresent(AttriExpr.self, forKey: .qAttrExps) ?? nil
     self.indicator = try container.decodeIfPresent(Indicator.self, forKey: .indicator) ?? nil
-    
+
     if let temp = try? container.decode(Double.self, forKey: .qNum) {
       self.qNum = temp
     } else {
       self.qNum = nil
     }
   }
-  
+
 }
 
 struct DataRow: Decodable {
@@ -115,7 +115,7 @@ struct DataRow: Decodable {
   init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
     var tempArray = [DataCell]()
-    
+
     for key in container.allKeys where key.stringValue != "key" {
       let decodedCell = try container.decode(DataCell.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
       tempArray.append(decodedCell)
