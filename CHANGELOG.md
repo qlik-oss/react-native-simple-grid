@@ -1,3 +1,10 @@
+# [1.1.0-alpha.26](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.25...v1.1.0-alpha.26) (2022-10-06)
+
+
+### Bug Fixes
+
+* rollback to average width ([8556a66](https://github.com/qlik-oss/react-native-simple-grid/commit/8556a66efe97c14a06240619f74185c4f16e09e2))
+
 # [1.1.0-alpha.25](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.24...v1.1.0-alpha.25) (2022-10-06)
 
 
