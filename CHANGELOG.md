@@ -1,3 +1,10 @@
+# [1.1.0-alpha.25](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.24...v1.1.0-alpha.25) (2022-10-06)
+
+
+### Bug Fixes
+
+* check for isData ([630d34d](https://github.com/qlik-oss/react-native-simple-grid/commit/630d34d35f5507be04d567bed894e6e54085c1cc))
+
 # [1.1.0-alpha.24](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.23...v1.1.0-alpha.24) (2022-10-05)
 
 
