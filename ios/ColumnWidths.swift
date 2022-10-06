@@ -60,25 +60,30 @@ class ColumnWidths {
     var widths = [Double](repeating: defaultWidth, count: columnCount)
     var totalWidth = 0.0
     columnWidths.enumerated().forEach { (index, _) in
-      let maxWidth = getMaxWidthFrom(dataRows: dataRows, index: index)
-      widths[index] = maxWidth
-      totalWidth += maxWidth
+      let averageWidth = getAverageWidth(dataRows: dataRows, index: index)
+      widths[index] = averageWidth
+      totalWidth += averageWidth
     }
-    if totalWidth > frame.width {
-      resetColumnWidths(widths: widths)
+    if totalWidth < frame.width {
+      columnWidths.enumerated().forEach { (index, _) in
+        widths[index] = defaultWidth
+      }
     }
+    resetColumnWidths(widths: widths)
 
   }
 
-  fileprivate func getMaxWidthFrom(dataRows: [DataRow], index: Int) -> Double {
-    var maxWidth = 0.0
-    for row in dataRows {
-      let fontAttribute = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16.0)]
-      let text = row.cells[index].qText ?? ""
-      let width = text.size(withAttributes: fontAttribute).width + (Double(PaddedLabel.PaddingSize) * 4)
-      maxWidth = max(maxWidth, max(width, DataCellView.minWidth))
+  fileprivate func getAverageWidth(dataRows: [DataRow], index: Int) -> Double {
+    let totalCount = dataRows.reduce(0) { partialResult, row in
+      return partialResult + row.cells[index].qText!.count
     }
-    return maxWidth
+    let average = totalCount / dataRows.count
+    let tempLabel = UILabel()
+    tempLabel.font = tempLabel.font.withSize(16)
+    tempLabel.text = String(repeating: "M", count: average)
+    tempLabel.sizeToFit()
+    let newWidth = max(tempLabel.frame.width + (Double(PaddedLabel.PaddingSize) * 2.5), DataCellView.minWidth)
+    return newWidth
   }
 
   func getTotalWidth() -> Double {
