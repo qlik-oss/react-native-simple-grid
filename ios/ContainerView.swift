@@ -571,7 +571,7 @@ class ContainerView: UIView {
     let headerHeight = tableTheme?.headerHeight ?? 54
     var y = headerHeight
     if let totals = totals {
-      if totals.position != "bottom" {
+      if totals.position != "bottom" && !isDataView {
           y += headerHeight
       }
     }
