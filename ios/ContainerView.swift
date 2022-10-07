@@ -149,6 +149,11 @@ class ContainerView: UIView {
             view.appendData(rows: dataRows!)
             view.scrollToTop()
           }
+          
+          if let slave = slaveCollectionView {
+            slave.appendData(rows: dataRows!)
+            slave.scrollToTop()
+          }
 
         } else {
           if let newRows = decodedRows.rows {
