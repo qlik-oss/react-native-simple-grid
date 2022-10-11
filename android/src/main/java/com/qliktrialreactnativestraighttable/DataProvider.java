@@ -3,6 +3,7 @@ package com.qliktrialreactnativestraighttable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -63,12 +65,6 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return dataColumns;
   }
 
-  Map<String, ImageView.ScaleType> AlignmentLookup = Map.of(
-    "topCenter", ImageView.ScaleType.FIT_START,
-    "bottomCenter", ImageView.ScaleType.FIT_END,
-    "centerCenter", ImageView.ScaleType.CENTER_INSIDE
-  );
-
   public void processColumns(List<DataColumn> columns) {
     final CountDownLatch latch = new CountDownLatch(columns.size());
     for( int i = 0; i < columns.size(); i++) {
@@ -99,7 +95,6 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
           imageData.remove(column.imageUrl);
           e.printStackTrace();
         }
-
       } else {
         latch.countDown();
       }
@@ -111,84 +106,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
   }
 
-  public class RowViewHolder extends RecyclerView.ViewHolder  {
-
-    private final LinearLayout row;
-    public RowViewHolder(View view) {
-      super(view);
-      row = (LinearLayout) view;
-    }
-
-    public void setBackGroundColor(int color) {
-      row.setBackgroundColor(color);
-    }
-    public void setData(DataRow dataRow) {
-      for(int i = 0; i < dataRow.cells.size(); i++) {
-        DataCell cell = dataRow.cells.get(i);
-        int columnIndex = cell.colIdx;
-        DataColumn column = dataColumns.get(columnIndex);
-
-        if(column.type.equals("image")) {
-          ImageView imageView = (ImageView) row.getChildAt(columnIndex);
-
-          Bitmap imageBitmap = getImageData(column.imageUrl);
-          imageView.setImageBitmap(imageBitmap);
-          LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, TableTheme.rowHeight);
-          imageView.setMaxHeight(TableTheme.rowHeight);
-          imageView.setAdjustViewBounds(true);
-          imageView.setLayoutParams(layoutParams);
-          imageView.setScaleType(AlignmentLookup.get(column.imagePosition));
-        } else {
-          ClickableTextView view = (ClickableTextView) row.getChildAt(columnIndex);
-          view.setData(cell);
-          view.setText(cell.qText);
-          view.setGravity(cell.textGravity | Gravity.CENTER_VERTICAL);
-        }
-      }
-    }
-
-
-
-    public void onRecycled() {
-      for(int i = 0; i <  row.getChildCount(); i++) {
-        ClickableTextView view = (ClickableTextView) row.getChildAt(i);
-        view.onRecycled();
-      }
-    }
-
-    public boolean updateWidth(float width, int column) {
-      View view =  row.getChildAt(column);
-      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)view.getLayoutParams();
-      float newWidth = params.width + width;
-      if(newWidth < minWidth) {
-        return false;
-      }
-
-      if (!updateNeighbour(width, column)) {
-        return false;
-      }
-      params.width = (int) newWidth;
-      view.setLayoutParams(params);
-
-      return true;
-    }
-
-    private boolean updateNeighbour(float width, int column) {
-      if (column + 1 < DataProvider.this.dataColumns.size() ) {
-        View neighbour =  row.getChildAt(column + 1);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) neighbour.getLayoutParams();
-        float newWidth = params.width - width;
-        if (newWidth < minWidth) {
-          return false;
-        }
-        params.width = (int)newWidth;
-        neighbour.setLayoutParams(params);
-      }
-      return true;
-    }
-  }
-
-  public  class ProgressHolder extends RecyclerView.ViewHolder {
+  public class ProgressHolder extends RecyclerView.ViewHolder {
     private final RelativeLayout row;
     public ProgressHolder(View view) {
       super(view);
@@ -210,29 +128,39 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     RecyclerView.ViewHolder viewHolder;
     if (viewType == VIEW_TYPE_ITEM) {
       LinearLayout rowView = new LinearLayout(parent.getContext());
+      int padding = (int)PixelUtils.dpToPx(16);
       rowView.setOrientation(LinearLayout.HORIZONTAL);
-      for (int i = 0; i < dataColumns.size(); i++) {
-        DataColumn dataColumn = dataColumns.get(i);
-        int width = dataColumn.width;
-        int padding = (int)PixelUtils.dpToPx(16);
 
-        if (dataColumn.type.equals("image")) {
-          ImageView imageView = new ImageView((parent.getContext()));
-          rowView.addView(imageView);
-          imageView.setPadding(padding, 0, padding, 0);
+      for (int i = 0; i < dataColumns.size(); i++) {
+        DataColumn column = dataColumns.get(i);
+        int width = column.width;
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, TableTheme.rowHeight);
+
+        if (column.type.equals("image")) {
+          RelativeLayout wrapper = new RelativeLayout(parent.getContext());
+          wrapper.setLayoutParams(layoutParams);
+
+          RelativeLayout container = new RelativeLayout(parent.getContext());
+          container.setPadding(padding, 0, (int) padding, 0);
+
+          ImageView imageView = new ClickableImageView(parent.getContext(), this.selectionsEngine, this.scrollView);
+          container.addView(imageView);
+          wrapper.addView(container);
+          rowView.addView(wrapper);
         } else {
           ClickableTextView view = new ClickableTextView(parent.getContext(), this.selectionsEngine, this.scrollView);
           view.setMaxLines(NUM_LINES);
           view.setEllipsize(TextUtils.TruncateAt.END);
-          LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, TableTheme.rowHeight);
           view.setLayoutParams(layoutParams);
           view.setPadding(padding, 0, (int) padding, 0);
           view.setTextSize(FONT_SIZE);
           rowView.addView(view);
         }
       }
-      RowViewHolder RowViewHolder = new RowViewHolder(rowView);
-      viewHolder = RowViewHolder;
+      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, TableTheme.rowHeight);
+      rowView.setLayoutParams(layoutParams);
+      RowViewHolder rowViewHolder = new RowViewHolder(rowView, this);
+      viewHolder = rowViewHolder;
     } else {
       RelativeLayout rowView = new RelativeLayout(parent.getContext());
       viewHolder = new ProgressHolder(rowView);
@@ -312,6 +240,13 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       return this.rows.size() < this.dataSize.qcy;
     }
     return false;
+  }
+
+  public void updateRepresentation() {
+    for(RecyclerView.ViewHolder holder : cachedViewHolders) {
+      RowViewHolder viewHolder = (RowViewHolder) holder;
+      viewHolder.updateColumnRepresentation();
+    }
   }
 
   public boolean updateWidth(float deltaWidth, int column) {

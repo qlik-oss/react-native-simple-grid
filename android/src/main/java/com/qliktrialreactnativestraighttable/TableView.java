@@ -93,11 +93,11 @@ public class TableView extends FrameLayout {
   }
 
   public void setDataColumns(List<DataColumn> cols) {
-    if (dataProvider.getDataColumns() == null) {
-      dataProvider.setDataColumns(cols);
-      if (dataProvider.ready()) {
-        createRecyclerView();
-      }
+    dataProvider.setDataColumns(cols);
+    if (dataProvider.getDataColumns() == null && dataProvider.ready()) {
+      createRecyclerView();
+    } else {
+      dataProvider.updateRepresentation();
     }
   }
 
@@ -116,7 +116,7 @@ public class TableView extends FrameLayout {
       if (this.headerView != null && dataProvider.ready()) {
         createRecyclerView();
       }
-//      selectionsEngine.clearSelections();
+      selectionsEngine.clearSelections();
     }
   }
 
@@ -128,7 +128,7 @@ public class TableView extends FrameLayout {
   }
 
   void createRecyclerView() {
-//    if (recyclerView == null) {
+   if (recyclerView == null) {
       createDataColumnWidths();
       createGrabbers();
 
@@ -154,7 +154,7 @@ public class TableView extends FrameLayout {
       rootView.addView(recyclerView, recyclerViewLayoutParams);
 
       setupGrabbers();
-//    }
+   }
   }
 
   private void createDataColumnWidths() {

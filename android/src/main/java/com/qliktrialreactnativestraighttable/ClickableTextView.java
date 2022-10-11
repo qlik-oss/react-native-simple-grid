@@ -1,10 +1,12 @@
 package com.qliktrialreactnativestraighttable;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+@SuppressLint("ViewConstructor")
 public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements SelectionsObserver {
   DataCell cell = null;
   boolean selected = false;
@@ -37,6 +39,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     }
   }
 
+  @SuppressLint("ClickableViewAccessibility")
   @Override
   public boolean onTouchEvent(MotionEvent e) {
     gestureDetector.onTouchEvent(e);
