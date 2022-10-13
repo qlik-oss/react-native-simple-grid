@@ -48,6 +48,9 @@ class DataCellView: UICollectionViewCell {
   var cellColor: UIColor?
   var numberOfLines = 1
   var isDataView  = true
+  weak var selectionBand: SelectionBand?
+  weak var dataCollectionView: DataCollectionView?
+
   static let iconMap: [String: UniChar] =  ["m": 0xe96c,
                                             "è": 0xe997,
                                             "ï": 0xe951,
@@ -117,6 +120,8 @@ class DataCellView: UICollectionViewCell {
             label.column = index
             label.cell = element
             label.checkSelected(selectionsEngine)
+            label.selectionBand = self.selectionBand
+            label.dataCollectionView = self.dataCollectionView
 
             label.checkForUrls()
             if representation.type == "indicator", let indicator = element.indicator, let uniChar = DataCellView.iconMap[indicator.icon ?? "m"] {

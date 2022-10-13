@@ -22,31 +22,27 @@ class ContainerView: UIView {
   var columnWidths = ColumnWidths()
   var grabbers = [() -> GrabberView?]()
   weak var mainHeaderView: HeaderView?
-  weak var masterHeaderView: HeaderView?
-  weak var slaveHeaderView: HeaderView?
-  weak var masterCollectionView: MasterColumnCollectionView?
-  weak var slaveCollectionView: DataCollectionView?
+  weak var primaryHeaderView: HeaderView?
+  weak var secondaryHeaderView: HeaderView?
+  weak var primaryCollectionView: MasterColumnCollectionView?
+  weak var secondaryCollectionView: DataCollectionView?
   weak var scrollView: UIScrollView?
   weak var rootView: UIView?
-  weak var masterTotalsView: TotalsView?
-  weak var slaveTotalsView: TotalsView?
+  weak var primaryTotalsView: TotalsView?
+  weak var secondaryTotalsView: TotalsView?
   weak var totalCellsView: TotalCellsView?
   weak var guideLineView: GuideLineView?
+  weak var primarySelectionBand: SelectionBand?
 
   @objc var onEndReached: RCTDirectEventBlock?
   @objc var onVerticalScrollEnded: RCTDirectEventBlock?
   @objc var onHeaderPressed: RCTDirectEventBlock?
-  @objc var onDoubleTap: RCTDirectEventBlock?
   @objc var containerWidth: NSNumber?
   @objc var freezeFirstColumn: Bool = false
   @objc var isDataView: Bool = false
-  @objc var isPercent: Bool = false
 
   override init(frame: CGRect) {
     super.init(frame: frame)
-    let doubleTapGesture = ShortTapGesture(target: self, action: #selector(handleDoubleTap(_:)))
-    doubleTapGesture.numberOfTapsRequired = 2
-    addGestureRecognizer(doubleTapGesture)
     let rootView = UIView(frame: frame)
     fillParentView(rootView, toParent: self)
 
@@ -62,15 +58,15 @@ class ContainerView: UIView {
     super.init(coder: coder)
   }
 
-  @objc func handleDoubleTap(_ sender: UITapGestureRecognizer) {
-    if let onDoubleTap = onDoubleTap {
-      onDoubleTap(["doubleTap": "here"])
-    }
-  }
-
   @objc var onSelectionsChanged: RCTDirectEventBlock? {
     didSet {
       selectionsEngine.onSelectionsChanged = onSelectionsChanged
+    }
+  }
+
+  @objc var onConfirmSelections: RCTDirectEventBlock? {
+    didSet {
+      selectionsEngine.onConfirmSelections = onConfirmSelections
     }
   }
 
@@ -114,20 +110,20 @@ class ContainerView: UIView {
         dataColumns = decodedCols.header
         totals = decodedCols.totals
 
-        if let masterTotalsView = masterTotalsView {
-          masterTotalsView.resetTotals(totals)
+        if let primaryTotalsView = primaryTotalsView {
+          primaryTotalsView.resetTotals(totals)
         }
 
-        if let slaveTotalsView = slaveTotalsView {
-          slaveTotalsView.resetTotals(totals)
+        if let secondaryTotalsView = secondaryTotalsView {
+          secondaryTotalsView.resetTotals(totals)
         }
 
         if let dataColumns = dataColumns {
-          if let masterHeaderView = masterHeaderView {
-            masterHeaderView.updateColumns(dataColumns)
+          if let primaryHeaderView = primaryHeaderView {
+            primaryHeaderView.updateColumns(dataColumns)
           }
-          if let slaveHeaderView = slaveHeaderView {
-            slaveHeaderView.updateColumns(dataColumns)
+          if let secondaryHeaderView = secondaryHeaderView {
+            secondaryHeaderView.updateColumns(dataColumns)
           }
         }
 
@@ -140,17 +136,18 @@ class ContainerView: UIView {
   @objc var rows: NSDictionary = [:] {
     didSet {
       do {
+        NotificationCenter.default.post(name: Notification.Name.onClearSelectionBand, object: nil)
         let json = try JSONSerialization.data(withJSONObject: rows)
         let decodedRows = try JSONDecoder().decode(RowsObject.self, from: json)
         if dataRows == nil || decodedRows.reset == true {
           dataRows = decodedRows.rows
 
-          if let view = masterCollectionView {
+          if let view = primaryCollectionView {
             view.appendData(rows: dataRows!)
             view.scrollToTop()
           }
-          
-          if let slave = slaveCollectionView {
+
+          if let slave = secondaryCollectionView {
             slave.appendData(rows: dataRows!)
             slave.scrollToTop()
           }
@@ -158,11 +155,11 @@ class ContainerView: UIView {
         } else {
           if let newRows = decodedRows.rows {
             dataRows!.append(contentsOf: newRows)
-            if let view = masterCollectionView {
-              view.appendData(rows: dataRows!)
+            if let primaryCollectionView = primaryCollectionView {
+              primaryCollectionView.appendData(rows: dataRows!)
             }
-            if let slave = slaveCollectionView {
-              slave.appendData(rows: dataRows!)
+            if let secondaryCollectionView = secondaryCollectionView {
+              secondaryCollectionView.appendData(rows: dataRows!)
             }
           }
         }
@@ -222,7 +219,7 @@ class ContainerView: UIView {
       createGrabbers()
       createTotalCellsView()
 
-      guard let collectionView = masterCollectionView else {
+      guard let collectionView = primaryCollectionView else {
         return
       }
 
@@ -235,11 +232,11 @@ class ContainerView: UIView {
   override func layoutSubviews() {
     super.layoutSubviews()
 
-    if let headerView = slaveHeaderView {
+    if let headerView = secondaryHeaderView {
       headerView.resizeLabels()
     }
 
-    if let totalsView = slaveTotalsView {
+    if let totalsView = secondaryTotalsView {
       totalsView.resizeLabels(withFrame: self.frame)
     }
 
@@ -255,7 +252,7 @@ class ContainerView: UIView {
   }
 
   fileprivate func updateHeadersView() {
-    guard let masterHeaderView = masterHeaderView else {return}
+    guard let masterHeaderView = primaryHeaderView else {return}
     let width = columnWidths.getTotalWidth(range: 0..<1)
     let frame = CGRect(x: 0, y: 0, width: width, height: Double(tableTheme!.headerHeight!))
 
@@ -263,21 +260,21 @@ class ContainerView: UIView {
     masterHeaderView.frame = frame
     masterHeaderView.resizeLabels()
 
-    if let slaveHeaderView = slaveHeaderView {
+    if let slaveHeaderView = secondaryHeaderView {
       slaveHeaderView.frame = getSlaveHeaderFrame()
       slaveHeaderView.resizeLabels()
     }
   }
 
   fileprivate func updateTotalsView() {
-    guard let headerView = masterHeaderView else { return }
+    guard let headerView = primaryHeaderView else { return }
     guard let totals = totals else { return }
-    guard let masterTotalsView = self.masterTotalsView else {return}
+    guard let masterTotalsView = self.primaryTotalsView else {return}
     let y = totals.position == "bottom" ? self.frame.height - headerView.frame.height * 2  : headerView.frame.height
     let frame = CGRect(x: 0.0, y: y, width: columnWidths.getTotalWidth(range: 0..<1), height: headerView.frame.height)
     masterTotalsView.frame = frame
 
-    if let slaveTotalsView = slaveTotalsView {
+    if let slaveTotalsView = secondaryTotalsView {
       var frame = getSlaveHeaderFrame()
       frame.origin.y = totals.position == "bottom" ? self.frame.height - headerView.frame.height * 2  : headerView.frame.height
       slaveTotalsView.frame = frame
@@ -329,20 +326,20 @@ class ContainerView: UIView {
   }
 
   fileprivate func updateCollectionViewFrame() {
-    guard let masterCollectionView = masterCollectionView else { return }
+    guard let primaryCollectionView = primaryCollectionView else { return }
 
     let collectionViewHeight = getCollectionViewHeight()
     let top = getCollectionViewTop()
     let firstColumnWidth = columnWidths.getTotalWidth(range: 0..<1)
     let slaveWidth = columnWidths.getTotalWidth(range: 1..<columnWidths.count())
 
-    let masterFrame =  CGRect(x: 0, y: top, width: firstColumnWidth, height: collectionViewHeight)
-    masterCollectionView.resizeCells(withFrame: masterFrame)
+    let primaryFrame =  CGRect(x: 0, y: top, width: firstColumnWidth, height: collectionViewHeight)
+    primaryCollectionView.resizeCells(withFrame: primaryFrame)
 
-    if let slaveCollectionView = slaveCollectionView {
+    if let secondaryCollectionView = secondaryCollectionView {
       let x = freezeFirstColumn ? 0 : firstColumnWidth
       let slaveFrame =  CGRect(x: x, y: top, width: slaveWidth, height: collectionViewHeight)
-      slaveCollectionView.resizeCells(withFrame: slaveFrame)
+      secondaryCollectionView.resizeCells(withFrame: slaveFrame)
     }
 
   }
@@ -356,7 +353,7 @@ class ContainerView: UIView {
       return
     }
 
-    if masterHeaderView == nil {
+    if primaryHeaderView == nil {
       let width = columnWidths.getTotalWidth(range: 0..<1)
       let frame = CGRect(x: 0, y: 0, width: width, height: Double(tableTheme!.headerHeight!))
       let newHeaderView = HeaderView(frame: frame,
@@ -372,11 +369,11 @@ class ContainerView: UIView {
       } else {
         scrollView.addSubview(newHeaderView)
       }
-      masterHeaderView = newHeaderView
+      primaryHeaderView = newHeaderView
       hScrollViewDelegate.headersView = newHeaderView
     }
 
-    if slaveHeaderView == nil {
+    if secondaryHeaderView == nil {
       let frame = getSlaveHeaderFrame()
       let newHeaderView = HeaderView(frame: frame,
                                      columns: dataColumns,
@@ -387,7 +384,7 @@ class ContainerView: UIView {
                                      withRange: 1..<columnWidths.count())
       newHeaderView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme?.headerBackgroundColor ?? "lightgray")
       scrollView.addSubview(newHeaderView)
-      slaveHeaderView = newHeaderView
+      secondaryHeaderView = newHeaderView
       updateHScrollContentSize()
     }
   }
@@ -413,7 +410,7 @@ class ContainerView: UIView {
       return
     }
 
-    guard let headerView = masterHeaderView else {
+    guard let headerView = primaryHeaderView else {
       return
     }
 
@@ -421,7 +418,7 @@ class ContainerView: UIView {
       return
     }
 
-    if self.masterTotalsView == nil {
+    if self.primaryTotalsView == nil {
       let y = totals.position == "bottom" ? self.frame.height - headerView.frame.height * 2  : headerView.frame.height
       let frame = CGRect(x: 0.0, y: y, width: columnWidths.getTotalWidth(range: 0..<1), height: headerView.frame.height)
       let view = TotalsView(frame: frame,
@@ -436,11 +433,11 @@ class ContainerView: UIView {
       } else {
         scrollView.addSubview(view)
       }
-      masterTotalsView = view
+      primaryTotalsView = view
       hScrollViewDelegate.totalsView = view
     }
 
-    if self.slaveTotalsView == nil {
+    if self.secondaryTotalsView == nil {
       var frame = getSlaveHeaderFrame()
       frame.origin.y = totals.position == "bottom" ? self.frame.height - headerView.frame.height * 2  : headerView.frame.height
       let view = TotalsView(frame: frame,
@@ -451,7 +448,7 @@ class ContainerView: UIView {
                             columnWidths: self.columnWidths,
                             withRange: 1..<columnWidths.count())
       scrollView.addSubview(view)
-      self.slaveTotalsView = view
+      self.secondaryTotalsView = view
     }
   }
 
@@ -482,7 +479,7 @@ class ContainerView: UIView {
     let firstColumnWidth = columnWidths.getTotalWidth(range: 0..<1)
     let slaveWidth = columnWidths.getTotalWidth(range: 1..<columnWidths.count())
 
-    if masterCollectionView == nil {
+    if primaryCollectionView == nil {
 
       let dataCollectionView = MasterColumnCollectionView(frame: CGRect(x: 0, y: top, width: firstColumnWidth, height: collectionViewHeight),
                                                           withRows: dataRows,
@@ -495,15 +492,15 @@ class ContainerView: UIView {
       dataCollectionView.dataSize = self.dataSize
       dataCollectionView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme.headerBackgroundColor ?? "lightgray")
       dataCollectionView.isDataView = self.isDataView
-      dataCollectionView.headerView = self.masterHeaderView
-      dataCollectionView.totalsView = self.masterTotalsView
+      dataCollectionView.headerView = self.primaryHeaderView
+      dataCollectionView.totalsView = self.primaryTotalsView
       dataCollectionView.freezeFirstColumn = self.freezeFirstColumn
       hScrollViewDelegate.collectionView = dataCollectionView
 
-      if let masterHeaderView = masterHeaderView {
+      if let masterHeaderView = primaryHeaderView {
         masterHeaderView.autoresizingMask = [.flexibleWidth]
       }
-      if let masterTotalsView = masterTotalsView {
+      if let masterTotalsView = primaryTotalsView {
         masterTotalsView.autoresizingMask = [.flexibleWidth]
       }
 
@@ -512,10 +509,10 @@ class ContainerView: UIView {
       } else {
         scrollView.addSubview(dataCollectionView)
       }
-      masterCollectionView = dataCollectionView
+      primaryCollectionView = dataCollectionView
     }
 
-    if slaveCollectionView == nil {
+    if secondaryCollectionView == nil {
       let x = freezeFirstColumn ? 0 : firstColumnWidth
       let collectionView = DataCollectionView(frame: CGRect(x: x, y: top, width: slaveWidth, height: collectionViewHeight),
                                               withRows: dataRows,
@@ -530,19 +527,20 @@ class ContainerView: UIView {
       collectionView.backgroundColor = ColorParser().fromCSS(cssString: tableTheme.headerBackgroundColor ?? "lightgray")
       collectionView.onEndReached = self.onEndReached
       collectionView.isDataView = self.isDataView
-      collectionView.headerView = self.slaveHeaderView
-      collectionView.totalsView = self.slaveTotalsView
+      collectionView.headerView = self.secondaryHeaderView
+      collectionView.totalsView = self.secondaryTotalsView
       collectionView.freezeFirstColumn = self.freezeFirstColumn
       collectionView.hScrollView = scrollView
       collectionView.backgroundColor = .red
 
       scrollView.addSubview(collectionView)
-      slaveCollectionView = collectionView
-      if let masterCollectionView = masterCollectionView {
+      secondaryCollectionView = collectionView
+      if let masterCollectionView = primaryCollectionView {
         masterCollectionView.slave = collectionView
         collectionView.slave = masterCollectionView
       }
     }
+
   }
 
   fileprivate func getCollectionViewFrame() -> CGRect {
@@ -552,7 +550,7 @@ class ContainerView: UIView {
     let headerHeight = tableTheme?.headerHeight ?? 54
     var y = headerHeight
     var totalHeight = self.frame.height - (CGFloat(headerHeight) * 2) // 2 is header + totals
-    if slaveTotalsView != nil {
+    if secondaryTotalsView != nil {
       totalHeight -= CGFloat(headerHeight)
       if let totals = totals {
         if totals.position != "bottom" {
@@ -566,7 +564,7 @@ class ContainerView: UIView {
   fileprivate func getCollectionViewHeight() -> Double {
     let headerHeight = tableTheme?.headerHeight ?? 54
     var totalHeight = self.frame.height - (CGFloat(headerHeight) * 2) // 2 is header + totals
-    if slaveTotalsView != nil {
+    if secondaryTotalsView != nil {
       totalHeight -= CGFloat(headerHeight)
     }
     return totalHeight
@@ -576,7 +574,7 @@ class ContainerView: UIView {
     let headerHeight = tableTheme?.headerHeight ?? 54
     var y = headerHeight
     if let totals = totals {
-      if totals.position != "bottom" && !isDataView {
+      if totals.position != "bottom" {
           y += headerHeight
       }
     }
@@ -594,10 +592,10 @@ class ContainerView: UIView {
       view.createTextView()
       addSubview(view)
       self.totalCellsView = view
-      masterCollectionView?.totalCellsView = view
+      primaryCollectionView?.totalCellsView = view
       if let dataSize = dataSize {
         view.totalRows = dataSize.qcy ?? 0
-        if let collectionView = masterCollectionView {
+        if let collectionView = primaryCollectionView {
           DispatchQueue.main.async {
             collectionView.signalVisibleRows()
           }
@@ -642,7 +640,7 @@ class ContainerView: UIView {
           colIdx += 1
         }
 
-        if let slaveCollectionView = slaveCollectionView {
+        if let slaveCollectionView = secondaryCollectionView {
           slaveCollectionView.grabbers = grabbers
         }
       }
@@ -659,12 +657,14 @@ class ContainerView: UIView {
     let frame = CGRect(x: x, y: 0, width: 40, height: self.frame.height)
     let grabber = GrabberView(frame: frame, index: Double(colIdx), theme: tableTheme, withRange: range)
     grabber.isLast = colIdx == columnWidths.columnWidths.count - 1
-    grabber.collectionView = isMaster ? self.masterCollectionView : self.slaveCollectionView
+    grabber.collectionView = isMaster ? self.primaryCollectionView : self.secondaryCollectionView
     grabber.containerView = self
-    grabber.headerView = isMaster ? self.masterHeaderView : self.slaveHeaderView
-    grabber.totalsView = isMaster ? self.masterTotalsView : self.slaveTotalsView
+    grabber.headerView = isMaster ? self.primaryHeaderView : self.secondaryHeaderView
+    grabber.totalsView = isMaster ? self.primaryTotalsView : self.secondaryTotalsView
     grabber.scrollView = self.scrollView
     grabber.guideLineView = guideLineView
+    grabber.primarySelectionBand = primaryCollectionView?.selectionBand
+    grabber.secondarySelectionBand = secondaryCollectionView?.selectionBand
     return grabber
   }
 
@@ -708,7 +708,7 @@ class ContainerView: UIView {
     guard let dataColumns = dataColumns else { return }
     if index + 1 == dataColumns.count {
       if dataColumns.count > 1 {
-        if let slaveCollectionView = slaveCollectionView {
+        if let slaveCollectionView = secondaryCollectionView {
           slaveCollectionView.resizeLastCell()
         }
       }

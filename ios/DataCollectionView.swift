@@ -28,12 +28,14 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   var dataRange: CountableRange = 0..<2
   var freezeFirstColumn = false
   var grabbers: [() -> GrabberView?]?
+  private var lasso = false
   weak var totalCellsView: TotalCellsView?
   weak var columnWidths: ColumnWidths?
   weak var slave: DataCollectionView?
   weak var headerView: HeaderView?
   weak var totalsView: TotalsView?
   weak var hScrollView: UIScrollView?
+  weak var selectionBand: SelectionBand?
 
   init(frame: CGRect, withRows rows: [DataRow],
        andColumns cols: [DataColumn],
@@ -49,11 +51,14 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     let colorParser = ColorParser()
     self.cellStyle = cellStyle
     self.dataRange = range
+    self.clipsToBounds = false
+
     if let colorString = cellStyle.color {
       cellColor = colorParser.fromCSS(cssString: colorString)
     }
     setData(columns: cols, withRows: rows)
     fitToFrame()
+    createSelectionBands()
   }
 
   fileprivate func fitToFrame() {
@@ -67,6 +72,16 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     let right = childCollectionView.rightAnchor.constraint(equalTo: self.rightAnchor)
     NSLayoutConstraint.activate([top, bottom, left, right])
     self.addConstraints([top, bottom, left, right])
+  }
+
+  fileprivate func createSelectionBands() {
+    guard let childCollectionView = childCollectionView else { return }
+
+    let selectionBand = SelectionBand(frame: self.frame)
+    selectionBand.parentCollectionView = self
+    childCollectionView.addSubview(selectionBand)
+    self.selectionBand = selectionBand
+
   }
 
   required init?(coder: NSCoder) {
@@ -190,6 +205,8 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     // swiftlint:disable:next force_cast
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DataCellView
     cell.isDataView = self.isDataView
+    cell.selectionBand = self.selectionBand
+    cell.dataCollectionView = self
     cell.backgroundColor = isDataView ? indexPath.row % 2 == 0 ? .white : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0) : .white
     cell.cellColor = cellColor
     cell.numberOfLines = cellStyle.rowHeight ?? 1
@@ -352,5 +369,16 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       grabber()?.repositionTo(x)
       startX += width
     })
+  }
+
+  func setLasso(_ lasso: Bool) {
+    self.lasso = lasso
+    if let childCollectionView = childCollectionView {
+      childCollectionView.isScrollEnabled = !self.lasso
+    }
+  }
+
+  func getOffset() -> CGFloat {
+    return 19.0 // 25 - 6.0 padding
   }
 }
