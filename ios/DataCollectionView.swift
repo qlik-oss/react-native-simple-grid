@@ -52,7 +52,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     self.cellStyle = cellStyle
     self.dataRange = range
     self.clipsToBounds = false
-
+    
     if let colorString = cellStyle.color {
       cellColor = colorParser.fromCSS(cssString: colorString)
     }
@@ -60,7 +60,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     fitToFrame()
     createSelectionBands()
   }
-
+  
   fileprivate func fitToFrame() {
     guard let childCollectionView = childCollectionView else {
       return
@@ -73,17 +73,17 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     NSLayoutConstraint.activate([top, bottom, left, right])
     self.addConstraints([top, bottom, left, right])
   }
-
+  
   fileprivate func createSelectionBands() {
     guard let childCollectionView = childCollectionView else { return }
-
+    
     let selectionBand = SelectionBand(frame: self.frame)
     selectionBand.parentCollectionView = self
     childCollectionView.addSubview(selectionBand)
     self.selectionBand = selectionBand
-
+    
   }
-
+  
   required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
@@ -370,14 +370,14 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       startX += width
     })
   }
-
+  
   func setLasso(_ lasso: Bool) {
     self.lasso = lasso
     if let childCollectionView = childCollectionView {
       childCollectionView.isScrollEnabled = !self.lasso
     }
   }
-
+  
   func getOffset() -> CGFloat {
     return 19.0 // 25 - 6.0 padding
   }

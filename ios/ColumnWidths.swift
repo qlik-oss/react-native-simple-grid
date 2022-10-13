@@ -65,7 +65,7 @@ class ColumnWidths {
       totalWidth += averageWidth
     }
     if totalWidth < frame.width {
-      columnWidths.enumerated().forEach { (index, _) in
+      columnWidths.enumerated().forEach{ (index, _) in
         widths[index] = defaultWidth
       }
     }
