@@ -33,37 +33,37 @@ class ContainerView: UIView {
   weak var totalCellsView: TotalCellsView?
   weak var guideLineView: GuideLineView?
   weak var primarySelectionBand: SelectionBand?
-  
+
   @objc var onEndReached: RCTDirectEventBlock?
   @objc var onVerticalScrollEnded: RCTDirectEventBlock?
   @objc var onHeaderPressed: RCTDirectEventBlock?
   @objc var containerWidth: NSNumber?
   @objc var freezeFirstColumn: Bool = false
   @objc var isDataView: Bool = false
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     let rootView = UIView(frame: frame)
     fillParentView(rootView, toParent: self)
-    
+
     self.addSubview(rootView)
     self.rootView = rootView
   }
-  
+
   func fillParentView(_ view: UIView, toParent parent: UIView) {
     view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
   }
-  
+
   required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
-  
+
   @objc var onSelectionsChanged: RCTDirectEventBlock? {
     didSet {
       selectionsEngine.onSelectionsChanged = onSelectionsChanged
     }
   }
-  
+
   @objc var onConfirmSelections: RCTDirectEventBlock? {
     didSet {
       selectionsEngine.onConfirmSelections = onConfirmSelections
@@ -109,15 +109,15 @@ class ContainerView: UIView {
         let decodedCols = try JSONDecoder().decode(Cols.self, from: json)
         dataColumns = decodedCols.header
         totals = decodedCols.totals
-        
+
         if let primaryTotalsView = primaryTotalsView {
           primaryTotalsView.resetTotals(totals)
         }
-        
+
         if let secondaryTotalsView = secondaryTotalsView {
           secondaryTotalsView.resetTotals(totals)
         }
-        
+
         if let dataColumns = dataColumns {
           if let primaryHeaderView = primaryHeaderView {
             primaryHeaderView.updateColumns(dataColumns)
@@ -146,7 +146,7 @@ class ContainerView: UIView {
             view.appendData(rows: dataRows!)
             view.scrollToTop()
           }
-          
+
           if let slave = secondaryCollectionView {
             slave.appendData(rows: dataRows!)
             slave.scrollToTop()
@@ -228,7 +228,7 @@ class ContainerView: UIView {
       }
     }
   }
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
 
@@ -540,11 +540,8 @@ class ContainerView: UIView {
         collectionView.slave = masterCollectionView
       }
     }
-    
-    
+
   }
-  
-  
 
   fileprivate func getCollectionViewFrame() -> CGRect {
 

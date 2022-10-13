@@ -7,13 +7,12 @@
 
 import Foundation
 
-class DragBox : UIView {
-  
-  
+class DragBox: UIView {
+
   override func draw(_ rect: CGRect) {
-    
+
     guard let context = UIGraphicsGetCurrentContext() else {return}
-   
+
     context.setFillColor(self.backgroundColor?.cgColor ?? UIColor.black.cgColor)
     context.fill(rect)
     // draw two thin grabbers

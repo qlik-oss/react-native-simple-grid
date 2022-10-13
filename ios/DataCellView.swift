@@ -50,7 +50,7 @@ class DataCellView: UICollectionViewCell {
   var isDataView  = true
   weak var selectionBand: SelectionBand?
   weak var dataCollectionView: DataCollectionView?
-  
+
   static let iconMap: [String: UniChar] =  ["m": 0xe96c,
                                             "è": 0xe997,
                                             "ï": 0xe951,

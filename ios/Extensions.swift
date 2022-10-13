@@ -16,11 +16,11 @@ extension UIView {
                                                  y: bounds.maxY - layer.shadowRadius,
                                                  width: bounds.width,
                                                  height: layer.shadowRadius)).cgPath
-    
+
   }
-  
+
   func addLeftShadow(radius: CGFloat, opacity: CGFloat, offset: CGFloat) {
-    
+
     layer.shadowRadius = radius
     layer.shadowOpacity = Float(opacity)
     layer.shadowColor = UIColor.gray.cgColor
@@ -29,7 +29,7 @@ extension UIView {
                                                  y: 0,
                                                  width: radius,
                                                  height: bounds.height)).cgPath
-    
+
   }
 }
 
