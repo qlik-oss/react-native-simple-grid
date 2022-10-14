@@ -105,6 +105,10 @@ public class TableView extends FrameLayout {
     dataProvider.setDataView(isDataView);
   }
 
+  public List<DataColumn> getColumns() {
+    return dataProvider.getDataColumns();
+  }
+
   public void setRows(List<DataRow> rows, boolean resetData) {
     dataProvider.setRows(rows, resetData);
     if (this.recyclerView != null) {
@@ -128,7 +132,7 @@ public class TableView extends FrameLayout {
   }
 
   void createRecyclerView() {
-   if (recyclerView == null) {
+    if (recyclerView == null) {
       createDataColumnWidths();
       createGrabbers();
 
@@ -154,7 +158,7 @@ public class TableView extends FrameLayout {
       rootView.addView(recyclerView, recyclerViewLayoutParams);
 
       setupGrabbers();
-   }
+    }
   }
 
   private void createDataColumnWidths() {

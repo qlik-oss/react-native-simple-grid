@@ -39,9 +39,12 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         layout.width = column.width;
         container.setLayoutParams(layout);
         ClickableImageView imageView = (ClickableImageView) container.getChildAt(0);
-
         imageView.setData(cell);
-        Bitmap imageBitmap = dataProvider.getImageData(column.imageUrl);
+
+        Bitmap imageBitmap = dataProvider.getImageData(cell.imageUrl);
+        if(imageBitmap == null) {
+          continue;
+        }
         imageView.setImageBitmap(imageBitmap);
         imageView.setSizing(column, imageBitmap);
         imageView.setAlignment(column);
@@ -63,7 +66,9 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         RelativeLayout container = (RelativeLayout) wrapper.getChildAt(0);
         ClickableImageView imageView = (ClickableImageView) container.getChildAt(0);
         Bitmap imageBitmap = dataProvider.getImageData(column.imageUrl);
-        imageView.setImageBitmap(imageBitmap);
+        if(imageBitmap == null) {
+          continue;
+        }
         imageView.setSizing(column, imageBitmap);
         imageView.setAlignment(column);
       }

@@ -20,6 +20,7 @@ import java.util.Map;
 public class ClickableImageView extends androidx.appcompat.widget.AppCompatImageView implements SelectionsObserver {
   DataCell cell = null;
   boolean selected = false;
+  String scaleType = null;
   int defaultTextColor = Color.BLACK;
   final SelectionsEngine selectionsEngine;
   GestureDetector gestureDetector;
@@ -70,6 +71,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     layout.width = TableTheme.rowHeight + parent.getPaddingLeft() + parent.getPaddingRight();
     parent.setLayoutParams(layout);
     this.setScaleType(ScaleType.FIT_CENTER);
+    scaleType = "alwaysFit";
   }
 
   private void stretchToFit(DataColumn column)          {
@@ -79,6 +81,8 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     layout.width = column.width;
     parent.setLayoutParams(layout);
     this.setScaleType(ScaleType.FIT_XY);
+    scaleType = "stretchToFit";
+
   }
 
   private void fitToHeight(Bitmap image) {
@@ -92,6 +96,8 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     layout.width = Math.round(TableTheme.rowHeight * aspectRatioMultiplier) + parent.getPaddingLeft() + parent.getPaddingRight();
     parent.setLayoutParams(layout);
     this.setScaleType(ScaleType.FIT_XY);
+    scaleType = "fitToHeight";
+
   }
 
   private void fitToWidth(DataColumn column, Bitmap image) {
@@ -100,17 +106,21 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     float aspectRatioMultiplier = height/width;
 
     ViewGroup parent = (ViewGroup) this.getParent();
-    ViewGroup.LayoutParams layout = parent.getLayoutParams();
+    RelativeLayout.LayoutParams layout = (RelativeLayout.LayoutParams) parent.getLayoutParams();
     layout.width = column.width;
     layout.height = Math.round(column.width * aspectRatioMultiplier);
     parent.setLayoutParams(layout);
 
     ViewGroup grandparent = (ViewGroup) parent.getParent();
-    ViewGroup.LayoutParams granparentLayout = grandparent.getLayoutParams();
-    granparentLayout.width = column.width;
-    granparentLayout.height = Math.round(column.width * aspectRatioMultiplier);
-    grandparent.setLayoutParams(granparentLayout);
+    ViewGroup.LayoutParams grandparentLayout = grandparent.getLayoutParams();
+    grandparentLayout.width = column.width;
+    grandparentLayout.height = Math.round(column.width * aspectRatioMultiplier);
+    grandparent.setLayoutParams(grandparentLayout);
     this.setScaleType(ScaleType.FIT_XY);
+
+    parent.setMinimumWidth(column.width);
+    parent.setMinimumHeight(Math.round(column.width * aspectRatioMultiplier));
+    scaleType = "fitToWidth";
   }
 
   public void setSizing(DataColumn column, Bitmap image) {
@@ -131,7 +141,10 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   }
 
   public void setAlignment(DataColumn column) {
-    RelativeLayout wrapper = (RelativeLayout) this.getParent().getParent();
+    RelativeLayout container = (RelativeLayout) this.getParent();
+    RelativeLayout wrapper = (RelativeLayout) container.getParent();
+    setTranslationY(0);
+
     switch (column.imagePosition) {
       case "topCenter":
         wrapper.setGravity(Gravity.LEFT);
@@ -141,12 +154,24 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
         break;
       case "centerCenter":
         wrapper.setGravity(Gravity.CENTER);
+        if (scaleType.equals("fitToWidth")) {
+          setTranslationY(TableTheme.rowHeight / 2 - container.getMinimumHeight() / 2);
+        }
         break;
       case "centerLeft":
-        wrapper.setGravity(Gravity.TOP);
+        if (scaleType.equals("fitToWidth")) {
+          wrapper.setGravity(Gravity.TOP);
+          break;
+        }
+        wrapper.setGravity(Gravity.CENTER);
         break;
       case "centerRight":
-        wrapper.setGravity(Gravity.BOTTOM);
+        if (scaleType.equals("fitToWidth")) {
+          wrapper.setGravity(Gravity.BOTTOM);
+          setTranslationY(TableTheme.rowHeight - container.getMinimumHeight());
+          break;
+        }
+        wrapper.setGravity(Gravity.CENTER);
         break;
     }
   }

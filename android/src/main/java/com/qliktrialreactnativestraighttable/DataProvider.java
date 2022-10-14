@@ -16,12 +16,16 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +38,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+  public static Set<String> imagePaths = new HashSet<>();
+  public static Map<String, Bitmap> imageData = new HashMap<>();
   private final int NUM_LINES = 1;
   private final int FONT_SIZE = 14;
   private final int VIEW_TYPE_ITEM = 0;
@@ -41,7 +47,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   boolean isDataView = false;
   List<DataRow> rows = null;
   List<DataColumn> dataColumns = null;
-  Map<String, Bitmap> imageData = new HashMap<>();
+
   Set<RowViewHolder> cachedViewHolders = new HashSet<>();
   SelectionsEngine selectionsEngine = null;
   DataSize dataSize = null;
@@ -57,46 +63,49 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     this.loading = loading;
   }
 
-  public Bitmap getImageData(String url) {
-    return imageData.get(url);
-  }
-
   public List<DataColumn> getDataColumns() {
     return dataColumns;
   }
 
-  public void processColumns(List<DataColumn> columns) {
-    final CountDownLatch latch = new CountDownLatch(columns.size());
-    for( int i = 0; i < columns.size(); i++) {
-      DataColumn column = columns.get(i);
+  public static Bitmap getImageData(String url) {
+    return imageData.get(url);
+  }
 
-      if(column.type.equals("image")) {
-        boolean isDuplicateImageUrl = imageData.containsKey(column.imageUrl);
-        if(isDuplicateImageUrl || !URLUtil.isValidUrl(column.imageUrl)) {
-          latch.countDown();
-          continue;
-        }
-        imageData.put(column.imageUrl, null);
-        try {
-          HttpUtils.get(column.imageUrl, new Callback() {
-              public void onResponse(Call call, Response response) {
-                InputStream inputStream = response.body().byteStream();
-                Bitmap bitmap = PixelUtils.byteStreamToBitmap(inputStream);
-                imageData.replace(column.imageUrl, bitmap);
-                latch.countDown();
-              }
+  public static void addImagePath(String imageUrl) {
+    if(!URLUtil.isValidUrl(imageUrl)) {
+      return;
+    }
+    imagePaths.add(imageUrl);
+  }
 
-              public void onFailure(Call call, IOException e) {
-                latch.countDown();
-              }
-          });
-        } catch(Exception e) {
-          latch.countDown();
-          imageData.remove(column.imageUrl);
-          e.printStackTrace();
-        }
-      } else {
+  public static void fetchImages() {
+    final CountDownLatch latch = new CountDownLatch(imagePaths.size());
+    Iterator<String> iterator = imagePaths.iterator();
+    while (iterator.hasNext()) {
+      String imageUrl = iterator.next();
+      boolean isDuplicateImageUrl = imageData.containsKey(imageUrl);
+      if(isDuplicateImageUrl || !URLUtil.isValidUrl(imageUrl)) {
         latch.countDown();
+        continue;
+      }
+      imageData.put(imageUrl, null);
+      try {
+        HttpUtils.get(imageUrl, new Callback() {
+            public void onResponse(Call call, Response response) {
+              InputStream inputStream = response.body().byteStream();
+              Bitmap bitmap = PixelUtils.byteStreamToBitmap(inputStream);
+              imageData.replace(imageUrl, bitmap);
+              latch.countDown();
+            }
+
+            public void onFailure(Call call, IOException e) {
+              latch.countDown();
+            }
+        });
+      } catch(Exception e) {
+        latch.countDown();
+        imageData.remove(imageUrl);
+        e.printStackTrace();
       }
     }
     try {
@@ -170,6 +179,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   @Override
   public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
+    fetchImages();
     if(viewHolder instanceof RowViewHolder) {
       RowViewHolder holder = (RowViewHolder) viewHolder;
       if (this.isDataView) {
@@ -214,7 +224,6 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     setLoading(false);
   }
   public void setDataColumns(List<DataColumn> cols) {
-    processColumns(cols);
     this.dataColumns = cols;
   }
 
