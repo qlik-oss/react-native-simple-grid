@@ -18,6 +18,7 @@ class PaddedLabel: UILabel, SelectionsListener {
   var selected = false
   var selectionsEngine: SelectionsEngine?
   var url: URL?
+  var menuTranslations: MenuTranslations?
   weak var selectionBand: SelectionBand?
   weak var dataCollectionView: DataCollectionView?
 
@@ -29,6 +30,10 @@ class PaddedLabel: UILabel, SelectionsListener {
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  override var canBecomeFirstResponder: Bool {
+    return true
   }
 
   override func drawText(in rect: CGRect) {
@@ -51,6 +56,46 @@ class PaddedLabel: UILabel, SelectionsListener {
     return CGRect(x: ctr.origin.x + xOffset, y: ctr.origin.y + PaddedLabel.PaddingSize, width: ctr.size.width, height: ctr.size.height)
   }
 
+  func showMenus() {
+    isUserInteractionEnabled = true
+    let longPress = UILongPressGestureRecognizer(target: self, action: #selector(showMenu))
+    self.addGestureRecognizer(longPress)
+  }
+
+  @objc func showMenu(_ sender: UILongPressGestureRecognizer) {
+    guard let menuTranslations = self.menuTranslations else {return}
+    self.becomeFirstResponder()
+
+    let menu = UIMenuController.shared
+
+    let locationOfTouchInLabel = sender.location(in: self)
+
+    if !menu.isMenuVisible {
+      var rect = bounds
+      rect.origin = locationOfTouchInLabel
+      rect.size = CGSize(width: 1, height: 1)
+
+      menu.menuItems = [
+        UIMenuItem(
+          title: menuTranslations.copy ?? "Copy",
+          action: #selector(handleCopy(_:))
+        )
+      ]
+
+      if #available(iOS 13.0, *) {
+        menu.showMenu(from: self, rect: rect)
+      } else {
+        // Fallback on earlier versions
+      }
+    }
+  }
+
+  @objc func handleCopy(_ controller: UIMenuController) {
+    let board = UIPasteboard.general
+    board.string = self.text
+    controller.setMenuVisible(false, animated: true)
+  }
+
   func makeSelectable(selectionsEngine: SelectionsEngine) {
     isUserInteractionEnabled = true
     self.selectionsEngine = selectionsEngine
@@ -63,6 +108,10 @@ class PaddedLabel: UILabel, SelectionsListener {
   }
 
   @objc func labelClicked(_ sender: UITapGestureRecognizer) {
+    let menu = UIMenuController.shared
+    if menu.isMenuVisible {
+      menu.setMenuVisible(false, animated: true)
+    }
     if sender.state == .ended {
       if let url = url {
         UIApplication.shared.open(url)

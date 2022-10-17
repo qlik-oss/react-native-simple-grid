@@ -48,6 +48,7 @@ class DataCellView: UICollectionViewCell {
   var cellColor: UIColor?
   var numberOfLines = 1
   var isDataView  = true
+  var menuTranslations: MenuTranslations?
   weak var selectionBand: SelectionBand?
   weak var dataCollectionView: DataCollectionView?
 
@@ -122,6 +123,7 @@ class DataCellView: UICollectionViewCell {
             label.checkSelected(selectionsEngine)
             label.selectionBand = self.selectionBand
             label.dataCollectionView = self.dataCollectionView
+            label.menuTranslations = self.menuTranslations
 
             label.checkForUrls()
             if representation.type == "indicator", let indicator = element.indicator, let uniChar = DataCellView.iconMap[indicator.icon ?? "m"] {
@@ -185,6 +187,7 @@ class DataCellView: UICollectionViewCell {
             let sizedFont = UIFont.systemFont(ofSize: 14)
             label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: sizedFont)
             label.adjustsFontForContentSizeCategory = true
+            label.showMenus()
             contentView.addSubview(label)
           }
         }

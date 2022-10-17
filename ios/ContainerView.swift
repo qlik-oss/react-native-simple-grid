@@ -19,6 +19,7 @@ class ContainerView: UIView {
   var cellStyle: CellContentStyle?
   var headerStyle: HeaderContentStyle?
   var defaultCalculated = false
+  var menuTranslations: MenuTranslations?
   var columnWidths = ColumnWidths()
   var grabbers = [() -> GrabberView?]()
   weak var mainHeaderView: HeaderView?
@@ -199,6 +200,18 @@ class ContainerView: UIView {
   @objc var name: String? {
     didSet {
       columnWidths.key = name
+    }
+  }
+
+  @objc var translations: NSDictionary = [:] {
+    didSet {
+      do {
+        let json = try JSONSerialization.data(withJSONObject: translations)
+        let decodedTranslations = try JSONDecoder().decode(Translations.self, from: json)
+        menuTranslations = decodedTranslations.menu
+      } catch {
+        print(error)
+      }
     }
   }
 
@@ -495,6 +508,7 @@ class ContainerView: UIView {
       dataCollectionView.headerView = self.primaryHeaderView
       dataCollectionView.totalsView = self.primaryTotalsView
       dataCollectionView.freezeFirstColumn = self.freezeFirstColumn
+      dataCollectionView.menuTranslations = self.menuTranslations
       hScrollViewDelegate.collectionView = dataCollectionView
 
       if let masterHeaderView = primaryHeaderView {
@@ -530,6 +544,7 @@ class ContainerView: UIView {
       collectionView.headerView = self.secondaryHeaderView
       collectionView.totalsView = self.secondaryTotalsView
       collectionView.freezeFirstColumn = self.freezeFirstColumn
+      collectionView.menuTranslations = self.menuTranslations
       collectionView.hScrollView = scrollView
       collectionView.backgroundColor = .red
 
