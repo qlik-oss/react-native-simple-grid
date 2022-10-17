@@ -101,7 +101,8 @@ class PaddedLabel: UILabel, SelectionsListener {
       guard let selectionBand = self.selectionBand else {return}
       if envelope.sender === selectionBand {
         let convertedFrame = convertLocalFrameToSelectionBandFrame(selectionBand)
-        if envelope.frame.intersects(convertedFrame) {
+        if convertedFrame.intersects(envelope.frame) {
+          print("\(text) -> Frame \(self.frame), converted: \(convertedFrame), enve\(envelope.frame)")
           addToSelections()
         }
       }
