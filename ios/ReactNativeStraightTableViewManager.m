@@ -21,4 +21,5 @@ RCT_EXPORT_VIEW_PROPERTY(headerContentStyle, NSDictionary*)
 RCT_EXPORT_VIEW_PROPERTY(isDataView, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(name, NSString*)
 RCT_EXPORT_VIEW_PROPERTY(onConfirmSelections, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(translations, NSDictionary*)
 @end

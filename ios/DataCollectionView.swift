@@ -27,6 +27,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   var isDataView = false
   var dataRange: CountableRange = 0..<2
   var freezeFirstColumn = false
+  var menuTranslations: MenuTranslations?
   var grabbers: [() -> GrabberView?]?
   private var lasso = false
   weak var totalCellsView: TotalCellsView?
@@ -206,6 +207,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DataCellView
     cell.isDataView = self.isDataView
     cell.selectionBand = self.selectionBand
+    cell.menuTranslations = self.menuTranslations
     cell.dataCollectionView = self
     cell.backgroundColor = isDataView ? indexPath.row % 2 == 0 ? .white : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0) : .white
     cell.cellColor = cellColor
