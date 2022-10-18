@@ -1,3 +1,10 @@
+# [1.1.0-alpha.29](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.28...v1.1.0-alpha.29) (2022-10-18)
+
+
+### Features
+
+* **MD-3347:** add drage select for ios ([#90](https://github.com/qlik-oss/react-native-simple-grid/issues/90)) ([33eb89e](https://github.com/qlik-oss/react-native-simple-grid/commit/33eb89e9558a012f9d00499c94c73f757b51b07d))
+
 # [1.1.0-alpha.28](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.27...v1.1.0-alpha.28) (2022-10-18)
 
 
