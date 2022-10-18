@@ -1,3 +1,10 @@
+# [1.1.0-alpha.28](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.27...v1.1.0-alpha.28) (2022-10-18)
+
+
+### Features
+
+* **md-3356:** native table images ([#88](https://github.com/qlik-oss/react-native-simple-grid/issues/88)) ([a5eef90](https://github.com/qlik-oss/react-native-simple-grid/commit/a5eef902b4622bbbe614b2f59ad6f6f58a6d7bdd))
+
 # [1.1.0-alpha.27](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.26...v1.1.0-alpha.27) (2022-10-07)
 
 
