@@ -379,6 +379,6 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   }
 
   func getOffset() -> CGFloat {
-    return 19.0 // 25 - 6.0 padding
+    return HorizontalScrollValues.RightScrollContentPadding.rawValue - HorizontalScrollValues.HorizontalPadding.rawValue
   }
 }

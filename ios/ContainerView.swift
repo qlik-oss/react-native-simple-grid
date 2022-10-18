@@ -322,7 +322,7 @@ class ContainerView: UIView {
     }
 
     let width = freezeFirstColumn ? columnWidths.getTotalWidth(range: 1..<columnWidths.count()) : columnWidths.getTotalWidth()
-    scrollView.contentSize = CGSize(width: width + 25, height: 0)
+    scrollView.contentSize = CGSize(width: width + HorizontalScrollValues.RightScrollContentPadding.rawValue, height: 0)
   }
 
   fileprivate func updateCollectionViewFrame() {
