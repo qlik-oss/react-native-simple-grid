@@ -137,4 +137,8 @@ class MasterColumnCollectionView: DataCollectionView {
     view.frame = CGRect(origin: view.frame.origin, size: CGSize(width: width, height: view.frame.height))
   }
 
+  override func getOffset() -> CGFloat {
+    return 0.0
+  }
+
 }

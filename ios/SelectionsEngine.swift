@@ -9,11 +9,66 @@ import Foundation
 
 class SelectionsEngine: NSObject {
   var selections = [String: String]()
+  var pendingSelections = Set<String>()
   var onSelectionsChanged: RCTDirectEventBlock?
+  var onConfirmSelections: RCTDirectEventBlock?
   var selectionListners = [SelectionsListener]()
+  var activeColumn = -1.0
+
+  override init() {
+    super.init()
+    NotificationCenter.default.addObserver(self, selector: #selector(onDragSelectDone), name: Notification.Name.onDragSelectDone, object: nil)
+  }
 
   func addListener(listener: SelectionsListener) {
     selectionListners.append(listener)
+  }
+
+  func canSelect(_ dataCell: DataCell) -> Bool {
+    guard let colIdx = dataCell.colIdx else { return false }
+    if activeColumn == -1.0 {
+      activeColumn = colIdx
+      return true
+    }
+    if activeColumn != colIdx {
+      activeColumn = colIdx
+      NotificationCenter.default.post(name: Notification.Name.onClearSelectionBand, object: nil)
+      if let onConfirmSelections = self.onConfirmSelections {
+        onConfirmSelections([:])
+      }
+      return false
+    }
+    return true
+  }
+
+  func addSelection(_ data: String) {
+    pendingSelections.insert(data)
+    for listner in selectionListners {
+      listner.addedToSelection(data: data)
+    }
+  }
+
+  @objc func onDragSelectDone(notification: Notification) {
+    flushPendingSelections()
+  }
+
+  func flushPendingSelections() {
+    for data in pendingSelections {
+      let components = SelectionsEngine.splitSignature(from: data)
+      selections[components[0]] = components[1]
+    }
+
+    pendingSelections.removeAll()
+
+    if let onSelectionsChanged = onSelectionsChanged {
+      var event = [String]()
+      for (key, value) in selections {
+        let sel = key + value
+        event.append(sel)
+      }
+      onSelectionsChanged(["selections": event])
+    }
+
   }
 
   func toggleSelected(_ data: String) {
@@ -48,6 +103,8 @@ class SelectionsEngine: NSObject {
     for listner in selectionListners {
       listner.clearSelected()
     }
+    activeColumn = -1.0
+    NotificationCenter.default.post(name: Notification.Name.onClearSelectionBand, object: nil)
   }
 
   static func buildSelectionSignator(from: DataCell) -> String {

@@ -10,4 +10,5 @@ protocol SelectionsListener {
   var id: Int {get set}
   func toggleSelected(data: String)
   func clearSelected()
+  func addedToSelection(data: String)
 }

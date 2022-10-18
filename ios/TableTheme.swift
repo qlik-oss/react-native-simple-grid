@@ -6,6 +6,11 @@
 //
 
 import Foundation
+enum HorizontalScrollValues: Double {
+  case RightScrollContentPadding = 25
+  case HorizontalPadding = 6
+}
+
 struct TableTheme: Decodable {
   let rowHeight: Int?
   var headerHeight: Int?

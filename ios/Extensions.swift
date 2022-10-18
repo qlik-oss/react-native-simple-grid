@@ -31,5 +31,12 @@ extension UIView {
                                                  height: bounds.height)).cgPath
 
   }
+}
 
+extension Notification.Name {
+  static let onTappedSelection = Notification.Name("onTappedSelection")
+  static let onTappedSelectionBand = Notification.Name("onTappedSelectionBand")
+  static let onClearSelectionBand = Notification.Name("onClearSelectionBand")
+  static let onSelectionDragged = Notification.Name("onSelectionDragged")
+  static let onDragSelectDone = Notification.Name("onDragSelectDone")
 }

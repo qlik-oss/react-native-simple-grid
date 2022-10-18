@@ -17,6 +17,9 @@ class GrabberView: UIView {
   weak var totalsView: TotalsView?
   weak var scrollView: UIScrollView?
   weak var guideLineView: GuideLineView?
+  weak var primarySelectionBand: SelectionBand?
+  weak var secondarySelectionBand: SelectionBand?
+
   var pressed = false
   var trim: CGFloat = 0
   var timer: Timer?
@@ -128,6 +131,14 @@ class GrabberView: UIView {
     if let totalsView = totalsView {
       totalsView.updateSize(translation, withColumn: abosluteColIdx)
     }
+
+    if let primarySelectionBand = self.primarySelectionBand {
+      primarySelectionBand.updateSize(translation, withColumn: colIdx)
+    }
+
+    if let secondarySelectionBand = self.secondarySelectionBand {
+      secondarySelectionBand.updateSize(translation, withColumn: colIdx)
+    }
     return true
   }
 
@@ -172,6 +183,7 @@ class GrabberView: UIView {
     if let container = containerView {
       container.onEndDragged(colIdx)
     }
+
   }
 
   func repositionTo(_ x: Double) {

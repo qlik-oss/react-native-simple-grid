@@ -18,15 +18,10 @@ class PaddedLabel: UILabel, SelectionsListener {
   var selected = false
   var selectionsEngine: SelectionsEngine?
   var url: URL?
+  weak var selectionBand: SelectionBand?
+  weak var dataCollectionView: DataCollectionView?
 
   private static let numberFormatter = NumberFormatter()
-
-  override var intrinsicContentSize: CGSize {
-    var s = super.intrinsicContentSize
-    s.height += UIEI.top + UIEI.bottom
-    s.width += UIEI.left + UIEI.right
-    return s
-  }
 
   override init(frame: CGRect) {
     super.init(frame: frame.integral)
@@ -63,6 +58,8 @@ class PaddedLabel: UILabel, SelectionsListener {
 
     addGestureRecognizer(tapGesture)
     selectionsEngine.addListener(listener: self)
+    NotificationCenter.default.addObserver(self, selector: #selector(onTappedSelectionBand), name: Notification.Name.onTappedSelectionBand, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(onSelectionDragged), name: Notification.Name.onSelectionDragged, object: nil)
   }
 
   @objc func labelClicked(_ sender: UITapGestureRecognizer) {
@@ -70,11 +67,66 @@ class PaddedLabel: UILabel, SelectionsListener {
       if let url = url {
         UIApplication.shared.open(url)
       } else {
-        let sig = SelectionsEngine.buildSelectionSignator(from: cell!)
-        if let selectionsEngine = selectionsEngine {
-          selectionsEngine.toggleSelected(sig)
+        guard let selectionsEngine = self.selectionsEngine else {return}
+        if selectionsEngine.canSelect(self.cell!) {
+          if let selectionBand = self.selectionBand {
+            if !selected {
+              let convertedFrame = convertLocalFrameToSelectionBandFrame(selectionBand)
+              let envelope = SelectionBandEnvelope(convertedFrame, sender: self, colIdx: self.cell?.colIdx ?? -1.0)
+              selectionBand.handleActivation(envelope)
+              NotificationCenter.default.post(name: Notification.Name.onTappedSelection, object: envelope)
+            }
+          }
+          toggleSelection()
         }
       }
+    }
+  }
+
+  @objc func onTappedSelectionBand(notificaiton: Notification) {
+    guard let point = notificaiton.object as? CGPoint else {return}
+    guard let parentView = self.selectionBand else {return}
+    let hitTestPoint = parentView.convert(point, to: self)
+    if self.frame.contains(hitTestPoint) {
+      toggleSelection()
+      if !selected {
+        NotificationCenter.default.post(name: Notification.Name.onClearSelectionBand, object: nil)
+      }
+    }
+  }
+
+  @objc func onSelectionDragged(notificaiton: Notification) {
+    if !selected {
+      guard let envelope = notificaiton.object as? SelectionBandEnvelope else {return}
+      guard let selectionBand = self.selectionBand else {return}
+      if envelope.sender === selectionBand {
+        let convertedFrame = convertLocalFrameToSelectionBandFrame(selectionBand)
+        if envelope.frame.contains(convertedFrame) {
+          addToSelections()
+        }
+      }
+    }
+  }
+
+  fileprivate func convertLocalFrameToSelectionBandFrame(_ selectionBand: UIView) -> CGRect {
+    let convertedFrame = convert(self.frame, from: self.superview)// convert(self.frame, to: dataCollectionView) //dataCollectionView.convert(self.frame, to: selectionBand)
+    // account for the 1 width colunm grabber line
+    return convert(convertedFrame, to: selectionBand).insetBy(dx: 0.5, dy: 0).offsetBy(dx: -0.5, dy: 0)// .offsetBy(dx: -dataCollectionView.frame.origin.x, dy: 0)
+  }
+
+  fileprivate func addToSelections() {
+    guard let selectionsEngine = self.selectionsEngine else { return }
+    let sig = SelectionsEngine.buildSelectionSignator(from: cell!)
+    selectionsEngine.addSelection(sig)
+    selected = true
+    updateBackground()
+
+  }
+
+  fileprivate func toggleSelection() {
+    let sig = SelectionsEngine.buildSelectionSignator(from: cell!)
+    if let selectionsEngine = selectionsEngine {
+      selectionsEngine.toggleSelected(sig)
     }
   }
 
@@ -92,14 +144,29 @@ class PaddedLabel: UILabel, SelectionsListener {
     }
   }
 
+  func addedToSelection(data: String) {
+    let sig = SelectionsEngine.signatureKey(from: data)
+    let comp = SelectionsEngine.signatureKey(from: cell!)
+    if sig == comp {
+      selected = true
+      updateBackground()
+    }
+  }
+
   func checkSelected(_ selectionsEngine: SelectionsEngine) {
     selected = selectionsEngine.contains(cell!)
     updateBackground()
   }
 
   fileprivate func updateBackground() {
-    backgroundColor = selected ? selectedBackgroundColor     : .clear
     textColor = selected ? .white : .black
+    animateBackgroundColor(to: selected ? selectedBackgroundColor : .clear)
+  }
+
+  fileprivate func animateBackgroundColor(to: UIColor) {
+    UIView.animate(withDuration: 0.3, animations: {
+      self.layer.backgroundColor = to.cgColor
+    })
   }
 
   func addSystemImage(imageName: String, afterLabel bolAfterLabel: Bool = false) {
@@ -196,5 +263,9 @@ class PaddedLabel: UILabel, SelectionsListener {
       let attributedString1 = NSMutableAttributedString(string: String(format: "%C", withIcon), attributes: iconAttributes as [NSAttributedString.Key: Any])
       self.attributedText = attributedString1
     }
+  }
+
+  deinit {
+    NotificationCenter.default.removeObserver(self.onTappedSelectionBand)
   }
 }
