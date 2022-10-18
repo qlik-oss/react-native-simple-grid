@@ -74,10 +74,13 @@ class ColumnWidths {
   }
 
   fileprivate func getAverageWidth(dataRows: [DataRow], index: Int) -> Double {
+    if dataRows.count == 0 {
+      return DataCellView.minWidth
+    }
     let totalCount = dataRows.reduce(0) { partialResult, row in
       return partialResult + row.cells[index].qText!.count
     }
-    let average = totalCount / dataRows.count
+    let average = totalCount / (dataRows.count)
     let tempLabel = UILabel()
     tempLabel.font = tempLabel.font.withSize(16)
     tempLabel.text = String(repeating: "M", count: average)

@@ -19,6 +19,7 @@ class ContainerView: UIView {
   var cellStyle: CellContentStyle?
   var headerStyle: HeaderContentStyle?
   var defaultCalculated = false
+  var menuTranslations: MenuTranslations?
   var columnWidths = ColumnWidths()
   var grabbers = [() -> GrabberView?]()
   weak var mainHeaderView: HeaderView?
@@ -37,6 +38,8 @@ class ContainerView: UIView {
   @objc var onEndReached: RCTDirectEventBlock?
   @objc var onVerticalScrollEnded: RCTDirectEventBlock?
   @objc var onHeaderPressed: RCTDirectEventBlock?
+  @objc var onExpandCell: RCTDirectEventBlock?
+  @objc var onSearchColumn: RCTDirectEventBlock?
   @objc var containerWidth: NSNumber?
   @objc var freezeFirstColumn: Bool = false
   @objc var isDataView: Bool = false
@@ -202,6 +205,18 @@ class ContainerView: UIView {
     }
   }
 
+  @objc var translations: NSDictionary = [:] {
+    didSet {
+      do {
+        let json = try JSONSerialization.data(withJSONObject: translations)
+        let decodedTranslations = try JSONDecoder().decode(Translations.self, from: json)
+        menuTranslations = decodedTranslations.menu
+      } catch {
+        print(error)
+      }
+    }
+  }
+
   override var bounds: CGRect {
     didSet {
       guard let dataRows = dataRows else {
@@ -360,6 +375,7 @@ class ContainerView: UIView {
                                      columns: dataColumns,
                                      withTheme: tableTheme!,
                                      onHeaderPressed: onHeaderPressed,
+                                     onSearchColumn: onSearchColumn,
                                      headerStyle: headerStyle!,
                                      columnWidths: columnWidths,
                                      withRange: 0..<1)
@@ -379,6 +395,7 @@ class ContainerView: UIView {
                                      columns: dataColumns,
                                      withTheme: tableTheme!,
                                      onHeaderPressed: onHeaderPressed,
+                                     onSearchColumn: onSearchColumn,
                                      headerStyle: headerStyle!,
                                      columnWidths: columnWidths,
                                      withRange: 1..<columnWidths.count())
@@ -495,6 +512,8 @@ class ContainerView: UIView {
       dataCollectionView.headerView = self.primaryHeaderView
       dataCollectionView.totalsView = self.primaryTotalsView
       dataCollectionView.freezeFirstColumn = self.freezeFirstColumn
+      dataCollectionView.menuTranslations = self.menuTranslations
+      dataCollectionView.onExpandedCell = self.onExpandCell
       hScrollViewDelegate.collectionView = dataCollectionView
 
       if let masterHeaderView = primaryHeaderView {
@@ -530,7 +549,9 @@ class ContainerView: UIView {
       collectionView.headerView = self.secondaryHeaderView
       collectionView.totalsView = self.secondaryTotalsView
       collectionView.freezeFirstColumn = self.freezeFirstColumn
+      collectionView.menuTranslations = self.menuTranslations
       collectionView.hScrollView = scrollView
+      collectionView.onExpandedCell = self.onExpandCell
       collectionView.backgroundColor = .red
 
       scrollView.addSubview(collectionView)
@@ -714,4 +735,6 @@ class ContainerView: UIView {
       }
     }
   }
+
+
 }

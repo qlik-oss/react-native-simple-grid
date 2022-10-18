@@ -8,11 +8,11 @@
 import Foundation
 
 struct StylingInfo {
-  var backgroundColorIdx = 0
-  var foregroundColorIdx = 0
+  var backgroundColorIdx = -1
+  var foregroundColorIdx = -1
 }
 
-struct Indicator: Decodable {
+struct Indicator: Codable {
   var color: String?
   var icon: String?
   var applySegmentColors: Bool?
@@ -20,7 +20,7 @@ struct Indicator: Decodable {
   var showTextValues: Bool?
 }
 
-struct MatrixCell: Decodable {
+struct MatrixCell: Codable {
   let qNum: Double?
   let qText: String?
   enum CodingKeys: String, CodingKey {
@@ -38,17 +38,17 @@ struct MatrixCell: Decodable {
   }
 }
 
-struct Matrix: Decodable {
+struct Matrix: Codable {
   let qMatrix: [[MatrixCell]]?
   let qMax: Double?
   let qMin: Double?
 }
 
-struct AttriExpr: Decodable {
+struct AttriExpr: Codable {
   let qValues: [MatrixCell]?
 }
 
-struct DataCell: Decodable {
+struct DataCell: Codable {
   var qText: String?
   var qNum: Double?
   var qElemNumber: Double?
@@ -98,10 +98,31 @@ struct DataCell: Decodable {
     }
   }
 
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(self.qText, forKey: .qText)
+    try container.encode(self.qNum, forKey: .qNum)
+    try container.encode(self.qElemNumber, forKey: .qElemNumber)
+    try container.encode(self.qState, forKey: .qState)
+    try container.encode(self.rowIdx, forKey: .rowIdx)
+    try container.encode(self.colIdx, forKey: .colIdx)
+    try container.encode(self.isDim, forKey: .isDim)
+    try container.encode(self.rawRowIdx, forKey: .rawRowIdx)
+    try container.encode(self.rawColIdx, forKey: .rawColIdx)
+    try container.encodeIfPresent(self.qMiniChart, forKey: .qMiniChart)
+
+    if let qAttrExps = self.qAttrExps {
+      try container.encode(qAttrExps, forKey: .qAttrExps)
+    }
+    if let indicator = self.indicator {
+      try container.encode(indicator, forKey: .indicator)
+    }
+  }
 }
 
-struct DataRow: Decodable {
+struct DataRow: Codable {
   var cells: [DataCell]
+
   private struct DynamicCodingKeys: CodingKey {
     var intValue: Int?
     init?(intValue: Int) {
@@ -112,6 +133,7 @@ struct DataRow: Decodable {
       self.stringValue = stringValue
     }
   }
+
   init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
     var tempArray = [DataCell]()

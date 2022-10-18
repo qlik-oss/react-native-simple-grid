@@ -35,8 +35,8 @@ class SelectionBand: UIView {
   let borderColor = UIColor.black
   let dragBoxSize = CGSize(width: 12, height: 12)
   let grabberColor = UIColor(red: 0.00, green: 0.36, blue: 0.73, alpha: 1.00)
+  let notificationCenter = NotificationCenter()
   weak var selectionBandResizer: UIView?
-  weak var parentCollectionView: DataCollectionView?
   weak var dragBox: UIView?
 
   override init(frame: CGRect) {
@@ -56,7 +56,7 @@ class SelectionBand: UIView {
 
     createDragBoxes()
 
-    NotificationCenter.default.addObserver(self, selector: #selector(handleClearSelection), name: Notification.Name.onClearSelectionBand, object: nil)
+    notificationCenter.addObserver(self, selector: #selector(handleClearSelection), name: Notification.Name.onClearSelectionBand, object: nil)
   }
 
   fileprivate func createDragBoxes() {
@@ -118,7 +118,7 @@ class SelectionBand: UIView {
 
   @objc func selectionBandResizerTapped(_ sender: UITapGestureRecognizer) {
     let point = sender.location(in: self)
-    NotificationCenter.default.post(name: Notification.Name.onTappedSelectionBand, object: point)
+    notificationCenter.post(name: Notification.Name.onTappedSelectionBand, object: point)
   }
 
   @objc func handleGesture(_ sender: UIPanGestureRecognizer) {
@@ -130,7 +130,7 @@ class SelectionBand: UIView {
       translation = sender.translation(in: self)
       handleDrag()
     case .ended:
-      NotificationCenter.default.post(name: Notification.Name.onDragSelectDone, object: nil)
+      notificationCenter.post(name: Notification.Name.onDragSelectDone, object: nil)
       clearRect()
       self.setNeedsDisplay()
     case .cancelled:
@@ -163,7 +163,7 @@ class SelectionBand: UIView {
     selectionBandResizer.frame = newFrame
     updateDragBox(selectionBandResizer: selectionBandResizer)
     let envelope = SelectionBandEnvelope(newFrame, sender: self)
-    NotificationCenter.default.post(name: Notification.Name.onSelectionDragged, object: envelope)
+    notificationCenter.post(name: Notification.Name.onSelectionDragged, object: envelope)
   }
 
   func clearRect () {

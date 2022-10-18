@@ -84,7 +84,7 @@ class TotalsView: HeaderStyleView {
       let col = dataColumns[index + dataRange.lowerBound]
       let width = columnWidths.columnWidths[index + dataRange.lowerBound]
       let frame = CGRect(x: currentX, y: 0, width: Int(width), height: theme!.headerHeight!)
-      let label = PaddedLabel(frame: frame)
+      let label = PaddedLabel(frame: frame, selectionBand: nil)
       label.textColor = ColorParser().fromCSS(cssString: cellStyle?.color ?? "black")
       label.font = UIFont.boldSystemFont(ofSize: 14)
       if col.isDim == true && index == 0 {

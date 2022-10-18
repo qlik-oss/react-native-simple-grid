@@ -23,6 +23,7 @@ class ColorParser {
     "lightgrey": .lightGray,
     "darkgrey": .darkGray,
     "purple": .purple,
+    "orange": .orange,
     "teal": .systemTeal]
 
   func fromCSS(cssString: String) -> UIColor {

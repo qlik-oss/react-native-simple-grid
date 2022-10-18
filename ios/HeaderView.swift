@@ -9,6 +9,7 @@ import Foundation
 
 class HeaderView: HeaderStyleView {
   var onHeaderPressed: RCTDirectEventBlock?
+  var onSearchColumn: RCTDirectEventBlock?
   var headerFrame = CGRect.zero
   weak var columnWidths: ColumnWidths?
   weak var bottomBorder: CALayer?
@@ -17,6 +18,7 @@ class HeaderView: HeaderStyleView {
        columns: [DataColumn],
        withTheme theme: TableTheme,
        onHeaderPressed: RCTDirectEventBlock?,
+       onSearchColumn: RCTDirectEventBlock?,
        headerStyle: HeaderContentStyle,
        columnWidths: ColumnWidths,
        withRange dataRange: CountableRange<Int> ) {
@@ -24,6 +26,7 @@ class HeaderView: HeaderStyleView {
     self.columnWidths = columnWidths
     self.dataRange = dataRange
     self.onHeaderPressed = onHeaderPressed
+    self.onSearchColumn = onSearchColumn
     headerFrame = frame
     addLabels(columns: columns, withTheme: theme, andHeaderStyle: headerStyle)
     addBottomBorder()
@@ -52,15 +55,10 @@ class HeaderView: HeaderStyleView {
       let frame = CGRect(x: currentX, y: 0, width: 200, height: theme.headerHeight!)
       let label = HeaderCell(frame: frame, dataColumn: column)
       label.onHeaderPressed = onHeaderPressed
+      label.onSearchColumn = onSearchColumn
+      label.setText(column.label ?? "", textColor: ColorParser().fromCSS(cssString: headerStyle.color ?? "black"))
 
-      label.text = column.label ?? ""
-      label.textColor = ColorParser().fromCSS(cssString: headerStyle.color ?? "black")
-
-      let sizedFont = UIFont.systemFont(ofSize: 14)
-      label.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: sizedFont)
-      label.adjustsFontForContentSizeCategory = true
-
-      updateIcon(column, forLabel: label)
+      updateSortIndicator(column, forLabel: label)
 
       currentX += 200// Int(column.widths[widthIndex])
       addSubview(label)
@@ -69,23 +67,23 @@ class HeaderView: HeaderStyleView {
 
   func updateColumns(_ dataColumns: [DataColumn]) {
     dataColumns[dataRange].enumerated().forEach { (index, element) in
-      if let label = subviews[index] as? PaddedLabel {
-        updateIcon(element, forLabel: label)
+      if let label = subviews[index] as? HeaderCell {
+        updateSortIndicator(element, forLabel: label)
         label.layer.backgroundColor = UIColor.clear.cgColor
         label.setNeedsDisplay()
       }
     }
   }
 
-  fileprivate func updateIcon(_ column: DataColumn, forLabel: PaddedLabel) {
+  fileprivate func updateSortIndicator(_ column: DataColumn, forLabel: HeaderCell) {
     if column.active == true {
       if column.sortDirection == "desc" {
-        forLabel.addSystemImage(imageName: "arrowtriangle.down.fill")
+        forLabel.setBottomBorder()
       } else {
-        forLabel.addSystemImage(imageName: "arrowtriangle.up.fill")
+        forLabel.setTopBorder()
       }
     } else {
-      forLabel.removeSystemImage()
+      forLabel.clearBorders()
     }
   }
 
