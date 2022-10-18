@@ -31,6 +31,7 @@ public class TableView extends FrameLayout {
 
   TableTheme tableTheme = new TableTheme();
   List<GrabberView> grabbers = null;
+
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   TableView(Context context, CustomHorizontalScrollView scrollView) {
     super(context);
@@ -92,16 +93,20 @@ public class TableView extends FrameLayout {
   }
 
   public void setDataColumns(List<DataColumn> cols) {
-    if (dataProvider.getDataColumns() == null) {
-      dataProvider.setDataColumns(cols);
-      if (dataProvider.ready()) {
-        createRecyclerView();
-      }
+    dataProvider.setDataColumns(cols);
+    if (dataProvider.getDataColumns() == null && dataProvider.ready()) {
+      createRecyclerView();
+    } else {
+      dataProvider.updateRepresentation();
     }
   }
 
   public void setDataView(boolean isDataView) {
     dataProvider.setDataView(isDataView);
+  }
+
+  public List<DataColumn> getColumns() {
+    return dataProvider.getDataColumns();
   }
 
   public void setRows(List<DataRow> rows, boolean resetData) {
@@ -110,10 +115,11 @@ public class TableView extends FrameLayout {
       this.requestLayout();
       this.recyclerView.requestLayout();
     }
-    if (this.headerView != null && dataProvider.ready()) {
-      createRecyclerView();
-    }
+
     if (resetData) {
+      if (this.headerView != null && dataProvider.ready()) {
+        createRecyclerView();
+      }
       selectionsEngine.clearSelections();
     }
   }

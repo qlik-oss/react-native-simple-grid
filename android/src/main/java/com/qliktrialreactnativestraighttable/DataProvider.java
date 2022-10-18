@@ -1,11 +1,15 @@
 package com.qliktrialreactnativestraighttable;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -13,21 +17,38 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.WritableArray;
-import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+  public static Set<String> imagePaths = new HashSet<>();
+  public static Map<String, Bitmap> imageData = new HashMap<>();
+  private final int NUM_LINES = 1;
+  private final int FONT_SIZE = 14;
   private final int VIEW_TYPE_ITEM = 0;
   private final int VIEW_TYPE_LOADING = 1;
   boolean isDataView = false;
   List<DataRow> rows = null;
   List<DataColumn> dataColumns = null;
-  Set<SimpleViewHolder> cachedViewHolders = new HashSet<>();
+
+  Set<RowViewHolder> cachedViewHolders = new HashSet<>();
   SelectionsEngine selectionsEngine = null;
   DataSize dataSize = null;
   boolean loading = false;
@@ -46,67 +67,55 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return dataColumns;
   }
 
-  public class SimpleViewHolder extends RecyclerView.ViewHolder  {
-    private final LinearLayout row;
-    public SimpleViewHolder(View view) {
-      super(view);
-      row = (LinearLayout) view;
-    }
+  public static Bitmap getImageData(String url) {
+    return imageData.get(url);
+  }
 
-    public void setBackGroundColor(int color) {
-      row.setBackgroundColor(color);
+  public static void addImagePath(String imageUrl) {
+    if(!URLUtil.isValidUrl(imageUrl)) {
+      return;
     }
-    public void setData(DataRow dataRow) {
-      for(int i = 0; i < dataRow.cells.size(); i++) {
-        int width = dataColumns.get(i).width;
-        ClickableTextView view = (ClickableTextView) row.getChildAt(i);
-        view.setLayoutParams(new LinearLayout.LayoutParams(width, TableTheme.rowHeight));
-        view.setData(dataRow.cells.get(i));
-        view.setText(dataRow.cells.get(i).qText);
-        view.setGravity(dataRow.cells.get(i).textGravity | Gravity.CENTER_VERTICAL);
+    imagePaths.add(imageUrl);
+  }
+
+  public static void fetchImages() {
+    final CountDownLatch latch = new CountDownLatch(imagePaths.size());
+    Iterator<String> iterator = imagePaths.iterator();
+    while (iterator.hasNext()) {
+      String imageUrl = iterator.next();
+      boolean isDuplicateImageUrl = imageData.containsKey(imageUrl);
+      if(isDuplicateImageUrl || !URLUtil.isValidUrl(imageUrl)) {
+        latch.countDown();
+        continue;
+      }
+      imageData.put(imageUrl, null);
+      try {
+        HttpUtils.get(imageUrl, new Callback() {
+            public void onResponse(Call call, Response response) {
+              InputStream inputStream = response.body().byteStream();
+              Bitmap bitmap = PixelUtils.byteStreamToBitmap(inputStream);
+              imageData.replace(imageUrl, bitmap);
+              latch.countDown();
+            }
+
+            public void onFailure(Call call, IOException e) {
+              latch.countDown();
+            }
+        });
+      } catch(Exception e) {
+        latch.countDown();
+        imageData.remove(imageUrl);
+        e.printStackTrace();
       }
     }
-
-    public void onRecycled() {
-      for(int i = 0; i <  row.getChildCount(); i++) {
-        ClickableTextView view = (ClickableTextView) row.getChildAt(i);
-        view.onRecycled();
-      }
-    }
-
-    public boolean updateWidth(float width, int column) {
-      View view =  row.getChildAt(column);
-      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)view.getLayoutParams();
-      float newWidth = params.width + width;
-      if(newWidth < minWidth) {
-        return false;
-      }
-
-      if (!updateNeighbour(width, column)) {
-        return false;
-      }
-      params.width = (int) newWidth;
-      view.setLayoutParams(params);
-
-      return true;
-    }
-
-    private boolean updateNeighbour(float width, int column) {
-      if (column + 1 < DataProvider.this.dataColumns.size() ) {
-        View neighbour =  row.getChildAt(column + 1);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) neighbour.getLayoutParams();
-        float newWidth = params.width - width;
-        if (newWidth < minWidth) {
-          return false;
-        }
-        params.width = (int)newWidth;
-        neighbour.setLayoutParams(params);
-      }
-      return true;
+    try {
+      latch.await();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
   }
 
-  public  class ProgressHolder extends RecyclerView.ViewHolder {
+  public class ProgressHolder extends RecyclerView.ViewHolder {
     private final RelativeLayout row;
     public ProgressHolder(View view) {
       super(view);
@@ -121,26 +130,46 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
   }
 
+
+
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     RecyclerView.ViewHolder viewHolder;
     if (viewType == VIEW_TYPE_ITEM) {
       LinearLayout rowView = new LinearLayout(parent.getContext());
+      int padding = (int)PixelUtils.dpToPx(16);
       rowView.setOrientation(LinearLayout.HORIZONTAL);
+
       for (int i = 0; i < dataColumns.size(); i++) {
-        int width = dataColumns.get(i).width;
-        ClickableTextView view = new ClickableTextView(parent.getContext(), this.selectionsEngine, this.scrollView);
-        view.setMaxLines(1);
-        view.setEllipsize(TextUtils.TruncateAt.END);
-        view.setLayoutParams(new LinearLayout.LayoutParams(width, TableTheme.rowHeight));
-        rowView.addView(view);
-        int leftPadding = (int)PixelUtils.dpToPx(16);
-        view.setPadding(leftPadding, 0, (int) PixelUtils.dpToPx(16), 0);
-        view.setGravity(Gravity.CENTER_VERTICAL);
-        view.setTextSize(14);
+        DataColumn column = dataColumns.get(i);
+        int width = column.width;
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, TableTheme.rowHeight);
+
+        if (column.type.equals("image")) {
+          RelativeLayout wrapper = new RelativeLayout(parent.getContext());
+          wrapper.setLayoutParams(layoutParams);
+
+          RelativeLayout container = new RelativeLayout(parent.getContext());
+          container.setPadding(padding, 0, (int) padding, 0);
+
+          ImageView imageView = new ClickableImageView(parent.getContext(), this.selectionsEngine, this.scrollView);
+          container.addView(imageView);
+          wrapper.addView(container);
+          rowView.addView(wrapper);
+        } else {
+          ClickableTextView view = new ClickableTextView(parent.getContext(), this.selectionsEngine, this.scrollView);
+          view.setMaxLines(NUM_LINES);
+          view.setEllipsize(TextUtils.TruncateAt.END);
+          view.setLayoutParams(layoutParams);
+          view.setPadding(padding, 0, (int) padding, 0);
+          view.setTextSize(FONT_SIZE);
+          rowView.addView(view);
+        }
       }
-      SimpleViewHolder simpleViewHolder = new SimpleViewHolder(rowView);
-      viewHolder = simpleViewHolder;
+      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, TableTheme.rowHeight);
+      rowView.setLayoutParams(layoutParams);
+      RowViewHolder rowViewHolder = new RowViewHolder(rowView, this);
+      viewHolder = rowViewHolder;
     } else {
       RelativeLayout rowView = new RelativeLayout(parent.getContext());
       viewHolder = new ProgressHolder(rowView);
@@ -150,8 +179,9 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   @Override
   public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
-    if(viewHolder instanceof SimpleViewHolder) {
-      SimpleViewHolder holder = (SimpleViewHolder) viewHolder;
+    fetchImages();
+    if(viewHolder instanceof RowViewHolder) {
+      RowViewHolder holder = (RowViewHolder) viewHolder;
       if (this.isDataView) {
         int color = position % 2 == 0 ? Color.WHITE : 0xFFF7F7F7;
         holder.setBackGroundColor(color);
@@ -221,9 +251,16 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return false;
   }
 
+  public void updateRepresentation() {
+    for(RecyclerView.ViewHolder holder : cachedViewHolders) {
+      RowViewHolder viewHolder = (RowViewHolder) holder;
+      viewHolder.updateColumnRepresentation();
+    }
+  }
+
   public boolean updateWidth(float deltaWidth, int column) {
     for(RecyclerView.ViewHolder holder : cachedViewHolders) {
-      SimpleViewHolder viewHolder = (SimpleViewHolder) holder;
+      RowViewHolder viewHolder = (RowViewHolder) holder;
       if (!viewHolder.updateWidth(deltaWidth, column)) {
         return false;
       }
@@ -241,10 +278,10 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   @Override
   public void onViewRecycled(RecyclerView.ViewHolder viewHolder) {
-    if (viewHolder instanceof  SimpleViewHolder) {
-      SimpleViewHolder simpleViewHolder = (SimpleViewHolder) viewHolder;
-      simpleViewHolder.onRecycled();
-      cachedViewHolders.remove(simpleViewHolder);
+    if (viewHolder instanceof  RowViewHolder) {
+      RowViewHolder RowViewHolder = (RowViewHolder) viewHolder;
+      RowViewHolder.onRecycled();
+      cachedViewHolders.remove(RowViewHolder);
     }
   }
 

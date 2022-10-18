@@ -1,6 +1,7 @@
 package com.qliktrialreactnativestraighttable;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
@@ -8,18 +9,32 @@ import com.facebook.react.bridge.WritableNativeMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class DataColumn {
 
   public Boolean isDim = false;
   public int width = 200;
   public String label;
+  public String type;
   public String id;
   public String align;
   public String sortDirection;
+  public String imageUrl;
+  public String imageSize;
+  public String imagePosition;
+  public List<Object> stylingInfo;
   public int dataColIdx = 0;
   public boolean active = false;
 
   public DataColumn(ReadableMap source) {
+    ReadableMap representation = source.getMap("representation");
+    stylingInfo = source.getArray("stylingInfo").toArrayList();
+    type = representation.getString("type");
+    imageUrl = representation.getString("imageUrl");
+    imageSize = representation.getString("imageSize");
+    imagePosition = representation.getString("imagePosition");
+    imageSize = representation.getString("imageSize");
     isDim = source.getBoolean("isDim");
     width = source.getInt("width");
     label = source.getString("label");

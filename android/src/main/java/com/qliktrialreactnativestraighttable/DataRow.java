@@ -9,13 +9,14 @@ import java.util.List;
 
 public class DataRow {
   public List<DataCell> cells = new ArrayList<>();
-  public DataRow(ReadableMap source) {
+  public DataRow(ReadableMap source, List<DataColumn> columns) {
     ReadableMapKeySetIterator iterator = source.keySetIterator();
     while (iterator.hasNextKey()) {
       String key = iterator.nextKey();
       if(!key.equalsIgnoreCase("key")) {
         ReadableMap cellItem = source.getMap(key);
-        cells.add(new DataCell(cellItem));
+        int colIdx = cellItem.getInt("colIdx");
+        cells.add(new DataCell(cellItem, columns.get(colIdx)));
       }
     }
     Collections.sort(cells, (a, b) -> a.rawColIdx - b.rawColIdx);
