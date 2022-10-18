@@ -129,7 +129,7 @@ class SelectionBand: UIView {
       currentPoint = sender.location(in: self)
       translation = sender.translation(in: self)
       handleDrag()
-    case.ended:
+    case .ended:
       NotificationCenter.default.post(name: Notification.Name.onDragSelectDone, object: nil)
       clearRect()
       self.setNeedsDisplay()
