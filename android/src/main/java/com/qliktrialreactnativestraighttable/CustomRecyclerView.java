@@ -1,18 +1,15 @@
 package com.qliktrialreactnativestraighttable;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+@SuppressLint("ViewConstructor")
 public class CustomRecyclerView extends RecyclerView {
   final LinearLayoutManager linearLayout;
   final DataProvider dataProvider;
@@ -28,8 +25,7 @@ public class CustomRecyclerView extends RecyclerView {
     scrollView = sv;
     linearLayout = ll;
 
-    DividerItemDecoration itemDecorator = new CustomDividerItemDecorator(getContext(), DividerItemDecoration.VERTICAL);
-//    RecyclerView.ItemDecoration itemDecorator = new CustomDividerItemDecorator(getContext(), DividerItemDecoration.VERTICAL);
+    DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
     OnScrollListener sharedScrollListener = new OnScrollListener(linearLayout);
 
     this.setLayoutManager(linearLayout);
@@ -54,11 +50,6 @@ public class CustomRecyclerView extends RecyclerView {
   public void requestLayout() {
     super.requestLayout();
     post(measureAndLayout);
-  }
-
-  @Override
-  protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
-    super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
   }
 
   class OnScrollListener extends RecyclerView.OnScrollListener {
@@ -93,25 +84,6 @@ public class CustomRecyclerView extends RecyclerView {
       active = false;
     }
 
-  }
-
-  public class CustomDividerItemDecorator extends DividerItemDecoration {
-    public CustomDividerItemDecorator(@NonNull android.content.Context context, int orientation) {
-      super(context, orientation);
-    }
-    @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-      int position = parent.getChildAdapterPosition(view);
-      if(position == 0) {
-        outRect.setEmpty();
-        return;
-      }
-      if (position > state.getItemCount() - 10) {
-        outRect.setEmpty();
-        return;
-      }
-      super.getItemOffsets(outRect, view, parent, state);
-    }
   }
 
   private final Runnable measureAndLayout = () -> {

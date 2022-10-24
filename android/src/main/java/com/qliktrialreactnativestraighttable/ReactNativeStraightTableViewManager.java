@@ -50,7 +50,6 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       FrameLayout rootView = new FrameLayout(reactContext);
       FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT);
       rootView.setLayoutParams(layoutParams);
-      ScrollView overlayScrollView = new ScrollView(reactContext);
 
       CustomHorizontalScrollView scrollView = new CustomHorizontalScrollView(reactContext);
       TableView tableView =  new TableView(reactContext, scrollView, rootView);
@@ -59,18 +58,9 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       scrollView.setFillViewport(true);
       tableView.setLayoutParams(scrollLayoutParams);
 
-
-      RelativeLayout.LayoutParams overlayScrollLayoutParams = new RelativeLayout.LayoutParams(15, RelativeLayout.LayoutParams.MATCH_PARENT);
-
-
       scrollView.addView(tableView, scrollLayoutParams);
       rootView.addView(scrollView);
-      rootView.addView(overlayScrollView,overlayScrollLayoutParams);
 
-//      int width = scrollView.getMeasuredWidth();
-//      int height = scrollView.getMeasuredHeight();
-      overlayScrollView.layout(0, 0, 100, 100);
-      overlayScrollView.setBackgroundColor(Color.MAGENTA);
       return rootView;
     }
 

@@ -152,7 +152,6 @@ public class TableView extends FrameLayout {
       createDataColumnWidths();
       createGrabbers();
 
-      DataColumn firstColumn = dataProvider.dataColumns.get(0);
       LinearLayoutManager linearLayout = new LinearLayoutManager(this.getContext());
 
       recyclerView = new CustomRecyclerView(this.getContext(), false, dataProvider, scrollView, linearLayout);
@@ -173,11 +172,11 @@ public class TableView extends FrameLayout {
         firstColumnViewLayoutParams.bottomMargin = SCROLL_THUMB_HEIGHT + TableTheme.headerHeight;
       }
 
-      firstColumnView.setViewToScrollCouple(recyclerView);
-      recyclerView.setViewToScrollCouple(firstColumnView);
-
       layoutView.addView(recyclerView, recyclerViewLayoutParams);
       if (rootView != null && isFirstColumnFrozen) {
+        HeaderViewFactory.buildFixedColumnCell(rootView, dataProvider.dataColumns.get(0), scrollView);
+        recyclerView.setViewToScrollCouple(firstColumnView);
+        firstColumnView.setViewToScrollCouple(recyclerView);
         rootView.addView(firstColumnView, firstColumnViewLayoutParams);
       }
 

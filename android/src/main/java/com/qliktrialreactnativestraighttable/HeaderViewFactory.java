@@ -35,7 +35,6 @@ public class HeaderViewFactory {
   List<DataColumn> dataColumns = new ArrayList<>();
   List<TotalsCell> totalsCells = new ArrayList<>();
   HeaderView headerView = null;
-  HeaderCell fixedFirstHeaderCell = null;
   AutoLinearLayout footerView = null;
   FrameLayout rootView;
   CustomHorizontalScrollView scrollView;
@@ -86,6 +85,27 @@ public class HeaderViewFactory {
   }
 
 
+  public static void buildFixedColumnCell(FrameLayout rootView, DataColumn column, CustomHorizontalScrollView scrollView) {
+    int padding = (int) PixelUtils.dpToPx(16);
+
+    HeaderCell fixedFirstHeaderCell = new HeaderCell(rootView.getContext(), column, scrollView);
+    fixedFirstHeaderCell.setMaxLines(1);
+    fixedFirstHeaderCell.setTypeface(fixedFirstHeaderCell.getTypeface(), Typeface.BOLD);
+    fixedFirstHeaderCell.setEllipsize(TextUtils.TruncateAt.END);
+    fixedFirstHeaderCell.setTextColor(Color.BLACK);
+    fixedFirstHeaderCell.setText(column.label);
+    fixedFirstHeaderCell.setPadding(padding, 0, padding, 0);
+    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, TableTheme.headerHeight);
+    fixedFirstHeaderCell.setTop(0);
+    fixedFirstHeaderCell.setLeft(0);
+    fixedFirstHeaderCell.setLayoutParams(layoutParams);
+    fixedFirstHeaderCell.setGravity(Gravity.CENTER_VERTICAL);
+    fixedFirstHeaderCell.setBackgroundColor(TableTheme.headerBackgroundColor);
+    fixedFirstHeaderCell.setElevation((int)PixelUtils.dpToPx(4));
+
+    rootView.addView(fixedFirstHeaderCell);
+  }
+
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void buildHeader(ReadableArray readableArray, Context context) {
     int padding = (int) PixelUtils.dpToPx(16);
@@ -100,23 +120,6 @@ public class HeaderViewFactory {
       DataColumn column = new DataColumn(columnMap);
       dataColumns.add(column);
 
-      if(i == 0 && rootView != null) { // && this.tableView.isFirstColumnFrozen
-        fixedFirstHeaderCell = new HeaderCell(rootView.getContext(), column, this.scrollView);
-        fixedFirstHeaderCell.setMaxLines(1);
-        fixedFirstHeaderCell.setTypeface(fixedFirstHeaderCell.getTypeface(), Typeface.BOLD);
-        fixedFirstHeaderCell.setEllipsize(TextUtils.TruncateAt.END);
-        fixedFirstHeaderCell.setTextColor(Color.BLACK);
-        fixedFirstHeaderCell.setText(column.label);
-        fixedFirstHeaderCell.setPadding(padding, 0, padding, 0);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, headerHeight);
-        fixedFirstHeaderCell.setTop(0);
-        fixedFirstHeaderCell.setLeft(0);
-        fixedFirstHeaderCell.setLayoutParams(layoutParams);
-        fixedFirstHeaderCell.setGravity(Gravity.CENTER_VERTICAL);
-        fixedFirstHeaderCell.setBackgroundColor(TableTheme.headerBackgroundColor);
-        fixedFirstHeaderCell.setElevation((int)PixelUtils.dpToPx(4));
-        rootView.addView(fixedFirstHeaderCell);
-      }
       TextView text = new HeaderCell(headerView.getContext(), column, this.scrollView);
       text.setMaxLines(1);
       text.setTypeface(text.getTypeface(), Typeface.BOLD);
