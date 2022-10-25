@@ -1,3 +1,10 @@
+# [1.1.0-alpha.30](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.29...v1.1.0-alpha.30) (2022-10-25)
+
+
+### Features
+
+* **MD-3347:** copy cell in table (ios) ([#94](https://github.com/qlik-oss/react-native-simple-grid/issues/94)) ([a071134](https://github.com/qlik-oss/react-native-simple-grid/commit/a071134fca61756387cbdc9d382679ad0fcd038d))
+
 # [1.1.0-alpha.29](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.28...v1.1.0-alpha.29) (2022-10-18)
 
 
