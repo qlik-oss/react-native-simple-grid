@@ -2,7 +2,9 @@ package com.qliktrialreactnativestraighttable;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -59,5 +61,9 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   @Override
   public void setSelected(boolean value) {
     selected = value;
+  }
+
+  public boolean isSelected(){
+    return selected;
   }
 }

@@ -27,12 +27,14 @@ public class TableViewFactory {
   private final ColumnWidths columnWidths;
   private final DataProvider dataProvider;
   private final TableView tableView;
+  private final DragBox dragBox;
 
-  public TableViewFactory(TableView tableView, ColumnWidths columnWidths, DataProvider dataProvider) {
+  public TableViewFactory(TableView tableView, ColumnWidths columnWidths, DataProvider dataProvider, DragBox dragBox) {
     this.tableView = tableView;
     this.columnWidths = columnWidths;
     this.dataProvider = dataProvider;
     this.context = tableView.getContext();
+    this.dragBox = dragBox;
   }
 
   public void createAll() {
@@ -55,6 +57,7 @@ public class TableViewFactory {
     this.rootLayout = new RootLayout(context, columnWidths);
     this.rootLayout.setPadding(0, 0, (int)PixelUtils.dpToPx(25), 0);
     this.rootLayout.setLayoutParams(frameLayout);
+    this.rootLayout.addView(dragBox);
 
     createHeaderView();
   }
@@ -71,13 +74,13 @@ public class TableViewFactory {
 
   protected void createRecyclerViews() {
     LinearLayoutManager linearLayout = new LinearLayoutManager(context);
-    coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout);
+    coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout, dragBox);
     FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     recyclerViewLayoutParams.topMargin = TableTheme.headerHeight;
     rootLayout.addView(coupledRecyclerView, recyclerViewLayoutParams);
 
     LinearLayoutManager firstColumnLinearLayout = new LinearLayoutManager(context);
-    firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout);
+    firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout, dragBox);
     FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
     firstColumnViewLayoutParams.topMargin = TableTheme.headerHeight;
     if(tableView.isFirstColumnFrozen) {

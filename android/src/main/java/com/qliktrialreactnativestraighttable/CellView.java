@@ -5,6 +5,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -16,15 +18,14 @@ import android.widget.RelativeLayout;
 @SuppressLint("ViewConstructor")
 public class CellView extends LinearLayout implements SelectionsObserver {
   Content content = null;
+  final DragBoxEventHandler dragBoxEventHandler;
   final SelectionsEngine selectionsEngine;
   final TableView tableView;
   GestureDetector gestureDetector;
-
   int padding = (int)PixelUtils.dpToPx(16);
 
   CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView) {
     super(context);
-    this.tableView = tableView;
     this.setPadding(padding, 0, padding, 0);
     if(type.equals("text")) {
       content = new ClickableTextView(context, selectionsEngine, tableView);
@@ -34,6 +35,11 @@ public class CellView extends LinearLayout implements SelectionsObserver {
       content = new MiniChartView(context);
     }
     this.selectionsEngine = selectionsEngine;
+    this.tableView = tableView;
+    this.dragBoxEventHandler = tableView.dragBoxEventHandler;
+
+    dragBoxEventHandler.setDragBoxListener((dragBox, column) -> handleDragBoxDrag(dragBox, column));
+
     gestureDetector = new GestureDetector(getContext(), new CellView.SingleTapListener());
     content.setGestureDetector(gestureDetector);
 
@@ -49,6 +55,19 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     View contentView = (View) content;
     contentView.setOnCreateContextMenuListener(onCreateContextMenuListener);
     this.addView(contentView);
+  }
+
+  public void handleDragBoxDrag(DragBox dragBox, int columnId) {
+    if(columnId != content.getCell().colIdx) {
+      return;
+    }
+    Rect cellBounds = getBounds();
+    if(cellBounds == null) {
+      return;
+    }
+    if(!this.content.isSelected() && dragBox.checkCollision(cellBounds)) {
+      selectCell();
+    }
   }
 
   private void copyCell(Context context){
@@ -68,11 +87,30 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     }
   }
 
+  private void selectCell() {
+    DataCell cell = content.getCell();
+    String selection = SelectionsEngine.getSignatureFrom(cell);
+    selectionsEngine.selectionsChanged(this.tableView, selection);
+  }
+
+  private Rect getBounds() {
+    Rect bounds = new Rect();
+    this.getDrawingRect(bounds);
+    try {
+      tableView.rootLayout.offsetDescendantRectToMyCoords(this, bounds);
+    } catch (IllegalArgumentException e) {
+      // ignore if cell offscreen
+      return null;
+    }
+    return bounds;
+  }
+
   public void handleSingleTap() {
     DataCell cell = content.getCell();
     if (cell.isDim) {
-      String selection = SelectionsEngine.getSignatureFrom(cell);
-      selectionsEngine.selectionsChanged(this.tableView, selection);
+      Rect bounds = getBounds();
+      tableView.addDragBox(bounds, cell.colIdx);
+      selectCell();
     }
   }
 

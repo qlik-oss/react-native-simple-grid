@@ -3,6 +3,7 @@ package com.qliktrialreactnativestraighttable;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Build;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ public class TableView extends FrameLayout {
   public final static int SCROLL_THUMB_HEIGHT = 12;
   RootLayout rootLayout;
   CustomHorizontalScrollView  scrollView;
+  final DragBox dragBox;
   HeaderView headerView = null;
   AutoLinearLayout footerView = null;
   CustomRecyclerView recyclerView = null;
@@ -29,6 +31,7 @@ public class TableView extends FrameLayout {
   boolean isFirstColumnFrozen = false;
   String name = "";
 
+  DragBoxEventHandler dragBoxEventHandler = new DragBoxEventHandler();
   TableTheme tableTheme = new TableTheme();
   List<GrabberView> grabbers = null;
   final TableViewFactory tableViewFactory;
@@ -38,11 +41,21 @@ public class TableView extends FrameLayout {
     super(context);
     columnWidths = new ColumnWidths(this.getContext());
     dataProvider = new DataProvider(columnWidths, selectionsEngine, this);
-    tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider);
+    dragBox = new DragBox(context, this, dragBoxEventHandler);
+    tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider, dragBox);
   }
 
   public void clearSelections() {
     selectionsEngine.clearSelections();
+  }
+
+  public void addDragBox(Rect bounds, int columnId) {
+    dragBox.show(bounds, columnId);
+  }
+
+  public void removeDragBox() {
+    dragBox.hide();
+    dragBox.invalidate();
   }
 
   public void setFirstColumnFrozen(boolean shouldFreeze) {

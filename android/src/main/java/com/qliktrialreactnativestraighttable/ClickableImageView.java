@@ -172,4 +172,9 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   public DataCell getCell() {
     return this.cell;
   }
+
+  @Override
+  public boolean isSelected() {
+    return selected;
+  }
 }

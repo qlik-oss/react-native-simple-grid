@@ -202,6 +202,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   public void setDataView(boolean isDataView) {
     this.isDataView = isDataView;
   }
+
   public void setRows(List<DataRow> data, boolean resetData) {
     if (this.rows == null || resetData) {
       int prevSize = 0;
