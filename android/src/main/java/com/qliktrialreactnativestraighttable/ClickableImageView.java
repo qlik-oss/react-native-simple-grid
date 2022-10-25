@@ -4,68 +4,38 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import java.util.Map;
-
 @SuppressLint("ViewConstructor")
-public class ClickableImageView extends androidx.appcompat.widget.AppCompatImageView implements SelectionsObserver {
+public class ClickableImageView extends androidx.appcompat.widget.AppCompatImageView implements Content {
   DataCell cell = null;
   boolean selected = false;
   String scaleType = null;
-  int defaultTextColor = Color.BLACK;
   final SelectionsEngine selectionsEngine;
   GestureDetector gestureDetector;
   final CustomHorizontalScrollView scrollView;
-  ClickableImageView(Context context, SelectionsEngine selectionsEngine, CustomHorizontalScrollView scrollView) {
+  final CellView cellView;
+
+  ClickableImageView(Context context, SelectionsEngine selectionsEngine, CustomHorizontalScrollView scrollView, CellView cellView) {
     super(context);
     this.scrollView = scrollView;
     this.selectionsEngine = selectionsEngine;
-    gestureDetector = new GestureDetector(getContext(), new ClickableImageView.SingleTapListener());
+    this.cellView = cellView;
   }
 
-  public void setData(DataCell cell) {
-    this.cell = cell;
-    // check to see if I'm here
-    if (cell.isDim) {
-      selectionsEngine.observe(this);
-      selected = selectionsEngine.contains(cell);
-      updateBackgroundColor();
-    }
-  }
-
-  public void handleSingleTap() {
-    if (cell.isDim) {
-      String selection = SelectionsEngine.getSignatureFrom(cell);
-      selectionsEngine.selectionsChanged(this.scrollView, selection);
-    }
-  }
-
+  @SuppressLint("ClickableViewAccessibility")
   @Override
   public boolean onTouchEvent(MotionEvent e) {
     gestureDetector.onTouchEvent(e);
     return true;
   }
 
-  public void onSelectionsChanged(String s) {
-    String received = SelectionsEngine.getKeyFrom(s);
-    String me = SelectionsEngine.getKeyFrom(cell);
-    if(received.equalsIgnoreCase(me)) {
-      selected = !selected;
-      updateBackgroundColor();
-    }
-  }
-
   private void alwaysFit() {
-    ViewGroup parent = (ViewGroup) this.getParent();
+    ViewGroup parent = (ViewGroup) cellView.getParent();
     ViewGroup.LayoutParams layout = parent.getLayoutParams();
     layout.height = TableTheme.rowHeight;
     layout.width = TableTheme.rowHeight + parent.getPaddingLeft() + parent.getPaddingRight();
@@ -75,7 +45,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   }
 
   private void stretchToFit(DataColumn column)          {
-    ViewGroup parent = (ViewGroup) this.getParent();
+    ViewGroup parent = (ViewGroup) cellView.getParent();
     ViewGroup.LayoutParams layout = parent.getLayoutParams();
     layout.height = TableTheme.rowHeight;
     layout.width = column.width;
@@ -90,7 +60,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     float width = image.getWidth();
     float aspectRatioMultiplier = width/height;
 
-    ViewGroup parent = (ViewGroup) this.getParent();
+    ViewGroup parent = (ViewGroup) cellView.getParent();
     ViewGroup.LayoutParams layout = parent.getLayoutParams();
     layout.height = TableTheme.rowHeight;
     layout.width = Math.round(TableTheme.rowHeight * aspectRatioMultiplier) + parent.getPaddingLeft() + parent.getPaddingRight();
@@ -105,7 +75,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     float width = image.getWidth();
     float aspectRatioMultiplier = height/width;
 
-    ViewGroup parent = (ViewGroup) this.getParent();
+    ViewGroup parent = (ViewGroup) cellView.getParent();
     RelativeLayout.LayoutParams layout = (RelativeLayout.LayoutParams) parent.getLayoutParams();
     layout.width = column.width;
     layout.height = Math.round(column.width * aspectRatioMultiplier);
@@ -141,7 +111,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   }
 
   public void setAlignment(DataColumn column) {
-    RelativeLayout container = (RelativeLayout) this.getParent();
+    RelativeLayout container = (RelativeLayout) cellView.getParent();
     RelativeLayout wrapper = (RelativeLayout) container.getParent();
     setTranslationY(0);
 
@@ -176,28 +146,29 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     }
   }
 
-  public void onClear() {
-    selected = false;
-    updateBackgroundColor();
-  }
-
-  private void updateBackgroundColor() {
+  public void updateBackgroundColor() {
     int color = selected ? TableTheme.selectedBackground : Color.TRANSPARENT;
-    RelativeLayout wrapper = (RelativeLayout) this.getParent().getParent();
+    RelativeLayout wrapper = (RelativeLayout) cellView.getParent().getParent();
     wrapper.setBackgroundColor(color);
   }
 
-  public void onRecycled() {
-    if (cell.isDim) {
-      selectionsEngine.remove(this);
-    }
+  @Override
+  public void setGestureDetector(GestureDetector gestureDetector) {
+    this.gestureDetector = gestureDetector;
   }
 
-  class SingleTapListener extends GestureDetector.SimpleOnGestureListener {
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-      handleSingleTap();
-      return true;
-    }
+  @Override
+  public void toggleSelected() {
+    this.selected = !selected;
+  }
+
+  @Override
+  public void setCell(DataCell cell) {
+    this.cell = cell;
+  }
+
+  @Override
+  public DataCell getCell() {
+    return this.cell;
   }
 }

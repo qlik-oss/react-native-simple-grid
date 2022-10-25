@@ -159,18 +159,21 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
           RelativeLayout container = new RelativeLayout(parent.getContext());
           container.setPadding(padding, 0, (int) padding, 0);
 
-          ImageView imageView = new ClickableImageView(parent.getContext(), this.selectionsEngine, this.scrollView);
-          container.addView(imageView);
+          CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.scrollView);
+          container.addView(cellView);
           wrapper.addView(container);
           rowView.addView(wrapper);
         } else {
-          ClickableTextView view = new ClickableTextView(parent.getContext(), this.selectionsEngine, this.scrollView);
-          view.setMaxLines(NUM_LINES);
-          view.setEllipsize(TextUtils.TruncateAt.END);
-          view.setLayoutParams(layoutParams);
-          view.setPadding(padding, 0, (int) padding, 0);
-          view.setTextSize(FONT_SIZE);
-          rowView.addView(view);
+          CellView cellView = new CellView(parent.getContext(), "text", this.selectionsEngine, this.scrollView);
+          ClickableTextView textView = (ClickableTextView) cellView.content;
+
+          textView.setMaxLines(NUM_LINES);
+          textView.setEllipsize(TextUtils.TruncateAt.END);
+          textView.setLayoutParams(layoutParams);
+          textView.setPadding(padding, 0, (int) padding, 0);
+          textView.setTextSize(FONT_SIZE);
+
+          rowView.addView(cellView);
         }
       }
       RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, TableTheme.rowHeight);

@@ -42,21 +42,24 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         layout.height = TableTheme.rowHeight;
         layout.width = column.width;
         container.setLayoutParams(layout);
-        ClickableImageView imageView = (ClickableImageView) container.getChildAt(0);
-        imageView.setData(cell);
+        CellView cellView = (CellView) container.getChildAt(0);
+        cellView.setData(cell);
 
         Bitmap imageBitmap = dataProvider.getImageData(cell.imageUrl);
         if(imageBitmap == null) {
           continue;
         }
+        ClickableImageView imageView = (ClickableImageView) cellView.content;
         imageView.setImageBitmap(imageBitmap);
         imageView.setSizing(column, imageBitmap);
         imageView.setAlignment(column);
       } else {
-        ClickableTextView view = (ClickableTextView) row.getChildAt(columnIndex);
-        view.setData(cell);
-        view.setText(cell.qText);
-        view.setGravity(cell.textGravity | Gravity.CENTER_VERTICAL);
+        CellView cellView = (CellView) row.getChildAt(columnIndex);
+        cellView.setData(cell);
+        ClickableTextView textView = (ClickableTextView) cellView.content;
+
+        textView.setText(cell.qText);
+        textView.setGravity(cell.textGravity | Gravity.CENTER_VERTICAL);
       }
     }
   }
