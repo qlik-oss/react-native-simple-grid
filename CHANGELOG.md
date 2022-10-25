@@ -1,3 +1,10 @@
+# [1.1.0-alpha.31](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.30...v1.1.0-alpha.31) (2022-10-25)
+
+
+### Bug Fixes
+
+* css colors for green and orange ([58fd32c](https://github.com/qlik-oss/react-native-simple-grid/commit/58fd32c35948aa75ac668c1760b84f34f812e22d))
+
 # [1.1.0-alpha.30](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.29...v1.1.0-alpha.30) (2022-10-25)
 
 
