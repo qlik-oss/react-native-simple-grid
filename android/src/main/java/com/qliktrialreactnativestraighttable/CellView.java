@@ -4,14 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 @SuppressLint("ViewConstructor")
-public class CellView extends View implements SelectionsObserver {
+public class CellView extends RelativeLayout implements SelectionsObserver {
   Content content = null;
   final SelectionsEngine selectionsEngine;
   GestureDetector gestureDetector;
@@ -38,14 +38,9 @@ public class CellView extends View implements SelectionsObserver {
       return true;
     };
     View.OnCreateContextMenuListener onCreateContextMenuListener = (contextMenu, view, contextMenuInfo) -> contextMenu.add(0, 0, 0, "Copy").setOnMenuItemClickListener(handleMenuItemClick);
-    this.setOnCreateContextMenuListener(onCreateContextMenuListener);
-  }
-
-  @Override
-  protected void onDraw(Canvas canvas) {
-    super.onDraw(canvas);
     View contentView = (View) content;
-    contentView.draw(canvas);
+    contentView.setOnCreateContextMenuListener(onCreateContextMenuListener);
+    this.addView(contentView);
   }
 
   private void copyCell(Context context){
@@ -102,7 +97,7 @@ public class CellView extends View implements SelectionsObserver {
     }
     @Override
     public void onLongPress(MotionEvent e) {
-      showContextMenu();
+      ((View) content).showContextMenu();
     }
   }
 }
