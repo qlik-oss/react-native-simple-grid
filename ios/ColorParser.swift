@@ -10,7 +10,7 @@ class ColorParser {
   let SupportedColors: [String: UIColor] = [
     "red": .red,
     "blue": .blue,
-    "green": .green,
+    "green": UIColor(red: 0.00, green: 0.50, blue: 0.00, alpha: 1.00),
     "black": .black,
     "white": .white,
     "gray": .gray,
@@ -23,7 +23,7 @@ class ColorParser {
     "lightgrey": .lightGray,
     "darkgrey": .darkGray,
     "purple": .purple,
-    "orange": .orange,
+    "orange": UIColor(red: 1.00, green: 0.65, blue: 0.00, alpha: 1.00),
     "teal": .systemTeal]
 
   func fromCSS(cssString: String) -> UIColor {
