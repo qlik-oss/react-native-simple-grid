@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 extension UIView {
   func addBottomShadow() {
     layer.shadowRadius = 2
@@ -31,6 +32,18 @@ extension UIView {
                                                  height: bounds.height)).cgPath
 
   }
+
+}
+
+extension UIImage {
+  func withColor(_ color: UIColor) -> UIImage? {
+    let renderer = UIGraphicsImageRenderer(size: size)
+    return renderer.image { context in
+      color.setFill()
+      self.draw(at: .zero)
+      context.fill(CGRect(x: 0, y: 0, width: size.width, height: size.height), blendMode: .sourceAtop)
+    }
+  }
 }
 
 extension Notification.Name {
@@ -39,4 +52,5 @@ extension Notification.Name {
   static let onClearSelectionBand = Notification.Name("onClearSelectionBand")
   static let onSelectionDragged = Notification.Name("onSelectionDragged")
   static let onDragSelectDone = Notification.Name("onDragSelectDone")
+  static let onExpandRow = Notification.Name("onExpandRow")
 }

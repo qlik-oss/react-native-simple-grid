@@ -17,4 +17,5 @@ class ReactnativeStraightTableViewManager: RCTViewManager {
   override func view() -> ContainerView {
     return ContainerView()
   }
+
 }

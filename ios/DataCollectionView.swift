@@ -12,12 +12,13 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     case noCellForIdentifier
   }
 
-  var stylingInfo = StylingInfo()
+  var stylingInfo = [StylingInfo]()
   var dataColumns: [DataColumn]?
   var dataRows: [DataRow]?
   var dataSize: DataSize?
   var loading = false
   var onEndReached: RCTDirectEventBlock?
+  var onExpandedCell: RCTDirectEventBlock?
   var childCollectionView: UICollectionView?
   var tableTheme: TableTheme?
   var selectionsEngine: SelectionsEngine?
@@ -27,6 +28,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   var isDataView = false
   var dataRange: CountableRange = 0..<2
   var freezeFirstColumn = false
+  var menuTranslations: MenuTranslations?
   var grabbers: [() -> GrabberView?]?
   private var lasso = false
   weak var totalCellsView: TotalCellsView?
@@ -78,9 +80,11 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     guard let childCollectionView = childCollectionView else { return }
 
     let selectionBand = SelectionBand(frame: self.frame)
-    selectionBand.parentCollectionView = self
     childCollectionView.addSubview(selectionBand)
     self.selectionBand = selectionBand
+    if let selectionsEngine = self.selectionsEngine {
+      selectionsEngine.setSelectionBand(selectionBand);
+    }
 
   }
 
@@ -176,18 +180,20 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     guard let dataColumns = dataColumns else {
       return
     }
-
-    for col in dataColumns[dataRange] {
-      if let stylingInfo = col.stylingInfo {
-        var index = 0
+    self.stylingInfo = [StylingInfo]()
+    dataColumns[dataRange].enumerated().forEach {(index, element) in
+      if let stylingInfo = element.stylingInfo {
+        var index = 0;
+        var si = StylingInfo()
         for style in stylingInfo {
           if  style == "cellBackgroundColor" {
-            self.stylingInfo.backgroundColorIdx = index
+            si.backgroundColorIdx = index
           } else if style == "cellForegroundColor" {
-            self.stylingInfo.foregroundColorIdx = index
+            si.foregroundColorIdx = index
           }
           index += 1
         }
+        self.stylingInfo.append(si)
       }
     }
   }
@@ -206,14 +212,17 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! DataCellView
     cell.isDataView = self.isDataView
     cell.selectionBand = self.selectionBand
+    cell.menuTranslations = self.menuTranslations
     cell.dataCollectionView = self
     cell.backgroundColor = isDataView ? indexPath.row % 2 == 0 ? .white : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0) : .white
     cell.cellColor = cellColor
+    cell.onExpandedCellEvent = onExpandedCell
     cell.numberOfLines = cellStyle.rowHeight ?? 1
     if let data = dataRows, let columnWidths = columnWidths, let dataColumns = dataColumns {
       let dataRow = data[indexPath.row]
       cell.selectionsEngine = self.selectionsEngine
       cell.setData(row: dataRow, withColumns: dataColumns[dataRange],
+                   dataColumns: dataColumns,
                    columnWidths: columnWidths.columnWidths,
                    theme: tableTheme!,
                    selectionsEngine: selectionsEngine!,

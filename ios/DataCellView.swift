@@ -40,14 +40,17 @@ func isDarkColor(color: UIColor) -> Bool {
   { key: 'minus-2', value: 'lui-icon--minus-2' },
   { key: 'dot', value: 'lui-icon--dot' },
  */
-class DataCellView: UICollectionViewCell {
+class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
   var border = UIBezierPath()
   var dataRow: DataRow?
+  var dataColumns: [DataColumn]?
   var borderColor = UIColor.black.withAlphaComponent(0.1)
   var selectionsEngine: SelectionsEngine?
   var cellColor: UIColor?
   var numberOfLines = 1
   var isDataView  = true
+  var onExpandedCellEvent: RCTDirectEventBlock?
+  var menuTranslations: MenuTranslations?
   weak var selectionBand: SelectionBand?
   weak var dataCollectionView: DataCollectionView?
 
@@ -82,12 +85,14 @@ class DataCellView: UICollectionViewCell {
 
   func setData(row: DataRow,
                withColumns cols: ArraySlice<DataColumn>,
+               dataColumns: [DataColumn],
                columnWidths: [Double],
                theme: TableTheme,
                selectionsEngine: SelectionsEngine,
-               withStyle styleInfo: StylingInfo,
+               withStyle styleInfo: [StylingInfo],
                withRange dataRange: CountableRange<Int>) {
     dataRow = row
+    self.dataColumns = dataColumns
     borderColor = ColorParser().fromCSS(cssString: theme.borderBackgroundColor ?? "#F0F0F0")
     createCells(row: row, withColumns: cols, columnWidths: columnWidths, withRange: dataRange)
     var x = 0.0
@@ -100,7 +105,10 @@ class DataCellView: UICollectionViewCell {
         if representation.type == "miniChart" && !isDataView {
           if let miniChart = views[index] as? MiniChartView {
             miniChart.frame = newFrame.integral
+            miniChart.menuTranslations = menuTranslations
+            miniChart.cell = element
             miniChart.setChartData(data: element, representedAs: representation)
+            miniChart.delegate = self
             miniChart.setNeedsDisplay()
           }
         } else if representation.type == "image" && !isDataView {
@@ -114,7 +122,7 @@ class DataCellView: UICollectionViewCell {
             label.textAlignment = element.qNum == nil ? .left : .right
             label.frame = newFrame.integral
             label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
-            let backgroundColor = getBackgroundColor(col: col, element: element, withStyle: styleInfo)
+            let backgroundColor = getBackgroundColor(col: col, element: element, withStyle: styleInfo[index])
             label.backgroundColor = backgroundColor
             label.numberOfLines = numberOfLines
             label.column = index
@@ -122,13 +130,15 @@ class DataCellView: UICollectionViewCell {
             label.checkSelected(selectionsEngine)
             label.selectionBand = self.selectionBand
             label.dataCollectionView = self.dataCollectionView
+            label.menuTranslations = self.menuTranslations
+            label.delegate = self
 
             label.checkForUrls()
             if representation.type == "indicator", let indicator = element.indicator, let uniChar = DataCellView.iconMap[indicator.icon ?? "m"] {
               label.setAttributedText(element.qText ?? "", withIcon: uniChar, element: element)
             } else {
               label.text = element.qText
-              label.textColor = isDarkColor(color: backgroundColor) ? .white : getForgroundColor(col: col, element: element, withStyle: styleInfo)
+              label.textColor = isDarkColor(color: backgroundColor) ? .white : getForgroundColor(col: col, element: element, withStyle: styleInfo[index])
             }
           }
         }
@@ -141,8 +151,12 @@ class DataCellView: UICollectionViewCell {
     if isDataView {
       return .clear
     }
+    if (styleInfo.backgroundColorIdx == -1) {
+      return .clear
+    }
     guard let attributes = element.qAttrExps else {return .clear}
     guard let values = attributes.qValues else {return .clear}
+    
     let colorString = values[styleInfo.backgroundColorIdx].qText ?? "none"
     let colorValue = ColorParser().fromCSS(cssString: colorString.lowercased())
     return colorValue
@@ -150,6 +164,9 @@ class DataCellView: UICollectionViewCell {
 
   fileprivate func getForgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
     if isDataView {
+      return cellColor!
+    }
+    if (styleInfo.foregroundColorIdx == -1) {
       return cellColor!
     }
     guard let attributes = element.qAttrExps else {return cellColor!}
@@ -176,7 +193,7 @@ class DataCellView: UICollectionViewCell {
             let imageCell = ImageCell(frame: .zero)
             contentView.addSubview(imageCell)
           } else {
-            let label = PaddedLabel(frame: .zero)
+            let label = PaddedLabel(frame: .zero, selectionBand: self.selectionBand)
             if col.isDim == true {
               if let selectionsEngine = selectionsEngine {
                 label.makeSelectable(selectionsEngine: selectionsEngine)
@@ -185,6 +202,7 @@ class DataCellView: UICollectionViewCell {
             let sizedFont = UIFont.systemFont(ofSize: 14)
             label.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: sizedFont)
             label.adjustsFontForContentSizeCategory = true
+            label.showMenus()
             contentView.addSubview(label)
           }
         }
@@ -281,4 +299,21 @@ class DataCellView: UICollectionViewCell {
     border.stroke()
 
   }
+  
+  func onExpandedCell(cell: DataCell) {
+    guard let dataRow = self.dataRow else { return }
+    guard let dataCols = self.dataColumns else { return }
+    guard let expandedCellEvent = self.onExpandedCellEvent else { return }
+    do {
+       let jsonEncoder = JSONEncoder()
+       let jsonData = try jsonEncoder.encode(dataRow)
+       let jsonCol = try jsonEncoder.encode(dataCols)
+       let row = String(data: jsonData, encoding: String.Encoding.utf8)
+       let col = String(data: jsonCol, encoding: String.Encoding.utf8)
+       expandedCellEvent(["row": row ?? "", "col": col ?? ""])
+     } catch {
+       print(error)
+     }
+  }
 }
+

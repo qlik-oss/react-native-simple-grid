@@ -15,20 +15,33 @@ class PaddedLabel: UILabel, SelectionsListener {
   static let PaddingSize = CGFloat(8)
   let UIEI = UIEdgeInsets(top: 0, left: PaddingSize, bottom: 0, right: PaddingSize) // as desired
   let selectedBackgroundColor = ColorParser().fromCSS(cssString: "#009845")
+  var contextMenu = ContextMenu()
   var selected = false
   var selectionsEngine: SelectionsEngine?
   var url: URL?
+  var menuTranslations: MenuTranslations?
+  
+  weak var delegate: ExpandedCellProtocol?
   weak var selectionBand: SelectionBand?
   weak var dataCollectionView: DataCollectionView?
 
   private static let numberFormatter = NumberFormatter()
 
-  override init(frame: CGRect) {
+  init(frame: CGRect, selectionBand: SelectionBand?) {
     super.init(frame: frame.integral)
+    self.selectionBand = selectionBand
+    if let selectionBand {
+      selectionBand.notificationCenter.addObserver(self, selector: #selector(onTappedSelectionBand), name: Notification.Name.onTappedSelectionBand, object: nil)
+      selectionBand.notificationCenter.addObserver(self, selector: #selector(onSelectionDragged), name: Notification.Name.onSelectionDragged, object: nil)
+    }
   }
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  override var canBecomeFirstResponder: Bool {
+    return true
   }
 
   override func drawText(in rect: CGRect) {
@@ -51,6 +64,34 @@ class PaddedLabel: UILabel, SelectionsListener {
     return CGRect(x: ctr.origin.x + xOffset, y: ctr.origin.y + PaddedLabel.PaddingSize, width: ctr.size.width, height: ctr.size.height)
   }
 
+  func showMenus() {
+    isUserInteractionEnabled = true
+    let longPress = UILongPressGestureRecognizer(target: self, action: #selector(showMenu))
+    self.addGestureRecognizer(longPress)
+  }
+
+  @objc func showMenu(_ sender: UILongPressGestureRecognizer) {
+    self.becomeFirstResponder()
+    contextMenu.menuTranslations = self.menuTranslations
+    contextMenu.cell = self.cell
+    contextMenu.showMenu(sender, view: self)
+  }
+
+  @objc func handleCopy(_ controller: UIMenuController) {
+    let board = UIPasteboard.general
+    board.string = self.text
+    controller.setMenuVisible(false, animated: true)
+    self.resignFirstResponder()
+  }
+
+  @objc func handleExpand(_ controller: UIMenuController) {
+    guard let cell = self.cell else { return }
+    guard let delegate = self.delegate else { return }
+
+    delegate.onExpandedCell(cell: cell)
+    self.resignFirstResponder()
+  }
+
   func makeSelectable(selectionsEngine: SelectionsEngine) {
     isUserInteractionEnabled = true
     self.selectionsEngine = selectionsEngine
@@ -58,11 +99,14 @@ class PaddedLabel: UILabel, SelectionsListener {
 
     addGestureRecognizer(tapGesture)
     selectionsEngine.addListener(listener: self)
-    NotificationCenter.default.addObserver(self, selector: #selector(onTappedSelectionBand), name: Notification.Name.onTappedSelectionBand, object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(onSelectionDragged), name: Notification.Name.onSelectionDragged, object: nil)
+
   }
 
   @objc func labelClicked(_ sender: UITapGestureRecognizer) {
+    let menu = UIMenuController.shared
+    if menu.isMenuVisible {
+      menu.setMenuVisible(false, animated: true)
+    }
     if sender.state == .ended {
       if let url = url {
         UIApplication.shared.open(url)
@@ -74,7 +118,7 @@ class PaddedLabel: UILabel, SelectionsListener {
               let convertedFrame = convertLocalFrameToSelectionBandFrame(selectionBand)
               let envelope = SelectionBandEnvelope(convertedFrame, sender: self, colIdx: self.cell?.colIdx ?? -1.0)
               selectionBand.handleActivation(envelope)
-              NotificationCenter.default.post(name: Notification.Name.onTappedSelection, object: envelope)
+              selectionBand.notificationCenter.post(name: Notification.Name.onTappedSelection, object: envelope)
             }
           }
           toggleSelection()
@@ -90,7 +134,9 @@ class PaddedLabel: UILabel, SelectionsListener {
     if self.frame.contains(hitTestPoint) {
       toggleSelection()
       if !selected {
-        NotificationCenter.default.post(name: Notification.Name.onClearSelectionBand, object: nil)
+        if let selectionBand = self.selectionBand {
+          selectionBand.notificationCenter.post(name: Notification.Name.onClearSelectionBand, object: nil)
+        }
       }
     }
   }
@@ -109,9 +155,9 @@ class PaddedLabel: UILabel, SelectionsListener {
   }
 
   fileprivate func convertLocalFrameToSelectionBandFrame(_ selectionBand: UIView) -> CGRect {
-    let convertedFrame = convert(self.frame, from: self.superview)// convert(self.frame, to: dataCollectionView) //dataCollectionView.convert(self.frame, to: selectionBand)
+    let convertedFrame = convert(self.frame, from: self.superview)
     // account for the 1 width colunm grabber line
-    return convert(convertedFrame, to: selectionBand).insetBy(dx: 0.5, dy: 0).offsetBy(dx: -0.5, dy: 0)// .offsetBy(dx: -dataCollectionView.frame.origin.x, dy: 0)
+    return convert(convertedFrame, to: selectionBand).insetBy(dx: 0.5, dy: 0).offsetBy(dx: -0.5, dy: 0)
   }
 
   fileprivate func addToSelections() {
@@ -167,43 +213,6 @@ class PaddedLabel: UILabel, SelectionsListener {
     UIView.animate(withDuration: 0.3, animations: {
       self.layer.backgroundColor = to.cgColor
     })
-  }
-
-  func addSystemImage(imageName: String, afterLabel bolAfterLabel: Bool = false) {
-    if #available(iOS 13.0, *) {
-      let config = UIImage.SymbolConfiguration(pointSize: 10)
-      let imageAttachment = NSTextAttachment()
-      let image = UIImage(systemName: imageName, withConfiguration: config)
-      imageAttachment.image = image
-      imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageAttachment.image!.size.width, height: imageAttachment.image!.size.height)
-      let attachmentString = NSAttributedString(attachment: imageAttachment)
-      let completeText = NSMutableAttributedString(string: "")
-
-      completeText.append(attachmentString)
-      if !hasSystemImage {
-        completeText.append(NSAttributedString(string: " "))
-        hasSystemImage = true
-      }
-      let tempText = self.text
-      if var tempText = tempText {
-        tempText = tempText.trimmingCharacters(in: .whitespaces)
-        let textAfterIcon = NSAttributedString(string: tempText)
-        completeText.append(textAfterIcon)
-      } else {
-        let textAfterIcon = NSAttributedString(string: tempText ?? "")
-        completeText.append(textAfterIcon)
-      }
-      self.attributedText = completeText
-    } else {
-      // no icon :(
-    }
-  }
-
-  func removeSystemImage() {
-    let text = self.text?.trimmingCharacters(in: .whitespaces)
-    self.attributedText = nil
-    self.text = text
-    self.hasSystemImage = false
   }
 
   func checkForUrls() {
@@ -266,6 +275,9 @@ class PaddedLabel: UILabel, SelectionsListener {
   }
 
   deinit {
-    NotificationCenter.default.removeObserver(self.onTappedSelectionBand)
+    if let selectionBand = self.selectionBand {
+      selectionBand.notificationCenter.removeObserver(self.onTappedSelectionBand)
+    }
+//    NotificationCenter.default.removeObserver(self.onTappedSelectionBand)
   }
 }

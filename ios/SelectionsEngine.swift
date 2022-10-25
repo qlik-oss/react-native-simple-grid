@@ -14,10 +14,16 @@ class SelectionsEngine: NSObject {
   var onConfirmSelections: RCTDirectEventBlock?
   var selectionListners = [SelectionsListener]()
   var activeColumn = -1.0
+  weak var selectionBand: SelectionBand?;
 
   override init() {
     super.init()
-    NotificationCenter.default.addObserver(self, selector: #selector(onDragSelectDone), name: Notification.Name.onDragSelectDone, object: nil)
+  
+  }
+  
+  func setSelectionBand(_ sb: SelectionBand) {
+    self.selectionBand = sb
+    sb.notificationCenter.addObserver(self, selector: #selector(onDragSelectDone), name: Notification.Name.onDragSelectDone, object: nil)
   }
 
   func addListener(listener: SelectionsListener) {
@@ -32,7 +38,9 @@ class SelectionsEngine: NSObject {
     }
     if activeColumn != colIdx {
       activeColumn = colIdx
-      NotificationCenter.default.post(name: Notification.Name.onClearSelectionBand, object: nil)
+      if let selectionBand = self.selectionBand {
+        selectionBand.notificationCenter.post(name: Notification.Name.onClearSelectionBand, object: nil)
+      }
       if let onConfirmSelections = self.onConfirmSelections {
         onConfirmSelections([:])
       }
@@ -104,7 +112,9 @@ class SelectionsEngine: NSObject {
       listner.clearSelected()
     }
     activeColumn = -1.0
-    NotificationCenter.default.post(name: Notification.Name.onClearSelectionBand, object: nil)
+    if let selectionBand = self.selectionBand {
+      selectionBand.notificationCenter.post(name: Notification.Name.onClearSelectionBand, object: nil)
+    }
   }
 
   static func buildSelectionSignator(from: DataCell) -> String {
