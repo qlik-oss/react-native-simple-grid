@@ -1,3 +1,10 @@
+# [1.1.0-alpha.32](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.31...v1.1.0-alpha.32) (2022-10-26)
+
+
+### Bug Fixes
+
+* text align ([7dd2e2f](https://github.com/qlik-oss/react-native-simple-grid/commit/7dd2e2fd93ed04a76281abdabcce9957fab631ce))
+
 # [1.1.0-alpha.31](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.30...v1.1.0-alpha.31) (2022-10-25)
 
 
