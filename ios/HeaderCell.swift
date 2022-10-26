@@ -72,10 +72,11 @@ class HeaderCell: UIView {
     }
   }
 
-  func setText(_ label: String, textColor: UIColor) {
+  func setText(_ label: String, textColor: UIColor, align: NSTextAlignment) {
     guard let paddedLabel = self.paddedLabel else { return }
 
     paddedLabel.text = label
+    paddedLabel.textAlignment = align
     paddedLabel.textColor = textColor
 
     let sizedFont = UIFont.systemFont(ofSize: 14)

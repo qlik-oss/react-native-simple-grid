@@ -119,7 +119,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
           }
         } else {
           if let label = views[index] as? PaddedLabel {
-            label.textAlignment = element.qNum == nil ? .left : .right
+            label.textAlignment = getTextAlignment(element, col: col)// element.qNum == nil ? .left : .right
             label.frame = newFrame.integral
             label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
             let backgroundColor = getBackgroundColor(col: col, element: element, withStyle: styleInfo[index])
@@ -145,6 +145,21 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
       }
       x += columnWidths[index + dataRange.lowerBound]
     }
+  }
+  
+  fileprivate func getTextAlignment(_ element: DataCell, col: DataColumn) -> NSTextAlignment {
+    if let align = col.align {
+      if align == "right" {
+        return .right
+      }
+      if align == "left" {
+        return .left
+      }
+      if align == "center" {
+        return .center
+      }
+    }
+    return .right
   }
 
   fileprivate func getBackgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {

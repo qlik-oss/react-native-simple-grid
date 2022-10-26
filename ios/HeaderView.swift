@@ -56,13 +56,28 @@ class HeaderView: HeaderStyleView {
       let label = HeaderCell(frame: frame, dataColumn: column)
       label.onHeaderPressed = onHeaderPressed
       label.onSearchColumn = onSearchColumn
-      label.setText(column.label ?? "", textColor: ColorParser().fromCSS(cssString: headerStyle.color ?? "black"))
+      label.setText(column.label ?? "", textColor: ColorParser().fromCSS(cssString: headerStyle.color ?? "black"), align: getTextAlignment(column))
 
       updateSortIndicator(column, forLabel: label)
 
       currentX += 200// Int(column.widths[widthIndex])
       addSubview(label)
     }
+  }
+  
+  fileprivate func getTextAlignment(_ col: DataColumn) -> NSTextAlignment {
+    if let align = col.align {
+      if align == "right" {
+        return .right
+      }
+      if align == "left" {
+        return .left
+      }
+      if align == "center" {
+        return .center
+      }
+    }
+    return .right
   }
 
   func updateColumns(_ dataColumns: [DataColumn]) {
