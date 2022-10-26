@@ -1,3 +1,10 @@
+# [1.1.0-alpha.33](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.32...v1.1.0-alpha.33) (2022-10-26)
+
+
+### Bug Fixes
+
+* revert syntax ([632bcbf](https://github.com/qlik-oss/react-native-simple-grid/commit/632bcbf3b09437cdd3846d4b7e8b8c3850e2e893))
+
 # [1.1.0-alpha.32](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.31...v1.1.0-alpha.32) (2022-10-26)
 
 
