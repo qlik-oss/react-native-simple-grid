@@ -30,9 +30,9 @@ class PaddedLabel: UILabel, SelectionsListener {
   init(frame: CGRect, selectionBand: SelectionBand?) {
     super.init(frame: frame.integral)
     self.selectionBand = selectionBand
-    if let selectionBand {
-      selectionBand.notificationCenter.addObserver(self, selector: #selector(onTappedSelectionBand), name: Notification.Name.onTappedSelectionBand, object: nil)
-      selectionBand.notificationCenter.addObserver(self, selector: #selector(onSelectionDragged), name: Notification.Name.onSelectionDragged, object: nil)
+    if let sb = selectionBand  {
+      sb.notificationCenter.addObserver(self, selector: #selector(onTappedSelectionBand), name: Notification.Name.onTappedSelectionBand, object: nil)
+      sb.notificationCenter.addObserver(self, selector: #selector(onSelectionDragged), name: Notification.Name.onSelectionDragged, object: nil)
     }
   }
 
