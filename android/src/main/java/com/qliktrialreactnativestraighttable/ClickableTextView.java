@@ -37,12 +37,6 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     setTextColor(textColor);
   }
 
-  public void onRecycled() {
-    if (cell != null && cell.isDim) {
-      selectionsEngine.remove(this);
-    }
-  }
-  
   @Override
   public void setGestureDetector(GestureDetector gestureDetector) {
     this.gestureDetector = gestureDetector;
