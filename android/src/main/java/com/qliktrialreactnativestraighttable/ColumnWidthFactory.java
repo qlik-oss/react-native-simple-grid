@@ -13,13 +13,15 @@ public class ColumnWidthFactory {
   final Context parentContext;
   final HeaderView headerView;
   final CustomHorizontalScrollView scrollView;
+  final TableView tableView;
 
-  ColumnWidthFactory(List<DataColumn> columnList, List<DataRow> rowList, Context parentContext, HeaderView headerView, CustomHorizontalScrollView scrollView) {
+  ColumnWidthFactory(List<DataColumn> columnList, List<DataRow> rowList, Context parentContext, HeaderView headerView, CustomHorizontalScrollView scrollView, TableView tableView) {
     this.columnList = columnList;
     this.rowList = rowList;
     this.parentContext = parentContext;
     this.headerView = headerView;
     this.scrollView = scrollView;
+    this.tableView = tableView;
   }
 
   public void autoSize(CustomHorizontalScrollView contextView) {
@@ -56,7 +58,7 @@ public class ColumnWidthFactory {
 
   private void requestLayoutHeaderView() {
     if (this.headerView != null) {
-     HeaderViewFactory headerViewFactory = new HeaderViewFactory(this.headerView, this.scrollView);
+     HeaderViewFactory headerViewFactory = new HeaderViewFactory(this.headerView, this.scrollView, this.tableView);
      headerViewFactory.readjustLayout(columnList, this.parentContext);
     }
   }

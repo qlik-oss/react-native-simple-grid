@@ -47,11 +47,13 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   boolean isDataView = false;
   List<DataRow> rows = null;
   List<DataColumn> dataColumns = null;
-
   Set<RowViewHolder> cachedViewHolders = new HashSet<>();
+  Set<RowViewHolder> cachedFirstColumnViewHolders = new HashSet<>();
+
   SelectionsEngine selectionsEngine = null;
   DataSize dataSize = null;
   boolean loading = false;
+  Boolean isFirstColumnFrozen = null;
   CustomHorizontalScrollView scrollView;
   public final float minWidth = PixelUtils.dpToPx(40);
 
@@ -61,6 +63,10 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   public void setLoading(boolean loading) {
     this.loading = loading;
+  }
+
+  public void setFirstColumnFrozen(boolean firstColumnFrozen) {
+    this.isFirstColumnFrozen = firstColumnFrozen;
   }
 
   public List<DataColumn> getDataColumns() {
@@ -134,13 +140,14 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    CustomRecyclerView recyclerView = (CustomRecyclerView) parent;
     RecyclerView.ViewHolder viewHolder;
     if (viewType == VIEW_TYPE_ITEM) {
       LinearLayout rowView = new LinearLayout(parent.getContext());
       int padding = (int)PixelUtils.dpToPx(16);
       rowView.setOrientation(LinearLayout.HORIZONTAL);
-
-      for (int i = 0; i < dataColumns.size(); i++) {
+      int numColumns = recyclerView.firstColumnOnly ? 1 : dataColumns.size();
+      for (int i = 0; i < numColumns; i++) {
         DataColumn column = dataColumns.get(i);
         int width = column.width;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, TableTheme.rowHeight);
@@ -166,9 +173,9 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
           rowView.addView(view);
         }
       }
-      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, TableTheme.rowHeight);
+      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, TableTheme.rowHeight);
       rowView.setLayoutParams(layoutParams);
-      RowViewHolder rowViewHolder = new RowViewHolder(rowView, this);
+      RowViewHolder rowViewHolder = new RowViewHolder(rowView, this, recyclerView.firstColumnOnly);
       viewHolder = rowViewHolder;
     } else {
       RelativeLayout rowView = new RelativeLayout(parent.getContext());
@@ -237,7 +244,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   }
 
   public boolean ready() {
-    return this.rows != null && dataSize != null && this.dataColumns != null;
+    return this.rows != null && dataSize != null && this.dataColumns != null && this.isFirstColumnFrozen != null;
   }
 
   public int getItemViewType(int position) {
