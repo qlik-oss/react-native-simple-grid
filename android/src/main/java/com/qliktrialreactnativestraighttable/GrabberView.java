@@ -29,6 +29,8 @@ public class GrabberView extends LinearLayout {
   AutoLinearLayout footerView = null;
   List<GrabberView> grabbers = null;
   CustomRecyclerView recyclerView;
+  CustomRecyclerView firstColumnRecyclerView;
+  HeaderCell firstColumnHeader;
   final FrameLayout rootView;
   ScreenGuideView screenGuideView = null;
   private final int column;
@@ -63,17 +65,12 @@ public class GrabberView extends LinearLayout {
             GrabberView.this.setTranslationX(x);
             GrabberView.this.updateHeader(motionDx);
 
-            if(rootView != null) {
-              HeaderCell firstColumnHeader = (HeaderCell) rootView.getChildAt(1);
-              CustomRecyclerView firstColumnRecyclerView = (CustomRecyclerView) rootView.getChildAt(3);
-
+            if(rootView != null && firstColumnHeader != null && firstColumnRecyclerView != null) {
               int headerHeight = firstColumnHeader.getMeasuredHeight();
               int rootHeight = rootView.getMeasuredHeight();
-              firstColumnRecyclerView.layout(0, 0, dataProvider.dataColumns.get(0).width - 5, rootHeight - TableView.SCROLL_THUMB_HEIGHT);
+              firstColumnRecyclerView.layout(0, TableTheme.headerHeight, dataProvider.dataColumns.get(0).width - 5, rootHeight - TableView.SCROLL_THUMB_HEIGHT);
               firstColumnHeader.layout(0, 0, dataProvider.dataColumns.get(0).width, headerHeight);
-              firstColumnHeader.setEllipsize(TextUtils.TruncateAt.END);
             }
-
 
             lastX = motionEvent.getRawX();
             if(column == dataProvider.dataColumns.size() - 1 && motionDx > 0) {
@@ -138,6 +135,14 @@ public class GrabberView extends LinearLayout {
     canvas.drawLine(width, top, width, canvas.getHeight() - top, linePaint);
   }
 
+  public void setFirstColumnHeader(HeaderCell cell) {
+    this.firstColumnHeader = cell;
+  }
+
+  public void setFirstColumnRecyclerView(CustomRecyclerView view) {
+    this.firstColumnRecyclerView = view;
+  }
+
   public void setDataProvider(DataProvider provider) {
     this.dataProvider = provider;
   }
@@ -198,7 +203,7 @@ public class GrabberView extends LinearLayout {
   }
 
   public void resizeView(View view, float dxMotion) {
-    ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) view.getLayoutParams();
+    ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
     layoutParams.width += dxMotion;
     view.setLayoutParams(layoutParams);
   }
