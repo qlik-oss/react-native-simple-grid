@@ -61,7 +61,7 @@ public class CustomRecyclerView extends RecyclerView {
     @Override
     public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
       super.onScrolled(rv, dx, dy);
-      if(active) {
+      if(active && scrollCoupledView != null) {
         scrollCoupledView.scrollBy(dx, dy);
       }
 

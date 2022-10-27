@@ -85,7 +85,7 @@ public class HeaderViewFactory {
   }
 
 
-  public static void buildFixedColumnCell(FrameLayout rootView, DataColumn column, CustomHorizontalScrollView scrollView) {
+  public static HeaderCell buildFixedColumnCell(FrameLayout rootView, DataColumn column, CustomHorizontalScrollView scrollView) {
     int padding = (int) PixelUtils.dpToPx(16);
 
     HeaderCell fixedFirstHeaderCell = new HeaderCell(rootView.getContext(), column, scrollView);
@@ -104,6 +104,7 @@ public class HeaderViewFactory {
     fixedFirstHeaderCell.setElevation((int)PixelUtils.dpToPx(4));
 
     rootView.addView(fixedFirstHeaderCell);
+    return fixedFirstHeaderCell;
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

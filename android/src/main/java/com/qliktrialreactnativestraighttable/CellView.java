@@ -4,21 +4,26 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 @SuppressLint("ViewConstructor")
-public class CellView extends RelativeLayout implements SelectionsObserver {
+public class CellView extends LinearLayout implements SelectionsObserver {
   Content content = null;
   final SelectionsEngine selectionsEngine;
   GestureDetector gestureDetector;
   final CustomHorizontalScrollView scrollView;
+  int padding = (int)PixelUtils.dpToPx(16);
 
   CellView(Context context, String type, SelectionsEngine selectionsEngine, CustomHorizontalScrollView scrollView) {
     super(context);
+    this.setPadding(padding, 0, padding, 0);
     if(type.equals("text")) {
       content = new ClickableTextView(context, selectionsEngine, scrollView);
     } else if(type.equals("image")) {
@@ -41,6 +46,12 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
     View contentView = (View) content;
     contentView.setOnCreateContextMenuListener(onCreateContextMenuListener);
     this.addView(contentView);
+  }
+
+  @Override
+  protected void onDraw(Canvas canvas) {
+    super.onDraw(canvas);
+    this.getChildAt(0).invalidate();
   }
 
   private void copyCell(Context context){

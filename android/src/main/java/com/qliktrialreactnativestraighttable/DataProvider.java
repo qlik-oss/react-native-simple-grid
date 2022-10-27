@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -144,34 +145,31 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     RecyclerView.ViewHolder viewHolder;
     if (viewType == VIEW_TYPE_ITEM) {
       LinearLayout rowView = new LinearLayout(parent.getContext());
-      int padding = (int)PixelUtils.dpToPx(16);
       rowView.setOrientation(LinearLayout.HORIZONTAL);
       int numColumns = recyclerView.firstColumnOnly ? 1 : dataColumns.size();
       for (int i = 0; i < numColumns; i++) {
         DataColumn column = dataColumns.get(i);
         int width = column.width;
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, TableTheme.rowHeight);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, TableTheme.rowHeight);
 
         if (column.type.equals("image")) {
           RelativeLayout wrapper = new RelativeLayout(parent.getContext());
-          wrapper.setLayoutParams(layoutParams);
 
-          RelativeLayout container = new RelativeLayout(parent.getContext());
-          container.setPadding(padding, 0, (int) padding, 0);
+//          RelativeLayout container = new RelativeLayout(parent.getContext());
 
           CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.scrollView);
-          container.addView(cellView);
-          wrapper.addView(container);
-          rowView.addView(wrapper);
+          RelativeLayout.LayoutParams cellLayoutParams = new RelativeLayout.LayoutParams(-1,-1);
+//          container.addView(cellView);
+          wrapper.addView(cellView, cellLayoutParams);
+          rowView.addView(wrapper, layoutParams);
         } else {
           CellView cellView = new CellView(parent.getContext(), "text", this.selectionsEngine, this.scrollView);
           ClickableTextView textView = (ClickableTextView) cellView.content;
 
           textView.setMaxLines(NUM_LINES);
           textView.setEllipsize(TextUtils.TruncateAt.END);
-          textView.setLayoutParams(layoutParams);
-          textView.setPadding(padding, 0, (int) padding, 0);
           textView.setTextSize(FONT_SIZE);
+          textView.setLayoutParams(layoutParams);
 
           rowView.addView(cellView);
         }

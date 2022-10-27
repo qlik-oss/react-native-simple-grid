@@ -8,6 +8,7 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 @SuppressLint("ViewConstructor")
@@ -111,8 +112,8 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   }
 
   public void setAlignment(DataColumn column) {
-    RelativeLayout container = (RelativeLayout) cellView.getParent();
-    RelativeLayout wrapper = (RelativeLayout) container.getParent();
+    ViewGroup container = (ViewGroup) cellView.getParent();
+    LinearLayout wrapper = (LinearLayout) container.getParent();
     setTranslationY(0);
 
     switch (column.imagePosition) {
@@ -148,7 +149,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
 
   public void updateBackgroundColor() {
     int color = selected ? TableTheme.selectedBackground : Color.TRANSPARENT;
-    RelativeLayout wrapper = (RelativeLayout) cellView.getParent().getParent();
+    ViewGroup wrapper = (ViewGroup) cellView.getParent().getParent();
     wrapper.setBackgroundColor(color);
   }
 

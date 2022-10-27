@@ -30,6 +30,7 @@ public class TableView extends FrameLayout {
   AutoLinearLayout footerView = null;
   CustomRecyclerView recyclerView = null;
   CustomRecyclerView firstColumnView = null;
+  HeaderCell firstColumnHeaderCell = null;
   ScreenGuideView screenGuideView = null;
   SelectionsEngine selectionsEngine = new SelectionsEngine();
   DataProvider dataProvider = new DataProvider();
@@ -174,7 +175,7 @@ public class TableView extends FrameLayout {
 
       layoutView.addView(recyclerView, recyclerViewLayoutParams);
       if (rootView != null && isFirstColumnFrozen) {
-        HeaderViewFactory.buildFixedColumnCell(rootView, dataProvider.dataColumns.get(0), scrollView);
+        firstColumnHeaderCell = HeaderViewFactory.buildFixedColumnCell(rootView, dataProvider.dataColumns.get(0), scrollView);
         recyclerView.setViewToScrollCouple(firstColumnView);
         firstColumnView.setViewToScrollCouple(recyclerView);
         rootView.addView(firstColumnView, firstColumnViewLayoutParams);
@@ -196,12 +197,13 @@ public class TableView extends FrameLayout {
   }
 
   private void setupGrabbers() {
-    //req frozen column layout
     for(GrabberView view : grabbers) {
       view.setDataProvider(dataProvider);
       view.setHeaderView(headerView);
       view.setGrabbers(grabbers);
       view.setRecyclerView(recyclerView);
+      view.setFirstColumnRecyclerView(firstColumnView);
+      view.setFirstColumnHeader(firstColumnHeaderCell);
       view.setFooterView(footerView);
     }
   }

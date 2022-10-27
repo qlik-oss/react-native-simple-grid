@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -36,13 +37,12 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
       DataColumn column = dataProvider.dataColumns.get(columnIndex);
 
       if(column.type.equals("image")) {
-        RelativeLayout wrapper = (RelativeLayout) row.getChildAt(columnIndex);
-        RelativeLayout container = (RelativeLayout) wrapper.getChildAt(0);
-        ViewGroup.LayoutParams layout = (ViewGroup.LayoutParams) container.getLayoutParams();
+        ViewGroup wrapper = (ViewGroup) row.getChildAt(columnIndex);
+        CellView cellView = (CellView) wrapper.getChildAt(0);
+        ViewGroup.LayoutParams layout = cellView.getLayoutParams();
         layout.height = TableTheme.rowHeight;
         layout.width = column.width;
-        container.setLayoutParams(layout);
-        CellView cellView = (CellView) container.getChildAt(0);
+        cellView.setLayoutParams(layout);
         cellView.setData(cell);
 
         Bitmap imageBitmap = dataProvider.getImageData(cell.imageUrl);
@@ -57,6 +57,11 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         CellView cellView = (CellView) row.getChildAt(columnIndex);
         cellView.setData(cell);
         ClickableTextView textView = (ClickableTextView) cellView.content;
+
+        LinearLayout.LayoutParams textViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        textView.setLayoutParams(textViewLayoutParams);
+        LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, TableTheme.rowHeight);
+        cellView.setLayoutParams(cellViewLayoutParams);
 
         textView.setText(cell.qText);
         textView.setGravity(cell.textGravity | Gravity.CENTER_VERTICAL);
@@ -84,7 +89,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
 
   public void onRecycled() {
     for(int i = 0; i <  row.getChildCount(); i++) {
-      View view = (View) row.getChildAt(i);
+      View view = row.getChildAt(i);
       if(view instanceof RelativeLayout) {
         return;
       }
@@ -93,34 +98,37 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     }
   }
 
-  public boolean updateWidth(float width, int column) {
+  public boolean updateWidth(float deltaWidth, int column) {
     if(column > numColumns - 1) {
       return true;
     }
     View view = row.getChildAt(column);
-    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)view.getLayoutParams();
-    float newWidth = params.width + width;
+    int currentWidth = dataProvider.dataColumns.get(column).width;
+    float newWidth = currentWidth + deltaWidth;
+
     if(newWidth < dataProvider.minWidth) {
       return false;
     }
 
-    if (!updateNeighbour(width, column)) {
+    if (!updateNeighbour(deltaWidth, column)) {
       return false;
     }
+    ViewGroup.LayoutParams params = view.getLayoutParams();
     params.width = (int) newWidth;
     view.setLayoutParams(params);
 
     return true;
   }
 
-  private boolean updateNeighbour(float width, int column) {
+  private boolean updateNeighbour(float deltaWidth, int column) {
     if (column + 1 < numColumns ) {
       View neighbour =  row.getChildAt(column + 1);
-      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) neighbour.getLayoutParams();
-      float newWidth = params.width - width;
+      int currentWidth = dataProvider.dataColumns.get(column + 1).width;
+      float newWidth = currentWidth - deltaWidth;
       if (newWidth < dataProvider.minWidth) {
         return false;
       }
+      ViewGroup.LayoutParams params = neighbour.getLayoutParams();
       params.width = (int)newWidth;
       neighbour.setLayoutParams(params);
     }
