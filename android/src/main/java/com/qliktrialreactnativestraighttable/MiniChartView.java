@@ -22,7 +22,9 @@ public class MiniChartView extends View {
       if (cell.miniChart != null && column.representation != null) {
         if (column.representation.miniChart != null) {
           if (column.representation.miniChart.type.equals("bars")) {
-            miniChartRenderer = new MiniBarChartRenderer(cell.miniChart, column.representation.miniChart);
+            miniChartRenderer = new MiniBarChartRenderer(cell.miniChart, column.representation);
+          } else if(column.representation.miniChart.type.equals("dots")) {
+            miniChartRenderer = new MiniDotsChartRenderer(cell.miniChart, column.representation);
           }
         }
       }

@@ -8,6 +8,7 @@ import android.graphics.Rect;
 public class MiniChartRenderer {
   qMiniChart miniChartData = null;
   MiniChartInfo miniChartInfo = null;
+  Representation representation = null;
   Rect bounds = new Rect();
   Paint paint = new Paint();
   float horizontalPadding = 20.0f;
@@ -18,14 +19,16 @@ public class MiniChartRenderer {
   float yScale = 1.0f;
   float xAxis = 0.0f;
 
-  public MiniChartRenderer(qMiniChart chartData, MiniChartInfo chartInfo ) {
+  public MiniChartRenderer(qMiniChart chartData, Representation representation ) {
+    this.representation = representation;
     miniChartData = chartData;
-    miniChartInfo = chartInfo;
+    miniChartInfo = representation.miniChart;
     paint.setColor(Color.RED);
-    if(chartInfo.yAxis != null && chartInfo.yAxis.scale.equals("global")) {
-//      yScale = chartInfo.
+    if(miniChartInfo.yAxis != null && miniChartInfo.yAxis.scale.equals("global")) {
+      float min = Math.min((float) representation.globalMin, 0.0f);
+      yScale = (float) representation.globalMax - min;
     } else {
-      float min = (float) chartData.qMin < 0.0f ? (float) chartData.qMin : 0.0f;
+      float min = Math.min((float) chartData.qMin, 0.0f);
       yScale = (float) (chartData.qMax - min);
     }
   }

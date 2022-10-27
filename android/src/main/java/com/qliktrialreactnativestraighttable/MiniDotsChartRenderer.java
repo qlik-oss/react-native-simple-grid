@@ -1,14 +1,11 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
+import android.graphics.Color;
 import android.graphics.Rect;
 
-public class MiniBarChartRenderer extends MiniChartRenderer {
-
-  Rect bar = new Rect();
-
-  public MiniBarChartRenderer(qMiniChart chartData, Representation representation) {
+public class MiniDotsChartRenderer extends MiniChartRenderer{
+  public MiniDotsChartRenderer(qMiniChart chartData, Representation representation) {
     super(chartData, representation);
   }
 
@@ -20,9 +17,8 @@ public class MiniBarChartRenderer extends MiniChartRenderer {
       float value = (float) miniChartData.matrix.rows.get(i).columns.get(1).qNum;
       float height = value * scale;
       float y = xAxis - height  ;
-      float b = xAxis;
       setColor(i, value, miniChartData.matrix.rows.size());
-      canvas.drawRect(x, y, x + bandwidth, b, paint);
+      canvas.drawCircle(x, y, 6, paint);
       x += padding * 2.0f + bandwidth;
     }
   }
