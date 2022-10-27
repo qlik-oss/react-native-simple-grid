@@ -152,7 +152,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         int width = column.width;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, TableTheme.rowHeight);
 
-        if (column.type.equals("image")) {
+        if (column.representation.type.equals("image")) {
           RelativeLayout wrapper = new RelativeLayout(parent.getContext());
           wrapper.setLayoutParams(layoutParams);
 
@@ -163,6 +163,9 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
           container.addView(imageView);
           wrapper.addView(container);
           rowView.addView(wrapper);
+        } else if(column.representation.type.equals("miniChart")) {
+          MiniChartView view = new MiniChartView(parent.getContext());
+          rowView.addView(view);
         } else {
           ClickableTextView view = new ClickableTextView(parent.getContext(), this.selectionsEngine, this.scrollView);
           view.setMaxLines(NUM_LINES);

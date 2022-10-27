@@ -23,6 +23,7 @@ public class DataCell {
   int  rawColIdx;
   boolean isNumber;
   int textGravity = Gravity.LEFT;
+  qMiniChart miniChart;
   public DataCell(ReadableMap source, DataColumn column) {
     qText = source.getString("qText");
     qElemNumber =  source.getInt("qElemNumber");
@@ -51,6 +52,7 @@ public class DataCell {
         DataProvider.addImagePath(imageUrl);
       }
     }
+    miniChart = source.hasKey("qMiniChart") ? new qMiniChart(source.getMap("qMiniChart")) : null;
 
   }
 

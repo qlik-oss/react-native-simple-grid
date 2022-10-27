@@ -64,7 +64,7 @@ public class GrabberView extends LinearLayout {
             GrabberView.this.updateHeader(motionDx);
 
             if(rootView != null) {
-              HeaderCell firstColumnHeader = (HeaderCell) rootView.getChildAt(1);
+              HeaderCell firstColumnHeader =  (HeaderCell) rootView.getChildAt(1);
               CustomRecyclerView firstColumnRecyclerView = (CustomRecyclerView) rootView.getChildAt(3);
 
               int headerHeight = firstColumnHeader.getMeasuredHeight();

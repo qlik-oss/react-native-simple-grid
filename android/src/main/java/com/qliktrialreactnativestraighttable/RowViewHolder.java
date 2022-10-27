@@ -35,7 +35,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
       int columnIndex = cell.colIdx;
       DataColumn column = dataProvider.dataColumns.get(columnIndex);
 
-      if(column.type.equals("image")) {
+      if(column.representation.type.equals("image")) {
         RelativeLayout wrapper = (RelativeLayout) row.getChildAt(columnIndex);
         RelativeLayout container = (RelativeLayout) wrapper.getChildAt(0);
         ViewGroup.LayoutParams layout = (ViewGroup.LayoutParams) container.getLayoutParams();
@@ -52,6 +52,9 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         imageView.setImageBitmap(imageBitmap);
         imageView.setSizing(column, imageBitmap);
         imageView.setAlignment(column);
+      } else if(column.representation.type.equals("miniChart")) {
+        MiniChartView miniChartView = (MiniChartView) row.getChildAt(columnIndex);
+        miniChartView.setData(cell, column);
       } else {
         ClickableTextView view = (ClickableTextView) row.getChildAt(columnIndex);
         view.setData(cell);
@@ -65,11 +68,11 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     for(int i = 0; i < this.row.getChildCount(); i++) {
       DataColumn column = dataProvider.dataColumns.get(i);
 
-      if(column.type.equals("image")) {
+      if(column.representation.type.equals("image")) {
         RelativeLayout wrapper = (RelativeLayout) row.getChildAt(i);
         RelativeLayout container = (RelativeLayout) wrapper.getChildAt(0);
         ClickableImageView imageView = (ClickableImageView) container.getChildAt(0);
-        Bitmap imageBitmap = dataProvider.getImageData(column.imageUrl);
+        Bitmap imageBitmap = dataProvider.getImageData(column.representation.imageUrl);
         if(imageBitmap == null) {
           continue;
         }
