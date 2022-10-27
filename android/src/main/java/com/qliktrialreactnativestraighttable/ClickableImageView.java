@@ -95,7 +95,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   }
 
   public void setSizing(DataColumn column, Bitmap image) {
-    switch (column.imageSize) {
+    switch (column.representation.imageSize) {
       case "alwaysFit":
         alwaysFit();
         break;
@@ -116,7 +116,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     LinearLayout wrapper = (LinearLayout) container.getParent();
     setTranslationY(0);
 
-    switch (column.imagePosition) {
+    switch (column.representation.imagePosition) {
       case "topCenter":
         wrapper.setGravity(Gravity.LEFT);
         break;
