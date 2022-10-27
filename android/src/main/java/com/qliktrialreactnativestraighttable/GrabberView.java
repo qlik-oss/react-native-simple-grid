@@ -65,7 +65,7 @@ public class GrabberView extends LinearLayout {
             GrabberView.this.setTranslationX(x);
             GrabberView.this.updateHeader(motionDx);
 
-            if(rootView != null) {
+            if(rootView != null && firstColumnHeader != null && firstColumnRecyclerView != null) {
               int headerHeight = firstColumnHeader.getMeasuredHeight();
               int rootHeight = rootView.getMeasuredHeight();
               firstColumnRecyclerView.layout(0, TableTheme.headerHeight, dataProvider.dataColumns.get(0).width - 5, rootHeight - TableView.SCROLL_THUMB_HEIGHT);
