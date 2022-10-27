@@ -1,3 +1,10 @@
+# [1.1.0-alpha.36](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.35...v1.1.0-alpha.36) (2022-10-27)
+
+
+### Features
+
+* **md-3365:** copy cell android ([#97](https://github.com/qlik-oss/react-native-simple-grid/issues/97)) ([a195f88](https://github.com/qlik-oss/react-native-simple-grid/commit/a195f8887e2b20acdbe1248521cc742c18e5e7b9))
+
 # [1.1.0-alpha.35](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.34...v1.1.0-alpha.35) (2022-10-26)
 
 
