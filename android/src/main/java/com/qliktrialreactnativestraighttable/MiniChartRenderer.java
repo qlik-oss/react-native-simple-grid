@@ -24,22 +24,25 @@ public class MiniChartRenderer {
     miniChartData = chartData;
     miniChartInfo = representation.miniChart;
     paint.setColor(Color.RED);
-    if(miniChartInfo.yAxis != null && miniChartInfo.yAxis.scale.equals("global")) {
-      float min = Math.min((float) representation.globalMin, 0.0f);
-      yScale = (float) representation.globalMax - min;
-    } else {
-      float min = Math.min((float) chartData.qMin, 0.0f);
-      yScale = (float) (chartData.qMax - min);
-    }
+
+
   }
 
-  public void updateData(qMiniChart chartData) {
+  public void updateData(qMiniChart chartData, Representation representation) {
     miniChartData = chartData;
+    this.representation = representation;
   }
 
   public void resetScales(Rect bounds) {
     this.bounds = bounds;
     if(miniChartData != null) {
+      if(miniChartInfo.yAxis != null && miniChartInfo.yAxis.scale.equals("global")) {
+        float min = Math.min((float) representation.globalMin, 0.0f);
+        yScale = (float) representation.globalMax - min;
+      } else {
+        float min = Math.min((float) miniChartData.qMin, 0.0f);
+        yScale = (float) (miniChartData.qMax - min);
+      }
       setBandwidth();
       setScales();
     }

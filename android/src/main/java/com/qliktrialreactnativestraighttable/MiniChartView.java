@@ -5,11 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.view.GestureDetector;
 import android.view.View;
 
-public class MiniChartView extends View {
+public class MiniChartView extends View implements Content {
   Rect bounds = new Rect();
   Paint paint = new Paint();
+  DataCell dataCell = null;
   MiniChartRenderer miniChartRenderer = null;
 
   public MiniChartView(Context context) {
@@ -25,28 +27,50 @@ public class MiniChartView extends View {
             miniChartRenderer = new MiniBarChartRenderer(cell.miniChart, column.representation);
           } else if(column.representation.miniChart.type.equals("dots")) {
             miniChartRenderer = new MiniDotsChartRenderer(cell.miniChart, column.representation);
+          } else if(column.representation.miniChart.type.equals("sparkline")) {
+            miniChartRenderer = new MiniSparkLinesRenderer(cell.miniChart, column.representation);
+          } else if(column.representation.miniChart.type.equals("posNeg")) {
+            miniChartRenderer = new MiniPosNegRenderer(cell.miniChart, column.representation);
           }
         }
       }
     } else {
-      miniChartRenderer.updateData(cell.miniChart);
+      miniChartRenderer.updateData(cell.miniChart, column.representation);
     }
-  }
-
-  @Override
-  protected void onLayout(boolean changed, int l, int t, int r, int b) {
-    super.onLayout(changed, l, t, r, b);
-    if(miniChartRenderer != null) {
-      bounds.set(l, t, r, b);
-      miniChartRenderer.resetScales(bounds);
-    }
+    this.invalidate();
   }
 
   @Override
   protected void onDraw(Canvas canvas) {
-    super.onDraw(canvas);
     if(miniChartRenderer != null){
+      canvas.getClipBounds(bounds);
+      miniChartRenderer.resetScales(bounds);
       miniChartRenderer.render(canvas);
     }
+  }
+
+  @Override
+  public void updateBackgroundColor() {
+    // no selections
+  }
+
+  @Override
+  public void setGestureDetector(GestureDetector gestureDetector) {
+
+  }
+
+  @Override
+  public void toggleSelected() {
+    // no selections
+  }
+
+  @Override
+  public void setCell(DataCell cell) {
+    dataCell = cell;
+  }
+
+  @Override
+  public DataCell getCell() {
+    return dataCell;
   }
 }

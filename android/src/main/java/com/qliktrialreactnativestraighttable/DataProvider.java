@@ -163,8 +163,10 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
           wrapper.addView(cellView, cellLayoutParams);
           rowView.addView(wrapper, layoutParams);
         } else if(column.representation.type.equals("miniChart")) {
-          MiniChartView view = new MiniChartView(parent.getContext());
-          rowView.addView(view); 
+          CellView cellView = new CellView(parent.getContext(), "miniChart", this.selectionsEngine, this.scrollView);
+
+          // MiniChartView view = new MiniChartView(parent.getContext());
+          rowView.addView(cellView);
         } else {
           CellView cellView = new CellView(parent.getContext(), "text", this.selectionsEngine, this.scrollView);
           ClickableTextView textView = (ClickableTextView) cellView.content;
