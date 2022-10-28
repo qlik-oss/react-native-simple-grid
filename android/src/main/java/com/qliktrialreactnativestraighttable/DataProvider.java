@@ -154,18 +154,13 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         if (column.representation.type.equals("image")) {
           RelativeLayout wrapper = new RelativeLayout(parent.getContext());
-
-//          RelativeLayout container = new RelativeLayout(parent.getContext());
-
           CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.scrollView);
           RelativeLayout.LayoutParams cellLayoutParams = new RelativeLayout.LayoutParams(-1,-1);
-//          container.addView(cellView);
           wrapper.addView(cellView, cellLayoutParams);
           rowView.addView(wrapper, layoutParams);
         } else if(column.representation.type.equals("miniChart")) {
           CellView cellView = new CellView(parent.getContext(), "miniChart", this.selectionsEngine, this.scrollView);
 
-          // MiniChartView view = new MiniChartView(parent.getContext());
           rowView.addView(cellView);
         } else {
           CellView cellView = new CellView(parent.getContext(), "text", this.selectionsEngine, this.scrollView);
@@ -299,7 +294,8 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   }
 
   public void onEndPan(CustomHorizontalScrollView contextView) {
-    EventUtils.sendOnColumnResize(contextView, dataColumns);
+    FrameLayout parent = (FrameLayout) contextView.getParent();
+    EventUtils.sendOnColumnResize(parent, dataColumns);
   }
 
 }

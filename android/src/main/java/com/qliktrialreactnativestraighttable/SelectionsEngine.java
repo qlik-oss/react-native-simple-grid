@@ -2,6 +2,7 @@ package com.qliktrialreactnativestraighttable;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
@@ -45,7 +46,8 @@ public class SelectionsEngine {
       array.pushString(selectionsString);
     }
     args.putArray("selections", array);
-    EventUtils.sendEventToJSFromView(contextView, "onSelectionsChanged", args);
+    FrameLayout parent = (FrameLayout) contextView.getParent();
+    EventUtils.sendEventToJSFromView(parent, "onSelectionsChanged", args);
   }
 
   public void clearSelections() {

@@ -3,6 +3,7 @@ package com.qliktrialreactnativestraighttable;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -36,7 +37,8 @@ public class ColumnWidthFactory {
 
     if (resized) {
       requestLayoutHeaderView();
-      EventUtils.sendOnColumnResize(contextView, this.columnList);
+      FrameLayout parent = (FrameLayout)contextView.getParent();
+      EventUtils.sendOnColumnResize(parent, this.columnList);
     }
   }
 
