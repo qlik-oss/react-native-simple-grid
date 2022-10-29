@@ -28,6 +28,8 @@ public class CellView extends LinearLayout implements SelectionsObserver {
       content = new ClickableTextView(context, selectionsEngine, scrollView);
     } else if(type.equals("image")) {
       content = new ClickableImageView(context, selectionsEngine, scrollView, this);
+    } else if(type.equals("miniChart")) {
+      content = new MiniChartView(context);
     }
     this.scrollView = scrollView;
     this.selectionsEngine = selectionsEngine;
@@ -95,7 +97,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
 
   public void onRecycled() {
     DataCell cell = content.getCell();
-    if (cell.isDim) {
+    if (cell != null && cell.isDim) {
       selectionsEngine.remove(this);
     }
   }

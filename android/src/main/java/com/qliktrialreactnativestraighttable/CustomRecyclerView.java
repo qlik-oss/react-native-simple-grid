@@ -3,6 +3,8 @@ package com.qliktrialreactnativestraighttable;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -70,7 +72,8 @@ public class CustomRecyclerView extends RecyclerView {
         && dataProvider.needsMore()) {
         // start the fetch
         dataProvider.setLoading(true);
-        EventUtils.sendEventToJSFromView(scrollView, "onEndReached");
+        FrameLayout parent = (FrameLayout) scrollView.getParent();
+        EventUtils.sendEventToJSFromView(parent, "onEndReached");
       }
     }
   }

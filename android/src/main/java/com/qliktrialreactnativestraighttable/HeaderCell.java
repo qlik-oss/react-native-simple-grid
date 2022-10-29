@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.MotionEvent;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
@@ -42,12 +43,13 @@ public class HeaderCell extends androidx.appcompat.widget.AppCompatTextView {
     if(column.sortDirection == null && column.active) {
       return;
     }
-    EventUtils.sendOnHeaderTapped(scrollView, column);
-    
+    FrameLayout parent = (FrameLayout)scrollView.getParent();
+    EventUtils.sendOnHeaderTapped(parent, column);
+
   }
 
   public void handleDown() {
-    if(column.sortDirection == null && column.active) { 
+    if(column.sortDirection == null && column.active) {
       return;
     }
     this.setBackgroundColor(Color.LTGRAY);
