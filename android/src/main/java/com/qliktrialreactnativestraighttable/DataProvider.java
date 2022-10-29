@@ -1,29 +1,20 @@
 package com.qliktrialreactnativestraighttable;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.facebook.react.bridge.ReadableMapKeySetIterator;
-
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,13 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
-
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 
+@SuppressLint("NotifyDataSetChanged")
 public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   public static Set<String> imagePaths = new HashSet<>();
   public static Map<String, Bitmap> imageData = new HashMap<>();
@@ -45,18 +34,24 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   private final int FONT_SIZE = 14;
   private final int VIEW_TYPE_ITEM = 0;
   private final int VIEW_TYPE_LOADING = 1;
+  final SelectionsEngine selectionsEngine;
   boolean isDataView = false;
   List<DataRow> rows = null;
   List<DataColumn> dataColumns = null;
   Set<RowViewHolder> cachedViewHolders = new HashSet<>();
   Set<RowViewHolder> cachedFirstColumnViewHolders = new HashSet<>();
-
-  SelectionsEngine selectionsEngine = null;
+  ColumnWidths columnWidths;
   DataSize dataSize = null;
   boolean loading = false;
-  Boolean isFirstColumnFrozen = null;
-  CustomHorizontalScrollView scrollView;
-  public final float minWidth = PixelUtils.dpToPx(40);
+  Boolean isFirstColumnFrozen = false;
+  final TableView tableView;
+  public static final float minWidth = PixelUtils.dpToPx(80);
+
+  public DataProvider(ColumnWidths columnWidths, SelectionsEngine selectionsEngine, TableView tableView) {
+    this.columnWidths = columnWidths;
+    this.selectionsEngine = selectionsEngine;
+    this.tableView = tableView;
+  }
 
   public boolean isLoading() {
     return loading;
@@ -149,21 +144,21 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       int numColumns = recyclerView.firstColumnOnly ? 1 : dataColumns.size();
       for (int i = 0; i < numColumns; i++) {
         DataColumn column = dataColumns.get(i);
-        int width = column.width;
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, TableTheme.rowHeight);
+        float width = column.width;
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams((int)width, TableTheme.rowHeight);
 
         if (column.representation.type.equals("image")) {
           RelativeLayout wrapper = new RelativeLayout(parent.getContext());
-          CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.scrollView);
+          CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.tableView);
           RelativeLayout.LayoutParams cellLayoutParams = new RelativeLayout.LayoutParams(-1,-1);
           wrapper.addView(cellView, cellLayoutParams);
           rowView.addView(wrapper, layoutParams);
         } else if(column.representation.type.equals("miniChart")) {
-          CellView cellView = new CellView(parent.getContext(), "miniChart", this.selectionsEngine, this.scrollView);
+          CellView cellView = new CellView(parent.getContext(), "miniChart", this.selectionsEngine, this.tableView);
 
           rowView.addView(cellView);
         } else {
-          CellView cellView = new CellView(parent.getContext(), "text", this.selectionsEngine, this.scrollView);
+          CellView cellView = new CellView(parent.getContext(), "text", this.selectionsEngine, this.tableView);
           ClickableTextView textView = (ClickableTextView) cellView.content;
 
           textView.setMaxLines(NUM_LINES);
@@ -244,10 +239,6 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
   }
 
-  public boolean ready() {
-    return this.rows != null && dataSize != null && this.dataColumns != null && this.isFirstColumnFrozen != null;
-  }
-
   public int getItemViewType(int position) {
     return this.rows.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
   }
@@ -281,6 +272,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     dataColumns.get(column).width += (int)deltaWidth;
 
+    columnWidths.updateWidths();
     return true;
   }
 
@@ -293,9 +285,18 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
   }
 
-  public void onEndPan(CustomHorizontalScrollView contextView) {
-    FrameLayout parent = (FrameLayout) contextView.getParent();
-    EventUtils.sendOnColumnResize(parent, dataColumns);
+  public void onEndPan() {
+    columnWidths.syncWidths();
+  }
+
+  public void invalidateLayout() {
+    for(DataColumn column : dataColumns) {
+      for (RecyclerView.ViewHolder holder : cachedViewHolders) {
+        RowViewHolder viewHolder = (RowViewHolder) holder;
+        viewHolder.setWidth(column.width, column.dataColIdx);
+      }
+    }
+    this.notifyDataSetChanged();
   }
 
 }

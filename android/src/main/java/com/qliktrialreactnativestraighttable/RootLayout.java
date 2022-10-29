@@ -5,9 +5,12 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 public class RootLayout extends FrameLayout {
-  RootLayout(Context context) {
+  final ColumnWidths columnWidths;
+  RootLayout(Context context, ColumnWidths columnWidths) {
     super(context);
+    this.columnWidths = columnWidths;
   }
+
 
   @Override
   public void requestLayout() {
@@ -18,10 +21,13 @@ public class RootLayout extends FrameLayout {
   private final Runnable measureAndLayout = new Runnable() {
     @Override
     public void run() {
+
       measure(
-        MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+        MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.UNSPECIFIED),
         MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
-      layout(getLeft(), getTop(), getRight(), getBottom());
+      int l = getLeft();
+      int r = l + (int)columnWidths.getTotalWidth() + getPaddingRight();
+      layout(getLeft(), getTop(), r, getBottom());
     }
   };
 }

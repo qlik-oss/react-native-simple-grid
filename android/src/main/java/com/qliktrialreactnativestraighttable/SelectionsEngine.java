@@ -1,5 +1,6 @@
 package com.qliktrialreactnativestraighttable;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -26,7 +27,7 @@ public class SelectionsEngine {
     observers.remove(observer);
   }
 
-  public void selectionsChanged(CustomHorizontalScrollView contextView, String s) {
+  public void selectionsChanged(View contextView, String s) {
     String key = getKeyFrom(s);
     if(selections.containsKey(key)) {
       selections.remove(key);
@@ -46,8 +47,7 @@ public class SelectionsEngine {
       array.pushString(selectionsString);
     }
     args.putArray("selections", array);
-    FrameLayout parent = (FrameLayout) contextView.getParent();
-    EventUtils.sendEventToJSFromView(parent, "onSelectionsChanged", args);
+    EventUtils.sendEventToJSFromView(contextView, "onSelectionsChanged", args);
   }
 
   public void clearSelections() {
@@ -62,6 +62,7 @@ public class SelectionsEngine {
     return selections.containsKey(key);
   }
 
+  @SuppressLint("DefaultLocale")
   static String getSignatureFrom(DataCell cell) {
     return String.format("/%d/%d/%d", cell.qElemNumber, cell.colIdx, cell.rowIdx);
   }
@@ -71,6 +72,7 @@ public class SelectionsEngine {
     return string.substring(0, index);
   }
 
+  @SuppressLint("DefaultLocale")
   static String getKeyFrom(DataCell cell) {
     return String.format("/%d/%d", cell.qElemNumber, cell.colIdx);
   }

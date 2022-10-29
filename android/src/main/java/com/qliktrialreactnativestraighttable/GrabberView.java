@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -31,8 +32,8 @@ public class GrabberView extends LinearLayout {
   CustomRecyclerView recyclerView;
   CustomRecyclerView firstColumnRecyclerView;
   HeaderCell firstColumnHeader;
-  final FrameLayout rootView;
   ScreenGuideView screenGuideView = null;
+  RootLayout rootLayout = null;
   private final int column;
   private boolean isLastColumn = false;
   boolean pressed = false;
@@ -59,21 +60,14 @@ public class GrabberView extends LinearLayout {
         case MotionEvent.ACTION_MOVE: {
           float x = motionEvent.getRawX() + dX;
           float motionDx = motionEvent.getRawX() - lastX;
-
-          motionDx = Math.round(motionDx);
+          motionDx = (float) Math.round(motionDx);
           if (dataProvider.updateWidth(motionDx, GrabberView.this.column)) {
             GrabberView.this.setTranslationX(x);
             GrabberView.this.updateHeader(motionDx);
-
-            if(rootView != null && firstColumnHeader != null && firstColumnRecyclerView != null) {
-              int headerHeight = firstColumnHeader.getMeasuredHeight();
-              int rootHeight = rootView.getMeasuredHeight();
-              firstColumnRecyclerView.layout(0, TableTheme.headerHeight, dataProvider.dataColumns.get(0).width - 5, rootHeight - TableView.SCROLL_THUMB_HEIGHT);
-              firstColumnHeader.layout(0, 0, dataProvider.dataColumns.get(0).width, headerHeight);
-            }
-
+            GrabberView.this.updateFirstColumnHeader(motionDx);
             lastX = motionEvent.getRawX();
-            if(column == dataProvider.dataColumns.size() - 1 && motionDx > 0) {
+            if(isLastColumn && motionDx > 0) {
+              GrabberView.this.rootLayout.requestLayout();
               GrabberView.this.recyclerView.requestLayout();
               GrabberView.this.scrollView.updateLayout();
               GrabberView.this.scrollView.scrollBy((int) motionDx, 0);
@@ -88,7 +82,12 @@ public class GrabberView extends LinearLayout {
           GrabberView.this.scrollView.requestDisallowInterceptTouchEvent(false);
           GrabberView.this.scrollView.updateLayout();
           GrabberView.this.recyclerView.requestLayout();
-          GrabberView.this.dataProvider.onEndPan(scrollView);
+          GrabberView.this.rootLayout.requestLayout();
+          if(GrabberView.this.firstColumnRecyclerView != null) {
+            firstColumnRecyclerView.requestLayout();
+          }
+          GrabberView.this.dataProvider.onEndPan();
+          GrabberView.this.postInvalidate();
           if(screenGuideView != null) {
             screenGuideView.fade(1, 0);
           }
@@ -104,11 +103,10 @@ public class GrabberView extends LinearLayout {
     }
   }
 
-  public GrabberView(int column, Context context, CustomHorizontalScrollView scrollView, FrameLayout rootView) {
+  public GrabberView(int column, Context context, CustomHorizontalScrollView scrollView ) {
     super(context);
     this.column = column;
     this.scrollView = scrollView;
-    this.rootView = rootView;
     grabberButton = new GrabberButton(this);
     grabberButton.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight));
     this.addView(grabberButton);
@@ -126,13 +124,17 @@ public class GrabberView extends LinearLayout {
 
   @Override
   protected void onDraw(Canvas canvas) {
-    super.onDraw(canvas);
-    if (isLastColumn && !pressed) {
-      return;
+    int width = getWidth() / 2;
+    int top = 0;
+    int height = getHeight() - top;
+    if(firstColumnHeader != null && this.column == 0) {
+      if(this.pressed) {
+        canvas.drawLine(width, top, width, height, linePaint);
+      } else  {
+        return;
+      }
     }
-    int width = canvas.getWidth() / 2;
-    int top = isLastColumn && !pressed ? (TableTheme.headerHeight) : 0;
-    canvas.drawLine(width, top, width, canvas.getHeight() - top, linePaint);
+    canvas.drawLine(width, top, width, height, linePaint);
   }
 
   public void setFirstColumnHeader(HeaderCell cell) {
@@ -169,15 +171,16 @@ public class GrabberView extends LinearLayout {
   }
 
   public void updateHeader(float dxMotion) {
-    if(column == 0 && rootView != null) {
-      View view = rootView.getChildAt(column);
-      resizeView(view, dxMotion);
-      updateChildren(rootView, dxMotion);
-    }
     View view = headerView.getChildAt(column);
     resizeView(view, dxMotion);
     updateNeighbour(headerView, dxMotion);
     updateFooter(dxMotion);
+  }
+
+  public void updateFirstColumnHeader(float dxMotion) {
+    if(firstColumnHeader != null && column == 0) {
+      resizeView(firstColumnHeader, dxMotion);
+    }
   }
 
   public void updateChildren(ViewGroup container, float dxMotion) {
@@ -206,5 +209,9 @@ public class GrabberView extends LinearLayout {
     ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
     layoutParams.width += dxMotion;
     view.setLayoutParams(layoutParams);
+  }
+
+  public void updateLayout() {
+    this.setElevation(PixelUtils.dpToPx(5));
   }
 }

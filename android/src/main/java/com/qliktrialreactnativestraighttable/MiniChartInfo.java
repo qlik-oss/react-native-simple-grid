@@ -43,6 +43,14 @@ public class MiniChartInfo {
     public MiniChartColor positive;
     public MiniChartColor main;
     public ChartColors(ReadableMap data) {
+      resetChartColors(data);
+    }
+
+    MiniChartColor getMiniChartColor(String name, ReadableMap data) {
+      return  data.hasKey(name) ? new MiniChartColor(data.getMap(name)) : null;
+    }
+
+    public void resetChartColors(ReadableMap data) {
       first = getMiniChartColor("first", data);
       last = getMiniChartColor("last", data);
       min = getMiniChartColor("min", data);
@@ -50,10 +58,6 @@ public class MiniChartInfo {
       negative = getMiniChartColor("negative", data);
       positive = getMiniChartColor("positive", data);
       main = getMiniChartColor("main", data);
-    }
-
-    MiniChartColor getMiniChartColor(String name, ReadableMap data) {
-      return  data.hasKey(name) ? new MiniChartColor(data.getMap(name)) : null;
     }
   }
 

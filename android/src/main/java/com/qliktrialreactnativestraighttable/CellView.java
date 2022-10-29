@@ -17,21 +17,22 @@ import android.widget.RelativeLayout;
 public class CellView extends LinearLayout implements SelectionsObserver {
   Content content = null;
   final SelectionsEngine selectionsEngine;
+  final TableView tableView;
   GestureDetector gestureDetector;
-  final CustomHorizontalScrollView scrollView;
+
   int padding = (int)PixelUtils.dpToPx(16);
 
-  CellView(Context context, String type, SelectionsEngine selectionsEngine, CustomHorizontalScrollView scrollView) {
+  CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView) {
     super(context);
+    this.tableView = tableView;
     this.setPadding(padding, 0, padding, 0);
     if(type.equals("text")) {
-      content = new ClickableTextView(context, selectionsEngine, scrollView);
+      content = new ClickableTextView(context, selectionsEngine, tableView);
     } else if(type.equals("image")) {
-      content = new ClickableImageView(context, selectionsEngine, scrollView, this);
+      content = new ClickableImageView(context, selectionsEngine, tableView, this);
     } else if(type.equals("miniChart")) {
       content = new MiniChartView(context);
     }
-    this.scrollView = scrollView;
     this.selectionsEngine = selectionsEngine;
     gestureDetector = new GestureDetector(getContext(), new CellView.SingleTapListener());
     content.setGestureDetector(gestureDetector);
@@ -50,12 +51,6 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     this.addView(contentView);
   }
 
-  @Override
-  protected void onDraw(Canvas canvas) {
-    super.onDraw(canvas);
-    this.getChildAt(0).invalidate();
-  }
-
   private void copyCell(Context context){
     DataCell cell = content.getCell();
     ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -69,6 +64,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
       selectionsEngine.observe(this);
       content.setSelected(selectionsEngine.contains(cell));
       content.updateBackgroundColor();
+      postInvalidate();
     }
   }
 
@@ -76,7 +72,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     DataCell cell = content.getCell();
     if (cell.isDim) {
       String selection = SelectionsEngine.getSignatureFrom(cell);
-      selectionsEngine.selectionsChanged(this.scrollView, selection);
+      selectionsEngine.selectionsChanged(this.tableView, selection);
     }
   }
 
