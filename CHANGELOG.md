@@ -1,3 +1,10 @@
+# [1.1.0-alpha.37](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.36...v1.1.0-alpha.37) (2022-10-29)
+
+
+### Features
+
+* barchart ([#99](https://github.com/qlik-oss/react-native-simple-grid/issues/99)) ([ac7ab23](https://github.com/qlik-oss/react-native-simple-grid/commit/ac7ab23e13d031f701bde9eea6cc9b1664dee242))
+
 # [1.1.0-alpha.36](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.35...v1.1.0-alpha.36) (2022-10-27)
 
 
