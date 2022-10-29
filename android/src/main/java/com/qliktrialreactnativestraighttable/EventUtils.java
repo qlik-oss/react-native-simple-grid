@@ -16,7 +16,7 @@ import org.json.JSONException;
 import java.util.List;
 
 public class EventUtils {
-  public static void sendEventToJSFromView(FrameLayout contextView, String eventName) {
+  public static void sendEventToJSFromView(View contextView, String eventName) {
     if (contextView != null) {
       WritableMap event = Arguments.createMap();
       ReactContext context = (ReactContext) contextView.getContext();
@@ -24,7 +24,7 @@ public class EventUtils {
       context.getJSModule(RCTEventEmitter.class).receiveEvent(contextView.getId(), eventName, event);
     }
   }
-  public static void sendEventToJSFromView(FrameLayout contextView, String eventName, WritableMap event) {
+  public static void sendEventToJSFromView(View contextView, String eventName, WritableMap event) {
     if (contextView != null) {
       ReactContext context = (ReactContext) contextView.getContext();
       // here the documentation is still using the old receiveEvent, so not sure what to use????
@@ -32,17 +32,7 @@ public class EventUtils {
     }
   }
 
-  public static void sendOnColumnResize(FrameLayout contextView, List<DataColumn> dataColumns) {
-    WritableArray widths = Arguments.createArray();
-    for(int i = 0; i < dataColumns.size(); i++) {
-      widths.pushDouble(PixelUtils.pxToDp(dataColumns.get(i).width));
-    }
-    WritableMap event = Arguments.createMap();
-    event.putArray("widths", widths);
-    EventUtils.sendEventToJSFromView(contextView, "onColumnsResized", event);
-  }
-
-  public static void sendOnHeaderTapped(FrameLayout contextView, DataColumn column) {
+  public static void sendOnHeaderTapped(View contextView, DataColumn column) {
     WritableMap event = Arguments.createMap();
     try {
       String columnJSONString = column.toEvent();

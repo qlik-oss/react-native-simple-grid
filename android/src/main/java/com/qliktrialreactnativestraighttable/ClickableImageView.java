@@ -18,12 +18,12 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   String scaleType = null;
   final SelectionsEngine selectionsEngine;
   GestureDetector gestureDetector;
-  final CustomHorizontalScrollView scrollView;
+  final TableView tableView;
   final CellView cellView;
 
-  ClickableImageView(Context context, SelectionsEngine selectionsEngine, CustomHorizontalScrollView scrollView, CellView cellView) {
+  ClickableImageView(Context context, SelectionsEngine selectionsEngine, TableView tableView, CellView cellView) {
     super(context);
-    this.scrollView = scrollView;
+    this.tableView = tableView;
     this.selectionsEngine = selectionsEngine;
     this.cellView = cellView;
   }
@@ -49,7 +49,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     ViewGroup parent = (ViewGroup) cellView.getParent();
     ViewGroup.LayoutParams layout = parent.getLayoutParams();
     layout.height = TableTheme.rowHeight;
-    layout.width = column.width;
+    layout.width = (int)column.width;
     parent.setLayoutParams(layout);
     this.setScaleType(ScaleType.FIT_XY);
     scaleType = "stretchToFit";
@@ -78,18 +78,18 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
 
     ViewGroup parent = (ViewGroup) cellView.getParent();
     RelativeLayout.LayoutParams layout = (RelativeLayout.LayoutParams) parent.getLayoutParams();
-    layout.width = column.width;
+    layout.width = (int)column.width;
     layout.height = Math.round(column.width * aspectRatioMultiplier);
     parent.setLayoutParams(layout);
 
     ViewGroup grandparent = (ViewGroup) parent.getParent();
     ViewGroup.LayoutParams grandparentLayout = grandparent.getLayoutParams();
-    grandparentLayout.width = column.width;
+    grandparentLayout.width = (int)column.width;
     grandparentLayout.height = Math.round(column.width * aspectRatioMultiplier);
     grandparent.setLayoutParams(grandparentLayout);
     this.setScaleType(ScaleType.FIT_XY);
 
-    parent.setMinimumWidth(column.width);
+    parent.setMinimumWidth((int)column.width);
     parent.setMinimumHeight(Math.round(column.width * aspectRatioMultiplier));
     scaleType = "fitToWidth";
   }

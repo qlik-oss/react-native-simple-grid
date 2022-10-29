@@ -36,10 +36,7 @@ public class HeaderViewFactory {
   List<TotalsCell> totalsCells = new ArrayList<>();
   HeaderView headerView = null;
   AutoLinearLayout footerView = null;
-  FrameLayout rootView;
-  CustomHorizontalScrollView scrollView;
-  final TableView tableView;
-
+  TableView tableView;
   public AutoLinearLayout getFooterView() {
     return footerView;
   }
@@ -52,50 +49,25 @@ public class HeaderViewFactory {
     return dataColumns;
   }
 
-  HeaderViewFactory(ReadableArray readableArray, CustomHorizontalScrollView scrollView, FrameLayout rootView, TableView tableView) {
-    this.scrollView = scrollView;
-    this.rootView = rootView;
-    this.tableView = tableView;
-    if (readableArray != null) {
-      for(int i = 0; i < readableArray.size(); i++) {
-        DataColumn column = new DataColumn(readableArray.getMap(i));
-        dataColumns.add(column);
-      }
-    }
-  }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  public HeaderViewFactory(ReadableArray readableArray, ReadableArray footerArray,  CustomHorizontalScrollView scrollView, FrameLayout rootView, TableView tableView) {
-    Context context = tableView.getContext();
-    this.scrollView = scrollView;
-    this.rootView = rootView;
+  public HeaderViewFactory(List<DataColumn> dataColumns, TableView tableView,  Context context) {
     this.tableView = tableView;
-    if(readableArray != null) {
-      buildHeader(readableArray, context);
-    }
-    if(footerArray != null) {
-      buildFooter(footerArray, context);
-    }
+    this.dataColumns = dataColumns;
+    buildHeader(context);
   }
 
-  public HeaderViewFactory(HeaderView headerView, CustomHorizontalScrollView scrollView, TableView tableView) {
-    this.scrollView = scrollView;
-    this.headerView = headerView;
-    this.tableView = tableView;
-  }
-
-
-  public static HeaderCell buildFixedColumnCell(FrameLayout rootView, DataColumn column, CustomHorizontalScrollView scrollView) {
+  public static HeaderCell buildFixedColumnCell(FrameLayout rootView, DataColumn column, TableView tableView) {
     int padding = (int) PixelUtils.dpToPx(16);
 
-    HeaderCell fixedFirstHeaderCell = new HeaderCell(rootView.getContext(), column, scrollView);
+    HeaderCell fixedFirstHeaderCell = new HeaderCell(rootView.getContext(), column, tableView);
     fixedFirstHeaderCell.setMaxLines(1);
     fixedFirstHeaderCell.setTypeface(fixedFirstHeaderCell.getTypeface(), Typeface.BOLD);
     fixedFirstHeaderCell.setEllipsize(TextUtils.TruncateAt.END);
     fixedFirstHeaderCell.setTextColor(Color.BLACK);
     fixedFirstHeaderCell.setText(column.label);
     fixedFirstHeaderCell.setPadding(padding, 0, padding, 0);
-    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, TableTheme.headerHeight);
+    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int)column.width, TableTheme.headerHeight);
     fixedFirstHeaderCell.setTop(0);
     fixedFirstHeaderCell.setLeft(0);
     fixedFirstHeaderCell.setLayoutParams(layoutParams);
@@ -103,12 +75,11 @@ public class HeaderViewFactory {
     fixedFirstHeaderCell.setBackgroundColor(TableTheme.headerBackgroundColor);
     fixedFirstHeaderCell.setElevation((int)PixelUtils.dpToPx(4));
 
-    rootView.addView(fixedFirstHeaderCell);
     return fixedFirstHeaderCell;
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  private void buildHeader(ReadableArray readableArray, Context context) {
+  private void buildHeader(Context context) {
     int padding = (int) PixelUtils.dpToPx(16);
     int headerHeight = TableTheme.headerHeight;
     headerView = new HeaderView(context);
@@ -116,24 +87,24 @@ public class HeaderViewFactory {
     headerView.setOrientation(LinearLayout.HORIZONTAL);
     headerView.setElevation((int)PixelUtils.dpToPx(4));
     headerView.setBackgroundColor(TableTheme.headerBackgroundColor);
-    for(int i = 0; i < readableArray.size(); i++) {
-      ReadableMap columnMap = readableArray.getMap(i);
-      DataColumn column = new DataColumn(columnMap);
-      dataColumns.add(column);
+    for(int i = 0; i < dataColumns.size(); i++) {
 
-      TextView text = new HeaderCell(headerView.getContext(), column, this.scrollView);
+      DataColumn column = dataColumns.get(i);
+
+      TextView text = new HeaderCell(headerView.getContext(), column, this.tableView);
       text.setMaxLines(1);
       text.setTypeface(text.getTypeface(), Typeface.BOLD);
       text.setEllipsize(TextUtils.TruncateAt.END);
       text.setTextColor(Color.BLACK);
       text.setText(column.label);
       text.setPadding(padding, 0, padding, 0);
-      LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
+      LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int)column.width, ViewGroup.LayoutParams.MATCH_PARENT);
       text.setLayoutParams(layoutParams);
       text.setGravity(Gravity.CENTER_VERTICAL);
       headerView.addView(text);
     }
     headerView.setDataColumns(dataColumns);
+
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -166,7 +137,7 @@ public class HeaderViewFactory {
         }
       }
       text.setPadding(padding, padding, padding, padding);
-      text.setLayoutParams(new LinearLayout.LayoutParams(column.width, TableTheme.headerHeight));
+      text.setLayoutParams(new LinearLayout.LayoutParams((int)column.width, TableTheme.headerHeight));
       footerView.addView(text);
     }
   }
@@ -181,14 +152,14 @@ public class HeaderViewFactory {
   void readjustLayout(List<DataColumn> dataColumns, Context context) {
     headerView.removeAllViews();
     for(DataColumn column: dataColumns) {
-      TextView text = new HeaderCell(context, column, this.scrollView);
+      TextView text = new HeaderCell(context, column, this.tableView);
       int padding = (int) PixelUtils.dpToPx(16);
       text.setMaxLines(1);
       text.setTypeface(text.getTypeface(), Typeface.BOLD);
       text.setEllipsize(TextUtils.TruncateAt.END);
       text.setText(column.label);
       text.setPadding(padding, padding, padding, padding);
-      text.setLayoutParams(new LinearLayout.LayoutParams(column.width, TableTheme.headerHeight));
+      text.setLayoutParams(new LinearLayout.LayoutParams((int)column.width, TableTheme.headerHeight));
       headerView.addView(text);
     }
     headerView.setBackgroundColor(TableTheme.headerBackgroundColor);

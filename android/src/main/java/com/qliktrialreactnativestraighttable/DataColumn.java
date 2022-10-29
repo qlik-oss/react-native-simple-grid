@@ -14,7 +14,7 @@ import java.util.List;
 public class DataColumn {
 
   public Boolean isDim = false;
-  public int width = 200;
+  public int width = 0;
   public String label;
   public String id;
   public String align;
@@ -30,13 +30,11 @@ public class DataColumn {
     stylingInfo = source.getArray("stylingInfo").toArrayList();
 
     isDim = source.getBoolean("isDim");
-    width = source.getInt("width");
     label = source.getString("label");
     id = source.getString("id");
     align = source.getString("align");
     sortDirection = source.getString("sortDirection");
     dataColIdx = source.getInt("dataColIdx");
-    width = (int)PixelUtils.dpToPx(width);
     if (source.hasKey("active")) {
       active = source.getBoolean("active");
     }

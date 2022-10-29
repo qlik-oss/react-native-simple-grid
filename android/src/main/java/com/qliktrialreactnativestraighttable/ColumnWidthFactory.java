@@ -37,8 +37,8 @@ public class ColumnWidthFactory {
 
     if (resized) {
       requestLayoutHeaderView();
-      FrameLayout parent = (FrameLayout)contextView.getParent();
-      EventUtils.sendOnColumnResize(parent, this.columnList);
+//      FrameLayout parent = (FrameLayout)contextView.getParent();
+//      EventUtils.sendOnColumnResize(parent, this.columnList);
     }
   }
 
@@ -59,9 +59,9 @@ public class ColumnWidthFactory {
   }
 
   private void requestLayoutHeaderView() {
-    if (this.headerView != null) {
-     HeaderViewFactory headerViewFactory = new HeaderViewFactory(this.headerView, this.scrollView, this.tableView);
-     headerViewFactory.readjustLayout(columnList, this.parentContext);
-    }
+//    if (this.headerView != null) {
+//     HeaderViewFactory headerViewFactory = new HeaderViewFactory(this.headerView, this.scrollView, this.tableView);
+//     headerViewFactory.readjustLayout(columnList, this.parentContext);
+//    }
   }
 }

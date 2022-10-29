@@ -15,16 +15,16 @@ import androidx.recyclerview.widget.RecyclerView;
 public class CustomRecyclerView extends RecyclerView {
   final LinearLayoutManager linearLayout;
   final DataProvider dataProvider;
-  final CustomHorizontalScrollView scrollView;
+  final TableView tableView;
   public boolean firstColumnOnly = false;
   public boolean active = false;
   public CustomRecyclerView scrollCoupledView = null;
 
-  public CustomRecyclerView(Context context, boolean onlyFirstColumn, DataProvider dp, CustomHorizontalScrollView sv, LinearLayoutManager ll) {
+  public CustomRecyclerView(Context context, boolean onlyFirstColumn, DataProvider dp, TableView tv, LinearLayoutManager ll) {
     super(context);
     firstColumnOnly = onlyFirstColumn;
     dataProvider = dp;
-    scrollView = sv;
+    tableView = tv;
     linearLayout = ll;
 
     DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
@@ -72,8 +72,7 @@ public class CustomRecyclerView extends RecyclerView {
         && dataProvider.needsMore()) {
         // start the fetch
         dataProvider.setLoading(true);
-        FrameLayout parent = (FrameLayout) scrollView.getParent();
-        EventUtils.sendEventToJSFromView(parent, "onEndReached");
+        EventUtils.sendEventToJSFromView(tableView, "onEndReached");
       }
     }
   }

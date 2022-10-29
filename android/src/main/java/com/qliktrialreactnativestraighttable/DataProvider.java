@@ -45,18 +45,24 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   private final int FONT_SIZE = 14;
   private final int VIEW_TYPE_ITEM = 0;
   private final int VIEW_TYPE_LOADING = 1;
+  final SelectionsEngine selectionsEngine;
   boolean isDataView = false;
   List<DataRow> rows = null;
   List<DataColumn> dataColumns = null;
   Set<RowViewHolder> cachedViewHolders = new HashSet<>();
   Set<RowViewHolder> cachedFirstColumnViewHolders = new HashSet<>();
-
-  SelectionsEngine selectionsEngine = null;
+  ColumnWidths columnWidths;
   DataSize dataSize = null;
   boolean loading = false;
-  Boolean isFirstColumnFrozen = null;
-  CustomHorizontalScrollView scrollView;
+  Boolean isFirstColumnFrozen = false;
+  final TableView tableView;
   public final float minWidth = PixelUtils.dpToPx(40);
+
+  public DataProvider(ColumnWidths columnWidths, SelectionsEngine selectionsEngine, TableView tableView) {
+    this.columnWidths = columnWidths;
+    this.selectionsEngine = selectionsEngine;
+    this.tableView = tableView;
+  }
 
   public boolean isLoading() {
     return loading;
@@ -149,21 +155,21 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       int numColumns = recyclerView.firstColumnOnly ? 1 : dataColumns.size();
       for (int i = 0; i < numColumns; i++) {
         DataColumn column = dataColumns.get(i);
-        int width = column.width;
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, TableTheme.rowHeight);
+        float width = column.width;
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams((int)width, TableTheme.rowHeight);
 
         if (column.representation.type.equals("image")) {
           RelativeLayout wrapper = new RelativeLayout(parent.getContext());
-          CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.scrollView);
+          CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.tableView);
           RelativeLayout.LayoutParams cellLayoutParams = new RelativeLayout.LayoutParams(-1,-1);
           wrapper.addView(cellView, cellLayoutParams);
           rowView.addView(wrapper, layoutParams);
         } else if(column.representation.type.equals("miniChart")) {
-          CellView cellView = new CellView(parent.getContext(), "miniChart", this.selectionsEngine, this.scrollView);
+          CellView cellView = new CellView(parent.getContext(), "miniChart", this.selectionsEngine, this.tableView);
 
           rowView.addView(cellView);
         } else {
-          CellView cellView = new CellView(parent.getContext(), "text", this.selectionsEngine, this.scrollView);
+          CellView cellView = new CellView(parent.getContext(), "text", this.selectionsEngine, this.tableView);
           ClickableTextView textView = (ClickableTextView) cellView.content;
 
           textView.setMaxLines(NUM_LINES);
@@ -281,6 +287,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     dataColumns.get(column).width += (int)deltaWidth;
 
+    columnWidths.updateWidths();
     return true;
   }
 
@@ -294,8 +301,19 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   }
 
   public void onEndPan(CustomHorizontalScrollView contextView) {
-    FrameLayout parent = (FrameLayout) contextView.getParent();
-    EventUtils.sendOnColumnResize(parent, dataColumns);
+//    FrameLayout parent = (FrameLayout) contextView.getParent();
+//    EventUtils.sendOnColumnResize(parent, dataColumns);
   }
+
+  public void updateAllWidths() {
+    columnWidths.updateWidths();
+    for(DataColumn column: dataColumns ) {
+      for(RecyclerView.ViewHolder holder : cachedViewHolders) {
+        RowViewHolder viewHolder = (RowViewHolder) holder;
+        viewHolder.setWidth((int)column.width, column.dataColIdx) ;
+      }
+    }
+  }
+
 
 }

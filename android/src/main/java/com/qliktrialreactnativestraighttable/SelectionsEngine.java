@@ -26,7 +26,7 @@ public class SelectionsEngine {
     observers.remove(observer);
   }
 
-  public void selectionsChanged(CustomHorizontalScrollView contextView, String s) {
+  public void selectionsChanged(View contextView, String s) {
     String key = getKeyFrom(s);
     if(selections.containsKey(key)) {
       selections.remove(key);
@@ -46,8 +46,7 @@ public class SelectionsEngine {
       array.pushString(selectionsString);
     }
     args.putArray("selections", array);
-    FrameLayout parent = (FrameLayout) contextView.getParent();
-    EventUtils.sendEventToJSFromView(parent, "onSelectionsChanged", args);
+    EventUtils.sendEventToJSFromView(contextView, "onSelectionsChanged", args);
   }
 
   public void clearSelections() {
