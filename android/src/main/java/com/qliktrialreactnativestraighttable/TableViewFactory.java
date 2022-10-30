@@ -172,7 +172,8 @@ public class TableViewFactory {
       this.coupledRecyclerView.requestLayout();
 
       updateGrabbers();
-      
+      updateScreenGuide();
+
       this.rootLayout.requestLayout();
       this.scrollView.requestLayout();
     }
@@ -192,5 +193,11 @@ public class TableViewFactory {
         grabberView.setTranslationX(startOffset);
       }
     }
+  }
+
+  private void updateScreenGuide() {
+    ViewGroup.LayoutParams params = screenGuideView.getLayoutParams();
+    params.width = tableView.getWidth();
+    screenGuideView.setLayoutParams(params);
   }
 }
