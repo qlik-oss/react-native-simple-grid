@@ -1,13 +1,19 @@
 package com.qliktrialreactnativestraighttable;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import androidx.annotation.RequiresApi;
+
+import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.views.text.ReactFontManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +40,9 @@ public class TableView extends FrameLayout {
   final TableViewFactory tableViewFactory;
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  TableView(Context context) {
+  TableView(ThemedReactContext context) {
     super(context);
+    TableTheme.iconFonts = ReactFontManager.getInstance().getTypeface("fontello", 0, context.getAssets());
     columnWidths = new ColumnWidths(this.getContext());
     dataProvider = new DataProvider(columnWidths, selectionsEngine, this);
     tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider);

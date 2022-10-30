@@ -24,6 +24,7 @@ public class DataCell {
   boolean isNumber;
   int textGravity = Gravity.LEFT;
   qMiniChart miniChart;
+  Indicator indicator;
   public DataCell(ReadableMap source, DataColumn column) {
     qText = source.getString("qText");
     qElemNumber =  source.getInt("qElemNumber");
@@ -53,7 +54,7 @@ public class DataCell {
       }
     }
     miniChart = source.hasKey("qMiniChart") ? new qMiniChart(source.getMap("qMiniChart")) : null;
-
+    indicator = source.hasKey("indicator") ? new Indicator(source.getMap("indicator")) : null;
   }
 
 }

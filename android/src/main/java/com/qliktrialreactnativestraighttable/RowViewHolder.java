@@ -59,15 +59,17 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         miniChartView.setData(cell, column);
       } else {
         CellView cellView = (CellView) row.getChildAt(columnIndex);
-        cellView.setData(cell);
         ClickableTextView textView = (ClickableTextView) cellView.content;
 
         LinearLayout.LayoutParams textViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(textViewLayoutParams);
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams((int)column.width, TableTheme.rowHeight);
         cellView.setLayoutParams(cellViewLayoutParams);
+        if(column.representation.type.equals("text")) {
+          cell.indicator = null;
+        }
+        cellView.setData(cell);
 
-        textView.setText(cell.qText);
         textView.setGravity(cell.textGravity | Gravity.CENTER_VERTICAL);
       }
     }
