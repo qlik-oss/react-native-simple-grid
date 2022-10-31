@@ -84,14 +84,23 @@ public class ColumnWidths {
     Paint paint = new Paint();
     for(DataRow row : rows) {
       if (row != null) {
-        runningTotal += row.cells.get(column.dataColIdx).qText.length();
+        String text = row.cells.get(column.dataColIdx).qText;
+        if(text != null) {
+          runningTotal += text.length();
+        }
+        else {
+          // give it something
+          runningTotal += DataProvider.minWidth;
+        }
       }
     }
     int averageTextSize = runningTotal / rows.size();
     // Create a string with max text
     String tempString = new String(new char[averageTextSize]).replace("\0", "X");
     float width = paint.measureText(tempString, 0, tempString.length());
-    return Math.max((int) DataProvider.minWidth, (int)PixelUtils.dpToPx(width));
+    width = Math.max(DataProvider.minWidth * 1.5f, PixelUtils.dpToPx(width));
+    // cast later since this is the equiv of a floor.
+    return (int)width;
   }
 
   public void updateWidths(List<DataColumn> columns) {
