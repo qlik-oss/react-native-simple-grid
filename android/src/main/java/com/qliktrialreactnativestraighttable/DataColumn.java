@@ -1,5 +1,8 @@
 package com.qliktrialreactnativestraighttable;
 
+import android.view.Gravity;
+import android.view.View;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -17,26 +20,46 @@ public class DataColumn {
   public int width = 0;
   public String label;
   public String id;
-  public String align;
   public String sortDirection;
   public Representation representation;
   public List<Object> stylingInfo;
+  public String align;
   public int dataColIdx = 0;
   public boolean active = false;
-
+  public int textAlignment = Gravity.LEFT;
   public DataColumn(ReadableMap source) {
     ReadableMap representationMap = source.getMap("representation");
     representation = new Representation(representationMap);
     stylingInfo = source.getArray("stylingInfo").toArrayList();
-
+    align = source.getString("align");
     isDim = source.getBoolean("isDim");
     label = source.getString("label");
     id = source.getString("id");
-    align = source.getString("align");
     sortDirection = source.getString("sortDirection");
     dataColIdx = source.getInt("dataColIdx");
     if (source.hasKey("active")) {
       active = source.getBoolean("active");
+    }
+    setupTextAlign();
+  }
+
+  private void setupTextAlign() {
+    if( align == null) {
+      textAlignment = isDim ? Gravity.LEFT : Gravity.RIGHT;
+    } else {
+      switch (align) {
+        case "left":
+          textAlignment = Gravity.LEFT;
+          break;
+        case "center":
+          textAlignment = Gravity.CENTER;
+          break;
+        case "right":
+          textAlignment = Gravity.RIGHT;
+          break;
+        default:
+          break;
+      }
     }
   }
 

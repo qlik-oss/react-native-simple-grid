@@ -45,9 +45,7 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
 
     @ReactProp(name = "theme")
     public void setTheme(View view, ReadableMap theme) {
-      TableTheme.from(theme);
-      TableView tableView = (TableView) view;
-      tableView.updateTheme();
+
     }
 
     @ReactProp(name = "freezeFirstColumn")
@@ -110,6 +108,20 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
     public void setName(View view, String value) {
       TableView tableView =(TableView) view;
       tableView.setName(value);
+    }
+
+    @ReactProp(name = "headerContentStyle")
+    public void setHeaderContentStyle(View view, ReadableMap source) {
+      HeaderContentStyle headerContentStyle = new HeaderContentStyle(source);
+      TableView tableView = (TableView) view;
+      tableView.setHeaderStyle(headerContentStyle);
+    }
+
+    @ReactProp(name = "cellContentStyle")
+    public void setCellContentStyle(View view, ReadableMap source) {
+      CellContentStyle cellContentStyle = new CellContentStyle(source);
+      TableView tableView = (TableView) view;
+      tableView.setCellContentStyle(cellContentStyle);
     }
 
   @Nullable

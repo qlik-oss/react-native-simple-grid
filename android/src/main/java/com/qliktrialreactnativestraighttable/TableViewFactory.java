@@ -3,8 +3,10 @@ package com.qliktrialreactnativestraighttable;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,9 +43,14 @@ public class TableViewFactory {
 
   public void createAll() {
     this.dataColumns = dataProvider.dataColumns;
+    updateRowHeights();
     createScrollView();
     tableView.addView(scrollView);
     scrollView.addView(rootLayout);
+  }
+
+  protected void updateRowHeights() {
+    tableView.rowHeight = tableView.cellContentStyle.rowHeight * TableTheme.rowHeightFactor;
   }
 
   protected void createScrollView() {
@@ -66,7 +73,7 @@ public class TableViewFactory {
   }
 
   protected void createHeaderView() {
-      HeaderViewFactory headerViewFactory = new HeaderViewFactory(dataColumns,  tableView, context );
+      HeaderViewFactory headerViewFactory = new HeaderViewFactory(dataColumns,  tableView, context, tableView.headerContentStyle );
       headerView = headerViewFactory.getHeaderView();
       FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, TableTheme.headerHeight);
       params.gravity = Gravity.TOP;
