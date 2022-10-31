@@ -1,3 +1,10 @@
+# [1.1.0-alpha.38](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.37...v1.1.0-alpha.38) (2022-10-31)
+
+
+### Bug Fixes
+
+* simplify android layout ([#101](https://github.com/qlik-oss/react-native-simple-grid/issues/101)) ([c53f0e4](https://github.com/qlik-oss/react-native-simple-grid/commit/c53f0e4280526fa4616f5dcb2ffe36a46340b7f7))
+
 # [1.1.0-alpha.37](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.36...v1.1.0-alpha.37) (2022-10-29)
 
 
