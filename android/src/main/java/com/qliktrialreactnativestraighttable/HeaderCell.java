@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 
 import androidx.annotation.NonNull;
 
@@ -12,18 +13,18 @@ import androidx.annotation.NonNull;
 @SuppressLint("ViewConstructor")
 public class HeaderCell extends androidx.appcompat.widget.AppCompatTextView {
   DataColumn column;
-  CustomHorizontalScrollView scrollView;
-  public HeaderCell(Context context, DataColumn column, CustomHorizontalScrollView scrollView) {
+  TableView tableView;
+  public HeaderCell(Context context, DataColumn column, TableView tableView) {
     super(context);
     this.column = column;
     this.setCompoundDrawablePadding((int)PixelUtils.dpToPx(4));
-    this.scrollView = scrollView;
+    this.tableView = tableView;
     updateArrow();
   }
 
   public void setColumn(DataColumn column) {
     this.column = column;
-    setBackgroundColor(Color.TRANSPARENT);
+    setBackgroundColor(TableTheme.headerBackgroundColor);
     updateArrow();
   }
 
@@ -43,8 +44,7 @@ public class HeaderCell extends androidx.appcompat.widget.AppCompatTextView {
     if(column.sortDirection == null && column.active) {
       return;
     }
-    FrameLayout parent = (FrameLayout)scrollView.getParent();
-    EventUtils.sendOnHeaderTapped(parent, column);
+    EventUtils.sendOnHeaderTapped(tableView, column);
 
   }
 

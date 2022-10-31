@@ -2,6 +2,7 @@ package com.qliktrialreactnativestraighttable;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -22,5 +23,15 @@ public class HeaderView extends AutoLinearLayout{
       HeaderCell headerCell = (HeaderCell) this.getChildAt(i);
       headerCell.setColumn(column);
     }
+  }
+
+  public void updateLayout() {
+    for (int i = 0; i < this.dataColumns.size(); i++){
+      HeaderCell headerCell = (HeaderCell)this.getChildAt(i);
+      ViewGroup.LayoutParams layoutParams = headerCell.getLayoutParams();
+      layoutParams.width = dataColumns.get(i).width;
+      headerCell.setLayoutParams(layoutParams);
+    }
+
   }
 }

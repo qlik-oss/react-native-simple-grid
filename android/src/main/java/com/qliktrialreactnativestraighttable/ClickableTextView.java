@@ -2,9 +2,7 @@ package com.qliktrialreactnativestraighttable;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -15,10 +13,10 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   int defaultTextColor = Color.BLACK;
   final SelectionsEngine selectionsEngine;
   GestureDetector gestureDetector;
-  final CustomHorizontalScrollView scrollView;
-  ClickableTextView(Context context, SelectionsEngine selectionsEngine, CustomHorizontalScrollView scrollView) {
+  final TableView tableView;
+  ClickableTextView(Context context, SelectionsEngine selectionsEngine, TableView tableView) {
     super(context);
-    this.scrollView = scrollView;
+    this.tableView = tableView;
     this.selectionsEngine = selectionsEngine;
     defaultTextColor = getCurrentTextColor();
   }
@@ -35,6 +33,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     int textColor = selected ? Color.WHITE : defaultTextColor;
     setBackgroundColor(color);
     setTextColor(textColor);
+    postInvalidate();
   }
 
   @Override
@@ -55,5 +54,10 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   @Override
   public DataCell getCell() {
     return this.cell;
+  }
+
+  @Override
+  public void setSelected(boolean value) {
+    selected = value;
   }
 }

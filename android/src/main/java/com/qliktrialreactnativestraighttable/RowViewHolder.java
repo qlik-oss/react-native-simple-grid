@@ -41,7 +41,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         CellView cellView = (CellView) wrapper.getChildAt(0);
         ViewGroup.LayoutParams layout = cellView.getLayoutParams();
         layout.height = TableTheme.rowHeight;
-        layout.width = column.width;
+        layout.width = (int)column.width;
         cellView.setLayoutParams(layout);
         cellView.setData(cell);
 
@@ -55,6 +55,9 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         imageView.setAlignment(column);
       } else if(column.representation.type.equals("miniChart")) {
         ViewGroup wrapper = (ViewGroup) row.getChildAt(columnIndex);
+        LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, TableTheme.rowHeight);
+        wrapper.setLayoutParams(cellViewLayoutParams);
+
         MiniChartView miniChartView = (MiniChartView) wrapper.getChildAt(0);
         miniChartView.setData(cell, column);
       } else {
@@ -64,7 +67,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
 
         LinearLayout.LayoutParams textViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(textViewLayoutParams);
-        LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, TableTheme.rowHeight);
+        LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams((int)column.width, TableTheme.rowHeight);
         cellView.setLayoutParams(cellViewLayoutParams);
 
         textView.setText(cell.qText);
@@ -107,7 +110,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
       return true;
     }
     View view = row.getChildAt(column);
-    int currentWidth = dataProvider.dataColumns.get(column).width;
+    int currentWidth = (int)dataProvider.dataColumns.get(column).width;
     float newWidth = currentWidth + deltaWidth;
 
     if(newWidth < dataProvider.minWidth) {
@@ -124,10 +127,23 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     return true;
   }
 
+  public boolean setWidth(int width, int column) {
+    if(column > numColumns - 1) {
+      return true;
+    }
+
+    View view = row.getChildAt(column);
+    ViewGroup.LayoutParams params = view.getLayoutParams();
+    params.width = width;
+    view.setLayoutParams(params);
+
+    return true;
+  }
+
   private boolean updateNeighbour(float deltaWidth, int column) {
     if (column + 1 < numColumns ) {
       View neighbour =  row.getChildAt(column + 1);
-      int currentWidth = dataProvider.dataColumns.get(column + 1).width;
+      int currentWidth = (int)dataProvider.dataColumns.get(column + 1).width;
       float newWidth = currentWidth - deltaWidth;
       if (newWidth < dataProvider.minWidth) {
         return false;

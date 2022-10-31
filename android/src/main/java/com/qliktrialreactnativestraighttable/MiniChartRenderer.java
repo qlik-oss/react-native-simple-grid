@@ -24,8 +24,6 @@ public class MiniChartRenderer {
     miniChartData = chartData;
     miniChartInfo = representation.miniChart;
     paint.setColor(Color.RED);
-
-
   }
 
   public void updateData(qMiniChart chartData, Representation representation) {
