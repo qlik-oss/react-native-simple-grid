@@ -55,6 +55,9 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         imageView.setAlignment(column);
       } else if(column.representation.type.equals("miniChart")) {
         ViewGroup wrapper = (ViewGroup) row.getChildAt(columnIndex);
+        LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, TableTheme.rowHeight);
+        wrapper.setLayoutParams(cellViewLayoutParams);
+
         MiniChartView miniChartView = (MiniChartView) wrapper.getChildAt(0);
         miniChartView.setData(cell, column);
       } else {
