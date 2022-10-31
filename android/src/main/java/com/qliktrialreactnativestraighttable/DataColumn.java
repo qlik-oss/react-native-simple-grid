@@ -23,7 +23,6 @@ public class DataColumn {
   public List<Object> stylingInfo;
   public int dataColIdx = 0;
   public boolean active = false;
-
   public DataColumn(ReadableMap source) {
     ReadableMap representationMap = source.getMap("representation");
     representation = new Representation(representationMap);

@@ -34,9 +34,10 @@ public class TableView extends FrameLayout {
   DataProvider dataProvider;
   boolean isFirstColumnFrozen = false;
   String name = "";
-
-  TableTheme tableTheme = new TableTheme();
+  HeaderContentStyle headerContentStyle;
+  CellContentStyle cellContentStyle;
   List<GrabberView> grabbers = null;
+  int rowHeight = TableTheme.rowHeightFactor;
   final TableViewFactory tableViewFactory;
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -62,8 +63,12 @@ public class TableView extends FrameLayout {
     columnWidths.setName(value);
   }
 
-  public void updateTheme() {
-    // no up for now
+  public void setHeaderStyle(HeaderContentStyle headerContentStyle) {
+    this.headerContentStyle = headerContentStyle;
+  }
+
+  public void setCellContentStyle(CellContentStyle cellContentStyle) {
+    this.cellContentStyle = cellContentStyle;
   }
 
   public void setDataColumns(List<DataColumn> cols) {

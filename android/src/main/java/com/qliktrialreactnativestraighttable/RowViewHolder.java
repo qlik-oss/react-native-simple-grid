@@ -30,7 +30,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
   public void setBackGroundColor(int color) {
     row.setBackgroundColor(color);
   }
-  public void setData(DataRow dataRow) {
+  public void setData(DataRow dataRow, int rowHeight) {
     for(int i = 0; i < numColumns; i++) {
       DataCell cell = dataRow.cells.get(i);
       int columnIndex = cell.colIdx;
@@ -40,8 +40,8 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         ViewGroup wrapper = (ViewGroup) row.getChildAt(columnIndex);
         CellView cellView = (CellView) wrapper.getChildAt(0);
         ViewGroup.LayoutParams layout = cellView.getLayoutParams();
-        layout.height = TableTheme.rowHeight;
-        layout.width = (int)column.width;
+        layout.height = rowHeight;
+        layout.width = column.width;
         cellView.setLayoutParams(layout);
         cellView.setData(cell);
 
@@ -55,6 +55,9 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         imageView.setAlignment(column);
       } else if(column.representation.type.equals("miniChart")) {
         ViewGroup wrapper = (ViewGroup) row.getChildAt(columnIndex);
+        LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, rowHeight);
+        wrapper.setLayoutParams(cellViewLayoutParams);
+
         MiniChartView miniChartView = (MiniChartView) wrapper.getChildAt(0);
         miniChartView.setData(cell, column);
       } else {
@@ -63,13 +66,12 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
 
         LinearLayout.LayoutParams textViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(textViewLayoutParams);
-        LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams((int)column.width, TableTheme.rowHeight);
+        LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, rowHeight);
         cellView.setLayoutParams(cellViewLayoutParams);
         if(column.representation.type.equals("text")) {
           cell.indicator = null;
         }
         cellView.setData(cell);
-
         textView.setGravity(cell.textGravity | Gravity.CENTER_VERTICAL);
       }
     }

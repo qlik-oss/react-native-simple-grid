@@ -123,7 +123,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       super(view);
       row = (RelativeLayout) view;
       ProgressBar bar = new ProgressBar(view.getContext());
-      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.rowHeight);
+      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)PixelUtils.dpToPx(48));
       bar.setLayoutParams(layoutParams);
       row.setGravity(Gravity.CENTER);
       int padding = (int)PixelUtils.dpToPx(8);
@@ -145,7 +145,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       for (int i = 0; i < numColumns; i++) {
         DataColumn column = dataColumns.get(i);
         float width = column.width;
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams((int)width, TableTheme.rowHeight);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams((int)width, tableView.rowHeight);
 
         if (column.representation.type.equals("image")) {
           RelativeLayout wrapper = new RelativeLayout(parent.getContext());
@@ -169,7 +169,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
           rowView.addView(cellView);
         }
       }
-      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, TableTheme.rowHeight);
+      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, tableView.rowHeight);
       rowView.setLayoutParams(layoutParams);
       RowViewHolder rowViewHolder = new RowViewHolder(rowView, this, recyclerView.firstColumnOnly);
       viewHolder = rowViewHolder;
@@ -189,7 +189,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         int color = position % 2 == 0 ? Color.WHITE : 0xFFF7F7F7;
         holder.setBackGroundColor(color);
       }
-      holder.setData(rows.get(position));
+      holder.setData(rows.get(position), tableView.rowHeight);
       cachedViewHolders.add(holder);
     }
   }

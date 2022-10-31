@@ -38,8 +38,8 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   private void alwaysFit() {
     ViewGroup parent = (ViewGroup) cellView.getParent();
     ViewGroup.LayoutParams layout = parent.getLayoutParams();
-    layout.height = TableTheme.rowHeight;
-    layout.width = TableTheme.rowHeight + parent.getPaddingLeft() + parent.getPaddingRight();
+    layout.height = tableView.rowHeight;
+    layout.width = tableView.rowHeight + parent.getPaddingLeft() + parent.getPaddingRight();
     parent.setLayoutParams(layout);
     this.setScaleType(ScaleType.FIT_CENTER);
     scaleType = "alwaysFit";
@@ -48,8 +48,8 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   private void stretchToFit(DataColumn column)          {
     ViewGroup parent = (ViewGroup) cellView.getParent();
     ViewGroup.LayoutParams layout = parent.getLayoutParams();
-    layout.height = TableTheme.rowHeight;
-    layout.width = (int)column.width;
+    layout.height = tableView.rowHeight;
+    layout.width = column.width;
     parent.setLayoutParams(layout);
     this.setScaleType(ScaleType.FIT_XY);
     scaleType = "stretchToFit";
@@ -63,8 +63,8 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
 
     ViewGroup parent = (ViewGroup) cellView.getParent();
     ViewGroup.LayoutParams layout = parent.getLayoutParams();
-    layout.height = TableTheme.rowHeight;
-    layout.width = Math.round(TableTheme.rowHeight * aspectRatioMultiplier) + parent.getPaddingLeft() + parent.getPaddingRight();
+    layout.height = tableView.rowHeight;
+    layout.width = Math.round(tableView.rowHeight * aspectRatioMultiplier) + parent.getPaddingLeft() + parent.getPaddingRight();
     parent.setLayoutParams(layout);
     this.setScaleType(ScaleType.FIT_XY);
     scaleType = "fitToHeight";
@@ -84,7 +84,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
 
     ViewGroup grandparent = (ViewGroup) parent.getParent();
     ViewGroup.LayoutParams grandparentLayout = grandparent.getLayoutParams();
-    grandparentLayout.width = (int)column.width;
+    grandparentLayout.width = column.width;
     grandparentLayout.height = Math.round(column.width * aspectRatioMultiplier);
     grandparent.setLayoutParams(grandparentLayout);
     this.setScaleType(ScaleType.FIT_XY);
@@ -126,7 +126,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
       case "centerCenter":
         wrapper.setGravity(Gravity.CENTER);
         if (scaleType.equals("fitToWidth")) {
-          setTranslationY(TableTheme.rowHeight / 2 - container.getMinimumHeight() / 2);
+          setTranslationY(tableView.rowHeight / 2 - container.getMinimumHeight() / 2);
         }
         break;
       case "centerLeft":
@@ -139,7 +139,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
       case "centerRight":
         if (scaleType.equals("fitToWidth")) {
           wrapper.setGravity(Gravity.BOTTOM);
-          setTranslationY(TableTheme.rowHeight - container.getMinimumHeight());
+          setTranslationY(tableView.rowHeight - container.getMinimumHeight());
           break;
         }
         wrapper.setGravity(Gravity.CENTER);

@@ -32,8 +32,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class HeaderViewFactory {
-  List<DataColumn> dataColumns = new ArrayList<>();
   List<TotalsCell> totalsCells = new ArrayList<>();
+  List<DataColumn> dataColumns;
+  final HeaderContentStyle headerContentStyle;
   HeaderView headerView = null;
   AutoLinearLayout footerView = null;
   TableView tableView;
@@ -51,9 +52,10 @@ public class HeaderViewFactory {
 
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  public HeaderViewFactory(List<DataColumn> dataColumns, TableView tableView,  Context context) {
+  public HeaderViewFactory(List<DataColumn> dataColumns, TableView tableView,  Context context, HeaderContentStyle contentStyle) {
     this.tableView = tableView;
     this.dataColumns = dataColumns;
+    this.headerContentStyle = contentStyle;
     buildHeader(context);
   }
 
@@ -95,12 +97,13 @@ public class HeaderViewFactory {
       text.setMaxLines(1);
       text.setTypeface(text.getTypeface(), Typeface.BOLD);
       text.setEllipsize(TextUtils.TruncateAt.END);
-      text.setTextColor(Color.BLACK);
+      text.setTextColor(headerContentStyle.color);
       text.setText(column.label);
       text.setPadding(padding, 0, padding, 0);
       LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int)column.width, ViewGroup.LayoutParams.MATCH_PARENT);
       text.setLayoutParams(layoutParams);
       text.setGravity(Gravity.CENTER_VERTICAL);
+      text.setBackgroundColor(headerContentStyle.backgroundColor);
       headerView.addView(text);
     }
     headerView.setDataColumns(dataColumns);
