@@ -3,12 +3,17 @@ package com.qliktrialreactnativestraighttable;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.fonts.Font;
 import android.graphics.fonts.FontFamily;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.method.MovementMethod;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -30,21 +35,50 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   @SuppressLint("ClickableViewAccessibility")
   @Override
   public boolean onTouchEvent(MotionEvent e) {
+    // Checks to see if there's a link, if there is and the user
+    // tapped on the link text, then forward the event to the movementMethod.
+    // otherwise forward the event to the gesture detector
+    MovementMethod movementMethod = this.getMovementMethod();
+    if(movementMethod != null ) {
+      // first check to see if use tapped on text if this is a link
+      Rect bounds = getMeasuredTextBounds();
+      int x = (int)e.getX();
+      int y = (int)e.getY();
+      boolean insideText = bounds.contains(x, y);
+      // if user is inside, then forward to the link listener
+      if(insideText) {
+        return movementMethod.onTouchEvent(this, new SpannableString(this.getText()), e);
+      }
+    }
     gestureDetector.onTouchEvent(e);
     return true;
   }
 
+  private Rect getMeasuredTextBounds() {
+    String s = this.getText().toString();
+
+    Rect bounds = new Rect();
+    TextPaint textPaint = this.getPaint();
+
+    textPaint.getTextBounds(s, 0, s.length(), bounds);
+    int baseline = this.getBaseline();
+    bounds.top = baseline + bounds.top;
+    bounds.bottom = bounds.top + this.getMeasuredHeight() ;
+    int startPadding = this.getPaddingStart();
+    bounds.left += startPadding;
+
+    bounds.right = (int) textPaint.measureText(s, 0, s.length()) + startPadding;
+    return bounds;
+  }
+
   public void updateBackgroundColor() {
-    int color = selected ? TableTheme.selectedBackground : Color.TRANSPARENT;
-    int textColor = selected ? Color.WHITE : defaultTextColor;
+    int bgColor = cell.cellBackgroundColorValid ? cell.cellBackgroundColor : Color.TRANSPARENT;
+    int fgColor = cell.cellForegroundColorValid ? cell.cellForegroundColor : tableView.cellContentStyle.color;
+    int color = selected ? TableTheme.selectedBackground : bgColor ;
+    int textColor = selected ? Color.WHITE : fgColor ;
     setBackgroundColor(color);
     setTextColor(textColor);
     postInvalidate();
-  }
-
-  @Override
-  public void setText(CharSequence text, BufferType type) {
-    super.setText(text, type);
   }
 
   @Override
@@ -63,6 +97,8 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     if(cell.indicator != null) {
       buildSpannableText();
     } else {
+      setTextColor(cell.cellForegroundColorValid ? cell.cellForegroundColor : tableView.cellContentStyle.color);
+      setBackgroundColor(cell.cellBackgroundColorValid ? cell.cellBackgroundColor : Color.TRANSPARENT);
       setText(cell.qText);
     }
   }
