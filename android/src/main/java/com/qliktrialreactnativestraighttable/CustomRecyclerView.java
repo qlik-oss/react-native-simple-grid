@@ -70,8 +70,8 @@ public class CustomRecyclerView extends RecyclerView {
       if(linearLayout == null || dataProvider == null) {
         return;
       }
-      int windowMin = Math.max(1, linearLayout.findFirstCompletelyVisibleItemPosition());
-      int windowMax = linearLayout.findLastCompletelyVisibleItemPosition();
+      int windowMin = linearLayout.findFirstVisibleItemPosition() + 1;
+      int windowMax = linearLayout.findLastVisibleItemPosition() + 1;
       int total = dataProvider.dataSize.qcy;
       rowCountView.update(windowMin, windowMax, total);
     });
