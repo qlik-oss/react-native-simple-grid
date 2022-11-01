@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -17,6 +18,7 @@ public class CustomRecyclerView extends RecyclerView {
   final DataProvider dataProvider;
   final TableView tableView;
   final DragBox dragBox;
+  RowCountView rowCountView;
   public boolean firstColumnOnly = false;
   public boolean active = false;
   public CustomRecyclerView scrollCoupledView = null;
@@ -53,11 +55,23 @@ public class CustomRecyclerView extends RecyclerView {
     scrollCoupledView = viewToScroll;
   }
 
+  public void setRowCountView(RowCountView view) {
+    this.rowCountView = view;
+  }
+
   @Override
   public void requestLayout() {
     super.requestLayout();
     post(measureAndLayout);
-    return;
+    post(() -> {
+      if(rowCountView == null || linearLayout == null || dataProvider == null) {
+        return;
+      }
+      int windowMin = Math.max(1, linearLayout.findFirstCompletelyVisibleItemPosition());
+      int windowMax = linearLayout.findLastCompletelyVisibleItemPosition();
+      int total = dataProvider.dataSize.qcy;
+      rowCountView.update(windowMin, windowMax, total);
+    });
   }
 
   class OnScrollListener extends RecyclerView.OnScrollListener {
@@ -71,6 +85,13 @@ public class CustomRecyclerView extends RecyclerView {
       super.onScrolled(rv, dx, dy);
       if(active && scrollCoupledView != null) {
         scrollCoupledView.scrollBy(dx, dy);
+      }
+
+      if(active && rowCountView != null) {
+//        int windowMin = linearLayoutManager.findFirstCompletelyVisibleItemPosition() + 1;
+//        int windowMax = linearLayoutManager.findLastCompletelyVisibleItemPosition() + 1;
+//        int total = dataProvider.dataSize.qcy;
+//        rowCountView.update(windowMin, windowMax, total);
       }
 
       if(linearLayoutManager.findLastCompletelyVisibleItemPosition() >= dataProvider.getItemCount() - 50
