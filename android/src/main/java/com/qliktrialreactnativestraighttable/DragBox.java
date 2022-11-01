@@ -26,6 +26,7 @@ public class DragBox extends View {
   Rect grabberLine;
   Rect grabberLineTwo;
   Rect drawRect;
+  Rect drawBottomFill;
   Paint paint = new Paint();
 
   public DragBox(Context context, TableView tableView, DragBoxEventHandler dragBoxEventHandler, boolean isFirstColumnBox){
@@ -38,8 +39,6 @@ public class DragBox extends View {
     setX(-1);
     setY(-1);
     setZ(3);
-    setBackgroundColor(Color.LTGRAY);
-    setAlpha(0.5F);
     setLayoutParams(layoutParams);
   }
 
@@ -49,18 +48,17 @@ public class DragBox extends View {
     if(this.bounds == null) {
       return;
     }
-//    this.bounds.offset(-25, -25);
-//    this.bounds.bottom += 50;
-//    this.bounds.right += 50;
     int width =  bounds.right - bounds.left;
     height = bounds.bottom - bounds.top;
     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
     setX(bounds.left);
     setY(bounds.top);
     setLayoutParams(layoutParams);
+    int inset = width / 4;
     drawRect = new Rect(0, 0, layoutParams.width, layoutParams.height);
-    grabberLine = new Rect(0, layoutParams.height - 10, layoutParams.width, layoutParams.height);
-    grabberLineTwo = new Rect(0, layoutParams.height - 20, layoutParams.width, layoutParams.height - 10);
+    drawBottomFill = new Rect(0, layoutParams.height - 35, layoutParams.width, layoutParams.height);
+    grabberLine = new Rect(inset, layoutParams.height - 10, layoutParams.width - inset, layoutParams.height - 10);
+    grabberLineTwo = new Rect(inset, layoutParams.height - 15, layoutParams.width - inset, layoutParams.height - 15);
     shown = true;
   }
 
@@ -91,11 +89,16 @@ public class DragBox extends View {
       return;
     }
     super.onDraw(canvas);
+    paint.setStyle(Paint.Style.FILL);
     paint.setColor(Color.BLUE);
+    canvas.drawRect(drawBottomFill, paint);
+
     paint.setStyle(Paint.Style.STROKE);
     paint.setStrokeWidth(10);
     canvas.drawRect(drawRect, paint);
-    paint.setStrokeWidth(3);
+
+    paint.setStrokeWidth(2);
+    paint.setColor(Color.WHITE);
     canvas.drawRect(grabberLine, paint);
     canvas.drawRect(grabberLineTwo, paint);
   }
