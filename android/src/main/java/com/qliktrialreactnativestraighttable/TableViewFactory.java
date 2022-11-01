@@ -107,7 +107,6 @@ public class TableViewFactory {
 
   protected void createRowCount() {
     rowCountView = new RowCountView(context, tableView);
-    firstColumnRecyclerView.setRowCountView(rowCountView);
     coupledRecyclerView.setRowCountView(rowCountView);
     tableView.addView(rowCountView);
 
