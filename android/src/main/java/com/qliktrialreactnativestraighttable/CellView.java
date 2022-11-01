@@ -40,19 +40,6 @@ public class CellView extends LinearLayout implements SelectionsObserver {
       content = new MiniChartView(context);
     }
 
-//    fadeOut.setAnimationListener(new Animation.AnimationListener() {
-//      @Override
-//      public void onAnimationStart(Animation animation) {
-//      }
-//      @Override
-//      public void onAnimationEnd(Animation animation) {
-//        Animation fadeIn = AnimationUtils.loadAnimation(YourActivity.this, R.anim.fade_in);
-//        imageView.startAnimation(fadeIn);
-//      }
-//      @Override
-//      public void onAnimationRepeat(Animation animation) {
-//      }
-//    });
     this.selectionsEngine = selectionsEngine;
     this.tableView = tableView;
 
