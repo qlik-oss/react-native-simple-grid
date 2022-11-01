@@ -62,14 +62,6 @@ public class DragBox extends View {
     shown = true;
   }
 
-  public boolean checkCollision(Rect colliderRect) {
-    if(bounds == null) {
-      return false;
-    }
-   boolean intersect = bounds.intersect(colliderRect);
-   return intersect;
-  }
-
   public void setScrollListener(CustomRecyclerView recyclerView) {
     recyclerView.addOnScrollListener(new OnScrollListener());
   }
@@ -129,7 +121,7 @@ public class DragBox extends View {
           bounds.top = (int) y;
           bounds.bottom = (int) y + height;
           setTranslationY(y);
-          dragBoxEventHandler.fireEvent("dragged", isFirstColumnBox);
+          dragBoxEventHandler.fireEvent("dragged", columnId, isFirstColumnBox);
           return true;
         }
         case MotionEvent.ACTION_UP: {

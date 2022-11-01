@@ -19,7 +19,7 @@ public class TableView extends FrameLayout {
   RootLayout rootLayout;
   CustomHorizontalScrollView  scrollView;
   final DragBox dragBox;
-  final DragBox firstColumnDragBox;
+  DragBox firstColumnDragBox = null;
   HeaderView headerView = null;
   AutoLinearLayout footerView = null;
   CustomRecyclerView recyclerView = null;
@@ -27,12 +27,12 @@ public class TableView extends FrameLayout {
   HeaderCell firstColumnHeaderCell = null;
   ScreenGuideView screenGuideView = null;
   SelectionsEngine selectionsEngine = new SelectionsEngine();
-  final  ColumnWidths columnWidths ;
+  final ColumnWidths columnWidths ;
   DataProvider dataProvider;
   boolean isFirstColumnFrozen = false;
   String name = "";
 
-  DragBoxEventHandler dragBoxEventHandler = new DragBoxEventHandler();
+  DragBoxEventHandler dragBoxEventHandler = new DragBoxEventHandler(this);
   TableTheme tableTheme = new TableTheme();
   List<GrabberView> grabbers = null;
   final TableViewFactory tableViewFactory;

@@ -11,6 +11,8 @@ import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,6 +29,8 @@ public class CellView extends LinearLayout implements SelectionsObserver {
 
   CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean firstColumn) {
     super(context);
+    this.dragBoxEventHandler = tableView.dragBoxEventHandler;
+    dragBoxEventHandler.setDragBoxListener((boxBounds, column) -> handleDragBoxDrag(boxBounds, column));
     this.setPadding(padding, 0, padding, 0);
     if(type.equals("text")) {
       content = new ClickableTextView(context, selectionsEngine, tableView, this);
@@ -35,12 +39,24 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     } else if(type.equals("miniChart")) {
       content = new MiniChartView(context);
     }
+
+//    fadeOut.setAnimationListener(new Animation.AnimationListener() {
+//      @Override
+//      public void onAnimationStart(Animation animation) {
+//      }
+//      @Override
+//      public void onAnimationEnd(Animation animation) {
+//        Animation fadeIn = AnimationUtils.loadAnimation(YourActivity.this, R.anim.fade_in);
+//        imageView.startAnimation(fadeIn);
+//      }
+//      @Override
+//      public void onAnimationRepeat(Animation animation) {
+//      }
+//    });
     this.selectionsEngine = selectionsEngine;
     this.tableView = tableView;
-    this.dragBoxEventHandler = tableView.dragBoxEventHandler;
-    this.firstColumn = firstColumn;
 
-    dragBoxEventHandler.setDragBoxListener((dragBox) -> handleDragBoxDrag(dragBox));
+    this.firstColumn = firstColumn;
 
     gestureDetector = new GestureDetector(getContext(), new CellView.SingleTapListener());
     content.setGestureDetector(gestureDetector);
@@ -59,15 +75,17 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     this.addView(contentView);
   }
 
-  public void handleDragBoxDrag(DragBox dragBox) {
-    if(dragBox.columnId != content.getCell().colIdx) {
+  public void handleDragBoxDrag(Rect dragBoxBounds, int columnId) {
+    DataCell cell = content.getCell();
+    if(cell == null || columnId != cell.colIdx) {
       return;
     }
     Rect cellBounds = getBounds();
     if(cellBounds == null) {
       return;
     }
-    if(!this.content.isSelected() && dragBox.checkCollision(cellBounds)) {
+    boolean hasIntersect = dragBoxBounds.intersect(cellBounds);
+    if(!this.content.isSelected() && hasIntersect) {
       selectCell();
     }
   }

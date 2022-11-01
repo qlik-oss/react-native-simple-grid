@@ -8,6 +8,8 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -20,12 +22,14 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   GestureDetector gestureDetector;
   final TableView tableView;
   final CellView cellView;
+  Animation fadeIn;
 
   ClickableImageView(Context context, SelectionsEngine selectionsEngine, TableView tableView, CellView cellView) {
     super(context);
     this.tableView = tableView;
     this.selectionsEngine = selectionsEngine;
     this.cellView = cellView;
+    fadeIn = AnimationUtils.loadAnimation(context, R.anim.catalyst_fade_in);
   }
 
   @SuppressLint("ClickableViewAccessibility")
@@ -151,6 +155,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     int color = selected ? TableTheme.selectedBackground : Color.TRANSPARENT;
     ViewGroup wrapper = (ViewGroup) cellView.getParent().getParent();
     wrapper.setBackgroundColor(color);
+    startAnimation(fadeIn);
   }
 
   @Override

@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 @SuppressLint("ViewConstructor")
 public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements Content {
@@ -18,12 +20,14 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   final SelectionsEngine selectionsEngine;
   GestureDetector gestureDetector;
   final TableView tableView;
+  Animation fadeIn;
   ClickableTextView(Context context, SelectionsEngine selectionsEngine, TableView tableView, CellView cellView) {
     super(context);
     this.tableView = tableView;
     this.selectionsEngine = selectionsEngine;
     this.cellView = cellView;
     defaultTextColor = getCurrentTextColor();
+    fadeIn = AnimationUtils.loadAnimation(context, R.anim.catalyst_fade_in);
   }
 
   @SuppressLint("ClickableViewAccessibility")
@@ -39,6 +43,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     cellView.setBackgroundColor(color);
     setTextColor(textColor);
     postInvalidate();
+    startAnimation(fadeIn);
   }
 
   @Override
