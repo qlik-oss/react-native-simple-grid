@@ -27,6 +27,7 @@ public class DataColumn {
   public int dataColIdx = 0;
   public boolean active = false;
   public int textAlignment = Gravity.LEFT;
+  public int rowHeight = TableTheme.rowHeightFactor;
   public DataColumn(ReadableMap source) {
     ReadableMap representationMap = source.getMap("representation");
     representation = new Representation(representationMap);
@@ -74,5 +75,12 @@ public class DataColumn {
     column.put("dataColIdx", dataColIdx);
     column.put("active", active);
     return column.toString();
+  }
+
+  public boolean isText() {
+    if(representation != null) {
+      return representation.type.equals("text") || representation.type.equals("url");
+    }
+    return true;
   }
 }

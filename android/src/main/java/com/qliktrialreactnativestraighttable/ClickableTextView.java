@@ -32,6 +32,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   GestureDetector gestureDetector;
   final TableView tableView;
   Animation fadeIn;
+  ClickableTextWrapper textWrapper;
   ClickableTextView(Context context, SelectionsEngine selectionsEngine, TableView tableView, CellView cellView) {
     super(context);
     this.tableView = tableView;
@@ -39,6 +40,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     this.cellView = cellView;
     defaultTextColor = getCurrentTextColor();
     fadeIn = AnimationUtils.loadAnimation(context, R.anim.catalyst_fade_in);
+    textWrapper = new ClickableTextWrapper(tableView, this);
   }
 
   @SuppressLint("ClickableViewAccessibility")
@@ -110,6 +112,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
       setTextColor(cell.cellForegroundColorValid ? cell.cellForegroundColor : tableView.cellContentStyle.color);
       setBackgroundColor(cell.cellBackgroundColorValid ? cell.cellBackgroundColor : Color.TRANSPARENT);
       setText(cell.qText);
+      textWrapper.countWords(cell.qText);
     }
   }
 
@@ -136,6 +139,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
       spannable.setSpan(new ConditionalTypeFaceSpan(this.getTypeface(), textColor), 0, cell.qText.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
     setText(spannable);
+    textWrapper.countWords(spannable.toString());
   }
 
   @Override
@@ -150,5 +154,23 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
 
   public boolean isSelected(){
     return selected;
+  }
+  
+  @Override
+  public void setMaxLines(int maxLines) {
+    maxLines = textWrapper.setMaxLines(maxLines);
+    super.setMaxLines(maxLines);
+  }
+
+  public void testTextWrap(DataColumn dataColumn) {
+    textWrapper.testTextWrap(dataColumn);
+  }
+
+  public int getMeasuredLineCount() {
+    return textWrapper.getMeasuredLinedCount();
+  }
+
+  public int measureLines(DataColumn dataColumn) {
+    return textWrapper.getMeasureLinedCount(dataColumn);
   }
 }

@@ -277,6 +277,14 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return true;
   }
 
+  public void updateRowHeight(int rowHeight) {
+    for(RecyclerView.ViewHolder holder : cachedViewHolders) {
+      RowViewHolder viewHolder = (RowViewHolder) holder;
+      viewHolder.updateHeight(rowHeight);
+    }
+    notifyDataSetChanged();
+  }
+
   @Override
   public void onViewRecycled(RecyclerView.ViewHolder viewHolder) {
     if (viewHolder instanceof  RowViewHolder) {
@@ -288,6 +296,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   public void onEndPan() {
     columnWidths.syncWidths();
+    tableView.onEndPan();
   }
 
   public void invalidateLayout() {

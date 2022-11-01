@@ -44,6 +44,7 @@ public class TableView extends FrameLayout {
   CellContentStyle cellContentStyle;
   List<GrabberView> grabbers = null;
   int rowHeight = TableTheme.rowHeightFactor;
+  int themedRowHeight = TableTheme.rowHeightFactor;
   final TableViewFactory tableViewFactory;
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -106,6 +107,12 @@ public class TableView extends FrameLayout {
 
     if(firstColumnHeaderCell != null && cols.size() > 0) {
       firstColumnHeaderCell.setColumn(cols.get(0));
+    }
+
+    if(grabbers != null) {
+      for(GrabberView grabberView : grabbers) {
+        grabberView.setDataProvider(dataProvider);
+      }
     }
   }
 
@@ -188,5 +195,18 @@ public class TableView extends FrameLayout {
   void invalidateLayout() {
     tableViewFactory.invalidateLayout();
     requestLayout();
+  }
+
+  void updateHeaderViewLineCount() {
+    tableViewFactory.updateHeaderViewLineCount();
+  }
+
+  void updateRecyclerViewLineCount(DataColumn column) {
+    tableViewFactory.updateRecyclerViewLineCount(column);
+  }
+
+  void onEndPan() {
+    // avoid drift
+    tableViewFactory.updateGrabbers();
   }
 }

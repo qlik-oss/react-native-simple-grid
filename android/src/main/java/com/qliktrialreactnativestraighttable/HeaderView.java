@@ -32,6 +32,26 @@ public class HeaderView extends AutoLinearLayout{
       layoutParams.width = dataColumns.get(i).width;
       headerCell.setLayoutParams(layoutParams);
     }
+  }
 
+  public void testTextWrap() {
+    for (int i = 0; i < this.dataColumns.size(); i++){
+      HeaderCell headerCell = (HeaderCell)this.getChildAt(i);
+      headerCell.testTextWrap();
+    }
+  }
+
+  public int getMaxLineCount() {
+    int lineCount = 0;
+    for(int i = 0; i < this.dataColumns.size(); i++) {
+      HeaderCell headerCell = (HeaderCell)this.getChildAt(i);
+      lineCount = Math.max(lineCount, headerCell.getMeasuredLinedCount());
+    }
+
+    for(int i = 0; i < this.dataColumns.size(); i++) {
+      HeaderCell headerCell = (HeaderCell)this.getChildAt(i);
+      headerCell.setMaxLines(lineCount);
+    }
+    return lineCount;
   }
 }

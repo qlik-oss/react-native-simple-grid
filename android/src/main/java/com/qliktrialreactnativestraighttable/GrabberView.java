@@ -62,7 +62,8 @@ public class GrabberView extends LinearLayout {
           float motionDx = motionEvent.getRawX() - lastX;
           motionDx = (float) Math.round(motionDx);
           if (dataProvider.updateWidth(motionDx, GrabberView.this.column)) {
-            GrabberView.this.setTranslationX(x);
+            // cast here to avoid drift
+            GrabberView.this.setTranslationX((int)x);
             GrabberView.this.updateHeader(motionDx);
             GrabberView.this.updateFirstColumnHeader(motionDx);
             lastX = motionEvent.getRawX();
@@ -91,6 +92,7 @@ public class GrabberView extends LinearLayout {
           if(screenGuideView != null) {
             screenGuideView.fade(1, 0);
           }
+
           return  true;
         }
       }
@@ -108,11 +110,19 @@ public class GrabberView extends LinearLayout {
     this.column = column;
     this.scrollView = scrollView;
     grabberButton = new GrabberButton(this);
-    grabberButton.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight));
+    grabberButton.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.rowHeightFactor));
     this.addView(grabberButton);
     grabberButton.setOnTouchListener(new TouchListener());
     linePaint.setColor(TableTheme.borderBackgroundColor);
     linePaint.setStrokeWidth(PixelUtils.dpToPx(1));
+  }
+
+  public void setHeaderHeight(int height) {
+    if (grabberButton != null) {
+      ViewGroup.LayoutParams params = grabberButton.getLayoutParams();
+      params.height = height;
+      grabberButton.setLayoutParams(params);
+    }
   }
 
   public void resetLinePaint(int color) {
@@ -171,10 +181,14 @@ public class GrabberView extends LinearLayout {
   }
 
   public void updateHeader(float dxMotion) {
-    View view = headerView.getChildAt(column);
-    resizeView(view, dxMotion);
-    updateNeighbour(headerView, dxMotion);
-    updateFooter(dxMotion);
+    HeaderCell headerCell = (HeaderCell)headerView.getChildAt(column);
+    resizeView(headerCell, dxMotion);
+    headerCell.testTextWrap();
+    View neighbour = updateNeighbour(headerView, dxMotion);
+    if(neighbour != null) {
+      headerCell = (HeaderCell) neighbour;
+      headerCell.testTextWrap();
+    }
   }
 
   public void updateFirstColumnHeader(float dxMotion) {
@@ -183,18 +197,13 @@ public class GrabberView extends LinearLayout {
     }
   }
 
-  public void updateChildren(ViewGroup container, float dxMotion) {
-    for(int i = 0; i < container.getChildCount(); i++) {
-      View neighbour = container.getChildAt(i);
-      resizeView(neighbour, -dxMotion);
-    }
-  }
-
-  public void updateNeighbour(LinearLayout container, float dxMotion) {
+  public View updateNeighbour(LinearLayout container, float dxMotion) {
     if(column + 1 < container.getChildCount()) {
       View neighbour = container.getChildAt(column + 1);
       resizeView(neighbour, -dxMotion);
+      return neighbour;
     }
+    return null;
   }
 
   public void updateFooter(float dxMotion) {

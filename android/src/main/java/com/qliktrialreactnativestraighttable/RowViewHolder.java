@@ -81,6 +81,11 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         if(column.representation.type.equals("url")) {
           setupHyperLink(textView, column.representation, cell);
         }
+        if(column.isDim) {
+          textView.setMaxLines(rowHeight/TableTheme.rowHeightFactor);
+        } else {
+          textView.setMaxLines(1);
+        }
         textView.setGravity(column.textAlignment | Gravity.CENTER_VERTICAL);
       }
     }
@@ -147,8 +152,28 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     params.width = (int) newWidth;
     view.setLayoutParams(params);
 
+    DataColumn dataColumn = dataProvider.dataColumns.get(column);
+    checkTextWrap(dataColumn);
+    checkNeighbourTextWrap(column);
+
     return true;
   }
+
+  private void checkNeighbourTextWrap(int column) {
+    if (column + 1 < numColumns ) {
+      DataColumn dataColumn = dataProvider.dataColumns.get(column);
+      checkTextWrap(dataColumn);
+    }
+  }
+
+  private void checkTextWrap(DataColumn dataColumn) {
+    if(dataColumn.isDim && dataColumn.isText() ) {
+      CellView cellView = (CellView) row.getChildAt(dataColumn.dataColIdx);
+      ClickableTextView textView = (ClickableTextView)cellView.content;
+      textView.testTextWrap(dataColumn);
+    }
+  }
+
 
   public boolean setWidth(int width, int column) {
     if(column > numColumns - 1) {
@@ -166,7 +191,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
   private boolean updateNeighbour(float deltaWidth, int column) {
     if (column + 1 < numColumns ) {
       View neighbour =  row.getChildAt(column + 1);
-      int currentWidth = (int)dataProvider.dataColumns.get(column + 1).width;
+      int currentWidth = dataProvider.dataColumns.get(column + 1).width;
       float newWidth = currentWidth - deltaWidth;
       if (newWidth < dataProvider.minWidth) {
         return false;
@@ -176,5 +201,54 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
       neighbour.setLayoutParams(params);
     }
     return true;
+  }
+
+  public int getLineCount(DataColumn column) {
+    CellView cellView = (CellView) row.getChildAt(column.dataColIdx);
+    ClickableTextView textView = (ClickableTextView) cellView.content;
+    return textView.getMeasuredLineCount();
+  }
+
+  public void updateHeight(int rowHeight) {
+    ViewGroup.LayoutParams params = row.getLayoutParams();
+    params.height = rowHeight;
+    row.setLayoutParams(params);
+
+  }
+
+  public int initialMeasure() {
+    int maxLines = 0;
+    for (DataColumn column: dataProvider.dataColumns) {
+      if(column.isText() && column.isDim) {
+        CellView cellView = (CellView) row.getChildAt(column.dataColIdx);
+        if(cellView != null) {
+          ClickableTextView clickableTextView = (ClickableTextView) cellView.content;
+          maxLines = Math.max(clickableTextView.measureLines(column), maxLines);
+        }
+      }
+    }
+    return  maxLines;
+  }
+
+  public void initializeHeight(int rowHeight) {
+    int lines = rowHeight / TableTheme.rowHeightFactor;
+
+    for (DataColumn column: dataProvider.dataColumns) {
+      if(column.isText() && column.isDim) {
+        if(column.dataColIdx < row.getChildCount()) {
+          CellView cellView = (CellView) row.getChildAt(column.dataColIdx);
+          ClickableTextView clickableTextView = (ClickableTextView) cellView.content;
+          clickableTextView.setMaxLines(lines);
+          clickableTextView.setGravity(column.textAlignment | Gravity.CENTER_VERTICAL);
+          clickableTextView.requestLayout();
+        }
+      }
+    }
+
+    ViewGroup.LayoutParams params = row.getLayoutParams();
+    params.height = rowHeight;
+    row.setLayoutParams(params);
+    row.requestLayout();
+
   }
 }

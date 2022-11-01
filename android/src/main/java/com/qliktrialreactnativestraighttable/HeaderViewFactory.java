@@ -3,6 +3,7 @@ package com.qliktrialreactnativestraighttable;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.text.LineBreaker;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -67,10 +68,10 @@ public class HeaderViewFactory {
     fixedFirstHeaderCell.setMaxLines(1);
     fixedFirstHeaderCell.setTypeface(fixedFirstHeaderCell.getTypeface(), Typeface.BOLD);
     fixedFirstHeaderCell.setEllipsize(TextUtils.TruncateAt.END);
-    fixedFirstHeaderCell.setTextColor(Color.BLACK);
+    fixedFirstHeaderCell.setTextColor(tableView.headerContentStyle.color);
     fixedFirstHeaderCell.setText(column.label);
     fixedFirstHeaderCell.setPadding(padding, 0, padding, 0);
-    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int)column.width, TableTheme.headerHeight);
+    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, TableTheme.rowHeightFactor);
     fixedFirstHeaderCell.setTop(0);
     fixedFirstHeaderCell.setLeft(0);
     fixedFirstHeaderCell.setZ(headerZ);
@@ -85,7 +86,7 @@ public class HeaderViewFactory {
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void buildHeader(Context context) {
     int padding = (int) PixelUtils.dpToPx(16);
-    int headerHeight = TableTheme.headerHeight;
+    int headerHeight = TableTheme.rowHeightFactor;
     headerView = new HeaderView(context);
     headerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, headerHeight));
     headerView.setOrientation(LinearLayout.HORIZONTAL);
@@ -95,14 +96,14 @@ public class HeaderViewFactory {
 
       DataColumn column = dataColumns.get(i);
 
-      TextView text = new HeaderCell(headerView.getContext(), column, this.tableView);
-      text.setMaxLines(1);
+      HeaderCell text = new HeaderCell(headerView.getContext(), column, this.tableView);
       text.setTypeface(text.getTypeface(), Typeface.BOLD);
       text.setEllipsize(TextUtils.TruncateAt.END);
       text.setTextColor(headerContentStyle.color);
       text.setText(column.label);
+      text.setMaxLines(1);
       text.setPadding(padding, 0, padding, 0);
-      LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int)column.width, ViewGroup.LayoutParams.MATCH_PARENT);
+      LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
       text.setLayoutParams(layoutParams);
       text.setGravity(Gravity.CENTER_VERTICAL);
       text.setZ(headerZ);
@@ -110,65 +111,6 @@ public class HeaderViewFactory {
       headerView.addView(text);
     }
     headerView.setDataColumns(dataColumns);
-
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  private void buildFooter(ReadableArray readableArray, Context context) {
-
-    buildTotalCells(readableArray);
-
-    footerView = new AutoLinearLayout(context);
-    footerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight));
-    footerView.setOrientation(LinearLayout.HORIZONTAL);
-    footerView.setElevation((int)PixelUtils.dpToPx(4));
-    footerView.setBackgroundColor(TableTheme.headerBackgroundColor);
-    // first add all fillers, then populate with the data
-    int j = 0;
-    for(int i = 0; i < dataColumns.size(); i++ ) {
-      DataColumn column = dataColumns.get(i);
-      TextView text = new TextView(context);
-      int padding = (int) PixelUtils.dpToPx(16);
-      text.setMaxLines(1);
-      text.setTypeface(text.getTypeface(), Typeface.BOLD);
-      text.setEllipsize(TextUtils.TruncateAt.END);
-      if(column.isDim && i == 0) {
-        text.setText("Totals");
-        text.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
-      }
-      if (!column.isDim) {
-        if (j < totalsCells.size()) {
-          text.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-          text.setText(totalsCells.get(j++).qText);
-        }
-      }
-      text.setPadding(padding, padding, padding, padding);
-      text.setLayoutParams(new LinearLayout.LayoutParams((int)column.width, TableTheme.headerHeight));
-      footerView.addView(text);
-    }
-  }
-
-  void buildTotalCells(ReadableArray source) {
-    for(int i = 0; i < source.size(); i++) {
-      TotalsCell cell = new TotalsCell(source.getMap(i));
-      totalsCells.add(cell);
-    }
-  }
-
-  void readjustLayout(List<DataColumn> dataColumns, Context context) {
-    headerView.removeAllViews();
-    for(DataColumn column: dataColumns) {
-      TextView text = new HeaderCell(context, column, this.tableView);
-      int padding = (int) PixelUtils.dpToPx(16);
-      text.setMaxLines(1);
-      text.setTypeface(text.getTypeface(), Typeface.BOLD);
-      text.setEllipsize(TextUtils.TruncateAt.END);
-      text.setText(column.label);
-      text.setPadding(padding, padding, padding, padding);
-      text.setLayoutParams(new LinearLayout.LayoutParams((int)column.width, TableTheme.headerHeight));
-      headerView.addView(text);
-    }
-    headerView.setBackgroundColor(TableTheme.headerBackgroundColor);
-    headerView.invalidate();
-  }
 }
