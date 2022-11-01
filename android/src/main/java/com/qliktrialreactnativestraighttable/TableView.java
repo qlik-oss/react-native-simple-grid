@@ -19,6 +19,7 @@ public class TableView extends FrameLayout {
   RootLayout rootLayout;
   CustomHorizontalScrollView  scrollView;
   final DragBox dragBox;
+  final DragBox firstColumnDragBox;
   HeaderView headerView = null;
   AutoLinearLayout footerView = null;
   CustomRecyclerView recyclerView = null;
@@ -41,21 +42,29 @@ public class TableView extends FrameLayout {
     super(context);
     columnWidths = new ColumnWidths(this.getContext());
     dataProvider = new DataProvider(columnWidths, selectionsEngine, this);
-    dragBox = new DragBox(context, this, dragBoxEventHandler);
-    tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider, dragBox);
+    dragBox = new DragBox(context, this, dragBoxEventHandler, false);
+    firstColumnDragBox = new DragBox(context, this, dragBoxEventHandler, true);
+    dragBoxEventHandler.setDragBoxes(dragBox, firstColumnDragBox);
+    tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider, dragBox, firstColumnDragBox);
   }
 
   public void clearSelections() {
     selectionsEngine.clearSelections();
   }
 
-  public void addDragBox(Rect bounds, int columnId) {
+  public void showDragBox(Rect bounds, int columnId) {
+    if(isFirstColumnFrozen && columnId == 0) {
+      firstColumnDragBox.show(bounds, columnId);
+      dragBox.hide();
+      return;
+    }
     dragBox.show(bounds, columnId);
+    firstColumnDragBox.hide();
   }
 
-  public void removeDragBox() {
+  public void hideDragBoxes() {
+    firstColumnDragBox.hide();
     dragBox.hide();
-    dragBox.invalidate();
   }
 
   public void setFirstColumnFrozen(boolean shouldFreeze) {

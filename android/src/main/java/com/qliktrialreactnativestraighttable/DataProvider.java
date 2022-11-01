@@ -149,16 +149,16 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         if (column.representation.type.equals("image")) {
           RelativeLayout wrapper = new RelativeLayout(parent.getContext());
-          CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.tableView);
+          CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.tableView, recyclerView.firstColumnOnly);
           RelativeLayout.LayoutParams cellLayoutParams = new RelativeLayout.LayoutParams(-1,-1);
           wrapper.addView(cellView, cellLayoutParams);
           rowView.addView(wrapper, layoutParams);
         } else if(column.representation.type.equals("miniChart")) {
-          CellView cellView = new CellView(parent.getContext(), "miniChart", this.selectionsEngine, this.tableView);
+          CellView cellView = new CellView(parent.getContext(), "miniChart", this.selectionsEngine, this.tableView, recyclerView.firstColumnOnly);
 
           rowView.addView(cellView);
         } else {
-          CellView cellView = new CellView(parent.getContext(), "text", this.selectionsEngine, this.tableView);
+          CellView cellView = new CellView(parent.getContext(), "text", this.selectionsEngine, this.tableView, recyclerView.firstColumnOnly);
           ClickableTextView textView = (ClickableTextView) cellView.content;
 
           textView.setMaxLines(NUM_LINES);

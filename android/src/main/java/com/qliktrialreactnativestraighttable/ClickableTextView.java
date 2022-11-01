@@ -7,19 +7,22 @@ import android.graphics.Color;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 
 @SuppressLint("ViewConstructor")
 public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements Content {
   DataCell cell = null;
+  final CellView cellView;
   boolean selected = false;
   int defaultTextColor = Color.BLACK;
   final SelectionsEngine selectionsEngine;
   GestureDetector gestureDetector;
   final TableView tableView;
-  ClickableTextView(Context context, SelectionsEngine selectionsEngine, TableView tableView) {
+  ClickableTextView(Context context, SelectionsEngine selectionsEngine, TableView tableView, CellView cellView) {
     super(context);
     this.tableView = tableView;
     this.selectionsEngine = selectionsEngine;
+    this.cellView = cellView;
     defaultTextColor = getCurrentTextColor();
   }
 
@@ -33,7 +36,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   public void updateBackgroundColor() {
     int color = selected ? TableTheme.selectedBackground : Color.TRANSPARENT;
     int textColor = selected ? Color.WHITE : defaultTextColor;
-    setBackgroundColor(color);
+    cellView.setBackgroundColor(color);
     setTextColor(textColor);
     postInvalidate();
   }

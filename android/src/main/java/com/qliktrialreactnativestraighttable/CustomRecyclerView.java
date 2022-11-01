@@ -21,7 +21,7 @@ public class CustomRecyclerView extends RecyclerView {
   public boolean active = false;
   public CustomRecyclerView scrollCoupledView = null;
 
-  public CustomRecyclerView(Context context, boolean onlyFirstColumn, DataProvider dp, TableView tv, LinearLayoutManager ll, DragBox db) {
+  public CustomRecyclerView(Context context, boolean onlyFirstColumn, DataProvider dp, TableView tv, LinearLayoutManager ll, DragBox db, DragBox firstColumnDb) {
     super(context);
     firstColumnOnly = onlyFirstColumn;
     dataProvider = dp;
@@ -46,6 +46,7 @@ public class CustomRecyclerView extends RecyclerView {
     this.setVerticalScrollbarThumbDrawable(new ScrollBarDrawable());
 
     dragBox.setScrollListener(this);
+    firstColumnDb.setScrollListener(this);
   }
 
   public void setViewToScrollCouple(CustomRecyclerView viewToScroll) {

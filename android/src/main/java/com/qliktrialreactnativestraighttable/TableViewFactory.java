@@ -28,13 +28,15 @@ public class TableViewFactory {
   private final DataProvider dataProvider;
   private final TableView tableView;
   private final DragBox dragBox;
+  private final DragBox firstColumnDragBox;
 
-  public TableViewFactory(TableView tableView, ColumnWidths columnWidths, DataProvider dataProvider, DragBox dragBox) {
+  public TableViewFactory(TableView tableView, ColumnWidths columnWidths, DataProvider dataProvider, DragBox dragBox, DragBox firstColumnDragBox) {
     this.tableView = tableView;
     this.columnWidths = columnWidths;
     this.dataProvider = dataProvider;
     this.context = tableView.getContext();
     this.dragBox = dragBox;
+    this.firstColumnDragBox = firstColumnDragBox;
   }
 
   public void createAll() {
@@ -58,6 +60,7 @@ public class TableViewFactory {
     this.rootLayout.setPadding(0, 0, (int)PixelUtils.dpToPx(25), 0);
     this.rootLayout.setLayoutParams(frameLayout);
     this.rootLayout.addView(dragBox);
+    this.rootLayout.setZ(1);
 
     createHeaderView();
   }
@@ -74,13 +77,13 @@ public class TableViewFactory {
 
   protected void createRecyclerViews() {
     LinearLayoutManager linearLayout = new LinearLayoutManager(context);
-    coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout, dragBox);
+    coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout, dragBox, firstColumnDragBox);
     FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     recyclerViewLayoutParams.topMargin = TableTheme.headerHeight;
     rootLayout.addView(coupledRecyclerView, recyclerViewLayoutParams);
 
     LinearLayoutManager firstColumnLinearLayout = new LinearLayoutManager(context);
-    firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout, dragBox);
+    firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout, dragBox, firstColumnDragBox);
     FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
     firstColumnViewLayoutParams.topMargin = TableTheme.headerHeight;
     if(tableView.isFirstColumnFrozen) {
@@ -90,8 +93,11 @@ public class TableViewFactory {
       firstColumnRecyclerView.setViewToScrollCouple(coupledRecyclerView);
       firstColumnRecyclerView.setElevation(PixelUtils.dpToPx(3));
       firstColumnHeaderCell.setElevation(PixelUtils.dpToPx(4));
+      firstColumnRecyclerView.setZ(2);
+
       tableView.addView(firstColumnRecyclerView, firstColumnViewLayoutParams);
       tableView.addView(firstColumnHeaderCell);
+      tableView.addView(firstColumnDragBox);
     }
 
     createGrabbers();

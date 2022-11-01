@@ -3,19 +3,24 @@ package com.qliktrialreactnativestraighttable;
 import java.util.ArrayList;
 
 public class DragBoxEventHandler {
-  private DragBox dragBox;
+  DragBox dragBox, firstColumnDragBox;
   ArrayList<DragBoxListener> listeners = new ArrayList<DragBoxListener> ();
-  public void setDragBox (DragBox dragBox) {
+  public void setDragBoxes (DragBox dragBox, DragBox firstColumnDragBox) {
     this.dragBox = dragBox;
+    this.firstColumnDragBox = firstColumnDragBox;
   }
   public void setDragBoxListener (DragBoxListener listener) {
     this.listeners.add(listener);
   }
-  public void fireEvent(String eventType, int columnId) {
+  public void fireEvent(String eventType, boolean firstColumn) {
     for(DragBoxListener listener : listeners) {
       switch(eventType) {
         case "dragged": {
-          listener.onDrag(this.dragBox, columnId);
+          if(firstColumn) {
+            listener.onDrag(this.firstColumnDragBox);
+            return;
+          }
+          listener.onDrag(this.dragBox);
         }
       }
     }

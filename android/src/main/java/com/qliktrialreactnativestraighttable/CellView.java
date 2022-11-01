@@ -21,14 +21,15 @@ public class CellView extends LinearLayout implements SelectionsObserver {
   final DragBoxEventHandler dragBoxEventHandler;
   final SelectionsEngine selectionsEngine;
   final TableView tableView;
+  final boolean firstColumn;
   GestureDetector gestureDetector;
   int padding = (int)PixelUtils.dpToPx(16);
 
-  CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView) {
+  CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean firstColumn) {
     super(context);
     this.setPadding(padding, 0, padding, 0);
     if(type.equals("text")) {
-      content = new ClickableTextView(context, selectionsEngine, tableView);
+      content = new ClickableTextView(context, selectionsEngine, tableView, this);
     } else if(type.equals("image")) {
       content = new ClickableImageView(context, selectionsEngine, tableView, this);
     } else if(type.equals("miniChart")) {
@@ -37,8 +38,9 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     this.selectionsEngine = selectionsEngine;
     this.tableView = tableView;
     this.dragBoxEventHandler = tableView.dragBoxEventHandler;
+    this.firstColumn = firstColumn;
 
-    dragBoxEventHandler.setDragBoxListener((dragBox, column) -> handleDragBoxDrag(dragBox, column));
+    dragBoxEventHandler.setDragBoxListener((dragBox) -> handleDragBoxDrag(dragBox));
 
     gestureDetector = new GestureDetector(getContext(), new CellView.SingleTapListener());
     content.setGestureDetector(gestureDetector);
@@ -57,8 +59,8 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     this.addView(contentView);
   }
 
-  public void handleDragBoxDrag(DragBox dragBox, int columnId) {
-    if(columnId != content.getCell().colIdx) {
+  public void handleDragBoxDrag(DragBox dragBox) {
+    if(dragBox.columnId != content.getCell().colIdx) {
       return;
     }
     Rect cellBounds = getBounds();
@@ -97,10 +99,13 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     Rect bounds = new Rect();
     this.getDrawingRect(bounds);
     try {
-      tableView.rootLayout.offsetDescendantRectToMyCoords(this, bounds);
+      if(firstColumn) {
+        tableView.offsetDescendantRectToMyCoords(this, bounds);
+      } else {
+        tableView.rootLayout.offsetDescendantRectToMyCoords(this, bounds);
+      }
     } catch (IllegalArgumentException e) {
       // ignore if cell offscreen
-      return null;
     }
     return bounds;
   }
@@ -109,7 +114,11 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     DataCell cell = content.getCell();
     if (cell.isDim) {
       Rect bounds = getBounds();
-      tableView.addDragBox(bounds, cell.colIdx);
+      if(!content.isSelected()) {
+        tableView.showDragBox(bounds, cell.colIdx);
+      } else {
+        tableView.hideDragBoxes();
+      }
       selectCell();
     }
   }

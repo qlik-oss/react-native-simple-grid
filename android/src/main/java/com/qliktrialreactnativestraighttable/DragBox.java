@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class DragBox extends View {
   final DragBoxEventHandler dragBoxEventHandler;
   final TableView tableView;
+  final boolean isFirstColumnBox;
   boolean shown = false;
   boolean pressed = false;
   int height;
@@ -27,16 +28,16 @@ public class DragBox extends View {
   Rect drawRect;
   Paint paint = new Paint();
 
-  public DragBox(Context context, TableView tableView, DragBoxEventHandler dragBoxEventHandler){
+  public DragBox(Context context, TableView tableView, DragBoxEventHandler dragBoxEventHandler, boolean isFirstColumnBox){
     super(context);
     this.tableView = tableView;
     this.setOnTouchListener(new DragBox.TouchListener());
     this.dragBoxEventHandler = dragBoxEventHandler;
-    dragBoxEventHandler.setDragBox(this);
+    this.isFirstColumnBox = isFirstColumnBox;
     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
     setX(-1);
     setY(-1);
-    setZ(1000);
+    setZ(3);
     setBackgroundColor(Color.LTGRAY);
     setAlpha(0.5F);
     setLayoutParams(layoutParams);
@@ -45,6 +46,9 @@ public class DragBox extends View {
   public void show(Rect bounds, int column) {
     this.columnId = column;
     this.bounds = bounds;
+    if(this.bounds == null) {
+      return;
+    }
 //    this.bounds.offset(-25, -25);
 //    this.bounds.bottom += 50;
 //    this.bounds.right += 50;
@@ -61,6 +65,9 @@ public class DragBox extends View {
   }
 
   public boolean checkCollision(Rect colliderRect) {
+    if(bounds == null) {
+      return false;
+    }
    boolean intersect = bounds.intersect(colliderRect);
    return intersect;
   }
@@ -72,6 +79,10 @@ public class DragBox extends View {
   public void hide() {
     this.bounds = null;
     shown = false;
+    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
+    setX(-1);
+    setY(-1);
+    setLayoutParams(layoutParams);
   }
 
   @Override
@@ -91,7 +102,6 @@ public class DragBox extends View {
 
   class TouchListener implements OnTouchListener {
     float dY = 0;
-    float lastY = 0;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -116,7 +126,7 @@ public class DragBox extends View {
           bounds.top = (int) y;
           bounds.bottom = (int) y + height;
           setTranslationY(y);
-          dragBoxEventHandler.fireEvent("dragged", columnId);
+          dragBoxEventHandler.fireEvent("dragged", isFirstColumnBox);
           return true;
         }
         case MotionEvent.ACTION_UP: {
