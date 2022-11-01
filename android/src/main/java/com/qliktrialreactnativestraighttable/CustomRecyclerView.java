@@ -63,8 +63,11 @@ public class CustomRecyclerView extends RecyclerView {
   public void requestLayout() {
     super.requestLayout();
     post(measureAndLayout);
+    if(rowCountView == null) {
+      return;
+    }
     post(() -> {
-      if(rowCountView == null || linearLayout == null || dataProvider == null) {
+      if(linearLayout == null || dataProvider == null) {
         return;
       }
       int windowMin = Math.max(1, linearLayout.findFirstCompletelyVisibleItemPosition());
@@ -85,13 +88,6 @@ public class CustomRecyclerView extends RecyclerView {
       super.onScrolled(rv, dx, dy);
       if(active && scrollCoupledView != null) {
         scrollCoupledView.scrollBy(dx, dy);
-      }
-
-      if(active && rowCountView != null) {
-//        int windowMin = linearLayoutManager.findFirstCompletelyVisibleItemPosition() + 1;
-//        int windowMax = linearLayoutManager.findLastCompletelyVisibleItemPosition() + 1;
-//        int total = dataProvider.dataSize.qcy;
-//        rowCountView.update(windowMin, windowMax, total);
       }
 
       if(linearLayoutManager.findLastCompletelyVisibleItemPosition() >= dataProvider.getItemCount() - 50
