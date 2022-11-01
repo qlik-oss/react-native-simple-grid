@@ -11,6 +11,7 @@ import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -29,8 +30,6 @@ public class CellView extends LinearLayout implements SelectionsObserver {
 
   CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean firstColumn) {
     super(context);
-    this.dragBoxEventHandler = tableView.dragBoxEventHandler;
-    dragBoxEventHandler.setDragBoxListener((boxBounds, column) -> handleDragBoxDrag(boxBounds, column));
     this.setPadding(padding, 0, padding, 0);
     if(type.equals("text")) {
       content = new ClickableTextView(context, selectionsEngine, tableView, this);
@@ -42,9 +41,10 @@ public class CellView extends LinearLayout implements SelectionsObserver {
 
     this.selectionsEngine = selectionsEngine;
     this.tableView = tableView;
-
     this.firstColumn = firstColumn;
+    this.dragBoxEventHandler = tableView.dragBoxEventHandler;
 
+    dragBoxEventHandler.addDragBoxListener((boxBounds, column) -> handleDragBoxDrag(boxBounds, column));
     gestureDetector = new GestureDetector(getContext(), new CellView.SingleTapListener());
     content.setGestureDetector(gestureDetector);
 

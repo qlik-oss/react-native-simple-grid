@@ -49,6 +49,7 @@ public class TableView extends FrameLayout {
   }
 
   public void clearSelections() {
+    hideDragBoxes();
     selectionsEngine.clearSelections();
   }
 

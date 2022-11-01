@@ -17,7 +17,7 @@ public class DragBoxEventHandler {
     this.dragBox = dragBox;
     this.firstColumnDragBox = firstColumnDragBox;
   }
-  public void setDragBoxListener (DragBoxListener listener) {
+  public void addDragBoxListener (DragBoxListener listener) {
     this.listeners.add(listener);
   }
   public void fireEvent(String eventType, int columnId, boolean firstColumn) {
@@ -28,7 +28,7 @@ public class DragBoxEventHandler {
             Rect bounds = new Rect(firstColumnDragBox.bounds);
             tableView.offsetDescendantRectToMyCoords(firstColumnDragBox, bounds);
             listener.onDrag(bounds, columnId);
-            return;
+            continue;
           }
           listener.onDrag(dragBox.bounds, columnId);
         }
