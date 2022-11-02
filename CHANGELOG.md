@@ -1,3 +1,10 @@
+# [1.1.0-alpha.43](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.42...v1.1.0-alpha.43) (2022-11-02)
+
+
+### Features
+
+* copy image charts android ([#109](https://github.com/qlik-oss/react-native-simple-grid/issues/109)) ([af81780](https://github.com/qlik-oss/react-native-simple-grid/commit/af817803b47c47f0031e60106f72d7c5e2a6e554))
+
 # [1.1.0-alpha.42](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.41...v1.1.0-alpha.42) (2022-11-02)
 
 
