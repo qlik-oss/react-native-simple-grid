@@ -19,7 +19,7 @@ public class CustomRecyclerView extends RecyclerView {
   final TableView tableView;
   final DragBox dragBox;
   RowCountView rowCountView;
-  public boolean firstColumnOnly = false;
+  public boolean firstColumnOnly;
   public boolean active = false;
   public CustomRecyclerView scrollCoupledView = null;
 
@@ -104,11 +104,7 @@ public class CustomRecyclerView extends RecyclerView {
   public void onScrollStateChanged(int state) {
     super.onScrollStateChanged(state);
 
-    active = true;
-    if(state == SCROLL_STATE_IDLE) {
-      active = false;
-    }
-
+    active = state != SCROLL_STATE_IDLE;
   }
 
   private final Runnable measureAndLayout = () -> {
