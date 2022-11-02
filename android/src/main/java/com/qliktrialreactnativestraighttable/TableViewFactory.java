@@ -68,6 +68,12 @@ public class TableViewFactory {
       updateFirstColumnHeaderHeight();
       updateTotalsViewHeight();
     }
+    tableView.post(new Runnable() {
+      @Override
+      public void run() {
+        updateGrabbers();
+      }
+    });
   }
 
   protected void updateRowHeights() {
