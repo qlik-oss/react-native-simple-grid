@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -183,5 +185,18 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   @Override
   public boolean isSelected() {
     return selected;
+  }
+
+  public void copyToClipBoard() {
+    ImageShare imageShare = new ImageShare();
+    BitmapDrawable drawable = (BitmapDrawable) this.getDrawable();
+    if(drawable != null) {
+      Bitmap bitmap = drawable.getBitmap();
+      imageShare.share(bitmap, getContext());
+    }
+  }
+
+  public String getCopyMenuString() {
+    return "share";
   }
 }
