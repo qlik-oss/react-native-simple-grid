@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -35,12 +37,11 @@ public class CustomRecyclerView extends RecyclerView {
     OnScrollListener sharedScrollListener = new OnScrollListener(linearLayout);
 
     this.setLayoutManager(linearLayout);
-    this.setAdapter(dataProvider);
     this.addItemDecoration(itemDecorator);
     this.setHasFixedSize(true);
     this.setBackgroundColor(Color.WHITE);
     this.addOnScrollListener(sharedScrollListener);
-    if(onlyFirstColumn) {
+    if (onlyFirstColumn) {
       return;
     }
     this.setVerticalScrollBarEnabled(true);
@@ -79,6 +80,7 @@ public class CustomRecyclerView extends RecyclerView {
 
   class OnScrollListener extends RecyclerView.OnScrollListener {
     LinearLayoutManager linearLayoutManager;
+
     public OnScrollListener(LinearLayoutManager layoutManager) {
       linearLayoutManager = layoutManager;
     }
@@ -86,11 +88,11 @@ public class CustomRecyclerView extends RecyclerView {
     @Override
     public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
       super.onScrolled(rv, dx, dy);
-      if(active && scrollCoupledView != null) {
+      if (active && scrollCoupledView != null) {
         scrollCoupledView.scrollBy(dx, dy);
       }
 
-      if(linearLayoutManager.findLastCompletelyVisibleItemPosition() >= dataProvider.getItemCount() - 50
+      if (linearLayoutManager.findLastCompletelyVisibleItemPosition() >= dataProvider.getItemCount() - 50
         && !dataProvider.isLoading()
         && dataProvider.needsMore()) {
         // start the fetch
@@ -113,4 +115,72 @@ public class CustomRecyclerView extends RecyclerView {
       MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
     layout(getLeft(), getTop(), getRight(), getBottom());
   };
+
+  public void updateLineHeight(DataColumn column) {
+    int maxLineCount = 0;
+    int childCount = getChildCount();
+
+    for (int i = 0; i < childCount; i++) {
+      View view = getChildAt(i);
+      RowViewHolder viewHolder = (RowViewHolder) getChildViewHolder(view);
+      if (viewHolder != null) {
+        int lineCount = viewHolder.getLineCount(column);
+        maxLineCount = Math.max(lineCount, maxLineCount);
+      }
+    }
+
+    int rowHeight = maxLineCount * TableTheme.rowHeightFactor;
+    tableView.rowHeight = Math.max(tableView.themedRowHeight, rowHeight);
+    for (int i = 0; i < childCount; i++) {
+      View view = getChildAt(i);
+      RowViewHolder viewHolder = (RowViewHolder) getChildViewHolder(view);
+      viewHolder.updateHeight(rowHeight);
+    }
+
+    dataProvider.updateRowHeight(tableView.rowHeight);
+
+  }
+
+  public boolean testTextWrap() {
+    if(!tableView.cellContentStyle.wrap) {
+      // don't test but tell whoever is calling
+      // that it's done testing
+      return true;
+    }
+    int childCount = getChildCount();
+    if (childCount == 0) {
+      return false;
+    }
+    int maxLines = 0;
+    for (int i = 0; i < childCount; i++) {
+      View view = getChildAt(i);
+      RowViewHolder viewHolder = (RowViewHolder) getChildViewHolder(view);
+      int lines = viewHolder.initialMeasure();
+      maxLines = Math.max(lines, maxLines);
+    }
+    if (!firstColumnOnly) {
+      tableView.rowHeight = Math.max(tableView.themedRowHeight, maxLines * TableTheme.rowHeightFactor);
+    }
+
+    tableView.post(new Runnable() {
+      @Override
+      public void run() {
+        for (int i = 0; i < childCount; i++) {
+          View view = getChildAt(i);
+          RowViewHolder viewHolder = (RowViewHolder) getChildViewHolder(view);
+          viewHolder.initializeHeight(tableView.rowHeight);
+        }
+        if (tableView.firstColumnView != null) {
+          tableView.firstColumnView.requestLayout();
+        }
+        if(tableView.rootLayout != null) {
+          tableView.rootLayout.requestLayout();
+        }
+        requestLayout();
+        dataProvider.notifyDataSetChanged();
+      }
+    });
+
+    return true;
+  }
 }

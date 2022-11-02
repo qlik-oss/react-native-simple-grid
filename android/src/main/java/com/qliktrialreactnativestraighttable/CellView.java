@@ -30,17 +30,19 @@ public class CellView extends LinearLayout implements SelectionsObserver {
 
   CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean firstColumn) {
     super(context);
-    this.setPadding(padding, 0, padding, 0);
+    this.tableView = tableView;
     if(type.equals("text")) {
-      content = new ClickableTextView(context, selectionsEngine, tableView, this);
+      ClickableTextView textView = new ClickableTextView(context, selectionsEngine, tableView, this);
+      textView.setPadding(padding, 0, padding, 0);
+      content = textView;
     } else if(type.equals("image")) {
       content = new ClickableImageView(context, selectionsEngine, tableView, this);
     } else if(type.equals("miniChart")) {
       content = new MiniChartView(context);
+      this.setPadding(padding, 0, padding, 0);
     }
 
     this.selectionsEngine = selectionsEngine;
-    this.tableView = tableView;
     this.firstColumn = firstColumn;
     this.dragBoxEventHandler = tableView.dragBoxEventHandler;
 
@@ -156,6 +158,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
       handleSingleTap();
       return true;
     }
+
     @Override
     public void onLongPress(MotionEvent e) {
       ((View) content).showContextMenu();

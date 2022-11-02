@@ -38,7 +38,7 @@ public class DragBox extends View {
     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
     setX(-1);
     setY(-1);
-    setZ(3);
+    setZ(PixelUtils.dpToPx(3));
     setLayoutParams(layoutParams);
   }
 
@@ -115,7 +115,7 @@ public class DragBox extends View {
         }
         case MotionEvent.ACTION_MOVE: {
           float y = event.getRawY() + dY;
-          if(y < TableTheme.headerHeight) {
+          if(y < tableView.headerHeight) {
             return true;
           }
           bounds.top = (int) y;
