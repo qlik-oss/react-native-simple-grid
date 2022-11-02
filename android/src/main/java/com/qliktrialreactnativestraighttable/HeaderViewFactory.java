@@ -160,8 +160,9 @@ public class HeaderViewFactory {
     totalsView.post(() -> {
       int headerHeight = headerView.getMeasuredHeight();
       int y = topPosition ? headerHeight : tableView.getMeasuredHeight() - TableTheme.rowHeightFactor * 2;
-
-      totalsView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.rowHeightFactor));
+      FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, TableTheme.rowHeightFactor);
+      params.topMargin = tableView.headerHeight;
+      totalsView.setLayoutParams(params);
       totalsView.setOrientation(LinearLayout.HORIZONTAL);
       totalsView.setElevation((int) PixelUtils.dpToPx(4));
       totalsView.setZ((int) PixelUtils.dpToPx(headerZ));

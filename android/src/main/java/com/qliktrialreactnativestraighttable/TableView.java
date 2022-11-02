@@ -189,6 +189,9 @@ public class TableView extends FrameLayout {
         @Override
         public void run() {
           scrollView.requestLayout();
+          if(tableViewFactory.totalsView != null) {
+            tableViewFactory.totalsView.requestLayout();
+          }
           requestLayout();
         }
       });
