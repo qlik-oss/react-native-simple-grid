@@ -16,16 +16,18 @@ public class CustomRecyclerView extends RecyclerView {
   final LinearLayoutManager linearLayout;
   final DataProvider dataProvider;
   final TableView tableView;
+  final DragBox dragBox;
   public boolean firstColumnOnly = false;
   public boolean active = false;
   public CustomRecyclerView scrollCoupledView = null;
 
-  public CustomRecyclerView(Context context, boolean onlyFirstColumn, DataProvider dp, TableView tv, LinearLayoutManager ll) {
+  public CustomRecyclerView(Context context, boolean onlyFirstColumn, DataProvider dp, TableView tv, LinearLayoutManager ll, DragBox db, DragBox firstColumnDb) {
     super(context);
     firstColumnOnly = onlyFirstColumn;
     dataProvider = dp;
     tableView = tv;
     linearLayout = ll;
+    dragBox = db;
 
     DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
     OnScrollListener sharedScrollListener = new OnScrollListener(linearLayout);
@@ -42,6 +44,9 @@ public class CustomRecyclerView extends RecyclerView {
     this.setVerticalScrollBarEnabled(true);
     this.setScrollbarFadingEnabled(true);
     this.setVerticalScrollbarThumbDrawable(new ScrollBarDrawable());
+
+    dragBox.setScrollListener(this);
+    firstColumnDb.setScrollListener(this);
   }
 
   public void setViewToScrollCouple(CustomRecyclerView viewToScroll) {
@@ -52,6 +57,7 @@ public class CustomRecyclerView extends RecyclerView {
   public void requestLayout() {
     super.requestLayout();
     post(measureAndLayout);
+    return;
   }
 
   class OnScrollListener extends RecyclerView.OnScrollListener {

@@ -2,23 +2,32 @@ package com.qliktrialreactnativestraighttable;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 @SuppressLint("ViewConstructor")
 public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements Content {
   DataCell cell = null;
+  final CellView cellView;
   boolean selected = false;
   int defaultTextColor = Color.BLACK;
   final SelectionsEngine selectionsEngine;
   GestureDetector gestureDetector;
   final TableView tableView;
-  ClickableTextView(Context context, SelectionsEngine selectionsEngine, TableView tableView) {
+  Animation fadeIn;
+  ClickableTextView(Context context, SelectionsEngine selectionsEngine, TableView tableView, CellView cellView) {
     super(context);
     this.tableView = tableView;
     this.selectionsEngine = selectionsEngine;
+    this.cellView = cellView;
     defaultTextColor = getCurrentTextColor();
+    fadeIn = AnimationUtils.loadAnimation(context, R.anim.catalyst_fade_in);
   }
 
   @SuppressLint("ClickableViewAccessibility")
@@ -31,9 +40,10 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   public void updateBackgroundColor() {
     int color = selected ? TableTheme.selectedBackground : Color.TRANSPARENT;
     int textColor = selected ? Color.WHITE : defaultTextColor;
-    setBackgroundColor(color);
+    cellView.setBackgroundColor(color);
     setTextColor(textColor);
     postInvalidate();
+    startAnimation(fadeIn);
   }
 
   @Override
@@ -59,5 +69,9 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   @Override
   public void setSelected(boolean value) {
     selected = value;
+  }
+
+  public boolean isSelected(){
+    return selected;
   }
 }

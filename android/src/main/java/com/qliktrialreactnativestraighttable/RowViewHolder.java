@@ -82,8 +82,8 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
 
       if(column.representation.type.equals("image")) {
         RelativeLayout wrapper = (RelativeLayout) row.getChildAt(i);
-        RelativeLayout container = (RelativeLayout) wrapper.getChildAt(0);
-        ClickableImageView imageView = (ClickableImageView) container.getChildAt(0);
+        CellView cellView = (CellView) wrapper.getChildAt(0);
+        ClickableImageView imageView = (ClickableImageView) cellView.getChildAt(0);
         Bitmap imageBitmap = dataProvider.getImageData(column.representation.imageUrl);
         if(imageBitmap == null) {
           continue;

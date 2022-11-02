@@ -3,6 +3,7 @@ package com.qliktrialreactnativestraighttable;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Build;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ public class TableView extends FrameLayout {
   public final static int SCROLL_THUMB_HEIGHT = 12;
   RootLayout rootLayout;
   CustomHorizontalScrollView  scrollView;
+  final DragBox dragBox;
+  DragBox firstColumnDragBox = null;
   HeaderView headerView = null;
   AutoLinearLayout footerView = null;
   CustomRecyclerView recyclerView = null;
@@ -24,11 +27,12 @@ public class TableView extends FrameLayout {
   HeaderCell firstColumnHeaderCell = null;
   ScreenGuideView screenGuideView = null;
   SelectionsEngine selectionsEngine = new SelectionsEngine();
-  final  ColumnWidths columnWidths ;
+  final ColumnWidths columnWidths ;
   DataProvider dataProvider;
   boolean isFirstColumnFrozen = false;
   String name = "";
 
+  DragBoxEventHandler dragBoxEventHandler = new DragBoxEventHandler(this);
   TableTheme tableTheme = new TableTheme();
   List<GrabberView> grabbers = null;
   final TableViewFactory tableViewFactory;
@@ -38,11 +42,30 @@ public class TableView extends FrameLayout {
     super(context);
     columnWidths = new ColumnWidths(this.getContext());
     dataProvider = new DataProvider(columnWidths, selectionsEngine, this);
-    tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider);
+    dragBox = new DragBox(context, this, dragBoxEventHandler, false);
+    firstColumnDragBox = new DragBox(context, this, dragBoxEventHandler, true);
+    dragBoxEventHandler.setDragBoxes(dragBox, firstColumnDragBox);
+    tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider, dragBox, firstColumnDragBox);
   }
 
   public void clearSelections() {
+    hideDragBoxes();
     selectionsEngine.clearSelections();
+  }
+
+  public void showDragBox(Rect bounds, int columnId) {
+    if(isFirstColumnFrozen && columnId == 0) {
+      firstColumnDragBox.show(bounds, columnId);
+      dragBox.hide();
+      return;
+    }
+    dragBox.show(bounds, columnId);
+    firstColumnDragBox.hide();
+  }
+
+  public void hideDragBoxes() {
+    firstColumnDragBox.hide();
+    dragBox.hide();
   }
 
   public void setFirstColumnFrozen(boolean shouldFreeze) {
