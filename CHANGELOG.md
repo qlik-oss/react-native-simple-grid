@@ -1,3 +1,10 @@
+# [1.1.0-alpha.40](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.39...v1.1.0-alpha.40) (2022-11-02)
+
+
+### Features
+
+* android styling and conditionals ([#103](https://github.com/qlik-oss/react-native-simple-grid/issues/103)) ([327d091](https://github.com/qlik-oss/react-native-simple-grid/commit/327d0914a914da32fedc827b749711ee3c904b61))
+
 # [1.1.0-alpha.39](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.38...v1.1.0-alpha.39) (2022-11-02)
 
 
