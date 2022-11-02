@@ -1,6 +1,8 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -175,5 +177,15 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
 
   public int measureLines(DataColumn dataColumn) {
     return textWrapper.getMeasureLinedCount(dataColumn);
+  }
+
+  public void copyToClipBoard() {
+    ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+    ClipData clip = ClipData.newPlainText(cell.qText, cell.qText);
+    clipboard.setPrimaryClip(clip);
+  }
+
+  public String getCopyMenuString() {
+    return "copy";
   }
 }

@@ -1,12 +1,20 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.GestureDetector;
 import android.view.View;
+
+import java.io.ByteArrayOutputStream;
 
 public class MiniChartView extends View implements Content {
   Rect bounds = new Rect();
@@ -72,5 +80,29 @@ public class MiniChartView extends View implements Content {
   @Override
   public DataCell getCell() {
     return dataCell;
+  }
+
+  public void copyToClipBoard() {
+    if(miniChartRenderer != null) {
+      Bitmap bitmap = renderToBitmap();
+      ImageShare imageShare = new ImageShare();
+      imageShare.share(bitmap, getContext());
+    }
+  }
+
+  private Bitmap renderToBitmap() {
+    int height = (int)PixelUtils.dpToPx(getHeight());
+    int width = (int)PixelUtils.dpToPx(getWidth());
+    Rect newBounds = new Rect(0, 0, width, height);
+    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(bitmap);
+    canvas.drawColor(Color.WHITE);
+    miniChartRenderer.resetScales(newBounds);
+    miniChartRenderer.render(canvas);
+    return bitmap;
+  }
+
+  public String getCopyMenuString() {
+    return "share";
   }
 }
