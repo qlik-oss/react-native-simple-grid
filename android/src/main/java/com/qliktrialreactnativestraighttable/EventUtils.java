@@ -11,7 +11,9 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -35,10 +37,39 @@ public class EventUtils {
   public static void sendOnHeaderTapped(View contextView, DataColumn column) {
     WritableMap event = Arguments.createMap();
     try {
-      String columnJSONString = column.toEvent();
+      String columnJSONString = column.toEvent().toString();
       Log.d("foo", columnJSONString);
       event.putString("column", columnJSONString);
       EventUtils.sendEventToJSFromView(contextView, "onHeaderPressed", event);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void sendOnExpand(View contextView, DataColumn column, DataRow row) {
+    WritableMap event = Arguments.createMap();
+    try {
+      JSONObject columnJSONObject = column.toEvent();
+      JSONArray columnJSONArray = new JSONArray();
+      columnJSONArray.put(columnJSONObject);
+
+      String rowJSONString = row.toEvent();
+      Log.d("bar", rowJSONString);
+      event.putString("row", rowJSONString);
+      event.putString("col", columnJSONArray.toString());
+      EventUtils.sendEventToJSFromView(contextView, "onExpandCell", event);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void sendOnSearchColumn(View contextView, DataColumn column) {
+    WritableMap event = Arguments.createMap();
+    try {
+      String columnJSONString = column.toEvent().toString();
+      Log.d("column", columnJSONString);
+      event.putString("column", columnJSONString);
+      EventUtils.sendEventToJSFromView(contextView, "onSearchColumn", event);
     } catch (JSONException e) {
       e.printStackTrace();
     }

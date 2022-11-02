@@ -64,7 +64,7 @@ public class DataColumn {
     }
   }
 
-  public String toEvent() throws JSONException {
+  public JSONObject toEvent() throws JSONException {
     JSONObject column = new JSONObject();
     column.put("isDim", isDim);
     column.put("width", width);
@@ -74,7 +74,9 @@ public class DataColumn {
     column.put("sortDirection", sortDirection);
     column.put("dataColIdx", dataColIdx);
     column.put("active", active);
-    return column.toString();
+    column.put("representation", representation.toEvent());
+
+    return column;
   }
 
   public boolean isText() {

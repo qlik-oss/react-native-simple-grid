@@ -38,7 +38,7 @@ public class DragBox extends View {
     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
     setX(-1);
     setY(-1);
-    setZ(PixelUtils.dpToPx(3));
+    setZ(PixelUtils.dpToPx(1));
     setLayoutParams(layoutParams);
   }
 
@@ -53,6 +53,7 @@ public class DragBox extends View {
     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
     setX(bounds.left);
     setY(bounds.top);
+    setAlpha(1);
     setLayoutParams(layoutParams);
     int inset = width / 4;
     drawRect = new Rect(0, 0, layoutParams.width, layoutParams.height);
@@ -72,6 +73,7 @@ public class DragBox extends View {
     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
     setX(-1);
     setY(-1);
+    setAlpha(0);
     setLayoutParams(layoutParams);
   }
 
@@ -82,7 +84,7 @@ public class DragBox extends View {
     }
     super.onDraw(canvas);
     paint.setStyle(Paint.Style.FILL);
-    paint.setColor(Color.BLUE);
+    paint.setColor(Color.DKGRAY);
     canvas.drawRect(drawBottomFill, paint);
 
     paint.setStyle(Paint.Style.STROKE);

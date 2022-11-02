@@ -21,6 +21,8 @@ import android.widget.RelativeLayout;
 @SuppressLint("ViewConstructor")
 public class CellView extends LinearLayout implements SelectionsObserver {
   Content content = null;
+  DataRow row;
+  DataColumn column;
   final DragBoxEventHandler dragBoxEventHandler;
   final SelectionsEngine selectionsEngine;
   final TableView tableView;
@@ -31,35 +33,47 @@ public class CellView extends LinearLayout implements SelectionsObserver {
   CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean firstColumn) {
     super(context);
     this.tableView = tableView;
-    if(type.equals("text")) {
-      ClickableTextView textView = new ClickableTextView(context, selectionsEngine, tableView, this);
-      textView.setPadding(padding, 0, padding, 0);
-      content = textView;
-    } else if(type.equals("image")) {
-      content = new ClickableImageView(context, selectionsEngine, tableView, this);
-    } else if(type.equals("miniChart")) {
-      content = new MiniChartView(context);
-      this.setPadding(padding, 0, padding, 0);
-    }
-
     this.selectionsEngine = selectionsEngine;
     this.firstColumn = firstColumn;
     this.dragBoxEventHandler = tableView.dragBoxEventHandler;
 
-    dragBoxEventHandler.addDragBoxListener((boxBounds, column) -> handleDragBoxDrag(boxBounds, column));
+    switch (type) {
+      case "text":
+        ClickableTextView textView = new ClickableTextView(context, selectionsEngine, tableView, this);
+        textView.setPadding(padding, 0, padding, 0);
+        content = textView;
+        break;
+      case "image":
+        content = new ClickableImageView(context, selectionsEngine, tableView, this);
+        break;
+      case "miniChart":
+        content = new MiniChartView(context);
+        this.setPadding(padding, 0, padding, 0);
+        break;
+    }
+
+    dragBoxEventHandler.addDragBoxListener(this::handleDragBoxDrag);
     gestureDetector = new GestureDetector(getContext(), new CellView.SingleTapListener());
     content.setGestureDetector(gestureDetector);
 
     MenuItem.OnMenuItemClickListener handleMenuItemClick = item -> {
       switch (item.getItemId()) {
         case 0: // Copy
+          copyCell();
+          break;
+        case 1: // Expand
         default:
-          copyCell(context);
+          expandRow();
       }
       return true;
     };
     String copyString = tableView.getTranslation("menu", content.getCopyMenuString());
-    View.OnCreateContextMenuListener onCreateContextMenuListener = (contextMenu, view, contextMenuInfo) -> contextMenu.add(0, 0, 0, copyString).setOnMenuItemClickListener(handleMenuItemClick);
+    String expandString = tableView.getTranslation("menu", "expand");
+
+    View.OnCreateContextMenuListener onCreateContextMenuListener = (contextMenu, view, contextMenuInfo) -> {
+      contextMenu.add(0, 0, 0, copyString).setOnMenuItemClickListener(handleMenuItemClick);
+      contextMenu.add(0, 1, 1, expandString).setOnMenuItemClickListener(handleMenuItemClick);
+    };
     View contentView = (View) content;
     contentView.setOnCreateContextMenuListener(onCreateContextMenuListener);
     this.addView(contentView);
@@ -80,13 +94,19 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     }
   }
 
-  private void copyCell(Context context){
+  private void expandRow() {
+    EventUtils.sendOnExpand(tableView, column, row);
+  }
+
+  private void copyCell(){
     if(content != null) {
       content.copyToClipBoard();
     }
   }
 
-  public void setData(DataCell cell) {
+  public void setData(DataCell cell, DataRow row, DataColumn column) {
+    this.row = row;
+    this.column = column;
     content.setCell(cell);
     if (cell.isDim) {
       selectionsEngine.observe(this);
@@ -161,7 +181,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
 
     @Override
     public void onLongPress(MotionEvent e) {
-      ((View) content).showContextMenu();
+      ((View) content).showContextMenu(e.getX(), e.getY());
     }
   }
 }

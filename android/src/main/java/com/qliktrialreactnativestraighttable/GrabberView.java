@@ -14,6 +14,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +33,7 @@ public class GrabberView extends LinearLayout {
   CustomRecyclerView recyclerView;
   CustomRecyclerView firstColumnRecyclerView;
   HeaderCell firstColumnHeader;
+  TextView fixedTotalsCell;
   ScreenGuideView screenGuideView = null;
   RootLayout rootLayout = null;
   private final int column;
@@ -65,6 +67,7 @@ public class GrabberView extends LinearLayout {
             // cast here to avoid drift
             GrabberView.this.setTranslationX((int)x);
             GrabberView.this.updateHeader(motionDx);
+            GrabberView.this.updateFixedTotalsCell(motionDx);
             GrabberView.this.updateFirstColumnHeader(motionDx);
             lastX = motionEvent.getRawX();
             if(isLastColumn && motionDx > 0) {
@@ -112,6 +115,7 @@ public class GrabberView extends LinearLayout {
     grabberButton = new GrabberButton(this);
     grabberButton.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.rowHeightFactor));
     this.addView(grabberButton);
+    grabberButton.setBackgroundColor(Color.TRANSPARENT);
     grabberButton.setOnTouchListener(new TouchListener());
     linePaint.setColor(TableTheme.borderBackgroundColor);
     linePaint.setStrokeWidth(PixelUtils.dpToPx(1));
@@ -134,14 +138,19 @@ public class GrabberView extends LinearLayout {
 
   @Override
   protected void onDraw(Canvas canvas) {
+    super.onDraw(canvas);
     int width = getWidth() / 2;
     int top = 0;
     int height = getHeight() - top;
-    canvas.drawLine(width, top, width, height - grabberButton.getHeight(), linePaint);
+    canvas.drawLine(width, top, width, height - TableTheme.rowHeightFactor, linePaint);
   }
 
   public void setFirstColumnHeader(HeaderCell cell) {
     this.firstColumnHeader = cell;
+  }
+
+  public void setFixedTotalsCell(TextView cell) {
+    this.fixedTotalsCell = cell;
   }
 
   public void setFirstColumnRecyclerView(CustomRecyclerView view) {
@@ -176,11 +185,17 @@ public class GrabberView extends LinearLayout {
   public void updateHeader(float dxMotion) {
     HeaderCell headerCell = (HeaderCell)headerView.getChildAt(column);
     resizeView(headerCell, dxMotion);
-    headerCell.testTextWrap();
+    headerCell.cell.testTextWrap();
     View neighbour = updateNeighbour(headerView, dxMotion);
     if(neighbour != null) {
       headerCell = (HeaderCell) neighbour;
-      headerCell.testTextWrap();
+      headerCell.cell.testTextWrap();
+    }
+  }
+
+  public void updateFixedTotalsCell(float dxMotion) {
+    if(fixedTotalsCell != null && column == 0) {
+      resizeView(fixedTotalsCell, dxMotion);
     }
   }
 

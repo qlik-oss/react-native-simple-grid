@@ -102,6 +102,9 @@ public class TableView extends FrameLayout {
 
   public String getTranslation(String mapKey, String stringKey) {
     String defaultString = mapKey + "." + stringKey;
+    if(translations == null) {
+      return defaultString;
+    }
     ReadableMap map = translations.getMap(mapKey);
     if(map == null) {
       return defaultString;

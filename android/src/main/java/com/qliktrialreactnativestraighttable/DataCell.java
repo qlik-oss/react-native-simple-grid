@@ -2,12 +2,13 @@ package com.qliktrialreactnativestraighttable;
 
 import android.graphics.Color;
 import android.util.Log;
-import android.view.Gravity;
 import android.webkit.URLUtil;
 
-import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableType;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,4 +82,23 @@ public class DataCell {
     }
   }
 
+  public JSONObject toEvent() throws JSONException {
+    JSONObject cell = new JSONObject();
+
+    cell.put("qText", qText);
+    cell.put("qNum", qNum);
+    cell.put("qElemNumber", qElemNumber);
+    cell.put("qState", qState);
+    cell.put("imageUrl", imageUrl);
+    cell.put("rowIdx", rowIdx);
+    cell.put("colIdx", colIdx);
+    cell.put("isDim", isDim);
+    cell.put("rawRowIdx", rawRowIdx);
+    cell.put("rawColIdx", rawColIdx);
+    cell.put("isNumber", isNumber);
+    cell.put("miniChart", miniChart);
+    cell.put("indicator", indicator);
+
+    return cell;
+  }
 }

@@ -51,6 +51,9 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
 
     @ReactProp(name = "translations")
     public void setTranslations(View view, @Nullable ReadableMap translations) {
+      if(translations == null) {
+        return;
+      }
       TableView tableView = (TableView) (view);
       tableView.setTranslations(translations);
     }
@@ -145,13 +148,17 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
   @Nullable
   @Override
   public Map getExportedCustomDirectEventTypeConstants() {
-    return MapBuilder.of(
-      "onEndReached",
-      MapBuilder.of("registrationName", "onEndReached"),
-      "onSelectionsChanged",
-      MapBuilder.of("registrationName", "onSelectionsChanged"),
-      "onHeaderPressed",
-      MapBuilder.of("registrationName", "onHeaderPressed")
-    );
+    return MapBuilder.<String, Object>builder()
+      .put("onEndReached",
+        MapBuilder.of("registrationName", "onEndReached"))
+      .put("onSelectionsChanged",
+        MapBuilder.of("registrationName", "onSelectionsChanged"))
+      .put("onHeaderPressed",
+        MapBuilder.of("registrationName", "onHeaderPressed"))
+      .put("onExpandCell",
+        MapBuilder.of("registrationName", "onExpandCell"))
+      .put("onSearchColumn",
+        MapBuilder.of("registrationName", "onSearchColumn"))
+      .build();
   }
 }
