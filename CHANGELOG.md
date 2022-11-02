@@ -1,3 +1,10 @@
+# [1.1.0-alpha.39](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.38...v1.1.0-alpha.39) (2022-11-02)
+
+
+### Features
+
+* **md-3351:** row count android ([#105](https://github.com/qlik-oss/react-native-simple-grid/issues/105)) ([8b347a3](https://github.com/qlik-oss/react-native-simple-grid/commit/8b347a31becaa2538063d21119858bf2ca940a94))
+
 # [1.1.0-alpha.38](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.37...v1.1.0-alpha.38) (2022-10-31)
 
 
