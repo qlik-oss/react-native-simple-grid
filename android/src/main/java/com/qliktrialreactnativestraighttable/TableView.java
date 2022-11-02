@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import androidx.annotation.RequiresApi;
 
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.views.text.ReactFontManager;
 
@@ -33,6 +34,7 @@ public class TableView extends FrameLayout {
   HeaderCell firstColumnHeaderCell = null;
   ScreenGuideView screenGuideView = null;
   SelectionsEngine selectionsEngine = new SelectionsEngine();
+  ReadableMap translations;
   final ColumnWidths columnWidths ;
   DataProvider dataProvider;
   boolean isFirstColumnFrozen = false;
@@ -83,6 +85,19 @@ public class TableView extends FrameLayout {
   public void setFirstColumnFrozen(boolean shouldFreeze) {
     isFirstColumnFrozen = shouldFreeze;
     dataProvider.setFirstColumnFrozen(shouldFreeze);
+  }
+
+  public void setTranslations(ReadableMap translations) {
+    this.translations = translations;
+  }
+
+  public String getTranslation(String mapKey, String stringKey) {
+    String defaultString = mapKey + "." + stringKey;
+    ReadableMap map = translations.getMap(mapKey);
+    if(map == null) {
+      return defaultString;
+    }
+    return JsonUtils.getString(map, stringKey, defaultString);
   }
 
   public void setName(String value) {

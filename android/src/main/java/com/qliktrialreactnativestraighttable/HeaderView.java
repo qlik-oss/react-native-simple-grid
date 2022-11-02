@@ -35,11 +35,10 @@ public class HeaderView extends AutoLinearLayout{
   }
 
   public void testTextWrap() {
-    for (int i = 0; i < this.dataColumns.size(); i++){
-      HeaderCell headerCell = (HeaderCell)this.getChildAt(i);
+    for (int i = 0; i < this.dataColumns.size(); i++) {
+      HeaderCell headerCell = (HeaderCell) this.getChildAt(i);
       headerCell.testTextWrap();
     }
-
   }
 
   public int getMaxLineCount() {

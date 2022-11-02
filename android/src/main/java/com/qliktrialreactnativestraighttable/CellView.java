@@ -58,7 +58,8 @@ public class CellView extends LinearLayout implements SelectionsObserver {
       }
       return true;
     };
-    View.OnCreateContextMenuListener onCreateContextMenuListener = (contextMenu, view, contextMenuInfo) -> contextMenu.add(0, 0, 0, "Copy").setOnMenuItemClickListener(handleMenuItemClick);
+    String copyString = tableView.getTranslation("menu", "copy");
+    View.OnCreateContextMenuListener onCreateContextMenuListener = (contextMenu, view, contextMenuInfo) -> contextMenu.add(0, 0, 0, copyString).setOnMenuItemClickListener(handleMenuItemClick);
     View contentView = (View) content;
     contentView.setOnCreateContextMenuListener(onCreateContextMenuListener);
     this.addView(contentView);
