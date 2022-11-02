@@ -50,7 +50,7 @@ public class MiniChartView extends View implements Content {
   }
 
   @Override
-  public void updateBackgroundColor() {
+  public void updateBackgroundColor(boolean shouldAnimate) {
     // no selections
   }
 

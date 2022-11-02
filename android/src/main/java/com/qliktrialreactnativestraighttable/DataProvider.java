@@ -13,6 +13,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.facebook.react.bridge.ReadableArray;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -38,11 +41,14 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   boolean isDataView = false;
   List<DataRow> rows = null;
   List<DataColumn> dataColumns = null;
+  List<TotalsCell> totalsCells = null;
   Set<RowViewHolder> cachedViewHolders = new HashSet<>();
   Set<RowViewHolder> cachedFirstColumnViewHolders = new HashSet<>();
   ColumnWidths columnWidths;
   DataSize dataSize = null;
   boolean loading = false;
+  String totalsLabel;
+  String totalsPosition;
   Boolean isFirstColumnFrozen = false;
   final TableView tableView;
   public static final float minWidth = PixelUtils.dpToPx(80);
@@ -59,6 +65,12 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   public void setLoading(boolean loading) {
     this.loading = loading;
+  }
+
+  public void setTotals(ReadableArray totals, String totalsLabel, String totalsPosition) {
+    this.totalsCells = HeaderViewFactory.getTotalsCellList(totals);
+    this.totalsLabel = totalsLabel;
+    this.totalsPosition = totalsPosition;
   }
 
   public void setFirstColumnFrozen(boolean firstColumnFrozen) {

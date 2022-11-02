@@ -17,6 +17,7 @@ import androidx.annotation.RequiresApi;
 
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableNativeMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -63,10 +64,21 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @ReactProp(name = "cols")
     public void setCols(View view,  @Nullable ReadableMap source) {
+      TableView tableView = (TableView) view;
+      String totalsLabel = null, totalsPosition = null;
+      ReadableArray totalsRows = null;
       ReadableArray columns = source.getArray("header");
       ReadableArray footer = source.getArray("footer");
+      ReadableMap totals = source.getMap("totals");
+
+      if(totals != null) {
+        totalsPosition = totals.getString("position");
+        totalsLabel = totals.getString("label");
+        totalsRows = totals.getArray("rows");
+        tableView.setTotals(totalsRows, totalsPosition, totalsLabel);
+      }
+
       List<DataColumn> dataColumns = new ArrayList<>();
-      TableView tableView = (TableView) view;
       for(int i = 0; i < columns.size(); i++) {
         DataColumn column = new DataColumn(columns.getMap(i));
         dataColumns.add(column);
