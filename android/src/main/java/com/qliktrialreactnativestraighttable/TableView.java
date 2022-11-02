@@ -1,6 +1,7 @@
 package com.qliktrialreactnativestraighttable;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -21,6 +22,7 @@ import com.facebook.react.bridge.ReadableArray;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressLint("ViewConstructor")
 public class TableView extends FrameLayout {
   public final static int SCROLL_THUMB_HEIGHT = 12;
   RootLayout rootLayout;

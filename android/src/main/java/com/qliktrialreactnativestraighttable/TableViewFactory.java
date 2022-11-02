@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TableViewFactory {
-  public int marginTop = TableTheme.rowHeightFactor;
-  public int marginBottom = TableTheme.rowHeightFactor;
+  public int extraTopMargin = 0;
+  public HeaderViewFactory headerViewFactory = null;
   public CustomHorizontalScrollView scrollView = null;
   public RootLayout rootLayout = null;
   public HeaderView headerView = null;
@@ -31,6 +31,7 @@ public class TableViewFactory {
   public List<GrabberView> grabbers = null;
   public List<TotalsCell> totalsCells = null;
   public HeaderCell firstColumnHeaderCell = null;
+  public TextView firstColumnTotalsCell = null;
   public ScreenGuideView screenGuideView = null;
   private List<DataColumn> dataColumns = null;
   public String totalsPosition;
@@ -61,7 +62,7 @@ public class TableViewFactory {
 
     tableView.addView(scrollView);
     scrollView.addView(rootLayout);
-    
+
     if(tableView.headerContentStyle.wrap) {
       headerView.testTextWrap();
       updateFirstColumnHeaderHeight();
@@ -111,41 +112,51 @@ public class TableViewFactory {
   protected void createRecyclerViews() {
     CustomLinearLayoutManger linearLayout = new CustomLinearLayoutManger(context);
     coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout, dragBox, firstColumnDragBox);
-    linearLayout.recyclerView = coupledRecyclerView;
-    coupledRecyclerView.setAdapter(dataProvider);
-
     FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    recyclerViewLayoutParams.topMargin = marginTop;
-    recyclerViewLayoutParams.bottomMargin = marginBottom;
-    rootLayout.addView(coupledRecyclerView, recyclerViewLayoutParams);
+    coupledRecyclerView.setLayoutParams(recyclerViewLayoutParams);
 
     CustomLinearLayoutManger firstColumnLinearLayout = new CustomLinearLayoutManger(context);
     firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout, dragBox, firstColumnDragBox);
-    firstColumnLinearLayout.recyclerView = firstColumnRecyclerView;
-    firstColumnRecyclerView.setAdapter(dataProvider);
-    FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    firstColumnViewLayoutParams.topMargin = marginTop;
-    firstColumnViewLayoutParams.bottomMargin = marginBottom;
-    if(tableView.isFirstColumnFrozen) {
-      firstColumnHeaderCell = HeaderViewFactory.buildFixedColumnCell(rootLayout, dataColumns.get(0), tableView);
-      dataProvider.setFirstColumnFrozen(true);
-      coupledRecyclerView.setViewToScrollCouple(firstColumnRecyclerView);
-      firstColumnRecyclerView.setViewToScrollCouple(coupledRecyclerView);
-      firstColumnRecyclerView.setElevation(PixelUtils.dpToPx(2));
-      firstColumnRecyclerView.setOutlineProvider(null);
-      firstColumnHeaderCell.setElevation(PixelUtils.dpToPx(2));
-      firstColumnRecyclerView.setZ(PixelUtils.dpToPx(2));
 
-      if(totalsCells != null) {
-        TextView totalsCell = HeaderViewFactory.buildFixedTotalsCell(tableView, dataColumns.get(0), totalsCells.get(0), headerViewFactory.topPosition);
-        tableView.addView(totalsCell);
+    headerView.post(() -> {
+      int headerHeight = headerView.getMeasuredHeight();
+      int marginTop = headerHeight + extraTopMargin;
+      int marginBottom = TableTheme.rowHeightFactor;
+
+      linearLayout.recyclerView = coupledRecyclerView;
+      coupledRecyclerView.setAdapter(dataProvider);
+
+      recyclerViewLayoutParams.topMargin = marginTop;
+      recyclerViewLayoutParams.bottomMargin = marginBottom;
+      rootLayout.addView(coupledRecyclerView, recyclerViewLayoutParams);
+
+      firstColumnLinearLayout.recyclerView = firstColumnRecyclerView;
+      firstColumnRecyclerView.setAdapter(dataProvider);
+      FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+      firstColumnViewLayoutParams.topMargin = marginTop;
+      firstColumnViewLayoutParams.bottomMargin = marginBottom;
+      if(tableView.isFirstColumnFrozen) {
+        firstColumnHeaderCell = HeaderViewFactory.buildFixedColumnCell(rootLayout, dataColumns.get(0), tableView, headerViewFactory.topPosition);
+        dataProvider.setFirstColumnFrozen(true);
+        coupledRecyclerView.setViewToScrollCouple(firstColumnRecyclerView);
+        firstColumnRecyclerView.setViewToScrollCouple(coupledRecyclerView);
+        firstColumnRecyclerView.setElevation(PixelUtils.dpToPx(2));
+        firstColumnRecyclerView.setOutlineProvider(null);
+        firstColumnHeaderCell.setElevation(PixelUtils.dpToPx(2));
+        firstColumnRecyclerView.setZ(PixelUtils.dpToPx(2));
+
+        if(totalsCells != null) {
+          firstColumnTotalsCell = HeaderViewFactory.buildFixedTotalsCell(tableView, dataColumns.get(0), totalsCells.get(0), headerViewFactory.topPosition);
+          tableView.addView(firstColumnTotalsCell);
+        }
+        tableView.addView(firstColumnRecyclerView, firstColumnViewLayoutParams);
+        tableView.addView(firstColumnHeaderCell);
+        tableView.addView(firstColumnDragBox);
       }
-      tableView.addView(firstColumnRecyclerView, firstColumnViewLayoutParams);
-      tableView.addView(firstColumnHeaderCell);
-      tableView.addView(firstColumnDragBox);
-    }
 
-    createRowCount();
+      createRowCount();
+    });
+
   }
 
   protected void createRowCount() {
@@ -215,13 +226,19 @@ public class TableViewFactory {
 
   void invalidateLayout() {
     if (this.coupledRecyclerView != null) {
+      int width = dataColumns.get(0).width;
 
       if (this.firstColumnHeaderCell != null) {
-        int width = dataColumns.get(0).width;
         ViewGroup.LayoutParams params = firstColumnHeaderCell.getLayoutParams();
         params.width = width;
         firstColumnHeaderCell.setLayoutParams(params);
         firstColumnHeaderCell.requestLayout();
+      }
+      if(this.firstColumnTotalsCell != null) {
+        ViewGroup.LayoutParams params = firstColumnTotalsCell.getLayoutParams();
+        params.width = width;
+        firstColumnTotalsCell.setLayoutParams(params);
+        firstColumnTotalsCell.requestLayout();
       }
 
       this.headerView.updateLayout();
@@ -252,15 +269,15 @@ public class TableViewFactory {
         case "top":
         default:
           topPosition = true;
-          marginTop = TableTheme.rowHeightFactor * 2;
+          extraTopMargin = TableTheme.rowHeightFactor;
           break;
       }
 
     }
-    this.headerViewFactory = new HeaderViewFactory(dataColumns, totalsCells, dataProvider.totalsLabel, topPosition, tableView, context);
+    this.headerViewFactory = new HeaderViewFactory(dataColumns, totalsCells, dataProvider.totalsLabel, topPosition, tableView, tableView.headerContentStyle, context);
   }
 
-  private void updateGrabbers() {
+  public void updateGrabbers() {
     if (grabbers != null) {
       int maxLineHeight = headerView.getMaxLineCount();
       int headerHeight = maxLineHeight * TableTheme.rowHeightFactor;

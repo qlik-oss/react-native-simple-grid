@@ -36,6 +36,7 @@ public class RowCountView extends RelativeLayout {
     FrameLayout.LayoutParams frameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, TableTheme.rowHeightFactor);
     container.setLayoutParams(frameLayout);
     container.setZ(PixelUtils.dpToPx(4));
+    container.setElevation(PixelUtils.dpToPx(4));
     container.setY(height - TableTheme.rowHeightFactor);
     container.setBackgroundColor(Color.WHITE);
 

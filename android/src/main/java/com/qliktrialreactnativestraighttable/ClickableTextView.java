@@ -82,7 +82,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     return bounds;
   }
 
-  public void updateBackgroundColor() {
+  public void updateBackgroundColor(boolean shouldAnimate) {
     int bgColor = cell.cellBackgroundColorValid ? cell.cellBackgroundColor : Color.TRANSPARENT;
     int fgColor = cell.cellForegroundColorValid ? cell.cellForegroundColor : tableView.cellContentStyle.color;
     int color = selected ? TableTheme.selectedBackground : bgColor ;
