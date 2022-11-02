@@ -1,3 +1,10 @@
+# [1.1.0-alpha.41](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.40...v1.1.0-alpha.41) (2022-11-02)
+
+
+### Features
+
+* **md-3747:** translations android ([#107](https://github.com/qlik-oss/react-native-simple-grid/issues/107)) ([3278ade](https://github.com/qlik-oss/react-native-simple-grid/commit/3278adeb2e812023c0b5c9bec855a43efcb30925))
+
 # [1.1.0-alpha.40](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.39...v1.1.0-alpha.40) (2022-11-02)
 
 
