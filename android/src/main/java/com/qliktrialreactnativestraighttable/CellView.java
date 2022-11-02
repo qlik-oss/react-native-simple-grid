@@ -92,7 +92,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     if (cell.isDim) {
       selectionsEngine.observe(this);
       content.setSelected(selectionsEngine.contains(cell));
-      content.updateBackgroundColor();
+      content.updateBackgroundColor(false);
       postInvalidate();
     }
   }
@@ -137,13 +137,13 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     String me = SelectionsEngine.getKeyFrom(cell);
     if(received.equalsIgnoreCase(me)) {
       content.toggleSelected();
-      content.updateBackgroundColor();
+      content.updateBackgroundColor(true);
     }
   }
 
   public void onClear() {
     content.setSelected(false);
-    content.updateBackgroundColor();
+    content.updateBackgroundColor(false);
   }
 
   public void onRecycled() {

@@ -91,7 +91,9 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     setBackgroundColor(color);
     setTextColor(textColor);
     postInvalidate();
-    startAnimation(fadeIn);
+    if(shouldAnimate) {
+      startAnimation(fadeIn);
+    }
   }
 
   @Override

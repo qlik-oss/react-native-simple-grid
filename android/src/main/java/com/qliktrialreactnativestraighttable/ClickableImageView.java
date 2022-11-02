@@ -151,11 +151,13 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     }
   }
 
-  public void updateBackgroundColor() {
+  public void updateBackgroundColor(boolean shouldAnimate) {
     int color = selected ? TableTheme.selectedBackground : Color.TRANSPARENT;
     ViewGroup wrapper = (ViewGroup) cellView.getParent().getParent();
     wrapper.setBackgroundColor(color);
-    startAnimation(fadeIn);
+    if(shouldAnimate) {
+      startAnimation(fadeIn);
+    }
   }
 
   @Override

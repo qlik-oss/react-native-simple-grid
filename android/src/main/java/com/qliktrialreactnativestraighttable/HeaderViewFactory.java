@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.graphics.text.LineBreaker;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -37,11 +38,14 @@ public class HeaderViewFactory {
   List<TotalsCell> totalsCells = new ArrayList<>();
   List<DataColumn> dataColumns;
   final HeaderContentStyle headerContentStyle;
+  String totalsLabel;
+  boolean topPosition;
   HeaderView headerView = null;
-  AutoLinearLayout footerView = null;
+  AutoLinearLayout totalsView = null;
   TableView tableView;
-  public AutoLinearLayout getFooterView() {
-    return footerView;
+
+  public AutoLinearLayout getTotalsView() {
+    return totalsView;
   }
 
   public HeaderView getHeaderView() {
@@ -53,11 +57,17 @@ public class HeaderViewFactory {
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  public HeaderViewFactory(List<DataColumn> dataColumns, TableView tableView,  Context context, HeaderContentStyle contentStyle) {
+  public HeaderViewFactory(List<DataColumn> dataColumns, List<TotalsCell> totalsCells, String totalsLabel, boolean topPosition, TableView tableView, HeaderContentStyle contentStyle,  Context context) {
     this.tableView = tableView;
     this.dataColumns = dataColumns;
+    this.totalsCells = totalsCells;
+    this.totalsLabel = totalsLabel;
+    this.topPosition = topPosition;
     this.headerContentStyle = contentStyle;
     buildHeader(context);
+    if(totalsCells != null) {
+      buildTotals(context);
+    }
   }
 
   public static HeaderCell buildFixedColumnCell(FrameLayout rootView, DataColumn column, TableView tableView) {
@@ -82,6 +92,29 @@ public class HeaderViewFactory {
     return fixedFirstHeaderCell;
   }
 
+  public static TextView buildFixedTotalsCell(TableView tableView, DataColumn column, TotalsCell totalsCell, boolean topPosition) {
+    int padding = (int) PixelUtils.dpToPx(16);
+    TextView text = new TextView(tableView.getContext());
+    text.setMaxLines(1);
+    text.setTypeface(text.getTypeface(), Typeface.BOLD);
+    text.setEllipsize(TextUtils.TruncateAt.END);
+    if(column.isDim) {
+      text.setText(tableView.totalsLabel);
+      text.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+    } else {
+      text.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+      text.setText(totalsCell.qText);
+    }
+    text.setPadding(padding, 0, padding, 0);
+    text.setLayoutParams(new LinearLayout.LayoutParams(column.width, TableTheme.headerHeight));
+    text.setBackgroundColor(Color.WHITE);
+    text.setZ(headerZ);
+    int y = topPosition ? TableTheme.headerHeight : tableView.getMeasuredHeight() - TableTheme.headerHeight * 2;
+    text.setY(y);
+
+    return text;
+  }
+
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void buildHeader(Context context) {
     int padding = (int) PixelUtils.dpToPx(16);
@@ -92,7 +125,6 @@ public class HeaderViewFactory {
     headerView.setElevation((int)PixelUtils.dpToPx(4));
     headerView.setBackgroundColor(TableTheme.headerBackgroundColor);
     for(int i = 0; i < dataColumns.size(); i++) {
-
       DataColumn column = dataColumns.get(i);
 
       HeaderCell text = new HeaderCell(headerView.getContext(), column, this.tableView);
@@ -112,4 +144,47 @@ public class HeaderViewFactory {
     headerView.setDataColumns(dataColumns);
   }
 
+  private void buildTotals(Context context) {
+    totalsView = new AutoLinearLayout(context);
+    totalsView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.headerHeight));
+    totalsView.setOrientation(LinearLayout.HORIZONTAL);
+    totalsView.setElevation((int)PixelUtils.dpToPx(4));
+    totalsView.setZ(headerZ);
+    int y = topPosition ? TableTheme.headerHeight : tableView.getMeasuredHeight() - TableTheme.headerHeight * 2;
+    totalsView.setY(y);
+    totalsView.setBackgroundColor(Color.WHITE);
+
+    // first add all fillers, then populate with the data
+    int j = 0;
+    for(int i = 0; i < dataColumns.size(); i++ ) {
+      DataColumn column = dataColumns.get(i);
+      TextView text = new TextView(context);
+      int padding = (int) PixelUtils.dpToPx(16);
+      text.setMaxLines(1);
+      text.setTypeface(text.getTypeface(), Typeface.BOLD);
+      text.setEllipsize(TextUtils.TruncateAt.END);
+      if(column.isDim && i == 0) {
+        text.setText(totalsLabel);
+        text.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+      }
+      if (!column.isDim) {
+        if (j < totalsCells.size()) {
+          text.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+          text.setText(totalsCells.get(j++).qText);
+        }
+      }
+      text.setPadding(padding, 0, padding, 0);
+      text.setLayoutParams(new LinearLayout.LayoutParams(column.width, TableTheme.headerHeight));
+      totalsView.addView(text);
+    }
+  }
+
+  public static List<TotalsCell> getTotalsCellList(ReadableArray source) {
+    List<TotalsCell> totalsCells = new ArrayList<>();
+    for(int i = 0; i < source.size(); i++) {
+      TotalsCell cell = new TotalsCell(source.getMap(i));
+      totalsCells.add(cell);
+    }
+    return totalsCells;
+  }
 }

@@ -16,12 +16,12 @@ import androidx.annotation.RequiresApi;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.views.text.ReactFontManager;
+import com.facebook.react.bridge.ReadableArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TableView extends FrameLayout {
-
   public final static int SCROLL_THUMB_HEIGHT = 12;
   RootLayout rootLayout;
   CustomHorizontalScrollView  scrollView;
@@ -48,6 +48,8 @@ public class TableView extends FrameLayout {
   int rowHeight = TableTheme.rowHeightFactor;
   int themedRowHeight = TableTheme.rowHeightFactor;
   int headerHeight = TableTheme.rowHeightFactor;
+  List<TotalsCell> totalsCells = null;
+  String totalsLabel;
   final TableViewFactory tableViewFactory;
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -60,6 +62,11 @@ public class TableView extends FrameLayout {
     firstColumnDragBox = new DragBox(context, this, dragBoxEventHandler, true);
     dragBoxEventHandler.setDragBoxes(dragBox, firstColumnDragBox);
     tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider, dragBox, firstColumnDragBox);
+  }
+
+  public void setTotals(ReadableArray totalsRows, String totalsPosition, String totalsLabel) {
+    this.totalsLabel = totalsLabel;
+    dataProvider.setTotals(totalsRows, totalsLabel, totalsPosition);
   }
 
   public void clearSelections() {
