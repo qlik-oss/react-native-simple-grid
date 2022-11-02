@@ -2,10 +2,17 @@ package com.qliktrialreactnativestraighttable;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Layout;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +97,7 @@ public class TableViewFactory {
     coupledRecyclerView.setAdapter(dataProvider);
 
     FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    recyclerViewLayoutParams.topMargin = tableView.headerHeight;
+    recyclerViewLayoutParams.topMargin = TableTheme.rowHeightFactor;
     recyclerViewLayoutParams.bottomMargin = TableTheme.rowHeightFactor;
     rootLayout.addView(coupledRecyclerView, recyclerViewLayoutParams);
 
@@ -99,9 +106,9 @@ public class TableViewFactory {
     firstColumnLinearLayout.recyclerView = firstColumnRecyclerView;
     firstColumnRecyclerView.setAdapter(dataProvider);
     FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    firstColumnViewLayoutParams.topMargin = tableView.headerHeight;
+    firstColumnViewLayoutParams.topMargin = TableTheme.rowHeightFactor;
     firstColumnViewLayoutParams.bottomMargin = TableTheme.rowHeightFactor;
-    if(tableView.isFirstColumnFrozen) {
+    if (tableView.isFirstColumnFrozen) {
       firstColumnHeaderCell = HeaderViewFactory.buildFixedColumnCell(rootLayout, dataColumns.get(0), tableView);
       dataProvider.setFirstColumnFrozen(true);
       coupledRecyclerView.setViewToScrollCouple(firstColumnRecyclerView);

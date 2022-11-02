@@ -48,6 +48,12 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
 
     }
 
+    @ReactProp(name = "translations")
+    public void setTranslations(View view, @Nullable ReadableMap translations) {
+      TableView tableView = (TableView) (view);
+      tableView.setTranslations(translations);
+    }
+
     @ReactProp(name = "freezeFirstColumn")
     public void setFreezeFirstColumn(View view, Boolean value) {
         TableView tableView = (TableView) view;

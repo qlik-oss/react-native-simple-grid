@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 @SuppressLint("ViewConstructor")
 public class RowCountView extends RelativeLayout {
+  final TableView tableView;
   final int margin = (int)PixelUtils.dpToPx(8);
   RelativeLayout container;
   TextView textView;
@@ -21,6 +22,7 @@ public class RowCountView extends RelativeLayout {
   public RowCountView(Context context, TableView tableView) {
     super(context);
     int height = tableView.getMeasuredHeight();
+    this.tableView = tableView;
 
     textView = new TextView(context);
     textView.setSingleLine();
@@ -42,7 +44,9 @@ public class RowCountView extends RelativeLayout {
   }
 
   public void update(int windowMin, int windowMax, int total) {
-    String text = windowMin + " - " + windowMax + " of " + total; // TODO: Translate
+    String ofString = tableView.getTranslation("misc", "of");
+
+    String text = windowMin + " - " + windowMax + " " + ofString + " " + total;
     textView.setText(text);
     textView.postInvalidate();
   }

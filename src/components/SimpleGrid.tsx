@@ -41,6 +41,9 @@ export type SimpleGridProps = {
       copy: string;
       expand: string;
     };
+    misc: {
+      of: string;
+    }
   };
 };
 

@@ -7,6 +7,10 @@ public class JsonUtils {
     return data.hasKey(key) ? data.getString(key) : null;
   }
 
+  static String getString(ReadableMap data, String key, String defaultValue) {
+    return data.hasKey(key) ? data.getString(key) : defaultValue;
+  }
+
   static int getInt(ReadableMap data, String key, int defaultValue) {
     return data.hasKey(key) ? data.getInt(key) : defaultValue;
   }
