@@ -1,3 +1,10 @@
+# [1.1.0-alpha.42](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.41...v1.1.0-alpha.42) (2022-11-02)
+
+
+### Features
+
+* **md-3350:** column totals android ([#106](https://github.com/qlik-oss/react-native-simple-grid/issues/106)) ([de75078](https://github.com/qlik-oss/react-native-simple-grid/commit/de75078fd96ea43c74cabbe5018dc333ef1cc3d3))
+
 # [1.1.0-alpha.41](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.40...v1.1.0-alpha.41) (2022-11-02)
 
 
