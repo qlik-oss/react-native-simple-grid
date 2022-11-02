@@ -86,10 +86,6 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
     [searchColumn]
   );
 
-  console.log("TOTALS:", layout?.totals?.show || layout?.totals?.position !== 'noTotals'
-  ? { ...layout.totals, rows: layout.qHyperCube.qGrandTotalRow }
-  : undefined)
-
   return (
     <ReactNativeStraightTableViewManager
       theme={theme}
