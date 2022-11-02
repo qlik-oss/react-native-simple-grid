@@ -23,7 +23,8 @@ public class MiniChartRenderer {
     this.representation = representation;
     miniChartData = chartData;
     miniChartInfo = representation.miniChart;
-    paint.setColor(Color.RED);
+    paint.setAntiAlias(true);
+    paint.setFilterBitmap(true);
   }
 
   public void updateData(qMiniChart chartData, Representation representation) {

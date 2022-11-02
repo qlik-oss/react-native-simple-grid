@@ -1,7 +1,6 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.view.GestureDetector;
-import android.view.MotionEvent;
 
 public interface Content {
   void updateBackgroundColor(boolean shouldAnimate);
@@ -11,4 +10,6 @@ public interface Content {
   boolean isSelected();
   void setCell(DataCell cell);
   DataCell getCell();
+  String getCopyMenuString();
+  void copyToClipBoard();
 }

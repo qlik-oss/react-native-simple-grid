@@ -58,7 +58,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
       }
       return true;
     };
-    String copyString = tableView.getTranslation("menu", "copy");
+    String copyString = tableView.getTranslation("menu", content.getCopyMenuString());
     View.OnCreateContextMenuListener onCreateContextMenuListener = (contextMenu, view, contextMenuInfo) -> contextMenu.add(0, 0, 0, copyString).setOnMenuItemClickListener(handleMenuItemClick);
     View contentView = (View) content;
     contentView.setOnCreateContextMenuListener(onCreateContextMenuListener);
@@ -81,10 +81,9 @@ public class CellView extends LinearLayout implements SelectionsObserver {
   }
 
   private void copyCell(Context context){
-    DataCell cell = content.getCell();
-    ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-    ClipData clip = ClipData.newPlainText(cell.qText, cell.qText);
-    clipboard.setPrimaryClip(clip);
+    if(content != null) {
+      content.copyToClipBoard();
+    }
   }
 
   public void setData(DataCell cell) {

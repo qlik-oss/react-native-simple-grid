@@ -66,7 +66,14 @@ public class TableViewFactory {
     if(tableView.headerContentStyle.wrap) {
       headerView.testTextWrap();
       updateFirstColumnHeaderHeight();
+      updateTotalsViewHeight();
     }
+    tableView.post(new Runnable() {
+      @Override
+      public void run() {
+        updateGrabbers();
+      }
+    });
   }
 
   protected void updateRowHeights() {
@@ -307,13 +314,15 @@ public class TableViewFactory {
     int maxLineCount = headerView.getMaxLineCount();
     int headerHeight = maxLineCount * TableTheme.rowHeightFactor;
     tableView.headerHeight = headerHeight;
+
     ViewGroup.LayoutParams params = headerView.getLayoutParams();
     params.height = headerHeight;
     headerView.setLayoutParams(params);
     FrameLayout.LayoutParams recyclerParams = (FrameLayout.LayoutParams) coupledRecyclerView.getLayoutParams();
-    recyclerParams.topMargin = headerHeight;
+    recyclerParams.topMargin = headerHeight + TableTheme.rowHeightFactor;
     coupledRecyclerView.setLayoutParams(recyclerParams);
 
+    updateTotalsViewHeight();
     updateFirstColumnsHeights();
 
     tableView.post(new Runnable() {
@@ -325,6 +334,11 @@ public class TableViewFactory {
         if(firstColumnHeaderCell != null) {
           firstColumnHeaderCell.requestLayout();
         }
+
+        if(totalsView != null) {
+          totalsView.requestLayout();
+        }
+
         coupledRecyclerView.requestLayout();
         rootLayout.requestLayout();
         headerView.requestLayout();
@@ -361,5 +375,13 @@ public class TableViewFactory {
         rootLayout.requestLayout();
       }
     });
+  }
+
+  public void updateTotalsViewHeight() {
+    if(totalsView != null) {
+      FrameLayout.LayoutParams pp = (FrameLayout.LayoutParams)totalsView.getLayoutParams();
+      pp.topMargin = tableView.headerHeight;
+      totalsView.setLayoutParams(pp);
+    }
   }
 }
