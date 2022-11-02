@@ -43,7 +43,6 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     }
 
     this.selectionsEngine = selectionsEngine;
-    this.tableView = tableView;
     this.firstColumn = firstColumn;
     this.dragBoxEventHandler = tableView.dragBoxEventHandler;
 

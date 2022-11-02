@@ -38,13 +38,14 @@ public class TableView extends FrameLayout {
   boolean isFirstColumnFrozen = false;
   String name = "";
 
+
   DragBoxEventHandler dragBoxEventHandler = new DragBoxEventHandler(this);
-  TableTheme tableTheme = new TableTheme();
   HeaderContentStyle headerContentStyle;
   CellContentStyle cellContentStyle;
   List<GrabberView> grabbers = null;
   int rowHeight = TableTheme.rowHeightFactor;
   int themedRowHeight = TableTheme.rowHeightFactor;
+  int headerHeight = TableTheme.rowHeightFactor;
   final TableViewFactory tableViewFactory;
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

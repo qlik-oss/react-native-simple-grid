@@ -88,23 +88,8 @@ public class TableViewFactory {
   }
 
   protected void createRecyclerViews() {
-<<<<<<< HEAD
-    LinearLayoutManager linearLayout = new LinearLayoutManager(context);
-    coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout, dragBox, firstColumnDragBox);
-    FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    recyclerViewLayoutParams.topMargin = TableTheme.headerHeight;
-    recyclerViewLayoutParams.bottomMargin = TableTheme.headerHeight;
-    rootLayout.addView(coupledRecyclerView, recyclerViewLayoutParams);
-
-    LinearLayoutManager firstColumnLinearLayout = new LinearLayoutManager(context);
-    firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout, dragBox, firstColumnDragBox);
-    FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    firstColumnViewLayoutParams.topMargin = TableTheme.headerHeight;
-    firstColumnViewLayoutParams.bottomMargin = TableTheme.headerHeight;
-    if(tableView.isFirstColumnFrozen) {
-=======
     CustomLinearLayoutManger linearLayout = new CustomLinearLayoutManger(context);
-    coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout);
+    coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout, dragBox, firstColumnDragBox);
     linearLayout.recyclerView = coupledRecyclerView;
     coupledRecyclerView.setAdapter(dataProvider);
 
@@ -113,13 +98,12 @@ public class TableViewFactory {
     rootLayout.addView(coupledRecyclerView, recyclerViewLayoutParams);
 
     CustomLinearLayoutManger firstColumnLinearLayout = new CustomLinearLayoutManger(context);
-    firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout);
+    firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout, dragBox, firstColumnDragBox);
     firstColumnLinearLayout.recyclerView = firstColumnRecyclerView;
     firstColumnRecyclerView.setAdapter(dataProvider);
     FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
     firstColumnViewLayoutParams.topMargin = TableTheme.rowHeightFactor;
     if (tableView.isFirstColumnFrozen) {
->>>>>>> ea16f25 (feat: text wrapping)
       firstColumnHeaderCell = HeaderViewFactory.buildFixedColumnCell(rootLayout, dataColumns.get(0), tableView);
       dataProvider.setFirstColumnFrozen(true);
       coupledRecyclerView.setViewToScrollCouple(firstColumnRecyclerView);
@@ -258,6 +242,7 @@ public class TableViewFactory {
   public void updateHeaderViewLineCount() {
     int maxLineCount = headerView.getMaxLineCount();
     int headerHeight = maxLineCount * TableTheme.rowHeightFactor;
+    tableView.headerHeight = headerHeight;
     ViewGroup.LayoutParams params = headerView.getLayoutParams();
     params.height = headerHeight;
     headerView.setLayoutParams(params);

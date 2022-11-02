@@ -34,8 +34,6 @@ import okhttp3.Response;
 
 public class HeaderViewFactory {
   private static final float headerZ = 4;
-  List<DataColumn> dataColumns = new ArrayList<>();
-  List<TotalsCell> totalsCells = new ArrayList<>();
   List<DataColumn> dataColumns;
   final HeaderContentStyle headerContentStyle;
   HeaderView headerView = null;

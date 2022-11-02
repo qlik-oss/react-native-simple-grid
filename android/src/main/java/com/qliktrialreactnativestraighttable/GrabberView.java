@@ -139,12 +139,12 @@ public class GrabberView extends LinearLayout {
     int height = getHeight() - top;
     if(firstColumnHeader != null && this.column == 0) {
       if(this.pressed) {
-        canvas.drawLine(width, top, width, height - TableTheme.headerHeight, linePaint);
+        canvas.drawLine(width, top, width, height - grabberButton.getHeight(), linePaint);
       } else  {
         return;
       }
     }
-    canvas.drawLine(width, top, width, height - TableTheme.headerHeight, linePaint);
+    canvas.drawLine(width, top, width, height - grabberButton.getHeight(), linePaint);
   }
 
   public void setFirstColumnHeader(HeaderCell cell) {

@@ -115,7 +115,7 @@ public class DragBox extends View {
         }
         case MotionEvent.ACTION_MOVE: {
           float y = event.getRawY() + dY;
-          if(y < TableTheme.headerHeight) {
+          if(y < tableView.headerHeight) {
             return true;
           }
           bounds.top = (int) y;
