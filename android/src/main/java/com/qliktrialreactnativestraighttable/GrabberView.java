@@ -137,13 +137,6 @@ public class GrabberView extends LinearLayout {
     int width = getWidth() / 2;
     int top = 0;
     int height = getHeight() - top;
-    if(firstColumnHeader != null && this.column == 0) {
-      if(this.pressed) {
-        canvas.drawLine(width, top, width, height - grabberButton.getHeight(), linePaint);
-      } else  {
-        return;
-      }
-    }
     canvas.drawLine(width, top, width, height - grabberButton.getHeight(), linePaint);
   }
 

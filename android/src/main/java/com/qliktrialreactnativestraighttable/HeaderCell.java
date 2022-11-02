@@ -78,7 +78,9 @@ public class HeaderCell extends androidx.appcompat.widget.AppCompatTextView {
   }
 
   public void testTextWrap() {
-    textWrapper.testTextWrap();
+    if(tableView.headerContentStyle.wrap) {
+      textWrapper.testTextWrap();
+    }
   }
 
   @Override

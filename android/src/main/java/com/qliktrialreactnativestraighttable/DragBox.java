@@ -38,7 +38,7 @@ public class DragBox extends View {
     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1, 1);
     setX(-1);
     setY(-1);
-    setZ(3);
+    setZ(PixelUtils.dpToPx(3));
     setLayoutParams(layoutParams);
   }
 

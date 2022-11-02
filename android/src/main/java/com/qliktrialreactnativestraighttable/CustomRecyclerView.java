@@ -142,6 +142,11 @@ public class CustomRecyclerView extends RecyclerView {
   }
 
   public boolean testTextWrap() {
+    if(!tableView.cellContentStyle.wrap) {
+      // don't test but tell whoever is calling
+      // that it's done testing
+      return true;
+    }
     int childCount = getChildCount();
     if (childCount == 0) {
       return false;
@@ -168,11 +173,11 @@ public class CustomRecyclerView extends RecyclerView {
         if (tableView.firstColumnView != null) {
           tableView.firstColumnView.requestLayout();
         }
-        tableView.rootLayout.requestLayout();
-        requestLayout();
-        if(!firstColumnOnly) {
-          dataProvider.notifyDataSetChanged();
+        if(tableView.rootLayout != null) {
+          tableView.rootLayout.requestLayout();
         }
+        requestLayout();
+        dataProvider.notifyDataSetChanged();
       }
     });
 

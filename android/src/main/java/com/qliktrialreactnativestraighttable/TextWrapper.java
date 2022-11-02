@@ -75,6 +75,8 @@ public class TextWrapper {
   }
 
   public void countWords(String text) {
-    wordCount = text.split("\\s+").length;
+    if(text != null) {
+      wordCount = text.split("\\s+").length;
+    }
   }
 }

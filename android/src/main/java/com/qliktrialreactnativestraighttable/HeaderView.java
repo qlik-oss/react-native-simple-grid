@@ -39,6 +39,7 @@ public class HeaderView extends AutoLinearLayout{
       HeaderCell headerCell = (HeaderCell)this.getChildAt(i);
       headerCell.testTextWrap();
     }
+
   }
 
   public int getMaxLineCount() {

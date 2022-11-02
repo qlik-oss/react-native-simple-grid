@@ -34,6 +34,7 @@ import okhttp3.Response;
 
 public class HeaderViewFactory {
   private static final float headerZ = 4;
+  List<TotalsCell> totalsCells = new ArrayList<>();
   List<DataColumn> dataColumns;
   final HeaderContentStyle headerContentStyle;
   HeaderView headerView = null;
@@ -72,7 +73,7 @@ public class HeaderViewFactory {
     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, TableTheme.rowHeightFactor);
     fixedFirstHeaderCell.setTop(0);
     fixedFirstHeaderCell.setLeft(0);
-    fixedFirstHeaderCell.setZ(headerZ);
+    fixedFirstHeaderCell.setZ(PixelUtils.dpToPx(headerZ));
     fixedFirstHeaderCell.setLayoutParams(layoutParams);
     fixedFirstHeaderCell.setGravity(Gravity.CENTER_VERTICAL);
     fixedFirstHeaderCell.setBackgroundColor(TableTheme.headerBackgroundColor);
@@ -104,7 +105,7 @@ public class HeaderViewFactory {
       LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
       text.setLayoutParams(layoutParams);
       text.setGravity(Gravity.CENTER_VERTICAL);
-      text.setZ(headerZ);
+      text.setZ(PixelUtils.dpToPx(headerZ));
       text.setBackgroundColor(headerContentStyle.backgroundColor);
       headerView.addView(text);
     }

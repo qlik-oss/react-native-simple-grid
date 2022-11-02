@@ -87,6 +87,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     int fgColor = cell.cellForegroundColorValid ? cell.cellForegroundColor : tableView.cellContentStyle.color;
     int color = selected ? TableTheme.selectedBackground : bgColor ;
     int textColor = selected ? Color.WHITE : fgColor ;
+    cellView.setBackgroundColor(color);
     setBackgroundColor(color);
     setTextColor(textColor);
     postInvalidate();
@@ -155,7 +156,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   public boolean isSelected(){
     return selected;
   }
-  
+
   @Override
   public void setMaxLines(int maxLines) {
     maxLines = textWrapper.setMaxLines(maxLines);
@@ -163,7 +164,9 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   }
 
   public void testTextWrap(DataColumn dataColumn) {
-    textWrapper.testTextWrap(dataColumn);
+    if(tableView.cellContentStyle.wrap) {
+      textWrapper.testTextWrap(dataColumn);
+    }
   }
 
   public int getMeasuredLineCount() {
