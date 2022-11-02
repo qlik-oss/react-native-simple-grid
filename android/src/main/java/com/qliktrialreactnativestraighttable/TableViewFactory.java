@@ -2,7 +2,6 @@ package com.qliktrialreactnativestraighttable;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.text.Layout;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -17,6 +16,7 @@ public class TableViewFactory {
   public CustomHorizontalScrollView scrollView;
   public RootLayout rootLayout;
   public HeaderView headerView;
+  public RowCountView rowCountView;
   public CustomRecyclerView firstColumnRecyclerView;
   public CustomRecyclerView coupledRecyclerView;
   public List<GrabberView> grabbers = null;
@@ -80,12 +80,14 @@ public class TableViewFactory {
     coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout, dragBox, firstColumnDragBox);
     FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     recyclerViewLayoutParams.topMargin = TableTheme.headerHeight;
+    recyclerViewLayoutParams.bottomMargin = TableTheme.headerHeight;
     rootLayout.addView(coupledRecyclerView, recyclerViewLayoutParams);
 
     LinearLayoutManager firstColumnLinearLayout = new LinearLayoutManager(context);
     firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout, dragBox, firstColumnDragBox);
     FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
     firstColumnViewLayoutParams.topMargin = TableTheme.headerHeight;
+    firstColumnViewLayoutParams.bottomMargin = TableTheme.headerHeight;
     if(tableView.isFirstColumnFrozen) {
       firstColumnHeaderCell = HeaderViewFactory.buildFixedColumnCell(rootLayout, dataColumns.get(0), tableView);
       dataProvider.setFirstColumnFrozen(true);
@@ -99,6 +101,14 @@ public class TableViewFactory {
       tableView.addView(firstColumnHeaderCell);
       tableView.addView(firstColumnDragBox);
     }
+
+    createRowCount();
+  }
+
+  protected void createRowCount() {
+    rowCountView = new RowCountView(context, tableView);
+    coupledRecyclerView.setRowCountView(rowCountView);
+    tableView.addView(rowCountView);
 
     createGrabbers();
   }

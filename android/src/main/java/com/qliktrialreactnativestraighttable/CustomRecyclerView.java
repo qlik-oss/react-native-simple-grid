@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -17,7 +18,8 @@ public class CustomRecyclerView extends RecyclerView {
   final DataProvider dataProvider;
   final TableView tableView;
   final DragBox dragBox;
-  public boolean firstColumnOnly = false;
+  RowCountView rowCountView;
+  public boolean firstColumnOnly;
   public boolean active = false;
   public CustomRecyclerView scrollCoupledView = null;
 
@@ -53,11 +55,26 @@ public class CustomRecyclerView extends RecyclerView {
     scrollCoupledView = viewToScroll;
   }
 
+  public void setRowCountView(RowCountView view) {
+    this.rowCountView = view;
+  }
+
   @Override
   public void requestLayout() {
     super.requestLayout();
     post(measureAndLayout);
-    return;
+    if(rowCountView == null) {
+      return;
+    }
+    post(() -> {
+      if(linearLayout == null || dataProvider == null) {
+        return;
+      }
+      int windowMin = linearLayout.findFirstVisibleItemPosition() + 1;
+      int windowMax = linearLayout.findLastVisibleItemPosition() + 1;
+      int total = dataProvider.dataSize.qcy;
+      rowCountView.update(windowMin, windowMax, total);
+    });
   }
 
   class OnScrollListener extends RecyclerView.OnScrollListener {
@@ -87,11 +104,7 @@ public class CustomRecyclerView extends RecyclerView {
   public void onScrollStateChanged(int state) {
     super.onScrollStateChanged(state);
 
-    active = true;
-    if(state == SCROLL_STATE_IDLE) {
-      active = false;
-    }
-
+    active = state != SCROLL_STATE_IDLE;
   }
 
   private final Runnable measureAndLayout = () -> {
