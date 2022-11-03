@@ -22,23 +22,25 @@ public class RowCountView extends RelativeLayout {
   public RowCountView(Context context, TableView tableView) {
     super(context);
     int height = tableView.getMeasuredHeight();
+    int width = tableView.getMeasuredWidth();
+
     this.tableView = tableView;
 
     textView = new TextView(context);
     textView.setSingleLine();
+    textView.setMinimumWidth(width / 2);
     RelativeLayout.LayoutParams textLayout = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
     textLayout.rightMargin = margin;
     textLayout.topMargin = margin;
+    textView.setGravity(Gravity.RIGHT);
     textView.setLayoutParams(textLayout);
 
     container = new RelativeLayout(context);
     container.setGravity(Gravity.RIGHT);
     FrameLayout.LayoutParams frameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, TableTheme.rowHeightFactor);
     container.setLayoutParams(frameLayout);
-    container.setZ(PixelUtils.dpToPx(4));
-    container.setElevation(PixelUtils.dpToPx(4));
+    container.setElevation(PixelUtils.dpToPx(2));
     container.setY(height - TableTheme.rowHeightFactor);
-    container.setBackgroundColor(Color.WHITE);
 
     container.addView(textView);
     addView(container);

@@ -1,6 +1,7 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.text.Layout;
 import android.util.Log;
@@ -121,9 +122,10 @@ public class TableViewFactory {
     coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout, dragBox, firstColumnDragBox);
     FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     coupledRecyclerView.setLayoutParams(recyclerViewLayoutParams);
-
     CustomLinearLayoutManger firstColumnLinearLayout = new CustomLinearLayoutManger(context);
     firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout, dragBox, firstColumnDragBox);
+    coupledRecyclerView.setZ(0);
+    coupledRecyclerView.setElevation(0);
 
     headerView.post(() -> {
       int headerHeight = headerView.getMeasuredHeight();
@@ -142,15 +144,12 @@ public class TableViewFactory {
       FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
       firstColumnViewLayoutParams.topMargin = marginTop;
       firstColumnViewLayoutParams.bottomMargin = marginBottom;
+
       if(tableView.isFirstColumnFrozen) {
         firstColumnHeaderCell = HeaderViewFactory.buildFixedColumnCell(rootLayout, dataColumns.get(0), tableView, headerViewFactory.topPosition);
         dataProvider.setFirstColumnFrozen(true);
         coupledRecyclerView.setViewToScrollCouple(firstColumnRecyclerView);
         firstColumnRecyclerView.setViewToScrollCouple(coupledRecyclerView);
-        firstColumnRecyclerView.setElevation(PixelUtils.dpToPx(2));
-        firstColumnRecyclerView.setOutlineProvider(null);
-        firstColumnHeaderCell.setElevation(PixelUtils.dpToPx(2));
-        firstColumnRecyclerView.setZ(PixelUtils.dpToPx(2));
 
         if(totalsCells != null) {
           firstColumnTotalsCell = HeaderViewFactory.buildFixedTotalsCell(tableView, dataColumns.get(0), totalsCells.get(0), headerViewFactory.topPosition);
@@ -213,6 +212,7 @@ public class TableViewFactory {
       view.rootLayout = this.rootLayout;
       view.setFirstColumnRecyclerView(firstColumnRecyclerView);
       view.setFirstColumnHeader(firstColumnHeaderCell);
+      view.setFixedTotalsCell(firstColumnTotalsCell);
       view.updateLayout();
     }
 

@@ -48,7 +48,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         layout.height = rowHeight;
         layout.width = column.width;
         cellView.setLayoutParams(layout);
-        cellView.setData(cell);
+        cellView.setData(cell, dataRow, column);
 
         Bitmap imageBitmap = dataProvider.getImageData(cell.imageUrl);
         if(imageBitmap == null) {
@@ -59,11 +59,11 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         imageView.setSizing(column, imageBitmap);
         imageView.setAlignment(column);
       } else if(column.representation.type.equals("miniChart")) {
-        ViewGroup wrapper = (ViewGroup) row.getChildAt(columnIndex);
+        CellView cellView = (CellView) row.getChildAt(columnIndex);
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, rowHeight);
-        wrapper.setLayoutParams(cellViewLayoutParams);
+        cellView.setLayoutParams(cellViewLayoutParams);
 
-        MiniChartView miniChartView = (MiniChartView) wrapper.getChildAt(0);
+        MiniChartView miniChartView = (MiniChartView) cellView.content;
         miniChartView.setData(cell, column);
       } else {
         CellView cellView = (CellView) row.getChildAt(columnIndex);
@@ -77,7 +77,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         if(column.representation.type.equals("text")) {
           cell.indicator = null;
         }
-        cellView.setData(cell);
+        cellView.setData(cell, dataRow, column);
         if(column.representation.type.equals("url")) {
           setupHyperLink(textView, column.representation, cell);
         }
@@ -111,7 +111,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
       if(column.representation.type.equals("image")) {
         RelativeLayout wrapper = (RelativeLayout) row.getChildAt(i);
         CellView cellView = (CellView) wrapper.getChildAt(0);
-        ClickableImageView imageView = (ClickableImageView) cellView.getChildAt(0);
+        ClickableImageView imageView = (ClickableImageView) cellView.content;
         Bitmap imageBitmap = dataProvider.getImageData(column.representation.imageUrl);
         if(imageBitmap == null) {
           continue;
