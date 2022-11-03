@@ -150,10 +150,6 @@ public class TableViewFactory {
         dataProvider.setFirstColumnFrozen(true);
         coupledRecyclerView.setViewToScrollCouple(firstColumnRecyclerView);
         firstColumnRecyclerView.setViewToScrollCouple(coupledRecyclerView);
-        firstColumnRecyclerView.setElevation(PixelUtils.dpToPx(0));
-//        firstColumnRecyclerView.setOutlineProvider(null);
-        firstColumnHeaderCell.setElevation(PixelUtils.dpToPx(0));
-        firstColumnRecyclerView.setZ(PixelUtils.dpToPx(0));
 
         if(totalsCells != null) {
           firstColumnTotalsCell = HeaderViewFactory.buildFixedTotalsCell(tableView, dataColumns.get(0), totalsCells.get(0), headerViewFactory.topPosition);

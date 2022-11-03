@@ -30,7 +30,6 @@ public class SearchButton extends androidx.appcompat.widget.AppCompatImageButton
 
     icon.setTint(Color.WHITE);
     this.setImageDrawable(icon);
-    EventUtils.sendOnSearchColumn(tableView, column);
     postInvalidate();
   }
 
