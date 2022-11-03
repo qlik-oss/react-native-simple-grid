@@ -6,7 +6,18 @@
 //
 
 import Foundation
-class ImageCell: UIImageView {
+class ImageCell: UIImageView, ConstraintCellProtocol {
+  
+  var dynamicWidth = NSLayoutConstraint()
+  
+  func getDynamicWidth() -> NSLayoutConstraint {
+    return dynamicWidth
+  }
+  
+  func setDynamicWidth(_ newVal: NSLayoutConstraint) {
+    dynamicWidth = newVal
+  }
+  
   func setData(data: DataCell, representedAs rep: Representation) {
     self.backgroundColor = .clear
     guard let qAttrExps = data.qAttrExps else {return}
@@ -29,7 +40,6 @@ class ImageCell: UIImageView {
   }
 
   func displayImage(rep: Representation) {
-    let cm = self.contentMode
     if rep.imageSize == "fitToHeight" {
       self.contentMode = .center
     } else {

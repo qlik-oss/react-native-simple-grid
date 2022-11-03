@@ -6,15 +6,15 @@
 //
 
 import Foundation
-class PaddedLabel: UILabel, SelectionsListener {
+class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   var id: Int = 0
-
+  var dynamicWidth = NSLayoutConstraint()
   var column = 0
   var cell: DataCell?
   var hasSystemImage = false
   static let PaddingSize = CGFloat(8)
   let UIEI = UIEdgeInsets(top: 0, left: PaddingSize, bottom: 0, right: PaddingSize) // as desired
-  let selectedBackgroundColor = ColorParser().fromCSS(cssString: "#009845")
+  let selectedBackgroundColor = ColorParser.fromCSS(cssString: "#009845")
   var contextMenu = ContextMenu()
   var selected = false
   var selectionsEngine: SelectionsEngine?
@@ -38,6 +38,14 @@ class PaddedLabel: UILabel, SelectionsListener {
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  func getDynamicWidth() -> NSLayoutConstraint {
+    return dynamicWidth
+  }
+  
+  func setDynamicWidth(_ newVal: NSLayoutConstraint) {
+    dynamicWidth = newVal
   }
 
   override var canBecomeFirstResponder: Bool {
@@ -248,7 +256,7 @@ class PaddedLabel: UILabel, SelectionsListener {
     let iconFont = UIFont.init(name: "fontello", size: font.pointSize)
     if let indicator = element.indicator {
       if let indicatorColor = indicator.color {
-        iconColor = ColorParser().fromCSS(cssString: indicatorColor.lowercased())
+        iconColor = ColorParser.fromCSS(cssString: indicatorColor.lowercased())
         applyTextColor = indicator.applySegmentColors == true
       }
       showTextValues = indicator.showTextValues == true
@@ -271,6 +279,18 @@ class PaddedLabel: UILabel, SelectionsListener {
     } else {
       let attributedString1 = NSMutableAttributedString(string: String(format: "%C", withIcon), attributes: iconAttributes as [NSAttributedString.Key: Any])
       self.attributedText = attributedString1
+    }
+  }
+  
+  func alignText(from: String) {
+    if from == "left" {
+      self.textAlignment = .left
+    } else if from == "right" {
+      self.textAlignment = .right
+    } else if from == "center" {
+      self.textAlignment = .center
+    } else {
+      self.textAlignment = .natural
     }
   }
 

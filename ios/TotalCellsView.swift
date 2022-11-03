@@ -10,47 +10,42 @@ import Foundation
 class TotalCellsView: UIView {
   weak var textView: UILabel?
   var totalRows = 0
-  var withShadow = true
-  let borderColor = UIColor.lightGray
-  init(frame: CGRect, withShadow: Bool) {
-    super.init(frame: frame)
-    self.withShadow = withShadow
-    if withShadow {
-      self.layer.shadowColor = UIColor.black.cgColor
-      self.layer.shadowOpacity = 0.1
-      self.layer.shadowOffset = CGSize(width: 0, height: -1)
-      self.layer.shadowRadius = 2
-    }
+  let borderColor = UIColor.lightGray.withAlphaComponent(0.2)
+  init(withShadow: Bool) {
+    super.init(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 40, height: 40)))
+    self.backgroundColor = .white
+    createTextView()
   }
+  
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
-  }
-
-  func addBorder() {
-    if !withShadow {
-      let topBorder = UIView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: 1))
-      topBorder.backgroundColor = borderColor
-      topBorder.autoresizingMask = [.flexibleWidth]
-      addSubview(topBorder)
-    }
   }
 
   func createTextView() {
     if let textView = textView {
       textView.removeFromSuperview()
     }
-    let view = UILabel(frame: CGRect(x: 0, y: 1, width: self.frame.width - 8, height: self.frame.height - 2))
+    let view = UILabel()
     view.text = "NA"
     view.textAlignment = .right
     view.font = UIFont.systemFont(ofSize: 14)
     addSubview(view)
 
-    view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    view.translatesAutoresizingMaskIntoConstraints = false
+    view.makeReadble(self)
 
     self.textView = view
 
-    addBorder()
+//    addBorder()
+  }
+
+  func addBorder() {
+   
+    let topBorder = UIView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: 1))
+    topBorder.backgroundColor = borderColor
+    topBorder.autoresizingMask = [.flexibleWidth]
+    addSubview(topBorder)
   }
 
   func updateTotals(first: IndexPath, last: IndexPath) {
@@ -60,4 +55,15 @@ class TotalCellsView: UIView {
       }
     }
   }
+  
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    layer.shadowColor = UIColor.black.cgColor
+    layer.shadowOffset = CGSize(width: 0, height: -0.5)
+    layer.shadowOpacity = 0.1
+    layer.shadowRadius = 1
+    layer.masksToBounds = false
+  }
+  
+ 
 }

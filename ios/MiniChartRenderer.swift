@@ -34,13 +34,13 @@ class MiniChartRenderer {
 
   init(rep: Representation) {
     self.representation = rep
-    mainColor = ColorParser().fromCSS(cssString: rep.miniChart?.colors?.main?.color ?? "black")
-    firstColor = ColorParser().fromCSS(cssString: rep.miniChart?.colors?.first?.color ?? "black")
-    lastColor = ColorParser().fromCSS(cssString: rep.miniChart?.colors?.last?.color ?? "black")
-    positiveColor = ColorParser().fromCSS(cssString: rep.miniChart?.colors?.positive?.color ?? "black")
-    negativeColor = ColorParser().fromCSS(cssString: rep.miniChart?.colors?.negative?.color ?? "black")
-    maxColor = ColorParser().fromCSS(cssString: rep.miniChart?.colors?.max?.color ?? "black")
-    minColor = ColorParser().fromCSS(cssString: rep.miniChart?.colors?.min?.color ?? "black")
+    mainColor = ColorParser.fromCSS(cssString: rep.miniChart?.colors?.main?.color ?? "black")
+    firstColor = ColorParser.fromCSS(cssString: rep.miniChart?.colors?.first?.color ?? "black")
+    lastColor = ColorParser.fromCSS(cssString: rep.miniChart?.colors?.last?.color ?? "black")
+    positiveColor = ColorParser.fromCSS(cssString: rep.miniChart?.colors?.positive?.color ?? "black")
+    negativeColor = ColorParser.fromCSS(cssString: rep.miniChart?.colors?.negative?.color ?? "black")
+    maxColor = ColorParser.fromCSS(cssString: rep.miniChart?.colors?.max?.color ?? "black")
+    minColor = ColorParser.fromCSS(cssString: rep.miniChart?.colors?.min?.color ?? "black")
     showDots = rep.miniChart?.showDots ?? false
   }
 

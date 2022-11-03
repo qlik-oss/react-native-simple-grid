@@ -8,8 +8,9 @@
 import Foundation
 import QuartzCore
 
-class MiniChartView: UIView {
+class MiniChartView: UIView, ConstraintCellProtocol {
   var miniChart = MiniChartRenderer()
+  var dynamicWidth = NSLayoutConstraint()
   let contextMenu = ContextMenu()
   var cell: DataCell?
   var menuTranslations: MenuTranslations?
@@ -22,6 +23,14 @@ class MiniChartView: UIView {
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  func getDynamicWidth() -> NSLayoutConstraint {
+    return dynamicWidth
+  }
+  
+  func setDynamicWidth(_ newVal: NSLayoutConstraint) {
+    dynamicWidth = newVal
   }
 
   override var canBecomeFirstResponder: Bool {

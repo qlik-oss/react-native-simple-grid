@@ -9,135 +9,121 @@ import Foundation
 
 class TotalsView: HeaderStyleView {
   var totals: Totals?
-  var theme: TableTheme?
   var cellStyle: CellContentStyle?
   var dataIndex = [Int]()
+  var isFirstColumn = false
+  var topShadow = false
   weak var columnWidths: ColumnWidths?
   weak var borderLayer: CALayer?
-
-  init(frame: CGRect,
-       withTotals totals: Totals,
-       dataColumns: [DataColumn],
-       theme: TableTheme,
-       cellStyle: CellContentStyle,
-       columnWidths: ColumnWidths,
-       withRange range: CountableRange<Int>) {
-    super.init(frame: frame)
-    self.columnWidths = columnWidths
-    self.totals = totals
-    self.theme = theme
-    self.cellStyle = cellStyle
-    self.dataRange = range
-    self.backgroundColor = .white
-    addLabels(dataColumns)
-    addBorder()
-  }
-
-  func addBorder() {
-
-    if let borderLayer = borderLayer {
-      borderLayer.removeFromSuperlayer()
+  
+  init(
+    withTotals totals: Totals,
+    dataColumns: [DataColumn],
+    cellStyle: CellContentStyle?,
+    columnWidths: ColumnWidths,
+    withRange range: CountableRange<Int>) {
+      super.init(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 40, height: 40)))
+      self.columnWidths = columnWidths
+      self.totals = totals
+      self.cellStyle = cellStyle
+      self.dataRange = range
+      self.backgroundColor = .white
+      
+      addLabels(dataColumns)
     }
-    let border = CALayer()
-    border.backgroundColor = UIColor.lightGray.cgColor
-    self.layer.addSublayer(border)
-    self.borderLayer = border
-    updateLayer()
-  }
-
-  override func updateLayer() {
-    guard let borderLayer = borderLayer else {   return  }
-    guard let totals = totals else { return   }
-    guard let columnWidths = columnWidths else { return }
-
-    let width = columnWidths.getTotalWidth(range: dataRange)
-
-    if totals.position == "bottom" {
-      let topBorder = CGRect(x: 0.0, y: 0.0, width: width, height: 1.0)
-      borderLayer.frame = topBorder
-    } else {
-      let bottomBorder = CGRect(x: 0.0, y: self.frame.height - 1.0, width: width, height: 1.0)
-      borderLayer.frame = bottomBorder
-    }
-  }
-
+  
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
+  
   fileprivate func addLabels(_ dataColumns: [DataColumn]) {
-    guard let columnWidths = columnWidths else {
-      return
-    }
-
-    guard let totals = totals else {
-      return
-    }
-
-    guard let rows = totals.rows else {
-      return
-    }
-
-    var currentX = 0
-    var currentTotalsIdx = 0
-    dataColumns[dataRange].enumerated().forEach { (index, _) in
+    guard let columnWidths = columnWidths else { return }
+    guard let totals = totals else { return }
+    guard let values = totals.values else { return }
+    
+    topShadow = totals.position == "bottom"
+    
+    var prev: PaddedLabel?
+    values[dataRange].enumerated().forEach{(index, value) in
+      let label = PaddedLabel(frame: CGRect.zero, selectionBand: nil)
       let col = dataColumns[index + dataRange.lowerBound]
-      let width = columnWidths.columnWidths[index + dataRange.lowerBound]
-      let frame = CGRect(x: currentX, y: 0, width: Int(width), height: theme!.headerHeight!)
-      let label = PaddedLabel(frame: frame, selectionBand: nil)
-      label.textColor = ColorParser().fromCSS(cssString: cellStyle?.color ?? "black")
+      label.textColor = ColorParser.fromCSS(cssString: cellStyle?.color ?? "black")
       label.font = UIFont.boldSystemFont(ofSize: 14)
-      if col.isDim == true && index == 0 {
-        label.text = "Totals"
-      } else if col.isDim == false {
-        label.text = rows[currentTotalsIdx].qText ?? "NA"
-        label.textAlignment = .right
-        dataIndex.append(index)
-        currentTotalsIdx += 1
-      }
-      currentX += Int(width)
-      addSubview(label)
+      label.text = value
+      label.alignText(from: col.align ?? "")
+      let width = columnWidths.columnWidths[index + dataRange.lowerBound]
+      self.addSubview(label)
+      setupConstraints(label, prev: prev, width: width, index: index)
+      prev = label
     }
   }
-
+  
+  func setupConstraints(_ label: PaddedLabel, prev: PaddedLabel?, width: Double, index: Int) {
+    let isLast = index == dataRange.count - 1
+    label.translatesAutoresizingMaskIntoConstraints = false
+    label.dynamicWidth = label.widthAnchor.constraint(equalToConstant: width)
+    var constraints = [NSLayoutConstraint]()
+    if let previous = prev {
+      constraints = [
+        label.leadingAnchor.constraint(equalTo: previous.trailingAnchor),
+        label.topAnchor.constraint(equalTo: self.topAnchor),
+        label.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+      ]
+    } else {
+      constraints = [
+        label.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        label.topAnchor.constraint(equalTo: self.topAnchor),
+        label.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+      ]
+    }
+    
+    if(isLast) {
+      constraints.append(label.trailingAnchor.constraint(equalTo: self.trailingAnchor))
+    } else {
+      constraints.append(label.dynamicWidth)
+    }
+    
+    NSLayoutConstraint.activate(constraints)
+    self.addConstraints(constraints)
+  }
+  
   func resetTotals(_ newTotals: Totals?) {
     if let nt = newTotals {
       totals = nt
-      guard let rows = nt.rows else {return}
-      if rows.count != dataIndex.count {
-        return
-      }
-      rows.enumerated().forEach { (index, element) in
-        let labelIndex = dataIndex[index]
-        if let label = subviews[labelIndex] as? PaddedLabel {
-          label.text = element.qText
+      guard let values = nt.values else {return}
+      values[dataRange].enumerated().forEach { (index, element) in
+        if let label = subviews[index] as? PaddedLabel {
+          label.text = element
         }
       }
     }
   }
-
-  func resizeLabels(withFrame: CGRect) {
-    guard let columnWidths = columnWidths else {
-      return
+  
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    if(topShadow) {
+      addTopShadow()
+    } else {
+      addBottomShadow()
     }
-
-    guard let totals = totals else {
-      return
-    }
-
-    if subviews.count > columnWidths.columnWidths.count {
-      return
-    }
-    var currentX = 0.0
-    subviews.enumerated().forEach { (index, value) in
-      let width = columnWidths.columnWidths[index + dataRange.lowerBound]
-      let newFrame = CGRect(x: currentX, y: 0, width: width, height: value.frame.height)
-      value.frame = newFrame
-      currentX += width
-    }
-
-    let y = totals.position == "bottom" ? withFrame.height - self.frame.height * 2 : self.frame.origin.y
-    self.frame = CGRect(origin: CGPoint(x: self.frame.origin.x, y: y), size: CGSize(width: currentX, height: self.frame.height))
   }
+  
+  override func updateSize(_ translation: CGPoint, withColumn column: Int) {
+    if column < subviews.count {
+      let headerCell = subviews[column] as! PaddedLabel
+      headerCell.dynamicWidth.constant = headerCell.dynamicWidth.constant + translation.x
+      headerCell.layoutIfNeeded()
+    }
+  }
+  
+  func resizeLabels() {
+    guard let columnWidths = columnWidths else { return }
 
+    columnWidths.columnWidths[dataRange].enumerated().forEach{(index, width) in
+      let headerCell = subviews[index] as! PaddedLabel
+      headerCell.dynamicWidth.constant = width
+      headerCell.layoutIfNeeded()
+    }
+  }
+  
 }

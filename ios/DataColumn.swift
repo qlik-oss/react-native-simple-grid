@@ -64,6 +64,7 @@ struct Totals: Decodable {
   var position: String?
   var show: Bool?
   var rows: [TotalsCell]?
+  var values: [String]?
 }
 
 struct Cols: Decodable {
