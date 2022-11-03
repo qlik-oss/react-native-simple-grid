@@ -1,3 +1,10 @@
+# [1.1.0-alpha.44](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.43...v1.1.0-alpha.44) (2022-11-03)
+
+
+### Features
+
+* **md-3746:** search expand android ([#110](https://github.com/qlik-oss/react-native-simple-grid/issues/110)) ([39810b7](https://github.com/qlik-oss/react-native-simple-grid/commit/39810b7ceb3a5b711a0376f6df2b33134d92817a))
+
 # [1.1.0-alpha.43](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.42...v1.1.0-alpha.43) (2022-11-02)
 
 
