@@ -18,6 +18,10 @@ class ImageCell: UIImageView, ConstraintCellProtocol {
     dynamicWidth = newVal
   }
   
+  func getLineCount() -> Int {
+    return 1
+  }
+  
   func setData(data: DataCell, representedAs rep: Representation) {
     self.backgroundColor = .clear
     guard let qAttrExps = data.qAttrExps else {return}

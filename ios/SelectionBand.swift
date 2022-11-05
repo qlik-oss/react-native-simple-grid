@@ -33,8 +33,8 @@ class SelectionBand: UIView {
   var topDragger = false
   let path = UIBezierPath()
   let borderColor = UIColor.black
-  let dragBoxSize = CGSize(width: 12, height: 12)
-  let grabberColor = UIColor(red: 0.00, green: 0.36, blue: 0.73, alpha: 1.00)
+  let dragBoxSize = CGSize(width: 12, height: 20)
+  let grabberColor = UIColor(red: 0.25, green: 0.25, blue: 0.25, alpha: 1.00)
   let notificationCenter = NotificationCenter()
   weak var selectionBandResizer: UIView?
   weak var dragBox: UIView?
@@ -68,12 +68,12 @@ class SelectionBand: UIView {
     let view = DragBox(frame: CGRect.zero)
     view.backgroundColor = grabberColor
 
-    view.layer.masksToBounds = false
+    view.layer.masksToBounds = true
     view.layer.shadowColor = UIColor.black.cgColor
     view.layer.shadowOpacity = 0.5
     view.layer.shadowOffset = .zero
     view.layer.shadowRadius = 2
-    view.layer.cornerRadius = 2
+    view.layer.cornerRadius = 4
 
     addSubview(view)
     return view

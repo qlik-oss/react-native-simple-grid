@@ -9,16 +9,21 @@ import Foundation
 
 class HeaderView: HeaderStyleView {
   var hasShadow = false
+  var dynamicHeightAnchor = NSLayoutConstraint()
   var onHeaderPressed: RCTDirectEventBlock?
   var onSearchColumn: RCTDirectEventBlock?
   weak var columnWidths: ColumnWidths?
   weak var bottomBorder: CALayer?
 
   init(columnWidths: ColumnWidths,
-       withRange dataRange: CountableRange<Int> ) {
+       withRange dataRange: CountableRange<Int>,
+       onHeaderPressed: RCTDirectEventBlock?,
+       onSearchColumn: RCTDirectEventBlock?) {
     super.init(frame: CGRect.zero)
     self.columnWidths = columnWidths
     self.dataRange = dataRange
+    self.onHeaderPressed = onHeaderPressed
+    self.onSearchColumn = onSearchColumn
   }
   
   fileprivate func addBottomBorder() {
@@ -42,8 +47,9 @@ class HeaderView: HeaderStyleView {
     guard let columnWidths = self.columnWidths else {return}
     var prev: HeaderCell?
     columns[dataRange].enumerated().forEach{(index, column) in
-      let label = HeaderCell(dataColumn: column)
-      label.setText(column.label ?? "", textColor: ColorParser.fromCSS(cssString: headerStyle.color ?? "black"), align: getTextAlignment(column))
+      let label = HeaderCell(dataColumn: column, onHeaderPressed: onHeaderPressed, onSearchColumn: onSearchColumn)
+      let fontSize = 14
+      label.setText(column.label ?? "", textColor: ColorParser.fromCSS(cssString: headerStyle.color ?? "black"), align: getTextAlignment(column), fontSize: Double(fontSize))
       addSubview(label)
       setupConstraints(label, width: columnWidths.columnWidths[index + dataRange.lowerBound], prev: prev, index: index)
       prev = label
@@ -97,6 +103,7 @@ class HeaderView: HeaderStyleView {
   func updateColumns(_ dataColumns: [DataColumn]) {
     dataColumns[dataRange].enumerated().forEach { (index, element) in
       if let label = subviews[index] as? HeaderCell {
+        label.dataColumn = element
         updateSortIndicator(element, forLabel: label)
         label.layer.backgroundColor = UIColor.clear.cgColor
         label.setNeedsDisplay()
@@ -133,6 +140,16 @@ class HeaderView: HeaderStyleView {
     if(hasShadow) {
       addBottomShadow()
     }
+  }
+  
+  func getMaxLineCount() -> Int {
+    var lineCount = 1
+    for view in subviews {
+      if let headerCell = view as? HeaderCell {
+        lineCount = max(headerCell.getLineCount(), lineCount)
+      }
+    }
+    return lineCount
   }
 
 }

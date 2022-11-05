@@ -32,6 +32,10 @@ class MiniChartView: UIView, ConstraintCellProtocol {
   func setDynamicWidth(_ newVal: NSLayoutConstraint) {
     dynamicWidth = newVal
   }
+  
+  func getLineCount() -> Int {
+    return 1
+  }
 
   override var canBecomeFirstResponder: Bool {
     return true

@@ -26,6 +26,7 @@ class LastColumnResizer : MultiColumnResizer {
     tableView.layoutIfNeeded()
     let _ = data.updateSize(translation, withColumn: index - 1)
     data.childCollectionView?.collectionViewLayout.invalidateLayout()
+    containerView?.testTruncation()
     
   }
   

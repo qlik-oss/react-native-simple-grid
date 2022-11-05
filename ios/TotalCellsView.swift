@@ -12,7 +12,7 @@ class TotalCellsView: UIView {
   var totalRows = 0
   let borderColor = UIColor.lightGray.withAlphaComponent(0.2)
   init(withShadow: Bool) {
-    super.init(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 40, height: 40)))
+    super.init(frame: CGRect.zero)
     self.backgroundColor = .white
     createTextView()
   }
@@ -64,6 +64,4 @@ class TotalCellsView: UIView {
     layer.shadowRadius = 1
     layer.masksToBounds = false
   }
-  
- 
 }

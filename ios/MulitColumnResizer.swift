@@ -34,6 +34,8 @@ class MultiColumnResizer : ColumnResizerView {
     updateHeader(translation)
     updateTotals(translation)
     updateAdjacent(by: translation.x)
+    
+    containerView?.testTruncation()
   }
   
   func updateHeader(_ translation: CGPoint) {

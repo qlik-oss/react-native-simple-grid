@@ -13,6 +13,7 @@ class TotalsView: HeaderStyleView {
   var dataIndex = [Int]()
   var isFirstColumn = false
   var topShadow = false
+  var dynamicHeight = NSLayoutConstraint()
   weak var columnWidths: ColumnWidths?
   weak var borderLayer: CALayer?
   
@@ -22,7 +23,7 @@ class TotalsView: HeaderStyleView {
     cellStyle: CellContentStyle?,
     columnWidths: ColumnWidths,
     withRange range: CountableRange<Int>) {
-      super.init(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 40, height: 40)))
+      super.init(frame: CGRect.zero)
       self.columnWidths = columnWidths
       self.totals = totals
       self.cellStyle = cellStyle
@@ -124,6 +125,16 @@ class TotalsView: HeaderStyleView {
       headerCell.dynamicWidth.constant = width
       headerCell.layoutIfNeeded()
     }
+  }
+  
+  func getMaxLineCount() -> Int {
+    var lineCount = 1
+    for view in subviews {
+      if let paddedCell = view as? PaddedLabel {
+        lineCount = max(paddedCell.getLineCount(true), lineCount)
+      }
+    }
+    return lineCount
   }
   
 }

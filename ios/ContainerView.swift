@@ -22,6 +22,9 @@ class ContainerView: UIView {
   var defaultCalculated = false
   var menuTranslations: MenuTranslations?
   var columnWidths = ColumnWidths()
+  var maxHeaderLineCount = 1
+  var maxTotalsLineCount = 1
+  var maxCollectionViewsLineCount = 1
   weak var firstColumnTable: TableView?
   weak var multiColumnTable: TableView?
   
@@ -61,6 +64,11 @@ class ContainerView: UIView {
       do {
         let json = try JSONSerialization.data(withJSONObject: size)
         dataSize = try JSONDecoder().decode(DataSize.self, from: json)
+        if let first = firstColumnTable, let multi = multiColumnTable {
+          first.dataCollectionView?.dataSize = dataSize
+          multi.dataCollectionView?.dataSize = dataSize
+          first.dataCollectionView?.totalCellsView?.totalRows = dataSize?.qcy ?? 0
+        }
       } catch {
         print(error)
       }
@@ -93,9 +101,11 @@ class ContainerView: UIView {
           multiTotals.resetTotals(totals)
         }
         
-        if let firstHeader = firstTable.headerView, let multiHeader = multiTable.headerView, let dataColumns = self.dataColumns {
-          firstHeader.updateColumns(dataColumns)
-          multiHeader.updateColumns(dataColumns)
+        if(dataColumns != nil) {
+          if let firstHeader = firstTable.headerView, let multiHeader = multiTable.headerView {
+            firstHeader.updateColumns(dataColumns!)
+            multiHeader.updateColumns(dataColumns!)
+          }
         }
       } catch {
         print(error)
@@ -113,11 +123,13 @@ class ContainerView: UIView {
           self.dataRows = decodedRows.rows
           if self.dataRows != nil {
             if let firstColumnTable = self.firstColumnTable {
+              firstColumnTable.dataCollectionView?.dataSize = dataSize
               firstColumnTable.dataCollectionView?.appendData(rows: dataRows!)
               firstColumnTable.dataCollectionView?.scrollToTop()
             }
             
             if let multiColumnTable = self.multiColumnTable {
+              multiColumnTable.dataCollectionView?.dataSize = dataSize
               multiColumnTable.dataCollectionView?.appendData(rows: dataRows!)
               multiColumnTable.dataCollectionView?.scrollToTop()
             }
@@ -204,6 +216,7 @@ class ContainerView: UIView {
         
         DispatchQueue.main.async {
           self.firstColumnTable?.dataCollectionView?.signalVisibleRows()
+          self.testTruncation()
         }
       } else {
         guard let firstColumnTable = self.firstColumnTable else { return }
@@ -214,5 +227,65 @@ class ContainerView: UIView {
     }
   }
   
+  func testTruncation() {
+    let headerWrap = headerStyle?.wrap ?? true
+    let cellWrap = cellStyle?.wrap ?? true
+    if(headerWrap) {
+      testHeaders()
+    }
+    if(cellWrap) {
+      testCollectionViews()
+    }
+  }
+  
+  func testHeaders() {
+    guard let firstHeader = firstColumnTable?.headerView else { return }
+    guard let multiHeader = multiColumnTable?.headerView else { return }
+    var headerLineCount = 0
+    headerLineCount = max(firstHeader.getMaxLineCount(), headerLineCount)
+    headerLineCount = max(multiHeader.getMaxLineCount(), headerLineCount)
+    
+    if(headerLineCount != maxHeaderLineCount) {
+      maxHeaderLineCount = headerLineCount
+      let height = Double(maxHeaderLineCount - 1) * TableTheme.HeaderLineHeight + TableTheme.DefaultCellHeight
+      firstHeader.dynamicHeightAnchor.constant = height
+      multiHeader.dynamicHeightAnchor.constant = height
+      firstColumnTable?.updateGrabbers(height)
+      multiColumnTable?.updateGrabbers(height)
+      firstHeader.layoutIfNeeded()
+      multiHeader.layoutIfNeeded()
+    }
+    testTotals()
+  }
+  
+  func testTotals() {
+    guard let firstTotal = firstColumnTable?.totalView else { return }
+    guard let multiTotal = multiColumnTable?.totalView else { return }
+    var lineCount = 0
+    lineCount = max(firstTotal.getMaxLineCount(), lineCount)
+    lineCount = max(multiTotal.getMaxLineCount(), lineCount)
+    
+    if(lineCount != maxTotalsLineCount) {
+      maxTotalsLineCount = lineCount
+      let height = Double(maxTotalsLineCount - 1) * TableTheme.HeaderLineHeight + TableTheme.DefaultCellHeight
+      firstTotal.dynamicHeight.constant = height
+      multiTotal.dynamicHeight.constant = height
+      firstTotal.layoutIfNeeded()
+      multiTotal.layoutIfNeeded()
+    }
+  }
+  
+  func testCollectionViews() {
+    guard let first = firstColumnTable?.dataCollectionView else { return }
+    guard let multi = multiColumnTable?.dataCollectionView else { return }
+    var lineCount = 0;
+    lineCount = max(first.getMaxLineCount(), lineCount)
+    lineCount = max(multi.getMaxLineCount(), lineCount)
+    if(lineCount != maxCollectionViewsLineCount) {
+      maxCollectionViewsLineCount = lineCount
+      first.setMaxLineCount(maxCollectionViewsLineCount)
+      multi.setMaxLineCount(maxCollectionViewsLineCount)
+    }
+  }
   
 }

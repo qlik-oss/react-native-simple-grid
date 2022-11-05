@@ -88,7 +88,15 @@ class TableView : UIView {
       
     }
     
-    
+  }
+  
+  func updateGrabbers(_ height: Double) {
+    if let firstGrabber = firstGrabber {
+      firstGrabber.setHeight(height)
+    }
+    for resizer in grabbers {
+      resizer()?.setHeight(height)
+    }
   }
   
 }

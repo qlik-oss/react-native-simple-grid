@@ -29,6 +29,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   var dataRange: CountableRange = 0..<2
   var freezeFirstColumn = false
   var menuTranslations: MenuTranslations?
+  var maxRowLineCount = 1;
   weak var totalCellsView: TotalCellsView?
   weak var columnWidths: ColumnWidths?
   weak var coupled: DataCollectionView?
@@ -211,6 +212,9 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     DispatchQueue.main.async {
       self.dataRows = rows
       self.childCollectionView?.reloadData()
+      self.childCollectionView?.performBatchUpdates({
+        self.signalVisibleRows()
+      })
       self.loading = false
     }
   }
@@ -247,8 +251,8 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    let width = self.bounds.width //columnWidths?.getTotalWidth(range: dataRange) ?? 400.0
-    let height = cellStyle.rowHeight ?? 1
+    let width = self.bounds.width
+    let height = max(cellStyle.rowHeight ?? maxRowLineCount, maxRowLineCount)
     return CGSize(width: width, height: CGFloat(tableTheme!.rowHeight! * height))
   }
   
@@ -277,6 +281,21 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       }
     }
   }
+ 
+  func getMaxLineCount() -> Int {
+    guard let childCollectionView = childCollectionView else { return maxRowLineCount }
+    var lines = 0
+    for view in childCollectionView.subviews {
+      if let cellView = view as? DataCellView {
+        lines = max(cellView.getMaxLineCount(), lines)
+      }
+    }
+    return lines
+  }
   
+  func setMaxLineCount(_ lines: Int) {
+    maxRowLineCount = lines
+    childCollectionView?.collectionViewLayout.invalidateLayout()
+  }
   
 }

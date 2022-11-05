@@ -70,8 +70,8 @@ class TableViewFactory {
     horizontalScrollView.addSubview(multiColumnTableView)
     createHScrollView()
     addShadowsToHeadersIfNeeded()
-    firstColumnTableView.layer.zPosition = 1
-    firstColumnTableView.adjacentTable = multiColumnTableView;
+    wireHeaders();
+    
   }
   
   func createHScrollView() {
@@ -99,7 +99,7 @@ class TableViewFactory {
     
     let constraints = [
       firstColumnTableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-      firstColumnTableView.heightAnchor.constraint(equalTo: horizontalScrollView.heightAnchor, constant: -TableTheme.DefaultCellHeight),
+      firstColumnTableView.heightAnchor.constraint(equalTo: horizontalScrollView.heightAnchor, constant: -TableTheme.HeaderLineHeight),
       firstColumnTableView.dynamicWidth
     ]
     
@@ -108,7 +108,6 @@ class TableViewFactory {
     
     createFirstColumnHeaderView()
   }
-  
   
   func createFirstColumnHeaderView() {
     createHeader(forTable: firstColumnTableView, withRange: 0..<1)
@@ -174,6 +173,7 @@ class TableViewFactory {
     NSLayoutConstraint.activate(constraints)
     containerView.addConstraints(constraints)
     firstColumnTableView.firstGrabber = resizer
+    resizer.containerView = containerView
     createMultiColumnTable()
   }
   
@@ -233,8 +233,9 @@ class TableViewFactory {
         resizer.headerView = multiColumnTableView.headerView
         resizer.totalsView = multiColumnTableView.totalView
         resizer.horizontalScrollView = horizontalScrollView
+        resizer.containerView = containerView
         resizer.borderColor = ColorParser.fromCSS(cssString: containerView.tableTheme?.borderBackgroundColor ?? "lightGray")
-        resizer.layer.zPosition = 2
+        resizer.layer.zPosition = 1
         multiColumnTableView.addSubview(resizer)
         let constraints = [
           resizer.topAnchor.constraint(equalTo: multiColumnTableView.topAnchor),
@@ -259,13 +260,13 @@ class TableViewFactory {
     multiColumnTableView.grabbers = grabbers
   }
   
-  
   func createLastGrabber() {
     if (dataColumns.count > 1) {
       let resizer = LastColumnResizer(columnWidths, index: columnWidths.count() - 1, bindTo: multiColumnTableView)
       resizer.horizontalScrollView = horizontalScrollView
       resizer.translatesAutoresizingMaskIntoConstraints = false
       resizer.borderColor = ColorParser.fromCSS(cssString: containerView.tableTheme?.borderBackgroundColor ?? "lightgray")
+      resizer.containerView = containerView
       grabbers.append({[weak resizer] in return resizer})
       multiColumnTableView.addSubview(resizer)
       let width = columnWidths.getTotalWidth(range: 1..<columnWidths.count())
@@ -309,10 +310,14 @@ class TableViewFactory {
   }
   
   func createHeader(forTable table: TableView, withRange: CountableRange<Int>) {
-    let header = HeaderView(columnWidths: columnWidths, withRange: withRange)
+    let header = HeaderView(columnWidths: columnWidths,
+                            withRange: withRange,
+                            onHeaderPressed: containerView.onHeaderPressed,
+                            onSearchColumn: containerView.onSearchColumn)
     header.translatesAutoresizingMaskIntoConstraints = false
     header.backgroundColor = ColorParser.fromCSS(cssString: containerView.tableTheme?.headerBackgroundColor
                                                  ?? "lightgray")
+    header.dynamicHeightAnchor = header.heightAnchor.constraint(equalToConstant: TableTheme.DefaultCellHeight)
     
     header.addLabels(columns: dataColumns, headerStyle: containerView.headerStyle)
     table.addSubview(header)
@@ -321,7 +326,7 @@ class TableViewFactory {
       header.leadingAnchor.constraint(equalTo: table.leadingAnchor),
       header.topAnchor.constraint(equalTo: table.topAnchor),
       header.trailingAnchor.constraint(equalTo: table.trailingAnchor),
-      header.heightAnchor.constraint(equalToConstant: TableTheme.DefaultCellHeight)
+      header.dynamicHeightAnchor
     ]
     
     NSLayoutConstraint.activate(constraints)
@@ -369,13 +374,14 @@ class TableViewFactory {
     if let totals = totals, let headerView = tableView.headerView {
       let totalsColView = TotalsView(withTotals: totals, dataColumns: dataColumns, cellStyle: containerView.cellStyle, columnWidths: columnWidths, withRange: range)
       totalsColView.translatesAutoresizingMaskIntoConstraints = false
+      totalsColView.dynamicHeight = totalsColView.heightAnchor.constraint(equalToConstant:  TableTheme.DefaultCellHeight)
       totalsColView.isFirstColumn = first
       tableView.addSubview(totalsColView)
       tableView.totalView = totalsColView
       var constraints = [
         totalsColView.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
         totalsColView.trailingAnchor.constraint(equalTo: tableView.trailingAnchor),
-        totalsColView.heightAnchor.constraint(equalToConstant:  TableTheme.DefaultCellHeight)
+        totalsColView.dynamicHeight
       ]
       
       if(totals.position == "bottom") {
@@ -385,7 +391,7 @@ class TableViewFactory {
       }
       NSLayoutConstraint.activate(constraints)
       tableView.addConstraints(constraints)
-      totalsColView.layer.zPosition = 2
+      totalsColView.layer.zPosition = 1
     }
   }
   
@@ -404,9 +410,17 @@ class TableViewFactory {
       if let firstHeader = firstColumnTableView.headerView, let secondHeader = multiColumnTableView.headerView {
         firstHeader.hasShadow = true
         secondHeader.hasShadow = true
-        firstHeader.layer.zPosition = 2
-        secondHeader.layer.zPosition = 2
+        firstHeader.layer.zPosition = 1
+        secondHeader.layer.zPosition = 1
       }
+    }
+  }
+  
+  func wireHeaders() {
+    firstColumnTableView.adjacentTable = multiColumnTableView;
+    horizontalScrollView.bringSubviewToFront(firstColumnTableView)
+    if let firstGrabber = firstColumnTableView.firstGrabber {
+      firstGrabber.superview?.bringSubviewToFront(firstGrabber)
     }
   }
 }

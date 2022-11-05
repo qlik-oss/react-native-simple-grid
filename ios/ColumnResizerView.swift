@@ -15,8 +15,9 @@ class ColumnResizerView : UIView {
   var linePath = UIBezierPath()
   weak var tableView: TableView?
   weak var adjacentTable: TableView?
-  weak var button: UIView?
+  weak var button: ResizerButtonView?
   weak var horizontalScrollView: UIScrollView?
+  weak var containerView: ContainerView?
   
   init( _ columnWidths: ColumnWidths, index: Int, bindTo bindedTableView: TableView) {
     self.columnWidths = columnWidths
@@ -24,19 +25,19 @@ class ColumnResizerView : UIView {
     self.index = index
     super.init(frame: CGRect.zero)
     self.isUserInteractionEnabled = true
-    self.backgroundColor = UIColor.white.withAlphaComponent(0)
     createButton()
   }
   
   fileprivate func createButton() {
-    let button = UIView()//UIView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 40, height: 40)))
+    let button = ResizerButtonView()
     button.translatesAutoresizingMaskIntoConstraints = false
     addSubview(button)
+    button.heightConstraint = button.heightAnchor.constraint(equalToConstant: TableTheme.DefaultCellHeight)
     let constraints = [
       button.topAnchor.constraint(equalTo: self.topAnchor),
-      button.heightAnchor.constraint(equalToConstant: TableTheme.DefaultCellHeight),
       button.widthAnchor.constraint(equalToConstant: TableTheme.DefaultResizerWidth),
-      button.leadingAnchor.constraint(equalTo: self.leadingAnchor)
+      button.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+      button.heightConstraint
     ]
     NSLayoutConstraint.activate(constraints)
     self.addConstraints(constraints)
@@ -46,6 +47,7 @@ class ColumnResizerView : UIView {
     panGesture.maximumNumberOfTouches = 1
     button.isUserInteractionEnabled = true
     button.addGestureRecognizer(panGesture)
+    button.backgroundColor = .purple.withAlphaComponent(0.2)
     self.button = button
   }
   
@@ -120,6 +122,7 @@ class ColumnResizerView : UIView {
     tableView.layoutIfNeeded()
     let _ = data.updateSize(translation, withColumn: index)
     data.childCollectionView?.collectionViewLayout.invalidateLayout()
+    containerView?.testTruncation()
   }
   
   func didEndPand() {
@@ -148,10 +151,14 @@ class ColumnResizerView : UIView {
     linePath.stroke()
   }
   
+  func setHeight(_ newVal: Double) {
+    guard let button = button else { return }
+    button.heightConstraint.constant = newVal
+    button.layoutIfNeeded()
+  }
+  
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
-  
-  
+
 }

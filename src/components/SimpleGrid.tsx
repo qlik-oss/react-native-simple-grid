@@ -43,31 +43,36 @@ export type SimpleGridProps = {
     };
     misc: {
       of: string;
-    }
+    };
   };
 };
 
-
 const transformTotals = (layout: any, table: any) => {
+  let totals;
   let rowIndex = 0;
-  let firstCol = true
-  let values = table?.columns?.map((col: any, index: number) => {
-    if(col.isDim && firstCol) {
-      firstCol = false
-      return layout.totals.label;
-    } 
-    if(!col.isDim && rowIndex < layout.qHyperCube.qGrandTotalRow.length) {
-      return layout.qHyperCube.qGrandTotalRow[rowIndex++].qText 
+  let firstCol = true;
+  let values = table?.columns?.map((col: any) => {
+    if (col.isDim && firstCol) {
+      firstCol = false;
+      return layout.totals.label || 'Totals';
     }
-    return ""; 
-  })
+    if (!col.isDim && rowIndex < layout.qHyperCube.qGrandTotalRow.length) {
+      return layout.qHyperCube.qGrandTotalRow[rowIndex++].qText;
+    }
+    return '';
+  });
 
   const show = layout?.totals?.show === 'auto' ? true : layout?.totals?.show;
-  if(layout.totals.show || layout.totals.position !== 'noTotals') {
-    return {...layout.totals, rows: layout.qHyperCube.qGrandTotalRow, show, values}
+  if (layout.totals.show || layout.totals.position !== 'noTotals') {
+    totals = {
+      ...layout.totals,
+      rows: layout.qHyperCube.qGrandTotalRow,
+      show,
+      values,
+    };
   }
-  return undefined;
-}
+  return totals;
+};
 
 const SimpleGrid: React.FC<SimpleGridProps> = ({
   translations,
@@ -116,7 +121,7 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
         footer: layout?.totals.show
           ? layout.qHyperCube.qGrandTotalRow
           : undefined,
-        totals: transformTotals(layout, tableData),         
+        totals: transformTotals(layout, tableData),
       }}
       rows={{ rows: tableData?.rows, reset: tableData?.reset }}
       style={style.table}

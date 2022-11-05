@@ -49,6 +49,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
   var cellColor: UIColor?
   var numberOfLines = 1
   var isDataView  = true
+  var dataRange: CountableRange = 0..<1
   var onExpandedCellEvent: RCTDirectEventBlock?
   var menuTranslations: MenuTranslations?
   weak var selectionBand: SelectionBand?
@@ -90,7 +91,8 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
                selectionsEngine: SelectionsEngine,
                withStyle styleInfo: [StylingInfo],
                withRange dataRange: CountableRange<Int>) {
-    dataRow = row
+    self.dataRow = row
+    self.dataRange = dataRange
     self.dataColumns = dataColumns
     borderColor = ColorParser.fromCSS(cssString: theme.borderBackgroundColor ?? "#F0F0F0")
     createCells(row: row, withColumns: dataColumns, columnWidths: columnWidths, withRange: dataRange)
@@ -308,6 +310,20 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
     } catch {
       print(error)
     }
+  }
+  
+  func getMaxLineCount() -> Int {
+    var maxLineCount = 1
+    guard let dataColumns = dataColumns else { return maxLineCount }
+    contentView.subviews.enumerated().forEach{(index, view) in
+      if let constraint = view as? ConstraintCellProtocol {
+        let dataColumn = dataColumns[index + dataRange.lowerBound]
+        if(dataColumn.isDim) {
+          maxLineCount = max(constraint.getLineCount(), maxLineCount)
+        }
+      }
+    }
+    return maxLineCount
   }
 }
 
