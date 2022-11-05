@@ -61,6 +61,8 @@ struct DataCell: Codable {
   var qMiniChart: Matrix?
   var qAttrExps: AttriExpr?
   var indicator: Indicator?
+  var cellBackgroundColor: String?
+  var cellForegroundColor: String?
 
   enum CodingKeys: String, CodingKey {
     case qText
@@ -75,6 +77,8 @@ struct DataCell: Codable {
     case qMiniChart
     case qAttrExps
     case indicator
+    case cellBackgroundColor
+    case cellForegroundColor
   }
 
   init(from decoder: Decoder) throws {
@@ -90,6 +94,8 @@ struct DataCell: Codable {
     self.qMiniChart = try container.decodeIfPresent(Matrix.self, forKey: .qMiniChart) ?? nil
     self.qAttrExps = try container.decodeIfPresent(AttriExpr.self, forKey: .qAttrExps) ?? nil
     self.indicator = try container.decodeIfPresent(Indicator.self, forKey: .indicator) ?? nil
+    self.cellBackgroundColor = try container.decodeIfPresent(String.self, forKey: .cellBackgroundColor) ?? ""
+    self.cellForegroundColor = try container.decodeIfPresent(String.self, forKey: .cellForegroundColor) ?? ""
 
     if let temp = try? container.decode(Double.self, forKey: .qNum) {
       self.qNum = temp
@@ -109,6 +115,8 @@ struct DataCell: Codable {
     try container.encode(self.isDim, forKey: .isDim)
     try container.encode(self.rawRowIdx, forKey: .rawRowIdx)
     try container.encode(self.rawColIdx, forKey: .rawColIdx)
+    try container.encode(self.cellBackgroundColor, forKey: .cellBackgroundColor)
+    try container.encode(self.cellForegroundColor, forKey: .cellForegroundColor)
     try container.encodeIfPresent(self.qMiniChart, forKey: .qMiniChart)
 
     if let qAttrExps = self.qAttrExps {

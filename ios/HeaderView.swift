@@ -8,31 +8,19 @@
 import Foundation
 
 class HeaderView: HeaderStyleView {
+  var hasShadow = false
   var onHeaderPressed: RCTDirectEventBlock?
   var onSearchColumn: RCTDirectEventBlock?
-  var headerFrame = CGRect.zero
   weak var columnWidths: ColumnWidths?
   weak var bottomBorder: CALayer?
 
-  init(frame: CGRect,
-       columns: [DataColumn],
-       withTheme theme: TableTheme,
-       onHeaderPressed: RCTDirectEventBlock?,
-       onSearchColumn: RCTDirectEventBlock?,
-       headerStyle: HeaderContentStyle,
-       columnWidths: ColumnWidths,
+  init(columnWidths: ColumnWidths,
        withRange dataRange: CountableRange<Int> ) {
-    super.init(frame: frame)
+    super.init(frame: CGRect.zero)
     self.columnWidths = columnWidths
     self.dataRange = dataRange
-    self.onHeaderPressed = onHeaderPressed
-    self.onSearchColumn = onSearchColumn
-    headerFrame = frame
-    addLabels(columns: columns, withTheme: theme, andHeaderStyle: headerStyle)
-    addBottomBorder()
-
   }
-
+  
   fileprivate func addBottomBorder() {
     if let existing = bottomBorder {
       existing.removeFromSuperlayer()
@@ -48,21 +36,47 @@ class HeaderView: HeaderStyleView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
-  func addLabels(columns: [DataColumn], withTheme theme: TableTheme, andHeaderStyle headerStyle: HeaderContentStyle) {
-    var currentX = 0
-    for column in columns[dataRange] {
-      let frame = CGRect(x: currentX, y: 0, width: 200, height: theme.headerHeight!)
-      let label = HeaderCell(frame: frame, dataColumn: column)
-      label.onHeaderPressed = onHeaderPressed
-      label.onSearchColumn = onSearchColumn
-      label.setText(column.label ?? "", textColor: ColorParser().fromCSS(cssString: headerStyle.color ?? "black"), align: getTextAlignment(column))
-
-      updateSortIndicator(column, forLabel: label)
-
-      currentX += 200// Int(column.widths[widthIndex])
+  
+  func addLabels(columns: [DataColumn],  headerStyle incomingHeaderStyle: HeaderContentStyle?) {
+    guard let headerStyle = incomingHeaderStyle else {return}
+    guard let columnWidths = self.columnWidths else {return}
+    var prev: HeaderCell?
+    columns[dataRange].enumerated().forEach{(index, column) in
+      let label = HeaderCell(dataColumn: column)
+      label.setText(column.label ?? "", textColor: ColorParser.fromCSS(cssString: headerStyle.color ?? "black"), align: getTextAlignment(column))
       addSubview(label)
+      setupConstraints(label, width: columnWidths.columnWidths[index + dataRange.lowerBound], prev: prev, index: index)
+      prev = label
     }
+  }
+  
+  func setupConstraints(_ label: HeaderCell, width: Double,  prev: HeaderCell?, index: Int) {
+    let isLast = index == dataRange.count - 1
+    label.translatesAutoresizingMaskIntoConstraints = false
+    label.dynamicWidth = label.widthAnchor.constraint(equalToConstant: width)
+    var constraints = [NSLayoutConstraint]()
+    if let previous = prev {
+      constraints = [
+        label.leadingAnchor.constraint(equalTo: previous.trailingAnchor),
+        label.topAnchor.constraint(equalTo: self.topAnchor),
+        label.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+      ]
+    } else {
+      constraints = [
+        label.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        label.topAnchor.constraint(equalTo: self.topAnchor),
+        label.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+      ]
+    }
+    
+    if(isLast) {
+      constraints.append(label.trailingAnchor.constraint(equalTo: self.trailingAnchor))
+    } else {
+      constraints.append(label.dynamicWidth)
+    }
+    
+    NSLayoutConstraint.activate(constraints)
+    self.addConstraints(constraints)
   }
   
   fileprivate func getTextAlignment(_ col: DataColumn) -> NSTextAlignment {
@@ -79,7 +93,7 @@ class HeaderView: HeaderStyleView {
     }
     return .right
   }
-
+  
   func updateColumns(_ dataColumns: [DataColumn]) {
     dataColumns[dataRange].enumerated().forEach { (index, element) in
       if let label = subviews[index] as? HeaderCell {
@@ -107,20 +121,17 @@ class HeaderView: HeaderStyleView {
       return
     }
 
-    var currentX = 0.0
-    subviews.enumerated().forEach { (index, value) in
-      let width = columnWidths.columnWidths[index + dataRange.lowerBound]
-      let newFrame = CGRect(x: currentX, y: 0, width: width, height: value.frame.height)
-      value.frame = newFrame
-      currentX += width
+    columnWidths.columnWidths[dataRange].enumerated().forEach{(index, width) in
+      let headerCell = subviews[index] as! HeaderCell
+      headerCell.dynamicWidth.constant = width
+      headerCell.layoutIfNeeded()
     }
-    self.frame = CGRect(origin: self.frame.origin, size: CGSize(width: currentX, height: self.frame.height))
-
   }
-
-  override func updateLayer() {
-    if let bottomBorder = bottomBorder {
-      bottomBorder.frame = CGRect(origin: bottomBorder.frame.origin, size: CGSize(width: self.frame.width, height: 1))
+  
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    if(hasShadow) {
+      addBottomShadow()
     }
   }
 

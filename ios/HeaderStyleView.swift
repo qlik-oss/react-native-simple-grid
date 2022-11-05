@@ -11,25 +11,11 @@ class HeaderStyleView: UIView {
   var dataRange: CountableRange<Int> = 0..<1
 
   func updateSize(_ translation: CGPoint, withColumn column: Int) {
-    labelsFactory.updateSize(view: self, translation: translation, withColumn: column)
+    if column < subviews.count {
+      let headerCell = subviews[column] as! HeaderCell
+      headerCell.dynamicWidth.constant = headerCell.dynamicWidth.constant + translation.x
+      headerCell.layoutIfNeeded()
+    }
   }
-
-  func updateLayer() {
-
-  }
-
-  override func layoutSubviews() {
-    super.layoutSubviews()
-
-    CATransaction.begin()
-    CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-
-    updateLayer()
-
-    CATransaction.commit()
-  }
-
-  func updateFirstCell(_ translation: CGPoint) {
-    labelsFactory.updateFirstCell(view: self, translation: translation)
-  }
+  
 }

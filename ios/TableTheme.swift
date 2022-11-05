@@ -6,12 +6,11 @@
 //
 
 import Foundation
-enum HorizontalScrollValues: Double {
-  case RightScrollContentPadding = 25
-  case HorizontalPadding = 6
-}
 
 struct TableTheme: Decodable {
+  static let DefaultCellHeight = 40.0
+  static let DefaultResizerWidth = 30.0
+  static let HorizontalScrollPadding = 50.0
   let rowHeight: Int?
   var headerHeight: Int?
   let borderRadius: Int?
@@ -20,4 +19,5 @@ struct TableTheme: Decodable {
   let borderSelectedColor: String?
   let selectedBackground: String?
   let headerTextColor: String?
+  
 }

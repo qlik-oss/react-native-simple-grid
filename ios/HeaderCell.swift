@@ -7,19 +7,20 @@
 
 import Foundation
 class HeaderCell: UIView {
+  var dynamicWidth = NSLayoutConstraint()
   var dataColumn: DataColumn?
   var onHeaderPressed: RCTDirectEventBlock?
   var onSearchColumn: RCTDirectEventBlock?
   let sortBorderWidth = 3.0
   let sortBorderColor = UIColor.black
   let buttonSize = CGSize(width: 20, height: 40)
-  let grabberHalfSize = 20.0
+  let grabberHalfSize = TableTheme.DefaultResizerWidth / 2.0
   weak var currentSortBorder: UIView?
   weak var searchButton: UIButton?
   weak var paddedLabel: PaddedLabel?
 
-  init(frame: CGRect, dataColumn: DataColumn) {
-    super.init(frame: frame)
+  init(dataColumn: DataColumn) {
+    super.init(frame: CGRect.zero)
     self.dataColumn = dataColumn
     makePressable()
   }

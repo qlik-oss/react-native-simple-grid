@@ -7,7 +7,7 @@
 
 import Foundation
 class ColorParser {
-  let SupportedColors: [String: UIColor] = [
+  static let SupportedColors: [String: UIColor] = [
     "red": .red,
     "blue": .blue,
     "green": UIColor(red: 0.00, green: 0.50, blue: 0.00, alpha: 1.00),
@@ -26,7 +26,7 @@ class ColorParser {
     "orange": UIColor(red: 1.00, green: 0.65, blue: 0.00, alpha: 1.00),
     "teal": .systemTeal]
 
-  func fromCSS(cssString: String) -> UIColor {
+  static func fromCSS(cssString: String) -> UIColor {
     if cssString == "none" {
       return UIColor.clear
     }

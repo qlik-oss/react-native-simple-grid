@@ -99,9 +99,6 @@ class ColumnWidths {
 
   func resize(index: Int, by: CGPoint) {
     columnWidths[index] += by.x
-    if index + 1 < columnWidths.count {
-      columnWidths[index + 1] -= by.x
-    }
   }
 
 }
