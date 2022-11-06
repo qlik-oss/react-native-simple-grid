@@ -15,7 +15,7 @@ class DragBox: UIView {
 
     context.setFillColor(self.backgroundColor?.cgColor ?? UIColor.black.cgColor)
     context.fill(rect)
-    // draw two thin grabbers
+    // draw three thin grabbers
     // center rect
     let width = rect.width * 0.5
     let x = (rect.width - width) / 2.0
@@ -23,5 +23,6 @@ class DragBox: UIView {
     context.setFillColor(UIColor.white.withAlphaComponent(0.5).cgColor)
     context.fill(g)
     context.fill(g.offsetBy(dx: 0, dy: -2))
+    context.fill(g.offsetBy(dx: 0, dy: -4))
   }
 }

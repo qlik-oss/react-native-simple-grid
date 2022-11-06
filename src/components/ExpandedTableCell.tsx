@@ -23,28 +23,28 @@ const ExpandedTableCell = () => {
         <DataTable.Title style={styles.title}>Column Data</DataTable.Title>
         <DataTable.Title style={styles.title}>Row Data</DataTable.Title>
       </DataTable.Header>
-        <ScrollView
-          contentContainerStyle={{
-            paddingBottom: DATA_TABLE_HEADER_HEIGHT * 2,
-          }}
-        >
-          {expandedCell.data?.col.map((item: any, index: number) => (
-            <DataTable.Row
-              key={index}
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{ backgroundColor: index % 2 ? '#F0F0F0' : 'white' }}
-            >
-              <View style={styles.cell}>
-                <Text>{item.label}</Text>
-              </View>
-              <Cell
-                style={styles.cell}
-                colData={item}
-                rowData={expandedCell.data.row.cells[index]}
-              />
-            </DataTable.Row>
-          ))}
-        </ScrollView>
+      <ScrollView
+        contentContainerStyle={{
+          paddingBottom: DATA_TABLE_HEADER_HEIGHT * 2,
+        }}
+      >
+        {expandedCell.data?.col.map((item: any, index: number) => (
+          <DataTable.Row
+            key={index}
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{ backgroundColor: index % 2 ? '#F0F0F0' : 'white' }}
+          >
+            <View style={styles.cell}>
+              <Text>{item.label}</Text>
+            </View>
+            <Cell
+              style={styles.cell}
+              colData={item}
+              rowData={expandedCell.data.row.cells[index]}
+            />
+          </DataTable.Row>
+        ))}
+      </ScrollView>
     </DataTable>
   );
 };

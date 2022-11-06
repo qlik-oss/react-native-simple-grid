@@ -8,5 +8,6 @@
 import Foundation
 protocol ConstraintCellProtocol {
   func getDynamicWidth() -> NSLayoutConstraint
-  func setDynamicWidth(_ newVal: NSLayoutConstraint)
+  func setDynamicWidth(_ newVal: NSLayoutConstraint, value: Double)
+  func getLineCount(columnWidth: Double) -> Int
 }

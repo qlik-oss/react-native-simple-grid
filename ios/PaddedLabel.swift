@@ -9,6 +9,7 @@ import Foundation
 class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   var id: Int = 0
   var dynamicWidth = NSLayoutConstraint()
+  var dynamicWidthValue = 0.0
   var column = 0
   var cell: DataCell?
   var hasSystemImage = false
@@ -20,17 +21,30 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   var selectionsEngine: SelectionsEngine?
   var url: URL?
   var menuTranslations: MenuTranslations?
-  
+  var numberOfWords = 0
+
   weak var delegate: ExpandedCellProtocol?
   weak var selectionBand: SelectionBand?
   weak var dataCollectionView: DataCollectionView?
 
   private static let numberFormatter = NumberFormatter()
 
+  override var text: String? {
+    didSet {
+      if let text = text {
+        var chararacter = CharacterSet.whitespaces
+        chararacter.insert("-")
+        let components = text.components(separatedBy: chararacter)
+        let words = components.filter { !$0.isEmpty }
+        numberOfWords = words.count
+      }
+    }
+  }
+
   init(frame: CGRect, selectionBand: SelectionBand?) {
     super.init(frame: frame.integral)
     self.selectionBand = selectionBand
-    if let sb = selectionBand  {
+    if let sb = selectionBand {
       sb.notificationCenter.addObserver(self, selector: #selector(onTappedSelectionBand), name: Notification.Name.onTappedSelectionBand, object: nil)
       sb.notificationCenter.addObserver(self, selector: #selector(onSelectionDragged), name: Notification.Name.onSelectionDragged, object: nil)
     }
@@ -39,13 +53,14 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   func getDynamicWidth() -> NSLayoutConstraint {
     return dynamicWidth
   }
-  
-  func setDynamicWidth(_ newVal: NSLayoutConstraint) {
+
+  func setDynamicWidth(_ newVal: NSLayoutConstraint, value: Double) {
     dynamicWidth = newVal
+    dynamicWidthValue = value
   }
 
   override var canBecomeFirstResponder: Bool {
@@ -53,24 +68,32 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   }
 
   override func drawText(in rect: CGRect) {
-    if numberOfLines != 1 {
-      let numLines = Self.numberFormatter.number(from: self.text ?? "") == nil ? numberOfLines : 1
-      let r = self.textRect(forBounds: rect.inset(by: UIEI), limitedToNumberOfLines: numLines)
-      super.drawText(in: r)
-    } else {
-      let r = rect.inset(by: UIEI)
-      super.drawText(in: r)
+    //       let insets = UIEdgeInsets(top: topInset, left: leftInset, bottom: bottomInset, right: rightInset)
+    let r = rect.inset(by: UIEI)
+    super.drawText(in: r)
+  }
+
+  override var intrinsicContentSize: CGSize {
+    get {
+      var contentSize = super.intrinsicContentSize
+      contentSize.height += UIEI.top + UIEI.bottom
+      contentSize.width += UIEI.left + UIEI.right
+      return contentSize
     }
-
   }
 
-  override func textRect(forBounds bounds: CGRect,
-                         limitedToNumberOfLines n: Int) -> CGRect {
-
-    let ctr = super.textRect(forBounds: bounds, limitedToNumberOfLines: n)
-    let xOffset = self.textAlignment == .right ?  -PaddedLabel.PaddingSize : 0
-    return CGRect(x: ctr.origin.x + xOffset, y: ctr.origin.y + PaddedLabel.PaddingSize, width: ctr.size.width, height: ctr.size.height)
-  }
+  //  override func drawText(in rect: CGRect) {
+  //    let r = rect.inset(by: UIEI)
+  //    super.drawText(in: r)
+  //  }
+  //
+  //  override func textRect(forBounds bounds: CGRect,
+  //                         limitedToNumberOfLines n: Int) -> CGRect {
+  //
+  //    let ctr = super.textRect(forBounds: bounds, limitedToNumberOfLines: n)
+  //    let xOffset = self.textAlignment == .right ?  -PaddedLabel.PaddingSize : 0
+  //    return CGRect(x: ctr.origin.x + xOffset, y: ctr.origin.y + PaddedLabel.PaddingSize, width: ctr.size.width, height: ctr.size.height)
+  //  }
 
   func showMenus() {
     isUserInteractionEnabled = true
@@ -281,7 +304,7 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       self.attributedText = attributedString1
     }
   }
-  
+
   func alignText(from: String) {
     if from == "left" {
       self.textAlignment = .left
@@ -294,10 +317,33 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
     }
   }
 
+  func getLineCount(columnWidth: Double) -> Int {
+    return getLineCount(true, columnWidth: columnWidth)
+  }
+
+  func getLineCount(_ update: Bool) -> Int {
+    return getLineCount(true, columnWidth: self.frame.width)
+  }
+
+  func getLineCount(_ update: Bool, columnWidth: Double) -> Int {
+    layoutIfNeeded()
+    if let font = self.font, let myText = text {
+      let width = columnWidth - (PaddedLabel.PaddingSize * 2)
+      let rect = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
+      let labelSize = myText.boundingRect(with: rect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font as Any], context: nil)
+      let count =  Int(ceil(CGFloat(labelSize.height) / font.lineHeight))
+      let lineCount = min(count, numberOfWords)
+      if update {
+        numberOfLines = lineCount
+      }
+      return lineCount
+    }
+    return numberOfLines
+  }
+
   deinit {
     if let selectionBand = self.selectionBand {
       selectionBand.notificationCenter.removeObserver(self.onTappedSelectionBand)
     }
-//    NotificationCenter.default.removeObserver(self.onTappedSelectionBand)
   }
 }

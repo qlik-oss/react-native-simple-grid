@@ -15,10 +15,10 @@ class HorizontalScrollViewDelegate: NSObject, UIScrollViewDelegate {
   weak var grabber: ColumnResizerView?
   var translateion = CGPoint.zero
   var width = 0.0
-  
+
   func captureFirstColumnWidth() {
     guard let columnWidths = self.columnWidths else { return }
-    width = columnWidths.columnWidths[0];
+    width = columnWidths.columnWidths[0]
   }
 
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -27,17 +27,17 @@ class HorizontalScrollViewDelegate: NSObject, UIScrollViewDelegate {
     guard let grabber = self.grabber else { return }
     let shadowOffsetX = clampScrollPos(scrollView.contentOffset.x)
     let rawX = scrollView.contentOffset.x
-    
-    if(rawX <= 0) {
-      let x = width - rawX;
+
+    if rawX <= 0 {
+      let x = width - rawX
       let translation = CGPoint(x: x, y: 0)
       columnWidths.columnWidths[0] = x
       tableView.setWidth(x)
-      let _ = tableView.dataCollectionView?.updateSize(translation, withColumn: 0)
+      _ = tableView.dataCollectionView?.updateSize(translation, withColumn: 0)
       tableView.dataCollectionView?.childCollectionView?.collectionViewLayout.invalidateLayout()
-      grabber.setPosition(x);
+      grabber.setPosition(x)
     }
-  
+
     let offset = shadowOffsetX/100.0
     updateShadow(tableView, offset: offset)
 

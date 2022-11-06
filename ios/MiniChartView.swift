@@ -24,13 +24,17 @@ class MiniChartView: UIView, ConstraintCellProtocol {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   func getDynamicWidth() -> NSLayoutConstraint {
     return dynamicWidth
   }
-  
-  func setDynamicWidth(_ newVal: NSLayoutConstraint) {
+
+  func setDynamicWidth(_ newVal: NSLayoutConstraint, value: Double) {
     dynamicWidth = newVal
+  }
+
+  func getLineCount(columnWidth: Double) -> Int {
+    return 1
   }
 
   override var canBecomeFirstResponder: Bool {

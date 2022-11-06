@@ -7,17 +7,21 @@
 
 import Foundation
 class ImageCell: UIImageView, ConstraintCellProtocol {
-  
+
   var dynamicWidth = NSLayoutConstraint()
-  
+
   func getDynamicWidth() -> NSLayoutConstraint {
     return dynamicWidth
   }
-  
-  func setDynamicWidth(_ newVal: NSLayoutConstraint) {
+
+  func setDynamicWidth(_ newVal: NSLayoutConstraint, value: Double) {
     dynamicWidth = newVal
   }
-  
+
+  func getLineCount(columnWidth: Double) -> Int {
+    return 1
+  }
+
   func setData(data: DataCell, representedAs rep: Representation) {
     self.backgroundColor = .clear
     guard let qAttrExps = data.qAttrExps else {return}
