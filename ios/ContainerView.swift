@@ -213,10 +213,13 @@ class ContainerView: UIView {
         tableViewFactory.create()
         firstColumnTable = tableViewFactory.firstColumnTableView
         multiColumnTable = tableViewFactory.multiColumnTableView
-
+        firstColumnTable?.resizeCells()
+        multiColumnTable?.resizeCells()
+        self.testTruncation()
+        
         DispatchQueue.main.async {
           self.firstColumnTable?.dataCollectionView?.signalVisibleRows()
-          self.testTruncation()
+          self.horizontalScrollView?.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
         }
       } else {
         guard let firstColumnTable = self.firstColumnTable else { return }

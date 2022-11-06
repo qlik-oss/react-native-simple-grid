@@ -19,7 +19,7 @@ class TableView: UIView {
   var dymaniceLeadingAnchor = NSLayoutConstraint()
   var columnWidths: ColumnWidths?
   var grabbers = [() -> MultiColumnResizer?]()
-
+  var dataRange: CountableRange = 0..<1
   func grow(by delta: Double) {
     dynamicWidth.constant = self.frame.width + delta
   }
@@ -33,7 +33,7 @@ class TableView: UIView {
     guard let columnWidths = columnWidths else { return }
     guard let dataCollectionView = dataCollectionView else { return }
 
-    let width = columnWidths.getTotalWidth(range: dataCollectionView.dataRange)
+    let width = columnWidths.getTotalWidth(range: dataRange)
     setWidth(width)
 
     if let headerView = headerView {
@@ -58,7 +58,6 @@ class TableView: UIView {
     if let horizontalScrollView = horizontalScrolLView {
       let totalWidth = columnWidths.getTotalWidth()
       horizontalScrollView.contentSize = CGSize(width: totalWidth, height: 0)
-      horizontalScrollView.contentOffset.x = 0
     }
   }
 
@@ -81,11 +80,8 @@ class TableView: UIView {
     }
 
     if let lastGrabber = lastGrabber {
-      let width = columnWidths.getTotalWidth(range: 1..<columnWidths.count())
-
-      lastGrabber.centerConstraint.constant = width
+      lastGrabber.centerConstraint = lastGrabber.trailingAnchor.constraint(equalTo: self.trailingAnchor)
       lastGrabber.layoutIfNeeded()
-
     }
 
   }
