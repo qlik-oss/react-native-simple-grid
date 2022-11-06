@@ -1,3 +1,10 @@
+# [1.1.0-alpha.46](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.45...v1.1.0-alpha.46) (2022-11-06)
+
+
+### Bug Fixes
+
+* horizontal scrollbar ([#113](https://github.com/qlik-oss/react-native-simple-grid/issues/113)) ([de27b6b](https://github.com/qlik-oss/react-native-simple-grid/commit/de27b6bc64076055d2c27264da62adcb55a71bab))
+
 # [1.1.0-alpha.45](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.44...v1.1.0-alpha.45) (2022-11-06)
 
 
