@@ -210,6 +210,7 @@ public class TableViewFactory {
       view.setGrabbers(grabbers);
       view.setRecyclerView(coupledRecyclerView);
       view.rootLayout = this.rootLayout;
+      view.totalsView = this.totalsView;
       view.setFirstColumnRecyclerView(firstColumnRecyclerView);
       view.setFirstColumnHeader(firstColumnHeaderCell);
       view.setFixedTotalsCell(firstColumnTotalsCell);

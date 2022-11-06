@@ -13,6 +13,7 @@ public class TextWrapper {
   TextPaint measureTextPaint = new TextPaint();
   int lineCount = 1;
   int wordCount = 0;
+  int additionalPadding = 0;
 
 
   TextWrapper(DataColumn column, TableView tableView, TextView textView) {
@@ -45,14 +46,14 @@ public class TextWrapper {
     if (wordCount > 1) {
       int lines = calculateLineCount();
       if (lines != lineCount) {
-        lineCount = lines;
+        lineCount = Math.min(lines, wordCount);
         tableView.updateHeaderViewLineCount();
       }
     }
   }
 
   protected int calculateLineCount() {
-    int width = column.width - textView.getPaddingLeft() - textView.getPaddingRight();
+    int width = column.width - textView.getPaddingLeft() - textView.getPaddingRight() - additionalPadding;
     measureTextPaint.setTypeface(textView.getTypeface());
     StaticLayout.Builder builder = StaticLayout.Builder.obtain(textView.getText(), 0, textView.getText().length(), measureTextPaint, width);
     builder.setIncludePad(true);
