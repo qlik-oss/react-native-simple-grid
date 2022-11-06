@@ -27,6 +27,16 @@ class ColumnWidths {
       resetColumnWidths(widths: widths)
       calculateDefaultColWidth(dataRows: dataRows, defaultWidth: defaultWidth, columnCount: columnCount, frame: frame)
     }
+    cleanUpValues()
+  }
+  
+  fileprivate func cleanUpValues() {
+    columnWidths = columnWidths.map{ (element) -> Double in
+      if element < DataCellView.minWidth {
+        return DataCellView.minWidth
+      }
+      return element
+    }
   }
 
   fileprivate func loadFromStorage(_ columnCount: Int) -> Bool {

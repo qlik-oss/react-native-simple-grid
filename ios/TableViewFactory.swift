@@ -102,7 +102,7 @@ class TableViewFactory {
   func createFirstColumn() {
     let width = columnWidths.columnWidths[0]
     firstColumnTableView.translatesAutoresizingMaskIntoConstraints = false
-
+    firstColumnTableView.dataRange = 0..<1
     firstColumnTableView.dynamicWidth = firstColumnTableView.widthAnchor.constraint(equalToConstant: width)
     firstColumnTableView.backgroundColor = .white
     let leadingAnchor = containerView.freezeFirstColumn ? horizontalScrollView.frameLayoutGuide.leadingAnchor : horizontalScrollView.leadingAnchor
@@ -190,6 +190,7 @@ class TableViewFactory {
   func createMultiColumnTable() {
 
     let width = columnWidths.getTotalWidth(range: 1..<columnWidths.count())
+    multiColumnTableView.dataRange = 1..<columnWidths.count()
     multiColumnTableView.translatesAutoresizingMaskIntoConstraints = false
     multiColumnTableView.dynamicWidth = multiColumnTableView.widthAnchor.constraint(greaterThanOrEqualToConstant: width)
     multiColumnTableView.dymaniceLeadingAnchor = multiColumnTableView.leadingAnchor.constraint(equalTo: horizontalScrollView.leadingAnchor,
@@ -278,9 +279,7 @@ class TableViewFactory {
       resizer.containerView = containerView
       grabbers.append({[weak resizer] in return resizer})
       multiColumnTableView.addSubview(resizer)
-      let width = columnWidths.getTotalWidth(range: 1..<columnWidths.count())
-
-      resizer.centerConstraint = resizer.centerXAnchor.constraint(equalTo: multiColumnTableView.leadingAnchor, constant: width)
+      resizer.centerConstraint = resizer.centerXAnchor.constraint(equalTo: multiColumnTableView.trailingAnchor)
       let constraints = [
         resizer.topAnchor.constraint(equalTo: multiColumnTableView.topAnchor),
         resizer.bottomAnchor.constraint(equalTo: multiColumnTableView.bottomAnchor),

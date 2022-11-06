@@ -261,7 +261,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
   func updateSize(_ translation: CGPoint, forColumn index: Int) -> Bool {
     let view = contentView.subviews[index]
     let newWidth = view.frame.width + translation.x
-    if newWidth < DataCellView.minWidth {
+    if newWidth < DataCellView.minWidth && translation.x < 0 {
       return false
     }
 
