@@ -77,7 +77,16 @@ class TableViewFactory {
 
   func createHScrollView() {
     horizontalScrollView.translatesAutoresizingMaskIntoConstraints = false
-    horizontalScrollView.fitToView(containerView)
+
+    let constraints = [
+      horizontalScrollView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+      horizontalScrollView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+      horizontalScrollView.topAnchor.constraint(equalTo: containerView.topAnchor),
+      horizontalScrollView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -TableTheme.DefaultCellHeight)
+    ]
+    NSLayoutConstraint.activate(constraints)
+    containerView.addConstraints(constraints)
+
     if containerView.freezeFirstColumn {
       horizontalScrollView.delegate = containerView.hScrollViewDelegate
     }
@@ -100,7 +109,7 @@ class TableViewFactory {
 
     let constraints = [
       firstColumnTableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-      firstColumnTableView.heightAnchor.constraint(equalTo: horizontalScrollView.heightAnchor, constant: -TableTheme.HeaderLineHeight),
+      firstColumnTableView.heightAnchor.constraint(equalTo: horizontalScrollView.heightAnchor),
       firstColumnTableView.dynamicWidth
     ]
 
@@ -165,7 +174,7 @@ class TableViewFactory {
       resizer.centerConstraint = resizer.centerXAnchor.constraint(equalTo: horizontalScrollView.leadingAnchor, constant: width)
       constraints = [
         resizer.topAnchor.constraint(equalTo: horizontalScrollView.frameLayoutGuide.topAnchor),
-        resizer.bottomAnchor.constraint(equalTo: horizontalScrollView.frameLayoutGuide.bottomAnchor, constant: -TableTheme.DefaultCellHeight),
+        resizer.bottomAnchor.constraint(equalTo: horizontalScrollView.frameLayoutGuide.bottomAnchor),
         resizer.widthAnchor.constraint(equalToConstant: TableTheme.DefaultResizerWidth),
         resizer.centerConstraint
       ]
@@ -187,7 +196,7 @@ class TableViewFactory {
                                                                                                constant: columnWidths.columnWidths[0])
 
     let constraints = [
-      multiColumnTableView.heightAnchor.constraint(equalTo: horizontalScrollView.heightAnchor, constant: -TableTheme.DefaultCellHeight),
+      multiColumnTableView.heightAnchor.constraint(equalTo: horizontalScrollView.heightAnchor),
       multiColumnTableView.dynamicWidth,
       multiColumnTableView.dymaniceLeadingAnchor
     ]
