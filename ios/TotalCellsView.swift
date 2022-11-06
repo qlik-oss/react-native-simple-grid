@@ -16,7 +16,6 @@ class TotalCellsView: UIView {
     self.backgroundColor = .white
     createTextView()
   }
-  
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -41,7 +40,7 @@ class TotalCellsView: UIView {
   }
 
   func addBorder() {
-   
+
     let topBorder = UIView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: 1))
     topBorder.backgroundColor = borderColor
     topBorder.autoresizingMask = [.flexibleWidth]
@@ -55,7 +54,7 @@ class TotalCellsView: UIView {
       }
     }
   }
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
     layer.shadowColor = UIColor.black.cgColor

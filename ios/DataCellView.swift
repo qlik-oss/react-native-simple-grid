@@ -50,11 +50,12 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
   var numberOfLines = 1
   var isDataView  = true
   var dataRange: CountableRange = 0..<1
+  var columnWidths: ColumnWidths?
   var onExpandedCellEvent: RCTDirectEventBlock?
   var menuTranslations: MenuTranslations?
   weak var selectionBand: SelectionBand?
   weak var dataCollectionView: DataCollectionView?
-  
+
   static let iconMap: [String: UniChar] =  ["m": 0xe96c,
                                             "è": 0xe997,
                                             "ï": 0xe951,
@@ -73,17 +74,17 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
                                             "minus-2": 0xe8e3,
                                             "dot": 0xe878
   ]
-  
-  static let minWidth: CGFloat = 40
-  
+
+  static let minWidth: CGFloat = 60
+
   override init(frame: CGRect) {
     super.init(frame: frame)
   }
-  
+
   required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
-  
+
   func setData(row: DataRow,
                dataColumns: [DataColumn],
                columnWidths: ColumnWidths,
@@ -94,6 +95,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
     self.dataRow = row
     self.dataRange = dataRange
     self.dataColumns = dataColumns
+    self.columnWidths = columnWidths
     borderColor = ColorParser.fromCSS(cssString: theme.borderBackgroundColor ?? "#F0F0F0")
     createCells(row: row, withColumns: dataColumns, columnWidths: columnWidths, withRange: dataRange)
     let views = contentView.subviews
@@ -127,7 +129,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
             label.dataCollectionView = self.dataCollectionView
             label.menuTranslations = self.menuTranslations
             label.delegate = self
-            
+
             label.checkForUrls()
             if representation.type == "indicator", let indicator = element.indicator, let uniChar = DataCellView.iconMap[indicator.icon ?? "m"] {
               label.setAttributedText(element.qText ?? "", withIcon: uniChar, element: element)
@@ -140,7 +142,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
       }
     }
   }
-  
+
   fileprivate func getTextAlignment(_ element: DataCell, col: DataColumn) -> NSTextAlignment {
     if let align = col.align {
       if align == "right" {
@@ -155,21 +157,21 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
     }
     return .right
   }
-  
+
   fileprivate func getBackgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
     if isDataView {
       return .clear
     }
-    if (styleInfo.backgroundColorIdx == -1) {
+    if styleInfo.backgroundColorIdx == -1 {
       return .clear
     }
-   
+
     if let bgColor = element.cellBackgroundColor {
       return ColorParser.fromCSS(cssString: bgColor)
     }
     return .clear
   }
-  
+
   fileprivate func getForgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
     if isDataView {
       return cellColor!
@@ -179,7 +181,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
     }
     return cellColor!
   }
-  
+
   fileprivate func createCells(row: DataRow, withColumns cols: [DataColumn], columnWidths: ColumnWidths, withRange: CountableRange<Int>) {
     let views = contentView.subviews
     if views.count < row.cells[withRange].count {
@@ -216,65 +218,65 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
       }
     }
   }
-  
+
   fileprivate func setupConstraints(_ view: UIView?, prev: UIView?, width: Double, isLast: Bool) {
     guard let v = view else { return }
     let p = v as! ConstraintCellProtocol
-    
+
     var constraints = [NSLayoutConstraint]()
-    
+
     v.translatesAutoresizingMaskIntoConstraints = false
-    p.setDynamicWidth(v.widthAnchor.constraint(equalToConstant: width))
+    p.setDynamicWidth(v.widthAnchor.constraint(equalToConstant: width), value: width)
     if let previous = prev {
       constraints = [
         v.leadingAnchor.constraint(equalTo: previous.trailingAnchor),
         v.topAnchor.constraint(equalTo: self.topAnchor),
-        v.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        v.bottomAnchor.constraint(equalTo: self.bottomAnchor)
       ]
     } else {
       constraints = [
         v.leadingAnchor.constraint(equalTo: self.leadingAnchor),
         v.topAnchor.constraint(equalTo: self.topAnchor),
-        v.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        v.bottomAnchor.constraint(equalTo: self.bottomAnchor)
       ]
     }
-    
-    if(isLast) {
+
+    if isLast {
       constraints.append(v.trailingAnchor.constraint(equalTo: self.trailingAnchor))
     } else {
       constraints.append(p.getDynamicWidth())
     }
-    
+
     NSLayoutConstraint.activate(constraints)
     self.addConstraints(constraints)
-    
+
   }
-  
+
   fileprivate func clearAllCells() {
     for view in contentView.subviews {
       view.removeFromSuperview()
     }
   }
-  
+
   func updateSize(_ translation: CGPoint, forColumn index: Int) -> Bool {
     let view = contentView.subviews[index]
     let newWidth = view.frame.width + translation.x
     if newWidth < DataCellView.minWidth {
       return false
     }
-    
+
     resizeContentView(view: view, width: newWidth)
-    
+
     return true
   }
-  
+
   func resizeCells(_ columnWidths: ColumnWidths, withRange range: CountableRange<Int>) {
-    columnWidths.columnWidths[range].enumerated().forEach{ (index, width) in
+    columnWidths.columnWidths[range].enumerated().forEach { (index, width) in
       let view = contentView.subviews[index]
       resizeContentView(view: view, width: width)
     }
   }
-  
+
   fileprivate func resizeContentView(view: UIView, width: CGFloat) {
     // this constraints is only active if it's not the last cell or only cell
     let p = view as! ConstraintCellProtocol
@@ -282,20 +284,20 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
     widthConstraint.constant = width
     view.layoutIfNeeded()
   }
-  
+
   override func draw(_ rect: CGRect) {
     super.draw(rect)
-    
+
     border.move(to: CGPoint(x: 0, y: rect.height))
     border.addLine(to: CGPoint(x: rect.width, y: rect.height))
     border.close()
-    
+
     border.lineWidth = 1
     borderColor.set()
     border.stroke()
-    
+
   }
-  
+
   func onExpandedCell(cell: DataCell) {
     guard let dataRow = self.dataRow else { return }
     guard let dataCols = self.dataColumns else { return }
@@ -311,19 +313,20 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
       print(error)
     }
   }
-  
+
   func getMaxLineCount() -> Int {
     var maxLineCount = 1
     guard let dataColumns = dataColumns else { return maxLineCount }
-    contentView.subviews.enumerated().forEach{(index, view) in
+    guard let columnWidths = columnWidths else { return maxLineCount }
+    contentView.subviews.enumerated().forEach {(index, view) in
       if let constraint = view as? ConstraintCellProtocol {
         let dataColumn = dataColumns[index + dataRange.lowerBound]
-        if(dataColumn.isDim) {
-          maxLineCount = max(constraint.getLineCount(), maxLineCount)
+        if dataColumn.isDim {
+          let columnWidth = columnWidths.columnWidths[index + dataRange.lowerBound]
+          maxLineCount = max(constraint.getLineCount(columnWidth: columnWidth), maxLineCount)
         }
       }
     }
     return maxLineCount
   }
 }
-

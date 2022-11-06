@@ -6,6 +6,6 @@
 //
 
 import Foundation
-class ResizerButtonView : UIView {
+class ResizerButtonView: UIView {
   var heightConstraint = NSLayoutConstraint()
 }

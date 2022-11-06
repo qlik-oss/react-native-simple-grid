@@ -20,5 +20,5 @@ struct TableTheme: Decodable {
   let borderSelectedColor: String?
   let selectedBackground: String?
   let headerTextColor: String?
-  
+
 }

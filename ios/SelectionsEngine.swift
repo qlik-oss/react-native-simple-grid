@@ -18,9 +18,9 @@ class SelectionsEngine: NSObject {
 
   override init() {
     super.init()
-  
+
   }
-  
+
   func setSelectionBand(_ sb: SelectionBand) {
     sb.notificationCenter.addObserver(self, selector: #selector(onDragSelectDone), name: Notification.Name.onDragSelectDone, object: nil)
     selectionBands.append({[weak sb] in return sb })

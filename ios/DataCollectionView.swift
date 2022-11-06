@@ -11,7 +11,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   enum DataCollectionViewError: Error {
     case noCellForIdentifier
   }
-  
+
   var stylingInfo = [StylingInfo]()
   var dataColumns: [DataColumn]?
   var dataRows: [DataRow]?
@@ -29,14 +29,14 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   var dataRange: CountableRange = 0..<2
   var freezeFirstColumn = false
   var menuTranslations: MenuTranslations?
-  var maxRowLineCount = 1;
+  var maxRowLineCount = 1
   weak var totalCellsView: TotalCellsView?
   weak var columnWidths: ColumnWidths?
   weak var coupled: DataCollectionView?
   weak var headerView: HeaderView?
   weak var hScrollView: UIScrollView?
   weak var selectionBand: SelectionBand?
-  
+
   init(frame: CGRect, withRows rows: [DataRow],
        andColumns cols: [DataColumn],
        theme: TableTheme,
@@ -51,7 +51,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     self.cellStyle = cellStyle
     self.dataRange = range
     self.clipsToBounds = false
-    
+
     if let colorString = cellStyle.color {
       cellColor = ColorParser.fromCSS(cssString: colorString)
     }
@@ -59,7 +59,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     fitToFrame()
     createSelectionBands()
   }
-  
+
   fileprivate func fitToFrame() {
     guard let childCollectionView = childCollectionView else {
       return
@@ -69,38 +69,38 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     childCollectionView.showsVerticalScrollIndicator = false
     childCollectionView.showsHorizontalScrollIndicator = false
   }
-  
+
   fileprivate func createSelectionBands() {
     guard let childCollectionView = childCollectionView else { return }
-    
+
     let selectionBand = SelectionBand(frame: self.frame)
     childCollectionView.addSubview(selectionBand)
     selectionBand.translatesAutoresizingMaskIntoConstraints = false
     selectionBand.fitToView(self)
     if let selectionsEngine = self.selectionsEngine {
-      selectionsEngine.setSelectionBand(selectionBand);
+      selectionsEngine.setSelectionBand(selectionBand)
     }
     self.selectionBand = selectionBand
   }
-  
+
   required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
-  
+
   func scrollToTop() {
     if let childCollectionView = childCollectionView {
       childCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
     }
   }
-  
+
   func updateSize(_ translation: CGPoint, withColumn index: Int) -> Bool {
     if !updateCell(translation, withColum: index) {
       return false
     }
-    
+
     return true
   }
-  
+
   func updateCell(_ translation: CGPoint, withColum index: Int) -> Bool {
     if let cv = self.childCollectionView {
       let visibleCells = cv.subviews
@@ -114,24 +114,24 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     }
     return true
   }
-  
+
   func resizeCells() {
     guard let columnWidths = columnWidths else { return }
     if let cv = self.childCollectionView {
       let visibleCells = cv.subviews
       for cell in visibleCells {
         if let uiCell = cell as? DataCellView {
-          uiCell.resizeCells(columnWidths, withRange: dataRange);
+          uiCell.resizeCells(columnWidths, withRange: dataRange)
         }
       }
     }
     childCollectionView?.collectionViewLayout.invalidateLayout()
   }
-  
+
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     syncScrolling()
   }
-  
+
   func syncScrolling() {
     if let coupled = coupled, let childCollectionView = childCollectionView {
       if let slaveChild = coupled.childCollectionView {
@@ -141,7 +141,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     }
     signalVisibleRows()
   }
-  
+
    func signalVisibleRows() {
     if let childCollectionView = childCollectionView {
       var min = Int.max
@@ -159,7 +159,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
           }
         }
       }
-      
+
       let arrayOfVisibleItems = childCollectionView.indexPathsForVisibleItems.sorted()
       let firstItem = arrayOfVisibleItems.first
       let lastItem = arrayOfVisibleItems.last
@@ -168,7 +168,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       }
     }
   }
-  
+
   func setData(columns: [DataColumn], withRows rows: [DataRow]) {
     dataColumns = columns
     dataRows = rows
@@ -176,7 +176,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     let flowLayout = UICollectionViewFlowLayout()
     let uiCollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
     uiCollectionView.translatesAutoresizingMaskIntoConstraints = false
-    
+
     uiCollectionView.register(DataCellView.self, forCellWithReuseIdentifier: reuseIdentifier)
     uiCollectionView.delegate = self
     uiCollectionView.dataSource = self
@@ -185,7 +185,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     childCollectionView = uiCollectionView
     addSubview(uiCollectionView)
   }
-  
+
   fileprivate func setupDataCols() {
     guard let dataColumns = dataColumns else {
       return
@@ -193,7 +193,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     self.stylingInfo = [StylingInfo]()
     dataColumns[dataRange].enumerated().forEach {(index, element) in
       if let stylingInfo = element.stylingInfo {
-        var index = 0;
+        var index = 0
         var si = StylingInfo()
         for style in stylingInfo {
           if  style == "cellBackgroundColor" {
@@ -207,7 +207,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       }
     }
   }
-  
+
   func appendData(rows: [DataRow]) {
     DispatchQueue.main.async {
       self.dataRows = rows
@@ -218,7 +218,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       self.loading = false
     }
   }
-  
+
   // MARK: collectionview
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     // swiftlint:disable:next force_cast
@@ -242,35 +242,35 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
                    withStyle: self.stylingInfo,
                    withRange: dataRange)
     }
-    
+
     return cell
   }
-  
+
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return dataRows?.count ?? 0
   }
-  
+
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     let width = self.bounds.width
     let height = max(cellStyle.rowHeight ?? maxRowLineCount, maxRowLineCount)
     return CGSize(width: width, height: CGFloat(tableTheme!.rowHeight! * height))
   }
-  
+
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
     return 0
   }
-  
+
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
     return 0
   }
-  
+
   func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
     let rowCount = dataRows!.count
     if indexPath.row == rowCount - 50 && !loading {
       loadMoreData()
     }
   }
-  
+
   func loadMoreData() {
     DispatchQueue.global(qos: .userInitiated).async {
       if let requestOnEndReached = self.onEndReached, let size = self.dataSize, let rows = self.dataRows {
@@ -281,7 +281,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       }
     }
   }
- 
+
   func getMaxLineCount() -> Int {
     guard let childCollectionView = childCollectionView else { return maxRowLineCount }
     var lines = 0
@@ -292,10 +292,10 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     }
     return lines
   }
-  
+
   func setMaxLineCount(_ lines: Int) {
     maxRowLineCount = lines
     childCollectionView?.collectionViewLayout.invalidateLayout()
   }
-  
+
 }

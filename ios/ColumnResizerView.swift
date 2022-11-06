@@ -6,7 +6,7 @@
 //
 
 import Foundation
-class ColumnResizerView : UIView {
+class ColumnResizerView: UIView {
   var pressed = false
   var columnWidths: ColumnWidths
   var borderColor = UIColor.gray
@@ -18,16 +18,17 @@ class ColumnResizerView : UIView {
   weak var button: ResizerButtonView?
   weak var horizontalScrollView: UIScrollView?
   weak var containerView: ContainerView?
-  
+
   init( _ columnWidths: ColumnWidths, index: Int, bindTo bindedTableView: TableView) {
     self.columnWidths = columnWidths
     self.tableView = bindedTableView
     self.index = index
     super.init(frame: CGRect.zero)
+    self.backgroundColor = .white.withAlphaComponent(0.0)
     self.isUserInteractionEnabled = true
     createButton()
   }
-  
+
   fileprivate func createButton() {
     let button = ResizerButtonView()
     button.translatesAutoresizingMaskIntoConstraints = false
@@ -41,16 +42,15 @@ class ColumnResizerView : UIView {
     ]
     NSLayoutConstraint.activate(constraints)
     self.addConstraints(constraints)
-    
+
     let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.handleGesture(_:)))
     panGesture.minimumNumberOfTouches = 1
     panGesture.maximumNumberOfTouches = 1
     button.isUserInteractionEnabled = true
     button.addGestureRecognizer(panGesture)
-    button.backgroundColor = .purple.withAlphaComponent(0.2)
     self.button = button
   }
-  
+
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
       super.touchesBegan(touches, with: event)
       if let touch = touches.first {
@@ -81,7 +81,7 @@ class ColumnResizerView : UIView {
       }
       return view
     }
-  
+
   @objc func handleGesture(_ sender: UIPanGestureRecognizer) {
     switch sender.state {
     case .began:
@@ -107,24 +107,25 @@ class ColumnResizerView : UIView {
       break
     }
   }
-  
+
   func didPan(_ translation: CGPoint) {
     guard let tableView = self.tableView else { return }
     guard let data = tableView.dataCollectionView else { return }
-    columnWidths.resize(index: index, by: translation)
-    self.centerConstraint.constant  = self.centerConstraint.constant + translation.x
-    
-    tableView.grow(by: translation.x)
-    if let adjacentTable = self.adjacentTable {
-      adjacentTable.dymaniceLeadingAnchor.constant = columnWidths.columnWidths[0]
-      adjacentTable.layoutIfNeeded()
+    if  data.updateSize(translation, withColumn: index) {
+      columnWidths.resize(index: index, by: translation)
+      self.centerConstraint.constant  = self.centerConstraint.constant + translation.x
+
+      tableView.grow(by: translation.x)
+      if let adjacentTable = self.adjacentTable {
+        adjacentTable.dymaniceLeadingAnchor.constant = columnWidths.columnWidths[0]
+        adjacentTable.layoutIfNeeded()
+      }
+      data.childCollectionView?.collectionViewLayout.invalidateLayout()
+      containerView?.testTruncation()
+      tableView.layoutIfNeeded()
     }
-    tableView.layoutIfNeeded()
-    let _ = data.updateSize(translation, withColumn: index)
-    data.childCollectionView?.collectionViewLayout.invalidateLayout()
-    containerView?.testTruncation()
   }
-  
+
   func didEndPand() {
     columnWidths.saveToStorage()
     if let scrollView = self.horizontalScrollView {
@@ -134,11 +135,11 @@ class ColumnResizerView : UIView {
       }
     }
   }
-  
+
   func setPosition(_ x: Double) {
     self.centerConstraint.constant = x
   }
-  
+
   override func draw(_ rect: CGRect) {
     let x = rect.origin.x + rect.width / 2
     linePath.removeAllPoints()
@@ -150,13 +151,13 @@ class ColumnResizerView : UIView {
     color.setStroke()
     linePath.stroke()
   }
-  
+
   func setHeight(_ newVal: Double) {
     guard let button = button else { return }
     button.heightConstraint.constant = newVal
     button.layoutIfNeeded()
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }

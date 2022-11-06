@@ -16,7 +16,7 @@ class TotalsView: HeaderStyleView {
   var dynamicHeight = NSLayoutConstraint()
   weak var columnWidths: ColumnWidths?
   weak var borderLayer: CALayer?
-  
+
   init(
     withTotals totals: Totals,
     dataColumns: [DataColumn],
@@ -29,23 +29,23 @@ class TotalsView: HeaderStyleView {
       self.cellStyle = cellStyle
       self.dataRange = range
       self.backgroundColor = .white
-      
+
       addLabels(dataColumns)
     }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   fileprivate func addLabels(_ dataColumns: [DataColumn]) {
     guard let columnWidths = columnWidths else { return }
     guard let totals = totals else { return }
     guard let values = totals.values else { return }
-    
+
     topShadow = totals.position == "bottom"
-    
+
     var prev: PaddedLabel?
-    values[dataRange].enumerated().forEach{(index, value) in
+    values[dataRange].enumerated().forEach {(index, value) in
       let label = PaddedLabel(frame: CGRect.zero, selectionBand: nil)
       let col = dataColumns[index + dataRange.lowerBound]
       label.textColor = ColorParser.fromCSS(cssString: cellStyle?.color ?? "black")
@@ -58,7 +58,7 @@ class TotalsView: HeaderStyleView {
       prev = label
     }
   }
-  
+
   func setupConstraints(_ label: PaddedLabel, prev: PaddedLabel?, width: Double, index: Int) {
     let isLast = index == dataRange.count - 1
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -68,26 +68,26 @@ class TotalsView: HeaderStyleView {
       constraints = [
         label.leadingAnchor.constraint(equalTo: previous.trailingAnchor),
         label.topAnchor.constraint(equalTo: self.topAnchor),
-        label.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        label.bottomAnchor.constraint(equalTo: self.bottomAnchor)
       ]
     } else {
       constraints = [
         label.leadingAnchor.constraint(equalTo: self.leadingAnchor),
         label.topAnchor.constraint(equalTo: self.topAnchor),
-        label.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        label.bottomAnchor.constraint(equalTo: self.bottomAnchor)
       ]
     }
-    
-    if(isLast) {
+
+    if isLast {
       constraints.append(label.trailingAnchor.constraint(equalTo: self.trailingAnchor))
     } else {
       constraints.append(label.dynamicWidth)
     }
-    
+
     NSLayoutConstraint.activate(constraints)
     self.addConstraints(constraints)
   }
-  
+
   func resetTotals(_ newTotals: Totals?) {
     if let nt = newTotals {
       totals = nt
@@ -99,16 +99,16 @@ class TotalsView: HeaderStyleView {
       }
     }
   }
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
-    if(topShadow) {
+    if topShadow {
       addTopShadow()
     } else {
       addBottomShadow()
     }
   }
-  
+
   override func updateSize(_ translation: CGPoint, withColumn column: Int) {
     if column < subviews.count {
       let headerCell = subviews[column] as! PaddedLabel
@@ -116,17 +116,17 @@ class TotalsView: HeaderStyleView {
       headerCell.layoutIfNeeded()
     }
   }
-  
+
   func resizeLabels() {
     guard let columnWidths = columnWidths else { return }
 
-    columnWidths.columnWidths[dataRange].enumerated().forEach{(index, width) in
+    columnWidths.columnWidths[dataRange].enumerated().forEach {(index, width) in
       let headerCell = subviews[index] as! PaddedLabel
       headerCell.dynamicWidth.constant = width
       headerCell.layoutIfNeeded()
     }
   }
-  
+
   func getMaxLineCount() -> Int {
     var lineCount = 1
     for view in subviews {
@@ -136,5 +136,5 @@ class TotalsView: HeaderStyleView {
     }
     return lineCount
   }
-  
+
 }

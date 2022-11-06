@@ -15,8 +15,8 @@ class HeaderStyleView: UIView {
       let headerCell = subviews[column] as! HeaderCell
       headerCell.dynamicWidth.constant = headerCell.dynamicWidth.constant + translation.x
       headerCell.layoutIfNeeded()
-     
+
     }
   }
-  
+
 }

@@ -20,7 +20,7 @@ extension UIView {
     self.clipsToBounds = false
 
   }
-  
+
   func addTopShadow() {
     self.clipsToBounds = false
     layer.shadowRadius = 2
@@ -68,15 +68,14 @@ extension Notification.Name {
   static let onExpandRow = Notification.Name("onExpandRow")
 }
 
-
 @propertyWrapper
-struct UseAutoLayout<T:UIView> {
+struct UseAutoLayout<T: UIView> {
   public var wrappedValue: T {
     didSet {
       wrappedValue.translatesAutoresizingMaskIntoConstraints = false
     }
   }
-  
+
   public init(wrappedValue: T) {
     self.wrappedValue = wrappedValue
     wrappedValue.translatesAutoresizingMaskIntoConstraints = false

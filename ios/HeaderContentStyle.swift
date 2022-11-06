@@ -14,5 +14,5 @@ struct HeaderContentStyle: Decodable {
   var fontFamily: String?
   var fontSize: Int?
   var sortLabelColor: String?
-  var wrap:Bool?
+  var wrap: Bool?
 }

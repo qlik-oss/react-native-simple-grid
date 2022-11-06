@@ -21,13 +21,14 @@ class ContainerView: UIView {
   var headerStyle: HeaderContentStyle?
   var defaultCalculated = false
   var menuTranslations: MenuTranslations?
+  var horizontalScrollView: UIScrollView?
   var columnWidths = ColumnWidths()
   var maxHeaderLineCount = 1
   var maxTotalsLineCount = 1
   var maxCollectionViewsLineCount = 1
   weak var firstColumnTable: TableView?
   weak var multiColumnTable: TableView?
-  
+
   @objc var onEndReached: RCTDirectEventBlock?
   @objc var onVerticalScrollEnded: RCTDirectEventBlock?
   @objc var onHeaderPressed: RCTDirectEventBlock?
@@ -36,19 +37,19 @@ class ContainerView: UIView {
   @objc var containerWidth: NSNumber?
   @objc var freezeFirstColumn: Bool = false
   @objc var isDataView: Bool = false
-  
+
   @objc var onSelectionsChanged: RCTDirectEventBlock? {
     didSet {
       selectionsEngine.onSelectionsChanged = onSelectionsChanged
     }
   }
-  
+
   @objc var onConfirmSelections: RCTDirectEventBlock? {
     didSet {
       selectionsEngine.onConfirmSelections = onConfirmSelections
     }
   }
-  
+
   @objc var clearSelections: NSString? {
     didSet {
       if let clearSelections = clearSelections {
@@ -58,7 +59,7 @@ class ContainerView: UIView {
       }
     }
   }
-  
+
   @objc var size: NSDictionary = [:] {
     didSet {
       do {
@@ -74,7 +75,7 @@ class ContainerView: UIView {
       }
     }
   }
-  
+
   @objc var theme: NSDictionary = [:] {
     didSet {
       do {
@@ -85,7 +86,7 @@ class ContainerView: UIView {
       }
     }
   }
-  
+
   @objc var cols: NSDictionary = [:] {
     didSet {
       do {
@@ -95,13 +96,13 @@ class ContainerView: UIView {
         totals = decodedCols.totals
         guard let firstTable = self.firstColumnTable else { return }
         guard let multiTable = self.multiColumnTable else { return }
-        
+
         if let firstTotals = firstTable.totalView, let multiTotals = multiTable.totalView {
           firstTotals.resetTotals(totals)
           multiTotals.resetTotals(totals)
         }
-        
-        if(dataColumns != nil) {
+
+        if dataColumns != nil {
           if let firstHeader = firstTable.headerView, let multiHeader = multiTable.headerView {
             firstHeader.updateColumns(dataColumns!)
             multiHeader.updateColumns(dataColumns!)
@@ -112,7 +113,7 @@ class ContainerView: UIView {
       }
     }
   }
-  
+
   @objc var rows: NSDictionary = [:] {
     didSet {
       do {
@@ -127,7 +128,7 @@ class ContainerView: UIView {
               firstColumnTable.dataCollectionView?.appendData(rows: dataRows!)
               firstColumnTable.dataCollectionView?.scrollToTop()
             }
-            
+
             if let multiColumnTable = self.multiColumnTable {
               multiColumnTable.dataCollectionView?.dataSize = dataSize
               multiColumnTable.dataCollectionView?.appendData(rows: dataRows!)
@@ -153,7 +154,7 @@ class ContainerView: UIView {
       }
     }
   }
-  
+
   @objc var cellContentStyle: NSDictionary = [:] {
     didSet {
       do {
@@ -165,7 +166,7 @@ class ContainerView: UIView {
       }
     }
   }
-  
+
   @objc var headerContentStyle: NSDictionary = [:] {
     didSet {
       do {
@@ -177,13 +178,13 @@ class ContainerView: UIView {
       }
     }
   }
-  
+
   @objc var name: String? {
     didSet {
       columnWidths.key = name
     }
   }
-  
+
   @objc var translations: NSDictionary = [:] {
     didSet {
       do {
@@ -195,16 +196,16 @@ class ContainerView: UIView {
       }
     }
   }
-  
+
   override var bounds: CGRect {
     didSet {
       guard let dataColumns = dataColumns else {return}
       guard let dataRows = dataRows else {return}
       columnWidths.loadDefaultWidths(bounds, columnCount: dataColumns.count, dataRows: dataRows)
-      
+
       if !created {
         created = true
-        
+
         let tableViewFactory = TableViewFactory(containerView: self,
                                                 columnWidths: columnWidths,
                                                 dataColumns: dataColumns,
@@ -212,8 +213,7 @@ class ContainerView: UIView {
         tableViewFactory.create()
         firstColumnTable = tableViewFactory.firstColumnTableView
         multiColumnTable = tableViewFactory.multiColumnTableView
-        
-        
+
         DispatchQueue.main.async {
           self.firstColumnTable?.dataCollectionView?.signalVisibleRows()
           self.testTruncation()
@@ -222,30 +222,36 @@ class ContainerView: UIView {
         guard let firstColumnTable = self.firstColumnTable else { return }
         guard let multiColumnTable = self.multiColumnTable else { return }
         firstColumnTable.resizeCells()
-        multiColumnTable.resizeCells();
+        multiColumnTable.resizeCells()
+        testTruncation()
+        DispatchQueue.main.async {
+          if let horizontalScrollView = self.horizontalScrollView {
+            horizontalScrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
+          }
+        }
       }
     }
   }
-  
+
   func testTruncation() {
     let headerWrap = headerStyle?.wrap ?? true
     let cellWrap = cellStyle?.wrap ?? true
-    if(headerWrap) {
+    if headerWrap {
       testHeaders()
     }
-    if(cellWrap) {
+    if cellWrap {
       testCollectionViews()
     }
   }
-  
+
   func testHeaders() {
     guard let firstHeader = firstColumnTable?.headerView else { return }
     guard let multiHeader = multiColumnTable?.headerView else { return }
     var headerLineCount = 0
     headerLineCount = max(firstHeader.getMaxLineCount(), headerLineCount)
     headerLineCount = max(multiHeader.getMaxLineCount(), headerLineCount)
-    
-    if(headerLineCount != maxHeaderLineCount) {
+
+    if headerLineCount != maxHeaderLineCount {
       maxHeaderLineCount = headerLineCount
       let height = Double(maxHeaderLineCount - 1) * TableTheme.HeaderLineHeight + TableTheme.DefaultCellHeight
       firstHeader.dynamicHeightAnchor.constant = height
@@ -257,15 +263,15 @@ class ContainerView: UIView {
     }
     testTotals()
   }
-  
+
   func testTotals() {
     guard let firstTotal = firstColumnTable?.totalView else { return }
     guard let multiTotal = multiColumnTable?.totalView else { return }
     var lineCount = 0
     lineCount = max(firstTotal.getMaxLineCount(), lineCount)
     lineCount = max(multiTotal.getMaxLineCount(), lineCount)
-    
-    if(lineCount != maxTotalsLineCount) {
+
+    if lineCount != maxTotalsLineCount {
       maxTotalsLineCount = lineCount
       let height = Double(maxTotalsLineCount - 1) * TableTheme.HeaderLineHeight + TableTheme.DefaultCellHeight
       firstTotal.dynamicHeight.constant = height
@@ -274,18 +280,18 @@ class ContainerView: UIView {
       multiTotal.layoutIfNeeded()
     }
   }
-  
+
   func testCollectionViews() {
     guard let first = firstColumnTable?.dataCollectionView else { return }
     guard let multi = multiColumnTable?.dataCollectionView else { return }
-    var lineCount = 0;
+    var lineCount = 0
     lineCount = max(first.getMaxLineCount(), lineCount)
     lineCount = max(multi.getMaxLineCount(), lineCount)
-    if(lineCount != maxCollectionViewsLineCount) {
+    if lineCount != maxCollectionViewsLineCount {
       maxCollectionViewsLineCount = lineCount
       first.setMaxLineCount(maxCollectionViewsLineCount)
       multi.setMaxLineCount(maxCollectionViewsLineCount)
     }
   }
-  
+
 }

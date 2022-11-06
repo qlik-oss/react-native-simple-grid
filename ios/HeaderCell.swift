@@ -17,7 +17,7 @@ class HeaderCell: UIView {
   weak var currentSortBorder: UIView?
   weak var searchButton: UIButton?
   weak var paddedLabel: PaddedLabel?
-  
+
   init(dataColumn: DataColumn, onHeaderPressed: RCTDirectEventBlock?, onSearchColumn: RCTDirectEventBlock?) {
     super.init(frame: CGRect.zero)
     self.dataColumn = dataColumn
@@ -25,11 +25,11 @@ class HeaderCell: UIView {
     self.onSearchColumn = onSearchColumn
     makePressable()
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   fileprivate func makePressable() {
     isUserInteractionEnabled = true
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onPressedHeader(_:)))
@@ -38,7 +38,7 @@ class HeaderCell: UIView {
       if dataColumn.isDim {
         createSearchButton()
       }
-      
+
       let label = PaddedLabel(frame: CGRect.zero, selectionBand: nil)
       addSubview(label)
       paddedLabel = label
@@ -51,10 +51,10 @@ class HeaderCell: UIView {
       ]
       NSLayoutConstraint.activate(constraints)
       addConstraints(constraints)
-      
+
     }
   }
-  
+
   fileprivate func createSearchButton() {
     let button = UIButton()
     if #available(iOS 13.0, *) {
@@ -65,19 +65,19 @@ class HeaderCell: UIView {
       // Fallback on earlier versions
     }
     addSubview(button)
-    
+
     button.translatesAutoresizingMaskIntoConstraints = false
     let constraints = [
       button.topAnchor.constraint(equalTo: self.topAnchor),
       button.bottomAnchor.constraint(equalTo: self.bottomAnchor),
       button.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -TableTheme.DefaultResizerWidth / 2.0),
-      button.widthAnchor.constraint(equalToConstant: 30),
+      button.widthAnchor.constraint(equalToConstant: 30)
     ]
     NSLayoutConstraint.activate(constraints)
     addConstraints(constraints)
     searchButton = button
   }
-  
+
   @objc func didSearch() {
     guard let onSearchColumn = self.onSearchColumn else { return }
     do {
@@ -89,19 +89,19 @@ class HeaderCell: UIView {
       print(error)
     }
   }
-  
+
   func setText(_ label: String, textColor: UIColor, align: NSTextAlignment, fontSize: Double) {
     guard let paddedLabel = self.paddedLabel else { return }
-    
+
     paddedLabel.text = label
     paddedLabel.textAlignment = align
     paddedLabel.textColor = textColor
-    
+
     let sizedFont = UIFont.systemFont(ofSize: fontSize)
     paddedLabel.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: sizedFont)
     paddedLabel.adjustsFontForContentSizeCategory = true
   }
-  
+
   @objc func onPressedHeader(_ sender: UITapGestureRecognizer) {
     setNeedsDisplay()
     if sender.state == .ended, let dataColumn = dataColumn, let onHeaderPressed = onHeaderPressed {
@@ -117,7 +117,7 @@ class HeaderCell: UIView {
       }
     }
   }
-  
+
   func setTopBorder() {
     clearBorders()
     let border = UIView()
@@ -127,7 +127,7 @@ class HeaderCell: UIView {
     addSubview(border)
     currentSortBorder = border
   }
-  
+
   func setBottomBorder() {
     clearBorders()
     let border = UIView()
@@ -137,20 +137,20 @@ class HeaderCell: UIView {
     addSubview(border)
     currentSortBorder = border
   }
-  
+
   func clearBorders() {
     guard let currentBorder = self.currentSortBorder else { return }
     currentBorder.removeFromSuperview()
   }
-  
+
   func getLineCount() -> Int {
     guard let paddedLabel = self.paddedLabel else { return 1 }
     guard let dataColumn = dataColumn else { return 1 }
-    if(!dataColumn.isDim) {
+    if !dataColumn.isDim {
       return 1
     }
-   
+
     return paddedLabel.getLineCount(true)
   }
-  
+
 }
