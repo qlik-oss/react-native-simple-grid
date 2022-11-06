@@ -4,23 +4,15 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-
-import okhttp3.internal.http2.Header;
 
 public class GrabberView extends LinearLayout {
   GrabberButton grabberButton;
@@ -29,6 +21,7 @@ public class GrabberView extends LinearLayout {
   DataProvider dataProvider = null;
   AutoLinearLayout headerView = null;
   AutoLinearLayout footerView = null;
+  AutoLinearLayout totalsView = null;
   List<GrabberView> grabbers = null;
   CustomRecyclerView recyclerView;
   CustomRecyclerView firstColumnRecyclerView;
@@ -69,6 +62,7 @@ public class GrabberView extends LinearLayout {
             GrabberView.this.updateHeader(motionDx);
             GrabberView.this.updateFixedTotalsCell(motionDx);
             GrabberView.this.updateFirstColumnHeader(motionDx);
+            GrabberView.this.updateTotals(motionDx);
             lastX = motionEvent.getRawX();
             if(isLastColumn && motionDx > 0) {
               GrabberView.this.rootLayout.requestLayout();
@@ -199,6 +193,14 @@ public class GrabberView extends LinearLayout {
     }
   }
 
+  public void updateTotals(float dxMotion) {
+    if(totalsView != null) {
+      View view = totalsView.getChildAt(column);
+      resizeView(view, dxMotion);
+      updateNeighbour(totalsView, dxMotion);
+    }
+  }
+
   public void updateFirstColumnHeader(float dxMotion) {
     if(firstColumnHeader != null && column == 0) {
       resizeView(firstColumnHeader, dxMotion);
@@ -212,14 +214,6 @@ public class GrabberView extends LinearLayout {
       return neighbour;
     }
     return null;
-  }
-
-  public void updateFooter(float dxMotion) {
-    if (footerView != null) {
-      View view = footerView.getChildAt(column);
-      resizeView(view, dxMotion);
-      updateNeighbour(footerView, dxMotion);
-    }
   }
 
   public void resizeView(View view, float dxMotion) {
