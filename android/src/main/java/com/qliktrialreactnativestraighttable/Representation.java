@@ -19,6 +19,9 @@ public class Representation {
 
   Representation(ReadableMap data) {
     type = data.getString("type");
+    if(type == null) {
+      type = "text";
+    }
     imageUrl = data.getString("imageUrl");
     imageSize = data.getString("imageSize");
     imagePosition = data.getString("imagePosition");
