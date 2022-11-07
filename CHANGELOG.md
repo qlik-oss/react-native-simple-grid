@@ -1,3 +1,10 @@
+# [1.1.0-alpha.51](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.50...v1.1.0-alpha.51) (2022-11-07)
+
+
+### Bug Fixes
+
+* get effective properties ([46900c1](https://github.com/qlik-oss/react-native-simple-grid/commit/46900c1d635814145acd4dbdb2d9a59357703122))
+
 # [1.1.0-alpha.50](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.49...v1.1.0-alpha.50) (2022-11-07)
 
 
