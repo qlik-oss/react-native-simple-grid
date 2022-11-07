@@ -1,3 +1,10 @@
+# [1.1.0-alpha.49](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.48...v1.1.0-alpha.49) (2022-11-07)
+
+
+### Bug Fixes
+
+* ios last column resizing ([3fd7800](https://github.com/qlik-oss/react-native-simple-grid/commit/3fd780073ddfc84a8e1d0aa82571497f18000c93))
+
 # [1.1.0-alpha.48](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.47...v1.1.0-alpha.48) (2022-11-06)
 
 
