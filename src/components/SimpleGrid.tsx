@@ -108,7 +108,10 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
   const signalSearch = useCallback(async (column: any) => {
     try {
       const props = await model.getEffectiveProperties();
-      column.label = props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef.qFieldDefs[0]
+     
+      if( props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef.qFieldDefs[0] ) {
+        column.label = props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef.qFieldDefs[0];
+      }
       searchColumn({searching: true, column})
     } catch (error) {
       
