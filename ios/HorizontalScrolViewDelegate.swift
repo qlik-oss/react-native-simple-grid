@@ -7,7 +7,6 @@
 
 import Foundation
 class HorizontalScrollViewDelegate: NSObject, UIScrollViewDelegate {
-
   weak var tableView: TableView?
   weak var totalsView: UIView?
   weak var headersView: UIView?
@@ -25,7 +24,7 @@ class HorizontalScrollViewDelegate: NSObject, UIScrollViewDelegate {
     guard let tableView = self.tableView else { return }
     guard let columnWidths = self.columnWidths else { return }
     guard let grabber = self.grabber else { return }
-    let shadowOffsetX = clampScrollPos(scrollView.contentOffset.x)
+    let shadowOffsetX = clampScrollPos(Float(scrollView.contentOffset.x))
     let rawX = scrollView.contentOffset.x
 
     if rawX <= 0 {
@@ -39,22 +38,16 @@ class HorizontalScrollViewDelegate: NSObject, UIScrollViewDelegate {
     }
 
     let offset = shadowOffsetX/100.0
-    updateShadow(tableView, offset: offset)
-
-    if let totalsView = totalsView {
-      updateShadow(totalsView, offset: offset)
-    }
-
-    if let headersView = headersView {
-      updateShadow(headersView, offset: offset)
-    }
+    updateShadow(offset: offset)
+    
   }
 
-  func clampScrollPos(_ x: CGFloat) -> CGFloat {
+  func clampScrollPos(_ x: Float) -> Float {
     return min(100.0, x)
   }
 
-  func updateShadow(_ view: UIView, offset: CGFloat) {
-    view.addLeftShadow(radius: 2, opacity: offset, offset: offset)
+  func updateShadow(offset: Float) {
+    tableView?.setShadow(offset: min(offset, 0.4))
+    tableView?.setNeedsDisplay()
   }
 }
