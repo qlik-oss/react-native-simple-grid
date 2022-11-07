@@ -1,3 +1,10 @@
+# [1.1.0-alpha.52](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.51...v1.1.0-alpha.52) (2022-11-07)
+
+
+### Bug Fixes
+
+* set label only if defined ([93d76a7](https://github.com/qlik-oss/react-native-simple-grid/commit/93d76a7d2e6fec1b5d87a1ae7a69535aaaf8244c))
+
 # [1.1.0-alpha.51](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.50...v1.1.0-alpha.51) (2022-11-07)
 
 
