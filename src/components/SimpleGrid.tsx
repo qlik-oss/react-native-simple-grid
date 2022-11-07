@@ -29,6 +29,7 @@ export type SimpleGridProps = {
     };
   };
   name: string;
+  model: any;
   clearSelections: boolean;
   rect: { width: number };
   contentStyle: { cellStyle: any; headerStyle: any };
@@ -88,6 +89,7 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
   onConfirmSelections,
   clearSelections,
   onHeaderPressed,
+  model,
 }) => {
   const expandCell = useUpdateAtom(setExpandedCellAtom);
   const searchColumn = useUpdateAtom(setSearchingTableColumnAtom);
@@ -103,15 +105,28 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
     [expandCell]
   );
 
+  const signalSearch = useCallback(async (column: any) => {
+    try {
+      const props = await model.getEffectiveProperties();
+      column.label = props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef.qFieldDefs[0]
+      searchColumn({searching: true, column})
+    } catch (error) {
+      
+    }
+  }, [searchColumn])
+
+
   const onSearchColumn = useCallback(
     (event: any) => {
       try {
         const column = JSON.parse(event.nativeEvent.column);
-        searchColumn({ searching: true, column });
+        signalSearch(column);
       } catch (error) {}
     },
-    [searchColumn]
+    [signalSearch]
   );
+
+  
 
   return (
     <ReactNativeStraightTableViewManager
