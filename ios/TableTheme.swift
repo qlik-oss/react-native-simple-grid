@@ -13,6 +13,7 @@ struct TableTheme: Decodable {
   static let DefaultResizerWidth = 30.0
   static let HorizontalScrollPadding = 50.0
   static let BorderColor = UIColor.black.withAlphaComponent(0.1)
+  static let DarkBorderColor = UIColor.black.withAlphaComponent(0.3)
   
   let rowHeight: Int?
   var headerHeight: Int?
