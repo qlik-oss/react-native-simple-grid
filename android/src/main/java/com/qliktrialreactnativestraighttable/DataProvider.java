@@ -70,7 +70,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   public void setTotals(ReadableArray totals, String totalsLabel, String totalsPosition) {
     this.totalsCells = HeaderViewFactory.getTotalsCellList(totals);
     this.totalsLabel = totalsLabel;
-    this.totalsPosition = totalsPosition;
+    this.totalsPosition = totalsPosition == null ? "noTotals" : totalsPosition;
   }
 
   public void setFirstColumnFrozen(boolean firstColumnFrozen) {
