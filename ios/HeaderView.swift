@@ -48,7 +48,7 @@ class HeaderView: HeaderStyleView {
     var prev: HeaderCell?
     columns[dataRange].enumerated().forEach {(index, column) in
       let label = HeaderCell(dataColumn: column, onHeaderPressed: onHeaderPressed, onSearchColumn: onSearchColumn)
-      let fontSize = 14
+      let fontSize = incomingHeaderStyle?.fontSize ?? 14
       label.setText(column.label ?? "", textColor: ColorParser.fromCSS(cssString: headerStyle.color ?? "black"), align: getTextAlignment(column), fontSize: Double(fontSize))
       addSubview(label)
       setupConstraints(label, width: columnWidths.columnWidths[index + dataRange.lowerBound], prev: prev, index: index)

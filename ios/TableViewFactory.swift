@@ -82,7 +82,7 @@ class TableViewFactory {
       horizontalScrollView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
       horizontalScrollView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
       horizontalScrollView.topAnchor.constraint(equalTo: containerView.topAnchor),
-      horizontalScrollView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -TableTheme.DefaultCellHeight)
+      horizontalScrollView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -TableTheme.TotalRowViewHeight)
     ]
     NSLayoutConstraint.activate(constraints)
     containerView.addConstraints(constraints)
@@ -168,7 +168,7 @@ class TableViewFactory {
       resizer.centerConstraint = resizer.centerXAnchor.constraint(equalTo: containerView.leadingAnchor, constant: width)
       constraints = [
         resizer.topAnchor.constraint(equalTo: containerView.topAnchor),
-        resizer.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -TableTheme.DefaultCellHeight),
+        resizer.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -TableTheme.TotalRowViewHeight),
         resizer.widthAnchor.constraint(equalToConstant: TableTheme.DefaultResizerWidth),
         resizer.centerConstraint
       ]
@@ -313,7 +313,7 @@ class TableViewFactory {
     let constraints = [
       totalRows.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
       totalRows.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-      totalRows.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -TableTheme.DefaultCellHeight),
+      totalRows.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -TableTheme.TotalRowViewHeight),
       totalRows.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
     ]
     NSLayoutConstraint.activate(constraints)
@@ -328,12 +328,13 @@ class TableViewFactory {
                             withRange: withRange,
                             onHeaderPressed: containerView.onHeaderPressed,
                             onSearchColumn: containerView.onSearchColumn)
+    let headerHeight = containerView.headerStyle?.lineHeight ?? TableTheme.CellContentHeight
     header.translatesAutoresizingMaskIntoConstraints = false
     header.backgroundColor = ColorParser.fromCSS(cssString: containerView.tableTheme?.headerBackgroundColor
                                                  ?? "lightgray")
-    header.dynamicHeightAnchor = header.heightAnchor.constraint(equalToConstant: TableTheme.DefaultCellHeight)
+    header.dynamicHeightAnchor = header.heightAnchor.constraint(equalToConstant: headerHeight + (PaddedLabel.PaddingSize * 2.0))
 
-    header.addLabels(columns: dataColumns, headerStyle: containerView.headerStyle)
+    header.addLabels(columns: dataColumns, headerStyle: containerView.headerStyle?.headerContentStyle)
     table.addSubview(header)
     table.headerView = header
     let constraints = [
@@ -387,8 +388,9 @@ class TableViewFactory {
 
     if let totals = totals, let headerView = tableView.headerView {
       let totalsColView = TotalsView(withTotals: totals, dataColumns: dataColumns, cellStyle: containerView.cellStyle, columnWidths: columnWidths, withRange: range)
+      let height = containerView.cellStyle?.lineHeight ?? TableTheme.CellContentHeight;
       totalsColView.translatesAutoresizingMaskIntoConstraints = false
-      totalsColView.dynamicHeight = totalsColView.heightAnchor.constraint(equalToConstant: TableTheme.DefaultCellHeight)
+      totalsColView.dynamicHeight = totalsColView.heightAnchor.constraint(equalToConstant: height + (PaddedLabel.PaddingSize * 2.0))
       totalsColView.isFirstColumn = first
       tableView.addSubview(totalsColView)
       tableView.totalView = totalsColView

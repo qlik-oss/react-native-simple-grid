@@ -9,7 +9,7 @@ import Foundation
 
 class TotalsView: HeaderStyleView {
   var totals: Totals?
-  var cellStyle: CellContentStyle?
+  var cellStyle: CellStyle?
   var dataIndex = [Int]()
   var isFirstColumn = false
   var topShadow = false
@@ -20,7 +20,7 @@ class TotalsView: HeaderStyleView {
   init(
     withTotals totals: Totals,
     dataColumns: [DataColumn],
-    cellStyle: CellContentStyle?,
+    cellStyle: CellStyle?,
     columnWidths: ColumnWidths,
     withRange range: CountableRange<Int>) {
       super.init(frame: CGRect.zero)
@@ -48,8 +48,9 @@ class TotalsView: HeaderStyleView {
     values[dataRange].enumerated().forEach {(index, value) in
       let label = PaddedLabel(frame: CGRect.zero, selectionBand: nil)
       let col = dataColumns[index + dataRange.lowerBound]
-      label.textColor = ColorParser.fromCSS(cssString: cellStyle?.color ?? "black")
-      label.font = UIFont.boldSystemFont(ofSize: 14)
+      let fontSize = cellStyle?.cellContentStyle?.fontSize ?? 14
+      label.textColor = ColorParser.fromCSS(cssString: cellStyle?.cellContentStyle?.color ?? "black")
+      label.font = UIFont.boldSystemFont(ofSize: CGFloat(fontSize))
       label.text = value
       label.alignText(from: col.align ?? "")
       let width = columnWidths.columnWidths[index + dataRange.lowerBound]
@@ -60,7 +61,6 @@ class TotalsView: HeaderStyleView {
   }
 
   func setupConstraints(_ label: PaddedLabel, prev: PaddedLabel?, width: Double, index: Int) {
-    let isLast = index == dataRange.count - 1
     label.translatesAutoresizingMaskIntoConstraints = false
     label.dynamicWidth = label.widthAnchor.constraint(equalToConstant: width)
     var constraints = [NSLayoutConstraint]()
