@@ -15,6 +15,7 @@ class TableView: UIView {
   weak var lastGrabber: LastColumnResizer?
   weak var firstGrabber: ColumnResizerView?
   weak var adjacentTable: TableView?
+  var isFirst = false
   var dynamicWidth = NSLayoutConstraint()
   var dymaniceLeadingAnchor = NSLayoutConstraint()
   var columnWidths: ColumnWidths?
@@ -46,7 +47,7 @@ class TableView: UIView {
 
     dataCollectionView.resizeCells()
     updateScrollContentSize(columnWidths)
-    repositionGrabbers(columnWidths)
+    repositionGrabbers(columnWidths, width: width)
 
     if let adjacentTable = adjacentTable {
       adjacentTable.dymaniceLeadingAnchor.constant = columnWidths.columnWidths[0]
@@ -61,15 +62,17 @@ class TableView: UIView {
     }
   }
 
-  func repositionGrabbers(_ columnWidths: ColumnWidths) {
-    if columnWidths.count() > 1 && !grabbers.isEmpty {
-      let range = 1..<columnWidths.count() - 1
-      var x = 0.0
-      columnWidths.columnWidths[range].enumerated().forEach {(index, width) in
-        x += width
-        let grabber = grabbers[index]()
-        grabber?.centerConstraint.constant = x
-        grabber?.setNeedsLayout()
+  func repositionGrabbers(_ columnWidths: ColumnWidths, width: Double) {
+    if(!isFirst) {
+      if columnWidths.count() > 1 && !grabbers.isEmpty {
+        let range = 1..<columnWidths.count() - 1
+        var x = 0.0
+        columnWidths.columnWidths[range].enumerated().forEach {(index, width) in
+          x += width
+          let grabber = grabbers[index]()
+          grabber?.centerConstraint.constant = x
+          grabber?.setNeedsLayout()
+        }
       }
     }
 
@@ -80,7 +83,7 @@ class TableView: UIView {
     }
 
     if let lastGrabber = lastGrabber {
-      lastGrabber.centerConstraint = lastGrabber.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+      lastGrabber.centerConstraint.constant = width
       lastGrabber.layoutIfNeeded()
     }
 

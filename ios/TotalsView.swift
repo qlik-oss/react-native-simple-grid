@@ -78,11 +78,9 @@ class TotalsView: HeaderStyleView {
       ]
     }
 
-    if isLast {
-      constraints.append(label.trailingAnchor.constraint(equalTo: self.trailingAnchor))
-    } else {
-      constraints.append(label.dynamicWidth)
-    }
+   
+    constraints.append(label.dynamicWidth)
+    
 
     NSLayoutConstraint.activate(constraints)
     self.addConstraints(constraints)

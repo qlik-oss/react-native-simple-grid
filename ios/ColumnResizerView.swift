@@ -8,6 +8,8 @@
 import Foundation
 class ColumnResizerView: UIView {
   var pressed = false
+  var headerView: HeaderView?
+  var totalsView: TotalsView?
   var columnWidths: ColumnWidths
   var borderColor = UIColor.gray
   var centerConstraint = NSLayoutConstraint()
@@ -121,6 +123,8 @@ class ColumnResizerView: UIView {
         adjacentTable.layoutIfNeeded()
       }
       data.childCollectionView?.collectionViewLayout.invalidateLayout()
+      updateHeader(translation)
+      updateTotals(translation)
       containerView?.testTruncation()
       tableView.layoutIfNeeded()
     }
@@ -156,6 +160,18 @@ class ColumnResizerView: UIView {
     guard let button = button else { return }
     button.heightConstraint.constant = newVal
     button.layoutIfNeeded()
+  }
+  
+  func updateHeader(_ translation: CGPoint) {
+    if let headerView = self.headerView {
+      headerView.updateSize(translation, withColumn: index)
+    }
+
+  }
+  func updateTotals(_ translation: CGPoint) {
+    if let totals = self.totalsView {
+      totals.updateSize(translation, withColumn: index)
+    }
   }
 
   required init?(coder: NSCoder) {

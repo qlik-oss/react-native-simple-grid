@@ -213,13 +213,13 @@ class ContainerView: UIView {
         tableViewFactory.create()
         firstColumnTable = tableViewFactory.firstColumnTableView
         multiColumnTable = tableViewFactory.multiColumnTableView
-        firstColumnTable?.resizeCells()
-        multiColumnTable?.resizeCells()
-        self.testTruncation()
         
         DispatchQueue.main.async {
           self.firstColumnTable?.dataCollectionView?.signalVisibleRows()
           self.horizontalScrollView?.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
+          self.testTruncation()
+//          self.firstColumnTable?.resizeCells()
+//          self.multiColumnTable?.resizeCells()
         }
       } else {
         guard let firstColumnTable = self.firstColumnTable else { return }
@@ -294,6 +294,7 @@ class ContainerView: UIView {
       maxCollectionViewsLineCount = lineCount
       first.setMaxLineCount(maxCollectionViewsLineCount)
       multi.setMaxLineCount(maxCollectionViewsLineCount)
+      
     }
   }
 

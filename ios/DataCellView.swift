@@ -241,11 +241,8 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
       ]
     }
 
-    if isLast {
-      constraints.append(v.trailingAnchor.constraint(equalTo: self.trailingAnchor))
-    } else {
-      constraints.append(p.getDynamicWidth())
-    }
+   
+    constraints.append(p.getDynamicWidth())
 
     NSLayoutConstraint.activate(constraints)
     self.addConstraints(constraints)
@@ -259,8 +256,9 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
   }
 
   func updateSize(_ translation: CGPoint, forColumn index: Int) -> Bool {
+    guard let columnWidths = columnWidths else { return  false }
     let view = contentView.subviews[index]
-    let newWidth = view.frame.width + translation.x
+    let newWidth = columnWidths.columnWidths[index + dataRange.lowerBound] + translation.x
     if newWidth < DataCellView.minWidth && translation.x < 0 {
       return false
     }

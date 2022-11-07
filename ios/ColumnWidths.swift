@@ -60,7 +60,7 @@ class ColumnWidths {
 
   fileprivate func getStorageKey() -> String {
     guard let key = key else {return ""}
-    let prefix = UIDevice.current.orientation.isLandscape ? "landscape." : "portrait."
+    let prefix = UIDevice.current.orientation.isLandscape ? "landscape.3." : "portrait.3."
     let storageKey = prefix + key
     return storageKey
   }

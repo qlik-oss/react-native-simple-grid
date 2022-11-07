@@ -103,6 +103,7 @@ class TableViewFactory {
     let width = columnWidths.columnWidths[0]
     firstColumnTableView.translatesAutoresizingMaskIntoConstraints = false
     firstColumnTableView.dataRange = 0..<1
+    firstColumnTableView.isFirst = true
     firstColumnTableView.dynamicWidth = firstColumnTableView.widthAnchor.constraint(equalToConstant: width)
     firstColumnTableView.backgroundColor = .white
     let leadingAnchor = containerView.freezeFirstColumn ? horizontalScrollView.frameLayoutGuide.leadingAnchor : horizontalScrollView.leadingAnchor
@@ -154,6 +155,8 @@ class TableViewFactory {
     let resizer = ColumnResizerView(columnWidths, index: 0, bindTo: firstColumnTableView)
     resizer.adjacentTable = multiColumnTableView
     resizer.horizontalScrollView = horizontalScrollView
+    resizer.headerView = firstColumnTableView.headerView
+    resizer.totalsView = firstColumnTableView.totalView
     resizer.translatesAutoresizingMaskIntoConstraints = false
     resizer.borderColor = ColorParser.fromCSS(cssString: containerView.tableTheme?.borderBackgroundColor ?? "lightgray")
     containerView.hScrollViewDelegate.grabber = resizer
@@ -272,14 +275,17 @@ class TableViewFactory {
 
   func createLastGrabber() {
     if dataColumns.count > 1 {
-      let resizer = LastColumnResizer(columnWidths, index: columnWidths.count() - 1, bindTo: multiColumnTableView)
+      let resizer = LastColumnResizer(columnWidths, index: columnWidths.count() - 2, bindTo: multiColumnTableView)
       resizer.horizontalScrollView = horizontalScrollView
       resizer.translatesAutoresizingMaskIntoConstraints = false
       resizer.borderColor = ColorParser.fromCSS(cssString: containerView.tableTheme?.borderBackgroundColor ?? "lightgray")
       resizer.containerView = containerView
+      resizer.totalsView = multiColumnTableView.totalView
+      resizer.headerView = multiColumnTableView.headerView
       grabbers.append({[weak resizer] in return resizer})
+      let width = columnWidths.getTotalWidth(range: 1..<columnWidths.count())
       multiColumnTableView.addSubview(resizer)
-      resizer.centerConstraint = resizer.centerXAnchor.constraint(equalTo: multiColumnTableView.trailingAnchor)
+      resizer.centerConstraint = resizer.centerXAnchor.constraint(equalTo: multiColumnTableView.leadingAnchor, constant: width)
       let constraints = [
         resizer.topAnchor.constraint(equalTo: multiColumnTableView.topAnchor),
         resizer.bottomAnchor.constraint(equalTo: multiColumnTableView.bottomAnchor),
@@ -426,6 +432,7 @@ class TableViewFactory {
 
   func wireHeaders() {
     firstColumnTableView.adjacentTable = multiColumnTableView
+    firstColumnTableView.layer.zPosition = 2
     horizontalScrollView.bringSubviewToFront(firstColumnTableView)
     if let firstGrabber = firstColumnTableView.firstGrabber {
       firstGrabber.superview?.bringSubviewToFront(firstGrabber)

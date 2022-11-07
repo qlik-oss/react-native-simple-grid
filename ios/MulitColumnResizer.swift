@@ -9,8 +9,7 @@ import Foundation
 class MultiColumnResizer: ColumnResizerView {
 
   var adjacentGrabber: MultiColumnResizer?
-  var headerView: HeaderView?
-  var totalsView: TotalsView?
+ 
 
   override init( _ columnWidths: ColumnWidths, index: Int, bindTo bindedTableView: TableView) {
     super.init(columnWidths, index: index, bindTo: bindedTableView)
@@ -39,17 +38,7 @@ class MultiColumnResizer: ColumnResizerView {
     }
   }
 
-  func updateHeader(_ translation: CGPoint) {
-    if let headerView = self.headerView {
-      headerView.updateSize(translation, withColumn: index)
-    }
-
-  }
-  func updateTotals(_ translation: CGPoint) {
-    if let totals = self.totalsView {
-      totals.updateSize(translation, withColumn: index)
-    }
-  }
+  
 
   func updateAdjacent(by x: Double) {
     if let adjacentGrabber = self.adjacentGrabber {
