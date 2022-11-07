@@ -1,3 +1,10 @@
+# [1.1.0-alpha.50](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.49...v1.1.0-alpha.50) (2022-11-07)
+
+
+### Bug Fixes
+
+* cleanup shadows ([0aa9250](https://github.com/qlik-oss/react-native-simple-grid/commit/0aa9250816332e4a16aa97a4ea837009a9ac3dfc))
+
 # [1.1.0-alpha.49](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.48...v1.1.0-alpha.49) (2022-11-07)
 
 
