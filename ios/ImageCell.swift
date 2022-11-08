@@ -23,7 +23,6 @@ class ImageCell: UIImageView, ConstraintCellProtocol {
   }
 
   func setData(data: DataCell, representedAs rep: Representation) {
-    self.backgroundColor = .clear
     guard let qAttrExps = data.qAttrExps else {return}
     guard let qValues = qAttrExps.qValues else {return}
     if qValues.count > 0 {

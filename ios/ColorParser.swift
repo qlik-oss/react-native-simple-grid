@@ -28,7 +28,10 @@ class ColorParser {
 
   static func fromCSS(cssString: String) -> UIColor {
     if cssString == "none" {
-      return UIColor.clear
+      return UIColor.white
+    }
+    if cssString.isEmpty {
+      return .black
     }
     let hex = cssString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
     if cssString.hasPrefix("#") {
@@ -75,6 +78,6 @@ class ColorParser {
       }
 
     }
-    return UIColor.black
+    return UIColor.clear
   }
 }

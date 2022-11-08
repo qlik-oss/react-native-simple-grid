@@ -20,12 +20,12 @@ class ColumnWidths {
     return columnWidths.count
   }
 
-  func loadDefaultWidths(_ frame: CGRect, columnCount: Int, dataRows: [DataRow]) {
+  func loadDefaultWidths(_ frame: CGRect, columnCount: Int, dataRows: [DataRow], dataCols: [DataColumn]) {
     if !loadFromStorage(columnCount) {
       let defaultWidth = frame.width / Double(columnCount)
       let widths = [Double](repeating: defaultWidth, count: columnCount)
       resetColumnWidths(widths: widths)
-      calculateDefaultColWidth(dataRows: dataRows, defaultWidth: defaultWidth, columnCount: columnCount, frame: frame)
+      calculateDefaultColWidth(dataRows: dataRows, dataCols: dataCols, defaultWidth: defaultWidth, columnCount: columnCount, frame: frame)
     }
     cleanUpValues()
   }
@@ -60,17 +60,17 @@ class ColumnWidths {
 
   fileprivate func getStorageKey() -> String {
     guard let key = key else {return ""}
-    let prefix = UIDevice.current.orientation.isLandscape ? "landscape.3." : "portrait.3."
+    let prefix = UIDevice.current.orientation.isLandscape ? "landscape.4." : "portrait.4."
     let storageKey = prefix + key
     return storageKey
   }
 
-  func calculateDefaultColWidth(dataRows: [DataRow], defaultWidth: Double, columnCount: Int, frame: CGRect) {
+  func calculateDefaultColWidth(dataRows: [DataRow], dataCols: [DataColumn], defaultWidth: Double, columnCount: Int, frame: CGRect) {
     // get max width
     var widths = [Double](repeating: defaultWidth, count: columnCount)
     var totalWidth = 0.0
     columnWidths.enumerated().forEach { (index, _) in
-      let averageWidth = getAverageWidth(dataRows: dataRows, index: index)
+      let averageWidth = getAverageWidth(dataRows: dataRows, dataCols: dataCols, index: index)
       widths[index] = averageWidth
       totalWidth += averageWidth
     }
@@ -83,9 +83,13 @@ class ColumnWidths {
 
   }
 
-  fileprivate func getAverageWidth(dataRows: [DataRow], index: Int) -> Double {
+  fileprivate func getAverageWidth(dataRows: [DataRow], dataCols: [DataColumn], index: Int) -> Double {
     if dataRows.count == 0 {
       return DataCellView.minWidth
+    }
+    let dataCol = dataCols[index]
+    if dataCol.representation?.type != "text" {
+      return DataCellView.minWidth * 1.5
     }
     let totalCount = dataRows.reduce(0) { partialResult, row in
       return partialResult + row.cells[index].qText!.count

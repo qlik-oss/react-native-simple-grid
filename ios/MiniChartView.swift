@@ -76,6 +76,12 @@ class MiniChartView: UIView, ConstraintCellProtocol {
       miniChart.yScale = miniChart.globalMaxValue
     }
   }
+  
+  
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    setNeedsDisplay()
+  }
 
   override func draw(_ rect: CGRect) {
     guard let ctx = UIGraphicsGetCurrentContext() else { return }

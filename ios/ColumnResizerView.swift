@@ -11,7 +11,7 @@ class ColumnResizerView: UIView {
   var headerView: HeaderView?
   var totalsView: TotalsView?
   var columnWidths: ColumnWidths
-  var borderColor = UIColor.gray
+  var borderColor = TableTheme.BorderColor
   var centerConstraint = NSLayoutConstraint()
   var index = 0
   var linePath = UIBezierPath()
@@ -35,7 +35,7 @@ class ColumnResizerView: UIView {
     let button = ResizerButtonView()
     button.translatesAutoresizingMaskIntoConstraints = false
     addSubview(button)
-    button.heightConstraint = button.heightAnchor.constraint(equalToConstant: TableTheme.DefaultCellHeight)
+    button.heightConstraint = button.heightAnchor.constraint(equalToConstant: TableTheme.CellContentHeight)
     let constraints = [
       button.topAnchor.constraint(equalTo: self.topAnchor),
       button.widthAnchor.constraint(equalToConstant: TableTheme.DefaultResizerWidth),

@@ -24,10 +24,10 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   var selectionsEngine: SelectionsEngine?
   let reuseIdentifier = "CellIdentifier"
   var cellColor = UIColor.black
-  var cellStyle = CellContentStyle()
   var isDataView = false
   var dataRange: CountableRange = 0..<2
   var freezeFirstColumn = false
+  var cellStyle: CellStyle?
   var menuTranslations: MenuTranslations?
   var maxRowLineCount = 1
   weak var totalCellsView: TotalCellsView?
@@ -41,7 +41,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
        andColumns cols: [DataColumn],
        theme: TableTheme,
        selectionsEngine: SelectionsEngine,
-       cellStyle: CellContentStyle,
+       cellStyle: CellStyle?,
        columnWidths: ColumnWidths,
        range: CountableRange<Int>) {
     super.init(frame: frame)
@@ -51,9 +51,10 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     self.cellStyle = cellStyle
     self.dataRange = range
     self.clipsToBounds = false
-
-    if let colorString = cellStyle.color {
-      cellColor = ColorParser.fromCSS(cssString: colorString)
+    if let cellContentStyle = cellStyle?.cellContentStyle {
+      if let colorString = cellContentStyle.color {
+        cellColor = ColorParser.fromCSS(cssString: colorString)
+      }
     }
     setData(columns: cols, withRows: rows)
     fitToFrame()
@@ -230,7 +231,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     cell.backgroundColor = isDataView ? indexPath.row % 2 == 0 ? .white : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0) : .white
     cell.cellColor = cellColor
     cell.onExpandedCellEvent = onExpandedCell
-    cell.numberOfLines = cellStyle.rowHeight ?? 1
+    cell.numberOfLines = cellStyle?.cellContentStyle?.rowHeight ?? 1
     if let data = dataRows, let columnWidths = columnWidths, let dataColumns = dataColumns {
       let dataRow = data[indexPath.row]
       cell.selectionsEngine = self.selectionsEngine
@@ -240,6 +241,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
                    theme: tableTheme!,
                    selectionsEngine: selectionsEngine!,
                    withStyle: self.stylingInfo,
+                   cellStyle: self.cellStyle,
                    withRange: dataRange)
     }
 
@@ -252,8 +254,10 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
 
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     let width = self.bounds.width
-    let height = max(cellStyle.rowHeight ?? maxRowLineCount, maxRowLineCount)
-    return CGSize(width: width, height: CGFloat(tableTheme!.rowHeight! * height))
+    let numberOfLines = max(cellStyle?.cellContentStyle?.rowHeight ?? maxRowLineCount, maxRowLineCount)
+    let lineHeight = cellStyle?.lineHeight ?? TableTheme.CellContentHeight
+    let height = Double(numberOfLines) * lineHeight
+    return CGSize(width: width, height: height + (PaddedLabel.PaddingSize * 2.0))
   }
 
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -261,7 +265,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   }
 
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-    return 0
+    return 0.5
   }
 
   func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

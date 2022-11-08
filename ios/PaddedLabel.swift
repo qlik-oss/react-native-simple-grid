@@ -82,19 +82,6 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
     }
   }
 
-  //  override func drawText(in rect: CGRect) {
-  //    let r = rect.inset(by: UIEI)
-  //    super.drawText(in: r)
-  //  }
-  //
-  //  override func textRect(forBounds bounds: CGRect,
-  //                         limitedToNumberOfLines n: Int) -> CGRect {
-  //
-  //    let ctr = super.textRect(forBounds: bounds, limitedToNumberOfLines: n)
-  //    let xOffset = self.textAlignment == .right ?  -PaddedLabel.PaddingSize : 0
-  //    return CGRect(x: ctr.origin.x + xOffset, y: ctr.origin.y + PaddedLabel.PaddingSize, width: ctr.size.width, height: ctr.size.height)
-  //  }
-
   func showMenus() {
     isUserInteractionEnabled = true
     let longPress = UILongPressGestureRecognizer(target: self, action: #selector(showMenu))
@@ -139,9 +126,8 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       menu.setMenuVisible(false, animated: true)
     }
     if sender.state == .ended {
-      if let url = url {
-        UIApplication.shared.open(url)
-      } else {
+      let point = sender.location(in: self)
+      if !hitTestURL(point) {
         guard let selectionsEngine = self.selectionsEngine else {return}
         if selectionsEngine.canSelect(self.cell!) {
           if let selectionBand = self.selectionBand {
@@ -156,6 +142,19 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
         }
       }
     }
+  }
+  
+  func hitTestURL(_ point: CGPoint) -> Bool {
+    guard let url = url else {return false}
+    guard let attributedText = attributedText else {return false}
+    var rect = attributedText.boundingRect(with: CGSize(width: frame.width, height: .greatestFiniteMagnitude),
+                                           options: [.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
+    rect = CGRect(origin: CGPoint.zero, size: CGSize(width: rect.width + (PaddedLabel.PaddingSize), height: self.bounds.height))
+    if rect.contains(point) {
+      UIApplication.shared.open(url)
+      return true
+    }
+    return false
   }
 
   @objc func onTappedSelectionBand(notificaiton: Notification) {
@@ -245,31 +244,27 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       self.layer.backgroundColor = to.cgColor
     })
   }
-
-  func checkForUrls() {
-    let urls = checkForUrls(text: self.text ?? "")
-    if urls.count > 0 {
-      self.text = urls[0].absoluteString
-      self.url = urls[0]
-      self.textColor = UIColor.systemBlue
+  
+  func setupUrl(_ col: DataColumn, cell: DataCell) {
+    guard let representation = col.representation else { return }
+    var textLabel = representation.urlPosition == "dimension" ? representation.linkUrl : cell.qText
+    if let linkUrl = representation.linkUrl {
+      textLabel = linkUrl.isEmpty ? cell.qText : textLabel
+      let urlText = linkUrl.isEmpty ? (textLabel ?? "") : linkUrl
+      var cs = CharacterSet.urlQueryAllowed
+      cs.insert(charactersIn: ":?&/")
+      let encodeUrlText = urlText.addingPercentEncoding(withAllowedCharacters: cs)
+      let url = URL(string: encodeUrlText ?? "")
+      if let url = url {
+        let attributedString = NSMutableAttributedString(string: textLabel ?? "link")
+        attributedString.setAttributes([NSAttributedString.Key.link: url], range: NSMakeRange(0, textLabel?.count ?? 0))
+        self.attributedText = attributedString
+        self.url = url
+      }
     }
   }
-
-  fileprivate func checkForUrls(text: String) -> [URL] {
-    let types: NSTextCheckingResult.CheckingType = .link
-
-    do {
-      let detector = try NSDataDetector(types: types.rawValue)
-
-      let matches = detector.matches(in: text, options: .reportCompletion, range: NSRange(location: 0, length: text.count))
-
-      return matches.compactMap({$0.url})
-    } catch let error {
-      debugPrint(error.localizedDescription)
-    }
-
-    return []
-  }
+  
+  
 
   func setAttributedText(_ t: String, withIcon: UniChar, element: DataCell) {
     var iconColor = UIColor.black// self.textColor;

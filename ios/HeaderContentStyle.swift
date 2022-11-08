@@ -16,3 +16,21 @@ struct HeaderContentStyle: Decodable {
   var sortLabelColor: String?
   var wrap: Bool?
 }
+
+class HeaderStyle {
+  var headerContentStyle: HeaderContentStyle?
+  var lineHeight = 0.0
+  var font: UIFont?
+
+  init(headerContentSyle: HeaderContentStyle?) {
+    self.headerContentStyle = headerContentSyle
+    if let headerContentSyle = self.headerContentStyle {
+      let fontSize = headerContentSyle.fontSize ?? 14
+      let sizedFont = UIFont.systemFont(ofSize: CGFloat(fontSize))
+      lineHeight =  TableTheme.getLineHeight(sizedFont: sizedFont)
+      font = sizedFont
+    }
+  }
+}
+
+

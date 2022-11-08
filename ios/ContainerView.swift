@@ -17,8 +17,8 @@ class ContainerView: UIView {
   let selectionsEngine = SelectionsEngine()
   let hScrollViewDelegate = HorizontalScrollViewDelegate()
   var needsGrabbers = true
-  var cellStyle: CellContentStyle?
-  var headerStyle: HeaderContentStyle?
+  var cellStyle: CellStyle?
+  var headerStyle: HeaderStyle?
   var defaultCalculated = false
   var menuTranslations: MenuTranslations?
   var horizontalScrollView: UIScrollView?
@@ -160,7 +160,7 @@ class ContainerView: UIView {
       do {
         let json = try JSONSerialization.data(withJSONObject: cellContentStyle)
         let decodedCellStyle = try JSONDecoder().decode(CellContentStyle.self, from: json)
-        cellStyle = decodedCellStyle
+        cellStyle = CellStyle(cellContentStyle: decodedCellStyle)
       } catch {
         print(error)
       }
@@ -172,7 +172,7 @@ class ContainerView: UIView {
       do {
         let json = try JSONSerialization.data(withJSONObject: headerContentStyle)
         let decodedHeaderStyle = try JSONDecoder().decode(HeaderContentStyle.self, from: json)
-        headerStyle = decodedHeaderStyle
+        headerStyle = HeaderStyle(headerContentSyle: decodedHeaderStyle)
       } catch {
         print(error)
       }
@@ -201,7 +201,7 @@ class ContainerView: UIView {
     didSet {
       guard let dataColumns = dataColumns else {return}
       guard let dataRows = dataRows else {return}
-      columnWidths.loadDefaultWidths(bounds, columnCount: dataColumns.count, dataRows: dataRows)
+      columnWidths.loadDefaultWidths(bounds, columnCount: dataColumns.count, dataRows: dataRows, dataCols: dataColumns)
 
       if !created {
         created = true
@@ -218,8 +218,6 @@ class ContainerView: UIView {
           self.firstColumnTable?.dataCollectionView?.signalVisibleRows()
           self.horizontalScrollView?.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
           self.testTruncation()
-//          self.firstColumnTable?.resizeCells()
-//          self.multiColumnTable?.resizeCells()
         }
       } else {
         guard let firstColumnTable = self.firstColumnTable else { return }
@@ -237,8 +235,8 @@ class ContainerView: UIView {
   }
 
   func testTruncation() {
-    let headerWrap = headerStyle?.wrap ?? true
-    let cellWrap = cellStyle?.wrap ?? true
+    let headerWrap = headerStyle?.headerContentStyle?.wrap ?? true
+    let cellWrap = cellStyle?.cellContentStyle?.wrap ?? true
     if headerWrap {
       testHeaders()
     }
@@ -256,9 +254,9 @@ class ContainerView: UIView {
 
     if headerLineCount != maxHeaderLineCount {
       maxHeaderLineCount = headerLineCount
-      let height = Double(maxHeaderLineCount - 1) * TableTheme.HeaderLineHeight + TableTheme.DefaultCellHeight
-      firstHeader.dynamicHeightAnchor.constant = height
-      multiHeader.dynamicHeightAnchor.constant = height
+      let height = Double(maxHeaderLineCount) * (headerStyle?.lineHeight ?? 1.0)
+      firstHeader.dynamicHeightAnchor.constant = height + (PaddedLabel.PaddingSize * 2.0)
+      multiHeader.dynamicHeightAnchor.constant = height + (PaddedLabel.PaddingSize * 2.0)
       firstColumnTable?.updateGrabbers(height)
       multiColumnTable?.updateGrabbers(height)
       firstHeader.layoutIfNeeded()
@@ -274,11 +272,12 @@ class ContainerView: UIView {
     lineCount = max(firstTotal.getMaxLineCount(), lineCount)
     lineCount = max(multiTotal.getMaxLineCount(), lineCount)
 
+    // uses cellcontent style for style, but header.wrap for checking wrap
     if lineCount != maxTotalsLineCount {
       maxTotalsLineCount = lineCount
-      let height = Double(maxTotalsLineCount - 1) * TableTheme.HeaderLineHeight + TableTheme.DefaultCellHeight
-      firstTotal.dynamicHeight.constant = height
-      multiTotal.dynamicHeight.constant = height
+      let height = Double(maxHeaderLineCount) * (cellStyle?.lineHeight ?? 1.0)
+      firstTotal.dynamicHeight.constant = height + (PaddedLabel.PaddingSize * 2.0)
+      multiTotal.dynamicHeight.constant = height + (PaddedLabel.PaddingSize * 2.0)
       firstTotal.layoutIfNeeded()
       multiTotal.layoutIfNeeded()
     }

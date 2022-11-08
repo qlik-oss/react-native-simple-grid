@@ -8,10 +8,13 @@
 import Foundation
 
 struct TableTheme: Decodable {
-  static let DefaultCellHeight = 36.0
+  static let CellContentHeight = 36.0
+  static let TotalRowViewHeight = 36.0
   static let DefaultResizerWidth = 30.0
   static let HorizontalScrollPadding = 50.0
-  static var HeaderLineHeight = 36.0
+  static let BorderColor = UIColor.black.withAlphaComponent(0.1)
+  static let DarkBorderColor = UIColor.black.withAlphaComponent(0.3)
+  
   let rowHeight: Int?
   var headerHeight: Int?
   let borderRadius: Int?
@@ -21,4 +24,10 @@ struct TableTheme: Decodable {
   let selectedBackground: String?
   let headerTextColor: String?
 
+}
+
+extension TableTheme {
+  static func getLineHeight(sizedFont: UIFont) -> CGFloat {
+    return UIFontMetrics(forTextStyle: .headline).scaledFont(for: sizedFont).lineHeight 
+  }
 }
