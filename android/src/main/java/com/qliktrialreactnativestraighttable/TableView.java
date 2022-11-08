@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import androidx.annotation.RequiresApi;
@@ -54,7 +55,6 @@ public class TableView extends FrameLayout {
   String totalsLabel;
   final TableViewFactory tableViewFactory;
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   TableView(ThemedReactContext context) {
     super(context);
     TableTheme.iconFonts = ReactFontManager.getInstance().getTypeface("fontello", 0, context.getAssets());
@@ -64,6 +64,18 @@ public class TableView extends FrameLayout {
     firstColumnDragBox = new DragBox(context, this, dragBoxEventHandler, true);
     dragBoxEventHandler.setDragBoxes(dragBox, firstColumnDragBox);
     tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider, dragBox, firstColumnDragBox);
+  }
+
+  public int getContentTop() {
+    int top = headerHeight;
+    if(dataProvider.totalsPosition.equals("top")){
+      top += TableTheme.rowHeightFactor;
+    }
+    return top;
+  }
+
+  public int getContentBottom() {
+    return getMeasuredHeight() - TableTheme.rowHeightFactor;
   }
 
   public void setTotals(ReadableArray totalsRows, String totalsPosition, String totalsLabel) {
@@ -77,6 +89,7 @@ public class TableView extends FrameLayout {
   }
 
   public void showDragBox(Rect bounds, int columnId) {
+    EventUtils.sendDragBox(this, true);
     if(isFirstColumnFrozen && columnId == 0) {
       firstColumnDragBox.show(bounds, columnId);
       dragBox.hide();
@@ -87,6 +100,7 @@ public class TableView extends FrameLayout {
   }
 
   public void hideDragBoxes() {
+    EventUtils.sendDragBox(this, false);
     firstColumnDragBox.hide();
     dragBox.hide();
   }

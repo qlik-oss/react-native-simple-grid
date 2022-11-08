@@ -26,7 +26,7 @@ public class TableViewFactory {
   public RootLayout rootLayout = null;
   public HeaderView headerView = null;
   public RowCountView rowCountView = null;
-  public AutoLinearLayout totalsView = null;
+  public TotalsView totalsView = null;
   public CustomRecyclerView firstColumnRecyclerView = null;
   public CustomRecyclerView coupledRecyclerView = null;
   public List<GrabberView> grabbers = null;
@@ -182,7 +182,7 @@ public class TableViewFactory {
       int startOffset = 0;
 
       for (int i = 0; i < dataColumns.size(); i++) {
-        GrabberView grabberView = new GrabberView(i, context, scrollView);
+        GrabberView grabberView = new GrabberView(i, context, scrollView, tableView);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dragWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         startOffset += (dataColumns.get(i).width) - offset;
         offset = 0;
@@ -210,7 +210,6 @@ public class TableViewFactory {
       view.setGrabbers(grabbers);
       view.setRecyclerView(coupledRecyclerView);
       view.rootLayout = this.rootLayout;
-      view.totalsView = this.totalsView;
       view.setFirstColumnRecyclerView(firstColumnRecyclerView);
       view.setFirstColumnHeader(firstColumnHeaderCell);
       view.setFixedTotalsCell(firstColumnTotalsCell);
@@ -248,6 +247,9 @@ public class TableViewFactory {
         firstColumnTotalsCell.setLayoutParams(params);
         firstColumnTotalsCell.requestLayout();
       }
+
+      this.totalsView.updateLayout();
+      this.totalsView.requestLayout();
 
       this.headerView.updateLayout();
       this.headerView.requestLayout();

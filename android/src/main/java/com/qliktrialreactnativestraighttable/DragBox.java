@@ -29,6 +29,7 @@ public class DragBox extends View {
   Rect drawBottomFill;
   Paint paint = new Paint();
 
+  @SuppressLint("ClickableViewAccessibility")
   public DragBox(Context context, TableView tableView, DragBoxEventHandler dragBoxEventHandler, boolean isFirstColumnBox){
     super(context);
     this.tableView = tableView;
@@ -117,7 +118,10 @@ public class DragBox extends View {
         }
         case MotionEvent.ACTION_MOVE: {
           float y = event.getRawY() + dY;
-          if(y < tableView.headerHeight) {
+          if(y < tableView.getContentTop()) {
+            return true;
+          }
+          if(y + height > tableView.getContentBottom()) {
             return true;
           }
           bounds.top = (int) y;
@@ -143,8 +147,8 @@ public class DragBox extends View {
         return;
       }
       int y = (int) getY() - dy;
-      bounds.top = (int) y;
-      bounds.bottom = (int) y + height;
+      bounds.top = y;
+      bounds.bottom = y + height;
       setTranslationY(y);
     }
   }

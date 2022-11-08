@@ -5,10 +5,20 @@ export type ExpandCellAtom = {
   data?: any;
 };
 
+export type DragBoxAtom = {
+  dragging: boolean;
+};
+
 export type SearchTableColumnAtom = {
   searching: boolean;
   column?: any;
 };
+
+export const dragBoxAtom = atom<DragBoxAtom>({ dragging: false });
+
+export const setDragBoxAtom = atom(null, (_get, set, value: DragBoxAtom) => {
+  set(dragBoxAtom, value);
+});
 
 export const expandCellAtom = atom<ExpandCellAtom>({ expand: false });
 

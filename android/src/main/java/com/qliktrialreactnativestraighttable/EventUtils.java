@@ -54,7 +54,6 @@ public class EventUtils {
       columnJSONArray.put(columnJSONObject);
 
       String rowJSONString = row.toEvent();
-      Log.d("bar", rowJSONString);
       event.putString("row", rowJSONString);
       event.putString("col", columnJSONArray.toString());
       EventUtils.sendEventToJSFromView(contextView, "onExpandCell", event);
@@ -67,11 +66,16 @@ public class EventUtils {
     WritableMap event = Arguments.createMap();
     try {
       String columnJSONString = column.toEvent().toString();
-      Log.d("column", columnJSONString);
       event.putString("column", columnJSONString);
       EventUtils.sendEventToJSFromView(contextView, "onSearchColumn", event);
     } catch (JSONException e) {
       e.printStackTrace();
     }
+  }
+
+  public static void sendDragBox(View contextView, boolean dragging) {
+    WritableMap event = Arguments.createMap();
+    event.putBoolean("dragging", dragging);
+    EventUtils.sendEventToJSFromView(contextView, "onDragBox", event);
   }
 }
