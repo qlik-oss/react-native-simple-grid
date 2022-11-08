@@ -19,6 +19,7 @@ class MiniDotGraph: MiniSparkLineChart {
   override func render(_ ctx: CGContext, rect: CGRect) {
     guard let data = data else {return}
     guard let rows = data.qMatrix else {return}
+    horizontalPadding = 16
     clearDots()
     if rect.size.height == 0 {return}
     ctx.clear(rect)

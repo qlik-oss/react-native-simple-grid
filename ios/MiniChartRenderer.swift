@@ -24,8 +24,8 @@ class MiniChartRenderer {
   var globalMinValue = -Double.infinity
   var yScale = Double.infinity
   var scale = 0.0
-  var verticalPadding = 0.0
-  var horizontalPadding = 0.0
+  var verticalPadding = 8.0
+  var horizontalPadding = 8.0
   var showDots = false
 
   init() {
@@ -69,7 +69,6 @@ class MiniChartRenderer {
   }
 
   func getBandWidth(rect: CGRect, data: Matrix) {
-    horizontalPadding = 10
     let count = data.qMatrix?.count ?? 1
     let width = rect.width - horizontalPadding
     let totalBandWidth =  width / CGFloat(count)
@@ -78,8 +77,7 @@ class MiniChartRenderer {
   }
 
   func getScale(rect: CGRect, data: Matrix) {
-    let height = rect.height  - 8
-    verticalPadding = 8
+    let height = rect.height  - verticalPadding
     scale =   height / yScale
   }
 

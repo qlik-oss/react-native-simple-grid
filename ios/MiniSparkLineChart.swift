@@ -18,18 +18,23 @@ class MiniSparkLineChart: MiniChartRenderer {
   override func render(_ ctx: CGContext, rect: CGRect) {
     guard let data = data else {return}
     guard let rows = data.qMatrix else {return}
-    linePath = UIBezierPath()
+    linePath.removeAllPoints()
+    horizontalPadding = 16
+    verticalPadding = 16
     clearDots()
     if rect.size.height == 0 {return}
     ctx.clear(rect)
     getBandWidth(rect: rect, data: data)
     getScale(rect: rect, data: data)
-
-    var x = padding + horizontalPadding / 2
+  
+    var x = horizontalPadding / 2
     var index = 1
     startPath(rows, ctx, x, rect)
     x += padding * 2 + bandWidth
     let halfLine = rect.height / 2
+   
+    
+    
     for row in rows.dropFirst() {
       let value = row[1].qNum ?? 1.0
       let height = value * scale
@@ -38,7 +43,7 @@ class MiniSparkLineChart: MiniChartRenderer {
       let vpadding = getVerticalPadding(y, halfLine: halfLine)
       linePath.addLine(to: CGPoint(x: x2, y: y + vpadding))
       drawDot(index, value: value, count: rows.count, x: x2, y: y + vpadding)
-      x += padding * 2 + bandWidth
+      x = x2
       index += 1
     }
     if mainColor != .clear {
