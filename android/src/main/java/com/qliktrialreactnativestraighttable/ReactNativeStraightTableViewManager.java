@@ -159,6 +159,8 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
         MapBuilder.of("registrationName", "onExpandCell"))
       .put("onSearchColumn",
         MapBuilder.of("registrationName", "onSearchColumn"))
+      .put("onDragBox",
+        MapBuilder.of("registrationName", "onDragBox"))
       .build();
   }
 }

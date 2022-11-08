@@ -1,5 +1,6 @@
 package com.qliktrialreactnativestraighttable;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,7 +18,8 @@ import java.util.List;
 public class GrabberView extends LinearLayout {
   GrabberButton grabberButton;
   Paint linePaint = new Paint();
-  CustomHorizontalScrollView scrollView;
+  final CustomHorizontalScrollView scrollView;
+  final TableView tableView;
   DataProvider dataProvider = null;
   AutoLinearLayout headerView = null;
   AutoLinearLayout footerView = null;
@@ -41,6 +43,7 @@ public class GrabberView extends LinearLayout {
       int action = motionEvent.getAction();
       switch (action) {
         case MotionEvent.ACTION_DOWN: {
+          tableView.hideDragBoxes();
           GrabberView.this.pressed = true;
           GrabberView.this.scrollView.setDisableIntercept(true);
           GrabberView.this.scrollView.requestDisallowInterceptTouchEvent(true);
@@ -102,10 +105,12 @@ public class GrabberView extends LinearLayout {
     }
   }
 
-  public GrabberView(int column, Context context, CustomHorizontalScrollView scrollView ) {
+  @SuppressLint("ClickableViewAccessibility")
+  public GrabberView(int column, Context context, CustomHorizontalScrollView scrollView, TableView tableView) {
     super(context);
     this.column = column;
     this.scrollView = scrollView;
+    this.tableView = tableView;
     grabberButton = new GrabberButton(this);
     grabberButton.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.rowHeightFactor));
     this.addView(grabberButton);

@@ -1,7 +1,11 @@
 import React, { useCallback } from 'react';
 import ReactNativeStraightTableViewManager from './ReactNativeStraightTableViewManager';
 import { useUpdateAtom } from 'jotai/utils';
-import { setExpandedCellAtom, setSearchingTableColumnAtom } from '../atoms';
+import {
+  setDragBoxAtom,
+  setExpandedCellAtom,
+  setSearchingTableColumnAtom,
+} from '../atoms';
 
 export type SimpleGridLayout = {
   totals: {
@@ -91,6 +95,7 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
   onHeaderPressed,
   model,
 }) => {
+  const draggingBox = useUpdateAtom(setDragBoxAtom);
   const expandCell = useUpdateAtom(setExpandedCellAtom);
   const searchColumn = useUpdateAtom(setSearchingTableColumnAtom);
 
@@ -108,16 +113,15 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
   const signalSearch = useCallback(async (column: any) => {
     try {
       const props = await model.getEffectiveProperties();
-     
+
       if( props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef.qFieldDefs[0] ) {
         column.label = props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef.qFieldDefs[0];
       }
       searchColumn({searching: true, column})
     } catch (error) {
-      
+
     }
   }, [searchColumn])
-
 
   const onSearchColumn = useCallback(
     (event: any) => {
@@ -129,7 +133,14 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
     [signalSearch]
   );
 
-  
+  const onDragBox = useCallback(
+    (event: any) => {
+      try {
+        draggingBox(event.nativeEvent.dragging);
+      } catch (error) {}
+    },
+    [draggingBox]
+  );
 
   return (
     <ReactNativeStraightTableViewManager
@@ -158,6 +169,7 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
       translations={translations}
       onExpandCell={onExpandCell}
       onSearchColumn={onSearchColumn}
+      onDragBox={onDragBox}
     />
   );
 };

@@ -30,10 +30,10 @@ public class HeaderViewFactory {
   String totalsLabel;
   boolean topPosition;
   HeaderView headerView = null;
-  AutoLinearLayout totalsView = null;
+  TotalsView totalsView = null;
   TableView tableView;
 
-  public AutoLinearLayout getTotalsView() {
+  public TotalsView getTotalsView() {
     return totalsView;
   }
 
@@ -45,7 +45,6 @@ public class HeaderViewFactory {
     return dataColumns;
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public HeaderViewFactory(List<DataColumn> dataColumns, List<TotalsCell> totalsCells, String totalsLabel, boolean topPosition, TableView tableView, HeaderContentStyle contentStyle, Context context) {
     this.tableView = tableView;
     this.dataColumns = dataColumns;
@@ -124,7 +123,6 @@ public class HeaderViewFactory {
     return text;
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void buildHeader(Context context) {
     int padding = (int) PixelUtils.dpToPx(16);
     int headerHeight = TableTheme.rowHeightFactor;
@@ -152,7 +150,8 @@ public class HeaderViewFactory {
   }
 
   private void buildTotals(Context context) {
-    totalsView = new AutoLinearLayout(context);
+    totalsView = new TotalsView(context);
+    totalsView.setDataColumns(dataColumns);
 
     totalsView.post(() -> {
       int headerHeight = headerView.getMeasuredHeight();
@@ -189,6 +188,7 @@ public class HeaderViewFactory {
         int padding = (int) PixelUtils.dpToPx(16);
         text.setTypeface(text.getTypeface(), Typeface.BOLD);
         text.setEllipsize(TextUtils.TruncateAt.END);
+        text.setMaxLines(1);
         text.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
         if (column.isDim && i == 0) {
           text.setText(totalsLabel);
