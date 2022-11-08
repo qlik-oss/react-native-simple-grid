@@ -1,3 +1,10 @@
+# [1.1.0-alpha.55](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.54...v1.1.0-alpha.55) (2022-11-08)
+
+
+### Bug Fixes
+
+* **MD-3721:** respect font sizing ([#118](https://github.com/qlik-oss/react-native-simple-grid/issues/118)) ([48df3bf](https://github.com/qlik-oss/react-native-simple-grid/commit/48df3bf891731609dd79b4a3fb81a83ed3a5e3a1))
+
 # [1.1.0-alpha.54](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.53...v1.1.0-alpha.54) (2022-11-07)
 
 
