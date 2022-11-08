@@ -94,8 +94,8 @@ struct DataCell: Codable {
     self.qMiniChart = try container.decodeIfPresent(Matrix.self, forKey: .qMiniChart) ?? nil
     self.qAttrExps = try container.decodeIfPresent(AttriExpr.self, forKey: .qAttrExps) ?? nil
     self.indicator = try container.decodeIfPresent(Indicator.self, forKey: .indicator) ?? nil
-    self.cellBackgroundColor = try container.decodeIfPresent(String.self, forKey: .cellBackgroundColor) ?? ""
-    self.cellForegroundColor = try container.decodeIfPresent(String.self, forKey: .cellForegroundColor) ?? ""
+    self.cellBackgroundColor = try container.decodeIfPresent(String.self, forKey: .cellBackgroundColor) ?? nil
+    self.cellForegroundColor = try container.decodeIfPresent(String.self, forKey: .cellForegroundColor) ?? nil
 
     if let temp = try? container.decode(Double.self, forKey: .qNum) {
       self.qNum = temp

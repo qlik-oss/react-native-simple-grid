@@ -98,6 +98,9 @@ class MiniSparkLineChart: MiniChartRenderer {
   }
 
   func startPath(_ rows: [[MatrixCell]], _ ctx: CGContext, _ x: Double, _ rect: CGRect) {
+    if rows.isEmpty {
+      return
+    }
     let startValue = rows[0][1].qNum ?? 0
     let height = startValue * scale
     let y = rect.height - height

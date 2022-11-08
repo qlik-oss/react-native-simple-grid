@@ -201,7 +201,7 @@ class ContainerView: UIView {
     didSet {
       guard let dataColumns = dataColumns else {return}
       guard let dataRows = dataRows else {return}
-      columnWidths.loadDefaultWidths(bounds, columnCount: dataColumns.count, dataRows: dataRows)
+      columnWidths.loadDefaultWidths(bounds, columnCount: dataColumns.count, dataRows: dataRows, dataCols: dataColumns)
 
       if !created {
         created = true

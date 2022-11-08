@@ -118,6 +118,11 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
           }
         } else if representation.type == "image" && !isDataView {
           if let imageView = views[index] as? ImageCell {
+            if let cellBackground = element.cellBackgroundColor {
+              imageView.backgroundColor = ColorParser.fromCSS(cssString: cellBackground)
+            } else {
+              imageView.backgroundColor = .clear
+            }
             imageView.setData(data: element, representedAs: representation)
             imageView.setNeedsDisplay()
           }
