@@ -23,7 +23,6 @@ public class GrabberView extends LinearLayout {
   DataProvider dataProvider = null;
   AutoLinearLayout headerView = null;
   AutoLinearLayout footerView = null;
-  AutoLinearLayout totalsView = null;
   List<GrabberView> grabbers = null;
   CustomRecyclerView recyclerView;
   CustomRecyclerView firstColumnRecyclerView;
@@ -65,7 +64,7 @@ public class GrabberView extends LinearLayout {
             GrabberView.this.updateHeader(motionDx);
             GrabberView.this.updateFixedTotalsCell(motionDx);
             GrabberView.this.updateFirstColumnHeader(motionDx);
-            GrabberView.this.updateTotals(motionDx);
+            tableView.tableViewFactory.totalsView.updateLayout();
             lastX = motionEvent.getRawX();
             if(isLastColumn && motionDx > 0) {
               GrabberView.this.rootLayout.requestLayout();
@@ -195,14 +194,6 @@ public class GrabberView extends LinearLayout {
   public void updateFixedTotalsCell(float dxMotion) {
     if(fixedTotalsCell != null && column == 0) {
       resizeView(fixedTotalsCell, dxMotion);
-    }
-  }
-
-  public void updateTotals(float dxMotion) {
-    if(totalsView != null) {
-      View view = totalsView.getChildAt(column);
-      resizeView(view, dxMotion);
-      updateNeighbour(totalsView, dxMotion);
     }
   }
 
