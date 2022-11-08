@@ -1,3 +1,10 @@
+# [1.1.0-alpha.56](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.55...v1.1.0-alpha.56) (2022-11-08)
+
+
+### Bug Fixes
+
+* styling & dragbox ([#121](https://github.com/qlik-oss/react-native-simple-grid/issues/121)) ([c675cb4](https://github.com/qlik-oss/react-native-simple-grid/commit/c675cb438cb734c2a6c37f175b126b572c778324))
+
 # [1.1.0-alpha.55](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.54...v1.1.0-alpha.55) (2022-11-08)
 
 
