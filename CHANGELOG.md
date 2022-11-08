@@ -1,3 +1,10 @@
+# [1.1.0-alpha.57](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.56...v1.1.0-alpha.57) (2022-11-08)
+
+
+### Bug Fixes
+
+* **md-3779:** column sort indicators android ([#122](https://github.com/qlik-oss/react-native-simple-grid/issues/122)) ([79ed846](https://github.com/qlik-oss/react-native-simple-grid/commit/79ed8467400e851d7f3de02e5e4ccf3e0952d33f))
+
 # [1.1.0-alpha.56](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.55...v1.1.0-alpha.56) (2022-11-08)
 
 
