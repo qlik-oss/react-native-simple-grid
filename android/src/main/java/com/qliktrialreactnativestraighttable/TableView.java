@@ -34,7 +34,6 @@ public class TableView extends FrameLayout {
   AutoLinearLayout footerView = null;
   CustomRecyclerView recyclerView = null;
   CustomRecyclerView firstColumnView = null;
-  HeaderCell firstColumnHeaderCell = null;
   ScreenGuideView screenGuideView = null;
   SelectionsEngine selectionsEngine = new SelectionsEngine();
   ReadableMap translations;
@@ -147,8 +146,8 @@ public class TableView extends FrameLayout {
       headerView.update(cols);
     }
 
-    if(firstColumnHeaderCell != null && cols.size() > 0) {
-      firstColumnHeaderCell.setColumn(cols.get(0));
+    if(tableViewFactory.firstColumnHeaderCell != null && cols.size() > 0) {
+      tableViewFactory.firstColumnHeaderCell.setColumn(cols.get(0));
     }
 
     if(grabbers != null) {
@@ -233,7 +232,6 @@ public class TableView extends FrameLayout {
       scrollView = tableViewFactory.scrollView;
       screenGuideView = tableViewFactory.screenGuideView;
       firstColumnView = tableViewFactory.firstColumnRecyclerView;
-      firstColumnHeaderCell = tableViewFactory.firstColumnHeaderCell;
     }
   }
 
