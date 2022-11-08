@@ -2,7 +2,9 @@ package com.qliktrialreactnativestraighttable;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +16,8 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 
 @SuppressLint("ViewConstructor")
 public class HeaderCell extends LinearLayout {
+  String sortIndicatorState = "none";
+  Paint paint = new Paint();
   DataColumn column;
   TableView tableView;
   HeaderText cell;
@@ -42,8 +46,36 @@ public class HeaderCell extends LinearLayout {
   }
 
   public void setColumn(DataColumn column) {
-    this.cell.setColumn(column);
+    sortIndicatorState = "none";
+    this.column = column;
     setBackgroundColor(TableTheme.headerBackgroundColor);
+    cell.setBackgroundColor(Color.TRANSPARENT);
+    if (column.active) {
+      if (column.sortDirection == null || column.sortDirection.compareToIgnoreCase("desc") == 0) {
+        sortIndicatorState = "top";
+      } else {
+        sortIndicatorState = "bottom";
+      }
+    }
+    postInvalidate();
+  }
+
+  @Override
+  protected void onDraw(Canvas canvas) {
+    super.onDraw(canvas);
+    paint.setStrokeWidth(PixelUtils.dpToPx(6));
+    paint.setColor(Color.BLACK);
+    switch(sortIndicatorState) {
+      case "top":
+        canvas.drawLine(0, getMeasuredHeight(), getMeasuredWidth(), getMeasuredHeight(), paint);
+        break;
+      case "bottom":
+        canvas.drawLine(0, 0, getMeasuredWidth(), 0, paint);
+        break;
+      default:
+      case "none":
+        break;
+    }
   }
 
   public void handleSingleTap() {
@@ -58,7 +90,8 @@ public class HeaderCell extends LinearLayout {
     if (column.sortDirection == null && column.active) {
       return;
     }
-    this.setBackgroundColor(Color.LTGRAY);
+    setBackgroundColor(Color.LTGRAY);
+    cell.setBackgroundColor(Color.TRANSPARENT);
     this.invalidate();
   }
 
@@ -92,35 +125,14 @@ public class HeaderCell extends LinearLayout {
     public HeaderText(Context context, DataColumn column, TableView tableView) {
       super(context);
       this.column = column;
-      this.setCompoundDrawablePadding((int) PixelUtils.dpToPx(4));
       this.tableView = tableView;
       this.setLayoutParams(new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
       textWrapper = new TextWrapper(column, tableView, this);
       if(column.isDim) {
         textWrapper.additionalPadding = (int)PixelUtils.dpToPx(16) * 5;
       }
+      this.setBackgroundColor(Color.TRANSPARENT);
       this.setGravity(Gravity.CENTER_VERTICAL);
-
-      updateArrow();
-    }
-
-    public void setColumn(DataColumn column) {
-      this.column = column;
-      textWrapper.column = column;
-      setBackgroundColor(TableTheme.headerBackgroundColor);
-      updateArrow();
-    }
-
-    private void updateArrow() {
-      if (column.active) {
-        if (column.sortDirection == null || column.sortDirection.compareToIgnoreCase("desc") == 0) {
-          setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_arrow_drop_up_24, 0, 0, 0);
-        } else {
-          setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_arrow_drop_down_24, 0, 0, 0);
-        }
-      } else {
-        setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-      }
     }
 
     public void testTextWrap() {

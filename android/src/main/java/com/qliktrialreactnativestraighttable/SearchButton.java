@@ -52,7 +52,7 @@ public class SearchButton extends androidx.appcompat.widget.AppCompatImageButton
         handleTouchDown();
         break;
       case MotionEvent.ACTION_UP:
-      case MotionEvent.ACTION_HOVER_EXIT:
+      case MotionEvent.ACTION_CANCEL:
         handleTouchUp();
         break;
     }
