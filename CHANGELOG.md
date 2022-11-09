@@ -1,3 +1,10 @@
+# [1.1.0-alpha.59](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.58...v1.1.0-alpha.59) (2022-11-09)
+
+
+### Bug Fixes
+
+* totals line count for ios ([c57d0bf](https://github.com/qlik-oss/react-native-simple-grid/commit/c57d0bf1b7d9d21b37f7ab912eea782d6f12b8ae))
+
 # [1.1.0-alpha.58](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.57...v1.1.0-alpha.58) (2022-11-09)
 
 
