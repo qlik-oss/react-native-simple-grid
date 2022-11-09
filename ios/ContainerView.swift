@@ -299,5 +299,21 @@ class ContainerView: UIView {
       layoutIfNeeded()
     }
   }
+  
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    updateVScrollPos()
+  }
+  
+  func updateVScrollPos() {
+    let totalWidth = columnWidths.getTotalWidth()
+    let rawX = firstColumnTable?.horizontalScrolLView?.contentOffset.x ?? 0.0
+//    let scroll
+    let right = max(abs(self.frame.width  -  totalWidth) - rawX, 0)
+    multiColumnTable?.dataCollectionView?.childCollectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: right)
+    multiColumnTable?.dataCollectionView?.childCollectionView?.showsVerticalScrollIndicator = true
+  }
+  
+  
 
 }

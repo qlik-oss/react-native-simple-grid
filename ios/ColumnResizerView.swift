@@ -33,6 +33,7 @@ class ColumnResizerView: UIView {
   
   fileprivate func createButton() {
     let button = ResizerButtonView()
+    button.isUserInteractionEnabled = true
     button.translatesAutoresizingMaskIntoConstraints = false
     addSubview(button)
     button.heightConstraint = button.heightAnchor.constraint(equalToConstant: TableTheme.CellContentHeight)
@@ -71,6 +72,17 @@ class ColumnResizerView: UIView {
         setNeedsDisplay()
       }
     }
+  }
+  
+  override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    let view = super.hitTest(point, with: event)
+    if view == button {
+      return view
+    }
+    if view == self {
+      return nil
+    }
+    return view
   }
   
   @objc func handleGesture(_ sender: UIPanGestureRecognizer) {
@@ -113,6 +125,9 @@ class ColumnResizerView: UIView {
         adjacentTable.layoutIfNeeded()
       }
       data.childCollectionView?.collectionViewLayout.invalidateLayout()
+      
+      containerView?.multiColumnTable?.dataCollectionView?.childCollectionView?.showsVerticalScrollIndicator = false
+      containerView?.updateVScrollPos()
       updateHeader(translation)
       updateTotals(translation)
       containerView?.testTruncation()

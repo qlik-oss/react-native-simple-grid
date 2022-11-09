@@ -35,12 +35,13 @@ class ImageCell: UIView, ConstraintCellProtocol {
     return 1
   }
   
-  func setData(data: DataCell, representedAs rep: Representation) {
+  func setData(data: DataCell, representedAs rep: Representation, index: Int?) {
     self.representation = rep
     guard let qAttrExps = data.qAttrExps else {return}
     guard let qValues = qAttrExps.qValues else {return}
+    guard let attrIndex = index else { return }
     if qValues.count > 0 {
-      guard let urlString = qValues[0].qText else {return}
+      guard let urlString = qValues[attrIndex].qText else {return}
       guard let url = URL(string: urlString) else {return}
       DispatchQueue.global(qos: .background).async {
         do {
@@ -80,37 +81,49 @@ class ImageCell: UIView, ConstraintCellProtocol {
         let aspectRatio = image.size.width/image.size.height
         let height = self.frame.height
         let width = height * aspectRatio
-        var leadingAnchor = rep.imagePosition == "topCenter" ?
-        imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor) :
-        imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         
-        if(rep.imagePosition == "centerCenter") {
-          leadingAnchor = imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+        if rep.imagePosition == "centerCenter" {
+          imageView.fitToView(self)
+        } else {
+          var leadingAnchor = rep.imagePosition == "topCenter" ?
+          imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor) :
+          imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+          
+          
+          let constraints = [
+            leadingAnchor,
+            imageView.heightAnchor.constraint(equalToConstant: height),
+            imageView.widthAnchor.constraint(equalToConstant: width)
+          ]
+          NSLayoutConstraint.activate(constraints)
+          addConstraints(constraints)
         }
-        let constraints = [
-          leadingAnchor,
-          imageView.heightAnchor.constraint(equalToConstant: height),
-          imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: width)
-        ]
-        NSLayoutConstraint.activate(constraints)
-        addConstraints(constraints)
       }
     } else if rep.imageSize == "alwaysFit" {
       if rep.imagePosition == "centerCenter" {
         imageView.fitToView(self)
       } else  if let image = imageView.image {
-        let aspectRatio = image.size.width/image.size.height
-        let height = self.frame.height
-        let width = height * aspectRatio
-        var leadingAnchor = rep.imagePosition == "topCenter" ?
-        imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor) :
-        imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        let aspectRatio = (image.size.height/image.size.width)
+        let maxWidth = self.frame.height / aspectRatio
+        let width = imageView.widthAnchor.constraint(lessThanOrEqualToConstant: maxWidth)
+        let leading = rep.imagePosition == "topCenter" ? imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor) :
+        imageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: -maxWidth)
+       
         
-        let constraints = [
-          leadingAnchor,
-          imageView.heightAnchor.constraint(equalToConstant: height),
-          imageView.widthAnchor.constraint(equalToConstant: width)
+        var constraints = [
+          leading,
+          imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+          imageView.topAnchor.constraint(equalTo: self.topAnchor),
+          imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+          width,
         ]
+        // need to bind to the leading of imageView and keep trailing lower priority
+        if rep.imagePosition == "bottomCenter" {
+          let hardLeading = imageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor)
+          leading.priority = UILayoutPriority(999)
+          constraints.append(hardLeading)
+        }
+        
         NSLayoutConstraint.activate(constraints)
         addConstraints(constraints)
         
@@ -136,9 +149,13 @@ class ImageCell: UIView, ConstraintCellProtocol {
       }
       imageView.clipsToBounds = true
     }
-    updateConstraintsIfNeeded()
     self.setNeedsLayout()
+    imageView.setNeedsLayout()
+    DispatchQueue.main.async {
+      self.updateContentScaleFactorIfNeeded()
+    }
   }
+  
   
   func updateContentScaleFactorIfNeeded() {
     guard let imageView = self.imageView else { return }

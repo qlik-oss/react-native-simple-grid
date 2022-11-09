@@ -57,7 +57,6 @@ class HeaderView: HeaderStyleView {
   }
 
   func setupConstraints(_ label: HeaderCell, width: Double, prev: HeaderCell?, index: Int) {
-    let isLast = index == dataRange.count - 1
     label.translatesAutoresizingMaskIntoConstraints = false
     label.dynamicWidth = label.widthAnchor.constraint(equalToConstant: width)
     var constraints = [NSLayoutConstraint]()
@@ -140,10 +139,12 @@ class HeaderView: HeaderStyleView {
   }
 
   func getMaxLineCount() -> Int {
+    guard let columnWidths = columnWidths else { return 0 }
     var lineCount = 1
-    for view in subviews {
+    subviews.enumerated().forEach{(index, view) in
       if let headerCell = view as? HeaderCell {
-        lineCount = max(headerCell.getLineCount(), lineCount)
+        let width = columnWidths.columnWidths[index + dataRange.lowerBound]
+        lineCount = max(headerCell.getLineCount(width), lineCount)
       }
     }
     return lineCount
