@@ -215,9 +215,9 @@ class ContainerView: UIView {
         multiColumnTable = tableViewFactory.multiColumnTableView
         
         DispatchQueue.main.async {
-          self.firstColumnTable?.dataCollectionView?.signalVisibleRows()
           self.horizontalScrollView?.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
           self.testTruncation()
+          self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows()
         }
       } else {
         guard let firstColumnTable = self.firstColumnTable else { return }
@@ -228,6 +228,7 @@ class ContainerView: UIView {
         DispatchQueue.main.async {
           if let horizontalScrollView = self.horizontalScrollView {
             horizontalScrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
+            self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows()
           }
         }
       }

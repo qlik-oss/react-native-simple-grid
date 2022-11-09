@@ -219,6 +219,16 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       self.loading = false
     }
   }
+  
+  func postSignalVisibleRows() {
+    DispatchQueue.main.async {
+      self.childCollectionView?.performBatchUpdates({
+        self.childCollectionView?.reloadData()
+        self.signalVisibleRows()
+        self.scrollToTop()
+      })
+    }
+  }
 
   // MARK: collectionview
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
