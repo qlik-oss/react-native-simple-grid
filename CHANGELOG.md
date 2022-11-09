@@ -1,3 +1,10 @@
+# [1.1.0-alpha.60](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.59...v1.1.0-alpha.60) (2022-11-09)
+
+
+### Bug Fixes
+
+* remove totals from view data & misc small fixes ([#124](https://github.com/qlik-oss/react-native-simple-grid/issues/124)) ([88947e7](https://github.com/qlik-oss/react-native-simple-grid/commit/88947e7048d0ee998c6e326a050343f320a52120))
+
 # [1.1.0-alpha.59](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.58...v1.1.0-alpha.59) (2022-11-09)
 
 
