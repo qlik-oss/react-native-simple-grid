@@ -110,18 +110,25 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
     [expandCell]
   );
 
-  const signalSearch = useCallback(async (column: any) => {
-    try {
-      const props = await model.getEffectiveProperties();
+  const signalSearch = useCallback(
+    async (column: any) => {
+      try {
+        const props = await model.getEffectiveProperties();
 
-      if( props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef.qFieldDefs[0] ) {
-        column.label = props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef.qFieldDefs[0];
-      }
-      searchColumn({searching: true, column})
-    } catch (error) {
-
-    }
-  }, [searchColumn])
+        if (
+          props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef
+            .qFieldDefs[0]
+        ) {
+          column.label =
+            props?.qHyperCubeDef?.qDimensions[
+              column.dataColIdx
+            ].qDef.qFieldDefs[0];
+        }
+        searchColumn({ searching: true, column });
+      } catch (error) {}
+    },
+    [model, searchColumn]
+  );
 
   const onSearchColumn = useCallback(
     (event: any) => {

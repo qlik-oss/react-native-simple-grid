@@ -213,11 +213,11 @@ class ContainerView: UIView {
         tableViewFactory.create()
         firstColumnTable = tableViewFactory.firstColumnTableView
         multiColumnTable = tableViewFactory.multiColumnTableView
-        
+        setNeedsLayout()
         DispatchQueue.main.async {
           self.horizontalScrollView?.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
-          self.testTruncation()
           self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows()
+          self.testTruncation()
         }
       } else {
         guard let firstColumnTable = self.firstColumnTable else { return }
@@ -262,6 +262,7 @@ class ContainerView: UIView {
       multiColumnTable?.updateGrabbers(height)
       firstHeader.layoutIfNeeded()
       multiHeader.layoutIfNeeded()
+      layoutIfNeeded()
     }
     testTotals()
   }
@@ -276,11 +277,12 @@ class ContainerView: UIView {
     // uses cellcontent style for style, but header.wrap for checking wrap
     if lineCount != maxTotalsLineCount {
       maxTotalsLineCount = lineCount
-      let height = Double(maxHeaderLineCount) * (cellStyle?.lineHeight ?? 1.0)
+      let height = Double(maxTotalsLineCount) * (cellStyle?.lineHeight ?? 1.0)
       firstTotal.dynamicHeight.constant = height + (PaddedLabel.PaddingSize * 2.0)
       multiTotal.dynamicHeight.constant = height + (PaddedLabel.PaddingSize * 2.0)
       firstTotal.layoutIfNeeded()
       multiTotal.layoutIfNeeded()
+      layoutIfNeeded()
     }
   }
 
@@ -294,7 +296,7 @@ class ContainerView: UIView {
       maxCollectionViewsLineCount = lineCount
       first.setMaxLineCount(maxCollectionViewsLineCount)
       multi.setMaxLineCount(maxCollectionViewsLineCount)
-      
+      layoutIfNeeded()
     }
   }
 
