@@ -99,6 +99,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
                withStyle styleInfo: [StylingInfo],
                cellStyle: CellStyle?,
                withRange dataRange: CountableRange<Int>) {
+    self.clipsToBounds = true
     self.dataRow = row
     self.dataRange = dataRange
     self.dataColumns = dataColumns
@@ -208,7 +209,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
             view = miniChartView
             self.contentView.addSubview(miniChartView)
           } else if representation.type == "image" && !isDataView {
-            let imageCell = ImageCell(frame: .zero)
+            let imageCell = ImageCell()
             view = imageCell
             self.contentView.addSubview(imageCell)
           } else {

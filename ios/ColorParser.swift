@@ -28,7 +28,7 @@ class ColorParser {
 
   static func fromCSS(cssString: String) -> UIColor {
     if cssString == "none" {
-      return UIColor.white
+      return UIColor.clear
     }
     if cssString.isEmpty {
       return .black
