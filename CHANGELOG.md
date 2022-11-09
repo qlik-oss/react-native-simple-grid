@@ -1,3 +1,10 @@
+# [1.1.0-alpha.61](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.60...v1.1.0-alpha.61) (2022-11-09)
+
+
+### Bug Fixes
+
+* image cells ([#125](https://github.com/qlik-oss/react-native-simple-grid/issues/125)) ([c7acc3e](https://github.com/qlik-oss/react-native-simple-grid/commit/c7acc3e4e9678d47661a21994501c66691eb8671))
+
 # [1.1.0-alpha.60](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.59...v1.1.0-alpha.60) (2022-11-09)
 
 
