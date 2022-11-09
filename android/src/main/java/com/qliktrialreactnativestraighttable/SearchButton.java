@@ -33,13 +33,12 @@ public class SearchButton extends androidx.appcompat.widget.AppCompatImageButton
     postInvalidate();
   }
 
+
   public void handleTouchUp(){
     this.setBackgroundColor(defaultColor);
 
     icon.setTint(Color.BLACK);
     this.setImageDrawable(icon);
-    EventUtils.sendOnSearchColumn(tableView, column);
-    postInvalidate();
   }
 
   @SuppressLint("ClickableViewAccessibility")
@@ -51,9 +50,12 @@ public class SearchButton extends androidx.appcompat.widget.AppCompatImageButton
       case MotionEvent.ACTION_DOWN:
         handleTouchDown();
         break;
-      case MotionEvent.ACTION_UP:
       case MotionEvent.ACTION_CANCEL:
         handleTouchUp();
+        break;
+      case MotionEvent.ACTION_UP:
+        EventUtils.sendOnSearchColumn(tableView, column);
+        postInvalidate();
         break;
     }
     return super.onTouchEvent(event);

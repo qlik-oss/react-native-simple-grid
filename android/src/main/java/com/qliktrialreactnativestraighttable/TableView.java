@@ -26,6 +26,9 @@ import java.util.List;
 @SuppressLint("ViewConstructor")
 public class TableView extends FrameLayout {
   public final static int SCROLL_THUMB_HEIGHT = 12;
+  ReadableArray totalsRows = null;
+  String totalsPosition = null;
+  String totalsLabel = null;
   RootLayout rootLayout;
   CustomHorizontalScrollView  scrollView;
   final DragBox dragBox;
@@ -51,7 +54,6 @@ public class TableView extends FrameLayout {
   int themedRowHeight = TableTheme.rowHeightFactor;
   int headerHeight = TableTheme.rowHeightFactor;
   List<TotalsCell> totalsCells = null;
-  String totalsLabel;
   final TableViewFactory tableViewFactory;
 
   TableView(ThemedReactContext context) {
@@ -79,7 +81,8 @@ public class TableView extends FrameLayout {
 
   public void setTotals(ReadableArray totalsRows, String totalsPosition, String totalsLabel) {
     this.totalsLabel = totalsLabel;
-    dataProvider.setTotals(totalsRows, totalsLabel, totalsPosition);
+    this.totalsRows = totalsRows;
+    this.totalsPosition = totalsPosition;
   }
 
   public void clearSelections() {
@@ -102,6 +105,10 @@ public class TableView extends FrameLayout {
     EventUtils.sendDragBox(this, false);
     firstColumnDragBox.hide();
     dragBox.hide();
+  }
+
+  public TotalsView getTotalsView() {
+    return tableViewFactory.totalsView;
   }
 
   public void setFirstColumnFrozen(boolean shouldFreeze) {
@@ -232,6 +239,7 @@ public class TableView extends FrameLayout {
       scrollView = tableViewFactory.scrollView;
       screenGuideView = tableViewFactory.screenGuideView;
       firstColumnView = tableViewFactory.firstColumnRecyclerView;
+      dataProvider.setTotals(totalsRows, totalsLabel, totalsPosition);
     }
   }
 
