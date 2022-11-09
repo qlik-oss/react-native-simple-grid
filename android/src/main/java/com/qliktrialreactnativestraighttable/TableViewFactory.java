@@ -215,8 +215,6 @@ public class TableViewFactory {
       view.setFixedTotalsCell(firstColumnTotalsCell);
       view.updateLayout();
     }
-
-    createScreenGuide(tableView.getWidth());
   }
 
   protected void createScreenGuide(int width) {
@@ -226,7 +224,7 @@ public class TableViewFactory {
       params.gravity = Gravity.CENTER_VERTICAL;
       rootLayout.addView(screenGuideView, params);
       for (GrabberView grabberView : grabbers) {
-        grabberView.setGreenGuideView(screenGuideView);
+        grabberView.setScreenGuideView(screenGuideView);
       }
     }
   }
@@ -247,9 +245,10 @@ public class TableViewFactory {
         firstColumnTotalsCell.setLayoutParams(params);
         firstColumnTotalsCell.requestLayout();
       }
-
-      this.totalsView.updateLayout();
-      this.totalsView.requestLayout();
+      if(this.totalsView != null) {
+        this.totalsView.updateLayout();
+        this.totalsView.requestLayout();
+      }
 
       this.headerView.updateLayout();
       this.headerView.requestLayout();
@@ -261,7 +260,6 @@ public class TableViewFactory {
       this.coupledRecyclerView.requestLayout();
 
       updateGrabbers();
-      updateScreenGuide();
 
       this.rootLayout.requestLayout();
       this.scrollView.requestLayout();
@@ -308,6 +306,9 @@ public class TableViewFactory {
   }
 
   private void updateScreenGuide() {
+    if(screenGuideView == null) {
+      return;
+    }
     ViewGroup.LayoutParams params = screenGuideView.getLayoutParams();
     params.width = tableView.getWidth();
     screenGuideView.setLayoutParams(params);

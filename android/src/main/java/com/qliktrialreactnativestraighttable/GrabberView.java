@@ -64,7 +64,9 @@ public class GrabberView extends LinearLayout {
             GrabberView.this.updateHeader(motionDx);
             GrabberView.this.updateFixedTotalsCell(motionDx);
             GrabberView.this.updateFirstColumnHeader(motionDx);
-            tableView.tableViewFactory.totalsView.updateLayout();
+            if(tableView.getTotalsView() != null) {
+              tableView.getTotalsView().updateLayout();
+            }
             lastX = motionEvent.getRawX();
             if(isLastColumn && motionDx > 0) {
               GrabberView.this.rootLayout.requestLayout();
@@ -167,7 +169,7 @@ public class GrabberView extends LinearLayout {
     this.footerView = footerView;
   }
 
-  public void setGreenGuideView(ScreenGuideView screenGuideView) {
+  public void setScreenGuideView(ScreenGuideView screenGuideView) {
     this.screenGuideView = screenGuideView;
   }
 
