@@ -63,12 +63,15 @@ class TableViewFactory {
 
   func create() {
     containerView.hScrollViewDelegate.tableView = firstColumnTableView
+    containerView.hScrollViewDelegate.multiColumnTable = multiColumnTableView
     containerView.hScrollViewDelegate.columnWidths = containerView.columnWidths
+    containerView.hScrollViewDelegate.freezeFirstCol = containerView.freezeFirstColumn
     containerView.hScrollViewDelegate.captureFirstColumnWidth()
     containerView.horizontalScrollView = horizontalScrollView
     containerView.addSubview(horizontalScrollView)
     horizontalScrollView.addSubview(firstColumnTableView)
     horizontalScrollView.addSubview(multiColumnTableView)
+    horizontalScrollView.delegate = containerView.hScrollViewDelegate
     createHScrollView()
     addShadowsToHeadersIfNeeded()
     wireHeaders()
@@ -86,10 +89,6 @@ class TableViewFactory {
     ]
     NSLayoutConstraint.activate(constraints)
     containerView.addConstraints(constraints)
-
-    if containerView.freezeFirstColumn {
-      horizontalScrollView.delegate = containerView.hScrollViewDelegate
-    }
 
     createFirstColumn()
     firstColumnTableView.horizontalScrolLView = horizontalScrollView

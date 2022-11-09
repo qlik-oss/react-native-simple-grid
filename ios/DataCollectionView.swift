@@ -67,8 +67,8 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     }
     childCollectionView.translatesAutoresizingMaskIntoConstraints = false
     childCollectionView.fitToView(self)
-    childCollectionView.showsVerticalScrollIndicator = false
     childCollectionView.showsHorizontalScrollIndicator = false
+    childCollectionView.showsVerticalScrollIndicator = false
   }
 
   fileprivate func createSelectionBands() {

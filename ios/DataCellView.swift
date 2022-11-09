@@ -119,12 +119,13 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
           }
         } else if representation.type == "image" && !isDataView {
           if let imageView = views[index] as? ImageCell {
+            let index = col.stylingInfo?.firstIndex(of: "imageUrl")
             if let cellBackground = element.cellBackgroundColor {
               imageView.backgroundColor = ColorParser.fromCSS(cssString: cellBackground)
             } else {
               imageView.backgroundColor = .clear
             }
-            imageView.setData(data: element, representedAs: representation)
+            imageView.setData(data: element, representedAs: representation, index: index)
             imageView.setNeedsDisplay()
           }
         } else {
@@ -146,7 +147,8 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
             if representation.type == "indicator", let indicator = element.indicator, let uniChar = DataCellView.iconMap[indicator.icon ?? "m"] {
               label.setAttributedText(element.qText ?? "", withIcon: uniChar, element: element)
             } else if representation.type == "url" {
-                label.setupUrl(col, cell: element)
+              let index = col.stylingInfo?.firstIndex(of: "url")
+              label.setupUrl(col, cell: element, index: index)
             } else  {
               label.text = element.qText
               label.textColor = getForgroundColor(col: col, element: element, withStyle: styleInfo[index])

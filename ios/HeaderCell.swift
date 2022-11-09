@@ -71,7 +71,7 @@ class HeaderCell: UIView {
       button.topAnchor.constraint(equalTo: self.topAnchor),
       button.bottomAnchor.constraint(equalTo: self.bottomAnchor),
       button.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -TableTheme.DefaultResizerWidth / 2.0),
-      button.widthAnchor.constraint(equalToConstant: 30)
+      button.widthAnchor.constraint(equalToConstant: 20)
     ]
     NSLayoutConstraint.activate(constraints)
     addConstraints(constraints)
@@ -101,6 +101,7 @@ class HeaderCell: UIView {
     paddedLabel.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: sizedFont)
     paddedLabel.adjustsFontForContentSizeCategory = true
   }
+  
 
   @objc func onPressedHeader(_ sender: UITapGestureRecognizer) {
     setNeedsDisplay()
@@ -143,14 +144,14 @@ class HeaderCell: UIView {
     currentBorder.removeFromSuperview()
   }
 
-  func getLineCount() -> Int {
+  func getLineCount(_ width: Double) -> Int {
     guard let paddedLabel = self.paddedLabel else { return 1 }
-    guard let dataColumn = dataColumn else { return 1 }
-    if !dataColumn.isDim {
-      return 1
+    var columnWidth = width
+    if searchButton != nil {
+      columnWidth -= 30
     }
 
-    return paddedLabel.getLineCount(true)
+    return paddedLabel.getLineCount(true, columnWidth: columnWidth)
   }
 
 }

@@ -30,6 +30,7 @@ class MultiColumnResizer: ColumnResizerView {
       tableView.layoutIfNeeded()
       data.childCollectionView?.collectionViewLayout.invalidateLayout()
 
+      containerView?.updateVScrollPos()
       updateHeader(translation)
       updateTotals(translation)
       updateAdjacent(by: translation.x)
