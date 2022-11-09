@@ -1,3 +1,10 @@
+# [1.1.0-alpha.58](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.57...v1.1.0-alpha.58) (2022-11-09)
+
+
+### Bug Fixes
+
+* reszing images ([#123](https://github.com/qlik-oss/react-native-simple-grid/issues/123)) ([93be6e1](https://github.com/qlik-oss/react-native-simple-grid/commit/93be6e193102395ec92c1a34e66a71e47156229b))
+
 # [1.1.0-alpha.57](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.56...v1.1.0-alpha.57) (2022-11-08)
 
 
