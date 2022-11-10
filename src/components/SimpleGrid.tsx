@@ -143,7 +143,7 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
   const onDragBox = useCallback(
     (event: any) => {
       try {
-        draggingBox(event.nativeEvent.dragging);
+        draggingBox({ dragging: event.nativeEvent.dragging });
       } catch (error) {}
     },
     [draggingBox]
