@@ -168,7 +168,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
 
   private void checkTextWrap(DataColumn dataColumn) {
     if(dataColumn.isDim && dataColumn.isText() ) {
-      CellView cellView = (CellView) row.getChildAt(dataColumn.dataColIdx);
+      CellView cellView = (CellView) row.getChildAt(dataColumn.columnIndex);
       ClickableTextView textView = (ClickableTextView)cellView.content;
       textView.testTextWrap(dataColumn);
     }
@@ -204,7 +204,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
   }
 
   public int getLineCount(DataColumn column) {
-    CellView cellView = (CellView) row.getChildAt(column.dataColIdx);
+    CellView cellView = (CellView) row.getChildAt(column.columnIndex);
     ClickableTextView textView = (ClickableTextView) cellView.content;
     return textView.getMeasuredLineCount();
   }
@@ -220,7 +220,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     int maxLines = 0;
     for (DataColumn column: dataProvider.dataColumns) {
       if(column.isText() && column.isDim) {
-        CellView cellView = (CellView) row.getChildAt(column.dataColIdx);
+        CellView cellView = (CellView) row.getChildAt(column.columnIndex);
         if(cellView != null) {
           ClickableTextView clickableTextView = (ClickableTextView) cellView.content;
           maxLines = Math.max(clickableTextView.measureLines(column), maxLines);
@@ -235,8 +235,8 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
 
     for (DataColumn column: dataProvider.dataColumns) {
       if(column.isText() && column.isDim) {
-        if(column.dataColIdx < row.getChildCount()) {
-          CellView cellView = (CellView) row.getChildAt(column.dataColIdx);
+        if(column.columnIndex < row.getChildCount()) {
+          CellView cellView = (CellView) row.getChildAt(column.columnIndex);
           ClickableTextView clickableTextView = (ClickableTextView) cellView.content;
           clickableTextView.setMaxLines(lines);
           clickableTextView.setGravity(column.textAlignment | Gravity.CENTER_VERTICAL);

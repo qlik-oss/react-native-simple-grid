@@ -87,7 +87,7 @@ public class ColumnWidths {
     Paint paint = new Paint();
     for(DataRow row : rows) {
       if (row != null) {
-        String text = row.cells.get(column.dataColIdx).qText;
+        String text = row.cells.get(column.columnIndex).qText;
         if(text != null) {
           runningTotal += text.length();
         }

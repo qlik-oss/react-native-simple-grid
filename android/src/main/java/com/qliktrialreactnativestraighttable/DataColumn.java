@@ -18,6 +18,7 @@ public class DataColumn {
 
   public Boolean isDim = false;
   public int width = 0;
+  public int columnIndex = 0;
   public String label;
   public String id;
   public String sortDirection;
@@ -28,7 +29,7 @@ public class DataColumn {
   public boolean active = false;
   public int textAlignment = Gravity.LEFT;
   public int rowHeight = TableTheme.rowHeightFactor;
-  public DataColumn(ReadableMap source) {
+  public DataColumn(ReadableMap source, int index) {
     ReadableMap representationMap = source.getMap("representation");
     representation = new Representation(representationMap);
     stylingInfo = source.getArray("stylingInfo").toArrayList();
@@ -38,6 +39,7 @@ public class DataColumn {
     id = source.getString("id");
     sortDirection = source.getString("sortDirection");
     dataColIdx = source.getInt("dataColIdx");
+    columnIndex = index;
     if (source.hasKey("active")) {
       active = source.getBoolean("active");
     }
