@@ -71,8 +71,10 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     if(this.isDataView) {
       this.totalsPosition = "noTotals";
     }
-    this.totalsCells = HeaderViewFactory.getTotalsCellList(totals);
-    this.totalsLabel = totalsLabel;
+    if(totals != null) {
+      this.totalsCells = HeaderViewFactory.getTotalsCellList(totals);
+      this.totalsLabel = totalsLabel;
+    }
     this.totalsPosition = totalsPosition == null ? "noTotals" : totalsPosition;
   }
 

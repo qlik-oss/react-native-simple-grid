@@ -231,6 +231,7 @@ public class TableView extends FrameLayout {
 
   void createRecyclerView() {
     if (recyclerView == null) {
+      dataProvider.setTotals(totalsRows, totalsLabel, totalsPosition);
       tableViewFactory.createAll();
       recyclerView = tableViewFactory.coupledRecyclerView;
       grabbers = tableViewFactory.grabbers;
@@ -239,7 +240,6 @@ public class TableView extends FrameLayout {
       scrollView = tableViewFactory.scrollView;
       screenGuideView = tableViewFactory.screenGuideView;
       firstColumnView = tableViewFactory.firstColumnRecyclerView;
-      dataProvider.setTotals(totalsRows, totalsLabel, totalsPosition);
     }
   }
 
