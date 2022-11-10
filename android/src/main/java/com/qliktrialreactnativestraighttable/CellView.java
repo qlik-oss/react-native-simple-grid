@@ -26,20 +26,20 @@ public class CellView extends LinearLayout implements SelectionsObserver {
   final DragBoxEventHandler dragBoxEventHandler;
   final SelectionsEngine selectionsEngine;
   final TableView tableView;
-  final boolean firstColumn;
+  final boolean isInFirstColumnRecyclerView;
   GestureDetector gestureDetector;
   int padding = (int)PixelUtils.dpToPx(16);
 
-  CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean firstColumn) {
+  CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean isInFirstColumnRecyclerView, DataColumn dataColumn) {
     super(context);
     this.tableView = tableView;
     this.selectionsEngine = selectionsEngine;
-    this.firstColumn = firstColumn;
+    this.isInFirstColumnRecyclerView = isInFirstColumnRecyclerView;
     this.dragBoxEventHandler = tableView.dragBoxEventHandler;
 
     switch (type) {
       case "text":
-        ClickableTextView textView = new ClickableTextView(context, selectionsEngine, tableView, this);
+        ClickableTextView textView = new ClickableTextView(context, selectionsEngine, tableView, this, dataColumn);
         textView.setPadding(padding, 0, padding, 0);
         content = textView;
         break;
@@ -126,7 +126,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     Rect bounds = new Rect();
     this.getDrawingRect(bounds);
     try {
-      if(firstColumn) {
+      if(isInFirstColumnRecyclerView) {
         tableView.offsetDescendantRectToMyCoords(this, bounds);
       } else {
         tableView.rootLayout.offsetDescendantRectToMyCoords(this, bounds);

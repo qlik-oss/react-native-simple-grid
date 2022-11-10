@@ -12,8 +12,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class DataCell {
+  String type;
   String qText;
   Double  qNum;
   int  qElemNumber;
@@ -31,7 +33,9 @@ public class DataCell {
   int cellBackgroundColor;
   boolean cellForegroundColorValid = false;
   boolean cellBackgroundColorValid = false;
+  List<Object> qAttrExps;
   public DataCell(ReadableMap source, DataColumn column) {
+    type = column.representation.type;
     qText = source.getString("qText");
     qElemNumber =  source.getInt("qElemNumber");
     qState =  source.getString("qState");
@@ -48,10 +52,10 @@ public class DataCell {
       isDim = source.getBoolean("isSelectable");
     }
     if(source.hasKey("qAttrExps")) {
-      ArrayList attrExps = source.getMap("qAttrExps").getArray("qValues").toArrayList();
+      qAttrExps = source.getMap("qAttrExps").getArray("qValues").toArrayList();
       int urlId = column.stylingInfo.indexOf("imageUrl");
       if(urlId != -1) {
-        String url = ((HashMap<String, String>) attrExps.get(urlId)).get("qText");
+        String url = ((HashMap<String, String>) qAttrExps.get(urlId)).get("qText");
         if (URLUtil.isValidUrl(url)) {
           imageUrl = url;
           DataProvider.addImagePath(imageUrl);

@@ -25,22 +25,35 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+
+import kotlin.text.Charsets;
+
 @SuppressLint("ViewConstructor")
 public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements Content {
-  DataCell cell = null;
+  final DataColumn column;
   final CellView cellView;
+  final SelectionsEngine selectionsEngine;
+  final TableView tableView;
+  String linkUrl = null;
+  String linkLabel = null;
+  DataCell cell = null;
   boolean selected = false;
   int defaultTextColor = Color.BLACK;
-  final SelectionsEngine selectionsEngine;
   GestureDetector gestureDetector;
-  final TableView tableView;
   Animation fadeIn;
   ClickableTextWrapper textWrapper;
-  ClickableTextView(Context context, SelectionsEngine selectionsEngine, TableView tableView, CellView cellView) {
+  ClickableTextView(Context context, SelectionsEngine selectionsEngine, TableView tableView, CellView cellView, DataColumn column) {
     super(context);
     this.tableView = tableView;
     this.selectionsEngine = selectionsEngine;
     this.cellView = cellView;
+    this.column = column;
     defaultTextColor = getCurrentTextColor();
     fadeIn = AnimationUtils.loadAnimation(context, R.anim.catalyst_fade_in);
     textWrapper = new ClickableTextWrapper(tableView, this);
@@ -109,6 +122,33 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     this.selected = !selected;
   }
 
+  private void setupUrl() {
+    if(column.representation == null || column.stylingInfo == null) {
+      return;
+    }
+    int urlLabelIndex = column.stylingInfo.indexOf("urlLabel");
+    String urlLabel = "";
+    if(urlLabelIndex != -1) {
+      HashMap<String, String> value = (HashMap<String, String>) cell.qAttrExps.get(urlLabelIndex);
+      String qText = value.get("qText");
+      urlLabel = qText != null ? qText : "";
+    } else {
+      urlLabel = column.representation.urlPosition.equals("dimension") ? (column.representation.linkUrl != null ? column.representation.linkUrl : "") : (cell.qText != null ? cell.qText : "");
+    }
+    String urlText = cell.qText;
+    int attrIndex = column.stylingInfo.indexOf("url");
+    if(attrIndex != -1) {
+      HashMap<String, String> value = (HashMap<String, String>) cell.qAttrExps.get(attrIndex);
+      urlText = value.get("qText");
+    }
+    if(urlLabel.isEmpty()) {
+      urlLabel = cell.qText != null ? cell.qText : "link";
+    }
+    String spaceEncodedUrl = urlText.replaceAll(" ", "%20");
+    this.linkUrl = spaceEncodedUrl;
+    this.linkLabel = urlLabel;
+  }
+
   @Override
   public void setCell(DataCell cell) {
     this.cell = cell;
@@ -119,6 +159,9 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
       setBackgroundColor(cell.cellBackgroundColorValid ? cell.cellBackgroundColor : Color.TRANSPARENT);
       setText(cell.qText);
       textWrapper.countWords(cell.qText);
+    }
+    if(cell.type.equals("url")) {
+      setupUrl();
     }
   }
 
