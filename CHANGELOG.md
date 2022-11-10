@@ -1,3 +1,10 @@
+# [1.1.0-alpha.63](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.62...v1.1.0-alpha.63) (2022-11-10)
+
+
+### Bug Fixes
+
+* autochart crash ([#127](https://github.com/qlik-oss/react-native-simple-grid/issues/127)) ([dfe208a](https://github.com/qlik-oss/react-native-simple-grid/commit/dfe208a2565a8f909d59addbf4b8006731864e47))
+
 # [1.1.0-alpha.62](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.61...v1.1.0-alpha.62) (2022-11-10)
 
 
