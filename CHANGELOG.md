@@ -1,3 +1,10 @@
+# [1.1.0-alpha.64](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.63...v1.1.0-alpha.64) (2022-11-10)
+
+
+### Bug Fixes
+
+* atom type should be object ([#129](https://github.com/qlik-oss/react-native-simple-grid/issues/129)) ([3fe5227](https://github.com/qlik-oss/react-native-simple-grid/commit/3fe5227cc940ccc819911723b230c48846a1e12b))
+
 # [1.1.0-alpha.63](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.62...v1.1.0-alpha.63) (2022-11-10)
 
 
