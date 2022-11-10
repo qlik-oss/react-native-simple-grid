@@ -318,7 +318,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     for(DataColumn column : dataColumns) {
       for (RecyclerView.ViewHolder holder : cachedViewHolders) {
         RowViewHolder viewHolder = (RowViewHolder) holder;
-        viewHolder.setWidth(column.width, column.dataColIdx);
+        viewHolder.setWidth(column.width, column.columnIndex);
       }
     }
     this.notifyDataSetChanged();

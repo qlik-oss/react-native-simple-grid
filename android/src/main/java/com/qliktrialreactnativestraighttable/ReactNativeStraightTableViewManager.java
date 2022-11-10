@@ -83,7 +83,7 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
 
       List<DataColumn> dataColumns = new ArrayList<>();
       for(int i = 0; i < columns.size(); i++) {
-        DataColumn column = new DataColumn(columns.getMap(i));
+        DataColumn column = new DataColumn(columns.getMap(i), i);
         dataColumns.add(column);
       }
       tableView.setDataColumns(dataColumns);

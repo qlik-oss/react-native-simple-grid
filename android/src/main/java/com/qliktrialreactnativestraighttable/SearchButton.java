@@ -14,6 +14,7 @@ public class SearchButton extends androidx.appcompat.widget.AppCompatImageButton
   final TableView tableView;
   final int defaultColor = Color.TRANSPARENT;
   final int pressedColor = Color.parseColor("#595959");
+  final int textColor = Color.parseColor("#404040");
 
   public SearchButton(Context context, TableView tableView, DataColumn column) {
     super(context);
@@ -37,7 +38,7 @@ public class SearchButton extends androidx.appcompat.widget.AppCompatImageButton
   public void handleTouchUp(){
     this.setBackgroundColor(defaultColor);
 
-    icon.setTint(Color.BLACK);
+    icon.setTint(textColor);
     this.setImageDrawable(icon);
   }
 
