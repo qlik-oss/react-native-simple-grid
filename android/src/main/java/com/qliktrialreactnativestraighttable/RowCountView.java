@@ -56,5 +56,13 @@ public class RowCountView extends RelativeLayout {
     textView.postInvalidate();
   }
 
+  @Override
+  protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    int height = tableView.getMeasuredHeight();
+    int width = tableView.getMeasuredWidth();
+    textView.setMinimumWidth(width / 2);
+    container.setY(height - TableTheme.rowHeightFactor);
 
+    super.onLayout(changed, l, t, r, b);
+  }
 }
