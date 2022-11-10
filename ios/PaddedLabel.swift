@@ -275,8 +275,6 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
     }
   }
   
-  
-  
   func setAttributedText(_ t: String, withIcon: UniChar, element: DataCell) {
     var iconColor = UIColor.black// self.textColor;
     var applyTextColor = false

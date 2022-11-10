@@ -28,6 +28,7 @@ class LastColumnResizer: MultiColumnResizer {
       data.childCollectionView?.collectionViewLayout.invalidateLayout()
       updateHeader(translation)
       updateTotals(translation)
+      selectionsBand?.updateSize(translation, withColumn: index + 1)
       containerView?.testTruncation()
     }
   }

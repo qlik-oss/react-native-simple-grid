@@ -20,6 +20,7 @@ class ColumnResizerView: UIView {
   weak var button: ResizerButtonView?
   weak var horizontalScrollView: UIScrollView?
   weak var containerView: ContainerView?
+  weak var selectionsBand: SelectionBand?
   
   init( _ columnWidths: ColumnWidths, index: Int, bindTo bindedTableView: TableView) {
     self.columnWidths = columnWidths
@@ -130,6 +131,7 @@ class ColumnResizerView: UIView {
       containerView?.updateVScrollPos()
       updateHeader(translation)
       updateTotals(translation)
+      selectionsBand?.updateSize(translation, withColumn: 0)
       containerView?.testTruncation()
       tableView.layoutIfNeeded()
     }

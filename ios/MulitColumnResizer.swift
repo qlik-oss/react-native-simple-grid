@@ -34,7 +34,7 @@ class MultiColumnResizer: ColumnResizerView {
       updateHeader(translation)
       updateTotals(translation)
       updateAdjacent(by: translation.x)
-
+      selectionsBand?.updateSize(translation, withColumn: index + 1)
       containerView?.testTruncation()
     }
   }
