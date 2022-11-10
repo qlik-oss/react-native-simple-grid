@@ -79,7 +79,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         }
         cellView.setData(cell, dataRow, column);
         if(column.representation.type.equals("url")) {
-          setupHyperLink(textView, column.representation, cell);
+          setupHyperLink(textView);
         }
         if(column.isDim) {
           textView.setMaxLines(rowHeight/TableTheme.rowHeightFactor);
@@ -91,9 +91,8 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     }
   }
 
-  private void setupHyperLink(ClickableTextView textView, Representation representation,  DataCell cell) {
-    String htmlLabel = representation.urlPosition.equals("dimension") ? representation.linkUrl : cell.qText;
-    String htmlText = String.format("<a href=\"%s\">%s</a>",representation.linkUrl, htmlLabel);
+  private void setupHyperLink(ClickableTextView textView) {
+    String htmlText = String.format("<a href=\"%s\">%s</a>", textView.linkUrl, textView.linkLabel);
     Spanned result = HtmlCompat.fromHtml(htmlText, HtmlCompat.FROM_HTML_MODE_LEGACY);
     textView.setText(result);
     textView.setMovementMethod(LinkMovementMethod.getInstance());
