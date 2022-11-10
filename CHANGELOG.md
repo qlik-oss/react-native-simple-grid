@@ -1,3 +1,11 @@
+# [1.1.0-alpha.65](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.64...v1.1.0-alpha.65) (2022-11-10)
+
+
+### Bug Fixes
+
+* add onlayout to rowcountview ([#131](https://github.com/qlik-oss/react-native-simple-grid/issues/131)) ([185fa8e](https://github.com/qlik-oss/react-native-simple-grid/commit/185fa8e8a2cbb4d25125a170e106538ce78ace53))
+* totals missing ([#130](https://github.com/qlik-oss/react-native-simple-grid/issues/130)) ([1293568](https://github.com/qlik-oss/react-native-simple-grid/commit/1293568c019348490823847ed5080019020e57e1))
+
 # [1.1.0-alpha.64](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.63...v1.1.0-alpha.64) (2022-11-10)
 
 
