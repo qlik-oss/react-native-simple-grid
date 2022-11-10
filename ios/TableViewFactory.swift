@@ -156,6 +156,8 @@ class TableViewFactory {
     resizer.horizontalScrollView = horizontalScrollView
     resizer.headerView = firstColumnTableView.headerView
     resizer.totalsView = firstColumnTableView.totalView
+    resizer.selectionsBand = firstColumnTableView.dataCollectionView?.selectionBand
+
     resizer.translatesAutoresizingMaskIntoConstraints = false
     resizer.borderColor = ColorParser.fromCSS(cssString: containerView.tableTheme?.borderBackgroundColor ?? "lightgray")
     containerView.hScrollViewDelegate.grabber = resizer
@@ -247,6 +249,7 @@ class TableViewFactory {
         resizer.horizontalScrollView = horizontalScrollView
         resizer.containerView = containerView
         resizer.borderColor = ColorParser.fromCSS(cssString: containerView.tableTheme?.borderBackgroundColor ?? "lightGray")
+        resizer.selectionsBand = multiColumnTableView.dataCollectionView?.selectionBand
         resizer.layer.zPosition = 1
         multiColumnTableView.addSubview(resizer)
         let constraints = [
@@ -281,6 +284,7 @@ class TableViewFactory {
       resizer.containerView = containerView
       resizer.totalsView = multiColumnTableView.totalView
       resizer.headerView = multiColumnTableView.headerView
+      resizer.selectionsBand = multiColumnTableView.dataCollectionView?.selectionBand
       grabbers.append({[weak resizer] in return resizer})
       let width = columnWidths.getTotalWidth(range: 1..<columnWidths.count())
       multiColumnTableView.addSubview(resizer)

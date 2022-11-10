@@ -181,7 +181,7 @@ class SelectionBand: UIView {
 
   func updateSize(_ translation: CGPoint, withColumn col: Int) {
     guard let selectionBandResizer = self.selectionBandResizer else { return }
-    if Double(col) == activeColIdx && selectionBandResizer.frame.width > 0 {
+    if selectionBandResizer.frame.width > 0 {
       let newFrame = CGRect(origin: selectionBandResizer.frame.origin,
                             size: CGSize(width: selectionBandResizer.frame.width + translation.x,
                                          height: selectionBandResizer.frame.height))
