@@ -216,7 +216,7 @@ class ContainerView: UIView {
         setNeedsLayout()
         DispatchQueue.main.async {
           self.horizontalScrollView?.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
-          self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows()
+          self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
           self.testTruncation()
         }
       } else {
@@ -228,7 +228,7 @@ class ContainerView: UIView {
         DispatchQueue.main.async {
           if let horizontalScrollView = self.horizontalScrollView {
             horizontalScrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
-            self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows()
+            self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
           }
         }
       }
@@ -263,6 +263,9 @@ class ContainerView: UIView {
       firstHeader.layoutIfNeeded()
       multiHeader.layoutIfNeeded()
       layoutIfNeeded()
+      DispatchQueue.main.async {
+        self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: false)
+      }
     }
     testTotals()
   }
@@ -283,6 +286,9 @@ class ContainerView: UIView {
       firstTotal.layoutIfNeeded()
       multiTotal.layoutIfNeeded()
       layoutIfNeeded()
+      DispatchQueue.main.async {
+        self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: false)
+      }
     }
   }
 
@@ -296,6 +302,9 @@ class ContainerView: UIView {
       maxCollectionViewsLineCount = lineCount
       first.setMaxLineCount(maxCollectionViewsLineCount)
       multi.setMaxLineCount(maxCollectionViewsLineCount)
+      DispatchQueue.main.async {
+        self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: false)
+      }
       layoutIfNeeded()
     }
   }
@@ -308,12 +317,9 @@ class ContainerView: UIView {
   func updateVScrollPos() {
     let totalWidth = columnWidths.getTotalWidth()
     let rawX = firstColumnTable?.horizontalScrolLView?.contentOffset.x ?? 0.0
-//    let scroll
     let right = max(abs(self.frame.width  -  totalWidth) - rawX, 0)
     multiColumnTable?.dataCollectionView?.childCollectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: right)
     multiColumnTable?.dataCollectionView?.childCollectionView?.showsVerticalScrollIndicator = true
   }
-  
-  
 
 }

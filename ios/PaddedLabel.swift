@@ -330,7 +330,6 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   }
   
   func getLineCount(_ update: Bool, columnWidth: Double) -> Int {
-    layoutIfNeeded()
     if let font = self.font, let myText = text {
       let width = columnWidth - (PaddedLabel.PaddingSize * 2)
       let rect = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)

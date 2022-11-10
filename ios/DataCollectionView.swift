@@ -220,12 +220,14 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     }
   }
   
-  func postSignalVisibleRows() {
+  func postSignalVisibleRows(scrollsToTop: Bool) {
     DispatchQueue.main.async {
       self.childCollectionView?.performBatchUpdates({
         self.childCollectionView?.reloadData()
         self.signalVisibleRows()
-        self.scrollToTop()
+        if(scrollsToTop) {
+          self.scrollToTop()
+        }
       })
     }
   }
@@ -241,7 +243,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     cell.backgroundColor = isDataView ? indexPath.row % 2 == 0 ? .white : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0) : .white
     cell.cellColor = cellColor
     cell.onExpandedCellEvent = onExpandedCell
-    cell.numberOfLines = cellStyle?.cellContentStyle?.rowHeight ?? 1
+    cell.numberOfLines = maxRowLineCount
     if let data = dataRows, let columnWidths = columnWidths, let dataColumns = dataColumns {
       let dataRow = data[indexPath.row]
       cell.selectionsEngine = self.selectionsEngine
