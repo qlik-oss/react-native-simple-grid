@@ -34,7 +34,7 @@ public class HeaderContentStyle {
     textPaint.setTypeface(typeFace);
     textPaint.setTextSize(this.fontSize);
     Paint.FontMetrics fm = textPaint.getFontMetrics();
-    lineHeight = (int)Math.ceil(fm.bottom - fm.top + textPaint.getFontSpacing());
+    lineHeight = (int)Math.ceil(fm.bottom - fm.top + textPaint.getFontSpacing() * 2);
     return lineHeight;
   }
 }

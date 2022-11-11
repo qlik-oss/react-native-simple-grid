@@ -72,9 +72,11 @@ public class TableViewFactory {
         firstColumnTotalsCell.testTextWrap();
       }
       headerView.testTextWrap();
-      updateFirstColumnHeaderHeight();
-      updateTotalsViewHeight();
     }
+
+    updateFirstColumnHeaderHeight();
+    updateTotalsViewHeight();
+
     tableView.post(new Runnable() {
       @Override
       public void run() {
@@ -310,7 +312,10 @@ public class TableViewFactory {
     params.height = headerHeight;
     headerView.setLayoutParams(params);
     FrameLayout.LayoutParams recyclerParams = (FrameLayout.LayoutParams) coupledRecyclerView.getLayoutParams();
-    recyclerParams.topMargin = headerHeight + tableView.totalsHeight;
+    recyclerParams.topMargin = headerHeight;
+    if(headerViewFactory.topPosition && totalsView != null) {
+      recyclerParams.topMargin += tableView.totalsHeight;
+    }
     coupledRecyclerView.setLayoutParams(recyclerParams);
 
     tableView.post(new Runnable() {
@@ -339,7 +344,10 @@ public class TableViewFactory {
     if(firstColumnRecyclerView != null && tableView != null) {
       FrameLayout.LayoutParams dd = (FrameLayout.LayoutParams) firstColumnRecyclerView.getLayoutParams();
       if(dd != null) {
-        dd.topMargin = tableView.headerHeight;
+        dd.topMargin = tableView.headerHeight ;
+        if(headerViewFactory.topPosition && totalsView != null) {
+          dd.topMargin += tableView.totalsHeight;
+        }
         firstColumnRecyclerView.setLayoutParams(dd);
         updateFirstColumnHeaderHeight();
       }
@@ -382,11 +390,23 @@ public class TableViewFactory {
       if(firstColumnTotalsCell != null) {
         FrameLayout.LayoutParams fp = (FrameLayout.LayoutParams) firstColumnTotalsCell.getLayoutParams();
         fp.height = totalsViewHeight;
-        fp.topMargin = tableView.headerHeight ;
+        if(headerViewFactory.topPosition) {
+          fp.topMargin = tableView.headerHeight;
+        }
 
         firstColumnTotalsCell.setLayoutParams(fp);
         firstColumnTotalsCell.setMaxLines(totalsViewHeight / tableView.cellContentStyle.lineHeight);
       }
+
+      tableView.post(new Runnable() {
+        @Override
+        public void run() {
+          totalsView.requestLayout();
+          if(firstColumnTotalsCell != null) {
+            firstColumnTotalsCell.requestLayout();
+          }
+        }
+      });
     }
   }
 }

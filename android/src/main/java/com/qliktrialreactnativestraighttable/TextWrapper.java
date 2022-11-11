@@ -69,7 +69,7 @@ public class TextWrapper {
     measureTextPaint.setTypeface(textView.getTypeface());
     StaticLayout.Builder builder = StaticLayout.Builder.obtain(textView.getText(), 0, textView.getText().length(), measureTextPaint, width);
     builder.setIncludePad(true);
-
+    builder.setMaxLines(wordCount);
     builder.setAlignment(Layout.Alignment.ALIGN_NORMAL);
     builder.setLineSpacing(1, 1);
     StaticLayout layout = builder.build();

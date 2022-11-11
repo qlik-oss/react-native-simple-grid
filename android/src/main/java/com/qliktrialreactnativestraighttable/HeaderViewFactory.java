@@ -58,6 +58,7 @@ public class HeaderViewFactory {
     }
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.Q)
   public static HeaderCell buildFixedColumnCell(FrameLayout rootView, DataColumn column, TableView tableView, boolean topPosition) {
     int headerHeight = tableView.tableViewFactory.headerView.getMeasuredHeight();
     int padding = (int) PixelUtils.dpToPx(16);
@@ -66,6 +67,7 @@ public class HeaderViewFactory {
     TextView textView = fixedFirstHeaderCell.cell;
     textView.setMaxLines(1);
     textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+    textView.setTextSize(tableView.headerContentStyle.fontSize);
     textView.setEllipsize(TextUtils.TruncateAt.END);
     textView.setTextColor(tableView.headerContentStyle.color);
     textView.setText(column.label);
@@ -101,6 +103,7 @@ public class HeaderViewFactory {
     text.setLayoutParams(new FrameLayout.LayoutParams(column.width, TableTheme.DefaultRowHeight));
     text.setBackgroundColor(Color.WHITE);
     text.setZ((int) PixelUtils.dpToPx(headerZ));
+    text.setTextSize(tableView.cellContentStyle.fontSize);
     text.setMaxLines(1);
     int y = topPosition ? headerHeight : tableView.getMeasuredHeight() - TableTheme.DefaultRowHeight * 2;
     text.setY(y);
