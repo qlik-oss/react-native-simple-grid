@@ -32,7 +32,7 @@ public class TableViewFactory {
   public List<GrabberView> grabbers = null;
   public List<TotalsCell> totalsCells = null;
   public HeaderCell firstColumnHeaderCell = null;
-  public TextView firstColumnTotalsCell = null;
+  public TotalsViewCell firstColumnTotalsCell = null;
   public ScreenGuideView screenGuideView = null;
   private List<DataColumn> dataColumns = null;
   public String totalsPosition;
@@ -65,6 +65,12 @@ public class TableViewFactory {
     scrollView.addView(rootLayout);
 
     if(tableView.headerContentStyle.wrap) {
+      if(totalsView != null) {
+        totalsView.testTextWrap();
+      }
+      if(firstColumnTotalsCell != null) {
+        firstColumnTotalsCell.testTextWrap();
+      }
       headerView.testTextWrap();
       updateFirstColumnHeaderHeight();
       updateTotalsViewHeight();
@@ -78,9 +84,9 @@ public class TableViewFactory {
   }
 
   protected void updateRowHeights() {
-    tableView.rowHeight = tableView.cellContentStyle.getLineHeight() + CellView.padding;
-    tableView.headerHeight = tableView.headerContentStyle.getLineHeight() + CellView.padding;
-    tableView.totalsHeight = tableView.cellContentStyle.getLineHeight() + CellView.padding;
+    tableView.rowHeight = tableView.cellContentStyle.getLineHeight() + CellView.PADDING_X_2;
+    tableView.headerHeight = tableView.headerContentStyle.getLineHeight() + CellView.PADDING_X_2;
+    tableView.totalsHeight = tableView.cellContentStyle.getLineHeight() + CellView.PADDING_X_2;
   }
 
   protected void createScrollView() {
@@ -150,7 +156,7 @@ public class TableViewFactory {
         dataProvider.setFirstColumnFrozen(true);
         coupledRecyclerView.setViewToScrollCouple(firstColumnRecyclerView);
         firstColumnRecyclerView.setViewToScrollCouple(coupledRecyclerView);
-
+        firstColumnRecyclerView.setZ(1);
         if(totalsCells != null) {
           firstColumnTotalsCell = HeaderViewFactory.buildFixedTotalsCell(tableView, dataColumns.get(0), totalsCells.get(0), headerViewFactory.topPosition);
           tableView.addView(firstColumnTotalsCell);
@@ -215,18 +221,6 @@ public class TableViewFactory {
     }
   }
 
-  protected void createScreenGuide(int width) {
-    if (screenGuideView == null && grabbers != null) {
-      screenGuideView = new ScreenGuideView(context);
-      FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT);
-      params.gravity = Gravity.CENTER_VERTICAL;
-      rootLayout.addView(screenGuideView, params);
-      for (GrabberView grabberView : grabbers) {
-        grabberView.setScreenGuideView(screenGuideView);
-      }
-    }
-  }
-
   void invalidateLayout() {
     if (this.coupledRecyclerView != null) {
       int width = dataColumns.get(0).width;
@@ -286,7 +280,7 @@ public class TableViewFactory {
   public void updateGrabbers() {
     if (grabbers != null) {
       int maxLineHeight = headerView.getMaxLineCount();
-      int headerHeight = maxLineHeight * tableView.headerContentStyle.lineHeight + CellView.padding;
+      int headerHeight = maxLineHeight * tableView.headerContentStyle.lineHeight + CellView.PADDING_X_2;
       List<DataColumn> dataColumns = dataProvider.getDataColumns();
       int dragWidth = (int) PixelUtils.dpToPx(40);
       int offset = dragWidth / 2;
@@ -303,18 +297,10 @@ public class TableViewFactory {
     }
   }
 
-  private void updateScreenGuide() {
-    if(screenGuideView == null) {
-      return;
-    }
-    ViewGroup.LayoutParams params = screenGuideView.getLayoutParams();
-    params.width = tableView.getWidth();
-    screenGuideView.setLayoutParams(params);
-  }
 
   public void updateHeaderViewLineCount() {
     int maxLineCount = headerView.getMaxLineCount();
-    int headerHeight = (maxLineCount * tableView.headerContentStyle.lineHeight) + (CellView.padding );
+    int headerHeight = (maxLineCount * tableView.headerContentStyle.lineHeight) + (CellView.PADDING_X_2);
     tableView.headerHeight = headerHeight;
 
     updateTotalsViewHeight();
@@ -365,6 +351,7 @@ public class TableViewFactory {
       ViewGroup.LayoutParams params = firstColumnHeaderCell.getLayoutParams();
       params.height = tableView.headerHeight;
       firstColumnHeaderCell.setLayoutParams(params);
+      firstColumnHeaderCell.setMaxLines(tableView.headerHeight / tableView.headerContentStyle.lineHeight);
     }
   }
 
@@ -381,15 +368,25 @@ public class TableViewFactory {
 
   public void updateTotalsViewHeight() {
     if(totalsView != null) {
-
       int maxLineCount = totalsView.getMaxLineCount();
-      int totalsViewHeight = (maxLineCount * tableView.headerContentStyle.lineHeight) + (CellView.padding);
+      int totalsViewHeight = (maxLineCount * tableView.cellContentStyle.lineHeight) + (CellView.PADDING_X_2);
       tableView.totalsHeight = totalsViewHeight;
 
       FrameLayout.LayoutParams pp = (FrameLayout.LayoutParams)totalsView.getLayoutParams();
-      pp.topMargin = tableView.headerHeight ;
+      if(headerViewFactory.topPosition) {
+        pp.topMargin = tableView.headerHeight;
+      }
       pp.height = totalsViewHeight;
       totalsView.setLayoutParams(pp);
+
+      if(firstColumnTotalsCell != null) {
+        FrameLayout.LayoutParams fp = (FrameLayout.LayoutParams) firstColumnTotalsCell.getLayoutParams();
+        fp.height = totalsViewHeight;
+        fp.topMargin = tableView.headerHeight ;
+
+        firstColumnTotalsCell.setLayoutParams(fp);
+        firstColumnTotalsCell.setMaxLines(totalsViewHeight / tableView.cellContentStyle.lineHeight);
+      }
     }
   }
 }

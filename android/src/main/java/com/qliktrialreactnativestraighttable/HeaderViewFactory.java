@@ -146,9 +146,11 @@ public class HeaderViewFactory {
       totalsView.setOrientation(LinearLayout.HORIZONTAL);
       totalsView.setElevation((int) PixelUtils.dpToPx(headerZ));
       totalsView.setBackgroundColor(Color.WHITE);
-      LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, tableView.totalsHeight);
+      FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, tableView.totalsHeight);
       layoutParams.topMargin = headerHeight;
-//      layoutParams.bottomMargin = tableView.totalsHeight;
+      if(!topPosition) {
+        layoutParams.bottomMargin = TableTheme.DefaultRowHeight;
+      }
       layoutParams.gravity = topPosition ? Gravity.TOP : Gravity.BOTTOM;
       totalsView.setLayoutParams(layoutParams);
       if(!topPosition) {
