@@ -17,12 +17,13 @@ import java.util.List;
 public class DataCell {
   String type;
   String qText;
-  Double  qNum;
-  int  qElemNumber;
+  Double qNum;
+  int qElemNumber;
   String  qState;
   String imageUrl;
-  int  rowIdx;
-  int  colIdx;
+  int rowIdx;
+  int colIdx;
+  int columnIndex;
   boolean  isDim = false;
   int rawRowIdx;
   int  rawColIdx;
@@ -41,6 +42,7 @@ public class DataCell {
     qState =  source.getString("qState");
     rowIdx =  source.getInt("rowIdx");
     colIdx =  source.getInt("colIdx");
+    columnIndex = column.columnIndex;
     rawRowIdx =  source.getInt("rawRowIdx");
     rawColIdx =  source.getInt("rawColIdx");
     ReadableType qNumType = source.getType("qNum");
