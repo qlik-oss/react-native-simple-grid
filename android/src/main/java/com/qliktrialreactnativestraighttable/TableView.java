@@ -25,7 +25,6 @@ import java.util.List;
 
 @SuppressLint("ViewConstructor")
 public class TableView extends FrameLayout {
-  public final static int SCROLL_THUMB_HEIGHT = 12;
   ReadableArray totalsRows = null;
   String totalsPosition = null;
   String totalsLabel = null;
@@ -50,9 +49,9 @@ public class TableView extends FrameLayout {
   HeaderContentStyle headerContentStyle;
   CellContentStyle cellContentStyle;
   List<GrabberView> grabbers = null;
-  int rowHeight = TableTheme.rowHeightFactor;
-  int themedRowHeight = TableTheme.rowHeightFactor;
-  int headerHeight = TableTheme.rowHeightFactor;
+  int rowHeight = 0;
+  int headerHeight = 0;
+  int totalsHeight = 0;
   List<TotalsCell> totalsCells = null;
   final TableViewFactory tableViewFactory;
 
@@ -68,15 +67,15 @@ public class TableView extends FrameLayout {
   }
 
   public int getContentTop() {
-    int top = headerHeight;
+    int top = headerHeight ;
     if(dataProvider.totalsPosition.equals("top")){
-      top += TableTheme.rowHeightFactor;
+      top += headerHeight;
     }
     return top;
   }
 
   public int getContentBottom() {
-    return getMeasuredHeight() - TableTheme.rowHeightFactor;
+    return getMeasuredHeight() - TableTheme.DefaultRowHeight;
   }
 
   public void setTotals(ReadableArray totalsRows, String totalsPosition, String totalsLabel) {
@@ -204,7 +203,6 @@ public class TableView extends FrameLayout {
   @Override
   protected void onSizeChanged(int w, int h, int oldw, int oldh) {
     super.onSizeChanged(w, h, oldw, oldh);
-    Log.d("FOO", "Size changed!!");
     columnWidths.loadWidths(w, dataProvider.dataColumns, dataProvider.rows);
     if(recyclerView == null) {
       createRecyclerView();

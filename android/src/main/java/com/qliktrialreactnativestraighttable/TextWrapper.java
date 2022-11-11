@@ -37,17 +37,30 @@ public class TextWrapper {
     measureLineCount();
   }
 
+
   public void testTextWrap(DataColumn dataColumn) {
     this.column = dataColumn;
     measureLineCount();
   }
 
+  public void testOnlyTextWrap() {
+    measureLineCountNoUpdate();
+  }
   void measureLineCount() {
     if (wordCount > 1) {
       int lines = calculateLineCount();
       if (lines != lineCount) {
         lineCount = Math.min(lines, wordCount);
         tableView.updateHeaderViewLineCount();
+      }
+    }
+  }
+
+  void measureLineCountNoUpdate() {
+    if (wordCount > 1) {
+      int lines = calculateLineCount();
+      if (lines != lineCount) {
+        lineCount = Math.min(lines, wordCount);
       }
     }
   }

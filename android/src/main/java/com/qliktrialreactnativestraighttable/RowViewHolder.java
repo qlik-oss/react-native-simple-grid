@@ -35,7 +35,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
   public void setBackGroundColor(int color) {
     row.setBackgroundColor(color);
   }
-  public void setData(DataRow dataRow, int rowHeight) {
+  public void setData(DataRow dataRow, int rowHeight, CellContentStyle cellContentStyle) {
     for(int i = 0; i < numColumns; i++) {
       DataCell cell = dataRow.cells.get(i);
       int columnIndex = cell.colIdx;
@@ -82,7 +82,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
           setupHyperLink(textView, column.representation, cell);
         }
         if(column.isDim) {
-          textView.setMaxLines(rowHeight/TableTheme.rowHeightFactor);
+          textView.setMaxLines(rowHeight/cellContentStyle.lineHeight);
         } else {
           textView.setMaxLines(1);
         }
@@ -230,8 +230,8 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     return  maxLines;
   }
 
-  public void initializeHeight(int rowHeight) {
-    int lines = rowHeight / TableTheme.rowHeightFactor;
+  public void initializeHeight(int rowHeight, CellContentStyle cellContentStyle) {
+    int lines = rowHeight / cellContentStyle.lineHeight;
 
     for (DataColumn column: dataProvider.dataColumns) {
       if(column.isText() && column.isDim) {

@@ -28,7 +28,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
   final TableView tableView;
   final boolean firstColumn;
   GestureDetector gestureDetector;
-  int padding = (int)PixelUtils.dpToPx(16);
+  static int padding = (int)PixelUtils.dpToPx(16);
 
   CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean firstColumn) {
     super(context);

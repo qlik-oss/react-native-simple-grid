@@ -78,8 +78,9 @@ public class TableViewFactory {
   }
 
   protected void updateRowHeights() {
-    tableView.themedRowHeight = tableView.cellContentStyle.rowHeight * TableTheme.rowHeightFactor;
-    tableView.rowHeight = tableView.themedRowHeight;
+    tableView.rowHeight = tableView.cellContentStyle.getLineHeight() + CellView.padding;
+    tableView.headerHeight = tableView.headerContentStyle.getLineHeight() + CellView.padding;
+    tableView.totalsHeight = tableView.cellContentStyle.getLineHeight() + CellView.padding;
   }
 
   protected void createScrollView() {
@@ -127,10 +128,9 @@ public class TableViewFactory {
     coupledRecyclerView.setZ(0);
     coupledRecyclerView.setElevation(0);
 
-    headerView.post(() -> {
-      int headerHeight = headerView.getMeasuredHeight();
+      int headerHeight = tableView.headerHeight;
       int marginTop = headerHeight + extraTopMargin;
-      int marginBottom = TableTheme.rowHeightFactor;
+      int marginBottom = TableTheme.DefaultRowHeight;
 
       linearLayout.recyclerView = coupledRecyclerView;
       coupledRecyclerView.setAdapter(dataProvider);
@@ -161,8 +161,6 @@ public class TableViewFactory {
       }
 
       createRowCount();
-    });
-
   }
 
   protected void createRowCount() {
@@ -277,7 +275,7 @@ public class TableViewFactory {
         case "top":
         default:
           topPosition = true;
-          extraTopMargin = TableTheme.rowHeightFactor;
+          extraTopMargin = tableView.totalsHeight;
           break;
       }
 
@@ -288,7 +286,7 @@ public class TableViewFactory {
   public void updateGrabbers() {
     if (grabbers != null) {
       int maxLineHeight = headerView.getMaxLineCount();
-      int headerHeight = maxLineHeight * TableTheme.rowHeightFactor;
+      int headerHeight = maxLineHeight * tableView.headerContentStyle.lineHeight + CellView.padding;
       List<DataColumn> dataColumns = dataProvider.getDataColumns();
       int dragWidth = (int) PixelUtils.dpToPx(40);
       int offset = dragWidth / 2;
@@ -316,18 +314,18 @@ public class TableViewFactory {
 
   public void updateHeaderViewLineCount() {
     int maxLineCount = headerView.getMaxLineCount();
-    int headerHeight = maxLineCount * TableTheme.rowHeightFactor;
+    int headerHeight = (maxLineCount * tableView.headerContentStyle.lineHeight) + (CellView.padding );
     tableView.headerHeight = headerHeight;
+
+    updateTotalsViewHeight();
+    updateFirstColumnsHeights();
 
     ViewGroup.LayoutParams params = headerView.getLayoutParams();
     params.height = headerHeight;
     headerView.setLayoutParams(params);
     FrameLayout.LayoutParams recyclerParams = (FrameLayout.LayoutParams) coupledRecyclerView.getLayoutParams();
-    recyclerParams.topMargin = headerHeight + TableTheme.rowHeightFactor;
+    recyclerParams.topMargin = headerHeight + tableView.totalsHeight;
     coupledRecyclerView.setLayoutParams(recyclerParams);
-
-    updateTotalsViewHeight();
-    updateFirstColumnsHeights();
 
     tableView.post(new Runnable() {
       @Override
@@ -383,8 +381,14 @@ public class TableViewFactory {
 
   public void updateTotalsViewHeight() {
     if(totalsView != null) {
+
+      int maxLineCount = totalsView.getMaxLineCount();
+      int totalsViewHeight = (maxLineCount * tableView.headerContentStyle.lineHeight) + (CellView.padding);
+      tableView.totalsHeight = totalsViewHeight;
+
       FrameLayout.LayoutParams pp = (FrameLayout.LayoutParams)totalsView.getLayoutParams();
-      pp.topMargin = tableView.headerHeight;
+      pp.topMargin = tableView.headerHeight ;
+      pp.height = totalsViewHeight;
       totalsView.setLayoutParams(pp);
     }
   }

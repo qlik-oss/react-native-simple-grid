@@ -180,7 +180,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
           textView.setMaxLines(NUM_LINES);
           textView.setEllipsize(TextUtils.TruncateAt.END);
-          textView.setTextSize(FONT_SIZE);
+          textView.setTextSize(tableView.cellContentStyle.fontSize);
           textView.setLayoutParams(layoutParams);
 
           rowView.addView(cellView);
@@ -206,7 +206,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         int color = position % 2 == 0 ? Color.WHITE : 0xFFF7F7F7;
         holder.setBackGroundColor(color);
       }
-      holder.setData(rows.get(position), tableView.rowHeight);
+      holder.setData(rows.get(position), tableView.rowHeight, tableView.cellContentStyle);
       cachedViewHolders.add(holder);
     }
   }
