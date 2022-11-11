@@ -37,7 +37,6 @@ public class TextWrapper {
     measureLineCount();
   }
 
-
   public void testTextWrap(DataColumn dataColumn) {
     this.column = dataColumn;
     measureLineCount();

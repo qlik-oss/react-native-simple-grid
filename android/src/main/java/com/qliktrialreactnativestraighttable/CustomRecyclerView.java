@@ -140,7 +140,7 @@ public class CustomRecyclerView extends RecyclerView {
       }
     }
 
-    int rowHeight = (maxLineCount * tableView.cellContentStyle.lineHeight) + CellView.padding ;
+    int rowHeight = (maxLineCount * tableView.cellContentStyle.lineHeight) + CellView.PADDING_X_2;
     tableView.rowHeight = Math.max(tableView.cellContentStyle.rowHeight, rowHeight);
     for (int i = 0; i < childCount; i++) {
       View view = getChildAt(i);
@@ -170,7 +170,7 @@ public class CustomRecyclerView extends RecyclerView {
       maxLines = Math.max(lines, maxLines);
     }
     if (!firstColumnOnly) {
-      tableView.rowHeight = (maxLines * tableView.cellContentStyle.lineHeight) + CellView.padding;
+      tableView.rowHeight = (maxLines * tableView.cellContentStyle.lineHeight) + CellView.PADDING_X_2;
     }
 
     tableView.post(new Runnable() {

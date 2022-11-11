@@ -1,15 +1,19 @@
 package com.qliktrialreactnativestraighttable;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
 
+@SuppressLint("ViewConstructor")
 public class TotalsView extends AutoLinearLayout{
   List<DataColumn> dataColumns = null;
-  TotalsView(Context context) {
+  final TableView tableView;
+  TotalsView(Context context, TableView tableView) {
     super(context);
+    this.tableView = tableView;
   }
 
   public void setDataColumns(List<DataColumn> dataColumns) {

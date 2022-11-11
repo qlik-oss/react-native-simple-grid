@@ -115,7 +115,11 @@ public class HeaderCell extends LinearLayout {
     return result;
   }
 
-
+  void setMaxLines(int maxLineCount) {
+    if(this.cell != null) {
+      this.cell.setMaxLines(maxLineCount);
+    }
+  }
   @SuppressLint("ViewConstructor")
   public class HeaderText extends androidx.appcompat.widget.AppCompatTextView {
     DataColumn column;

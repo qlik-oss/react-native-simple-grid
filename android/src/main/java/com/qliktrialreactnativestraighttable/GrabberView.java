@@ -27,7 +27,7 @@ public class GrabberView extends LinearLayout {
   CustomRecyclerView recyclerView;
   CustomRecyclerView firstColumnRecyclerView;
   HeaderCell firstColumnHeader;
-  TextView fixedTotalsCell;
+  TotalsViewCell fixedTotalsCell;
   ScreenGuideView screenGuideView = null;
   RootLayout rootLayout = null;
   private final int column;
@@ -61,12 +61,10 @@ public class GrabberView extends LinearLayout {
           if (dataProvider.updateWidth(motionDx, GrabberView.this.column)) {
             // cast here to avoid drift
             GrabberView.this.setTranslationX((int)x);
+            GrabberView.this.updateTotals(motionDx);
             GrabberView.this.updateHeader(motionDx);
             GrabberView.this.updateFixedTotalsCell(motionDx);
             GrabberView.this.updateFirstColumnHeader(motionDx);
-            if(tableView.getTotalsView() != null) {
-              tableView.getTotalsView().updateLayout();
-            }
             lastX = motionEvent.getRawX();
             if(isLastColumn && motionDx > 0) {
               GrabberView.this.rootLayout.requestLayout();
@@ -149,7 +147,7 @@ public class GrabberView extends LinearLayout {
     this.firstColumnHeader = cell;
   }
 
-  public void setFixedTotalsCell(TextView cell) {
+  public void setFixedTotalsCell(TotalsViewCell cell) {
     this.fixedTotalsCell = cell;
   }
 
@@ -189,9 +187,24 @@ public class GrabberView extends LinearLayout {
     }
   }
 
+  public void updateTotals(float dxMotion) {
+    TotalsView totalsView = tableView.getTotalsView();
+    if(totalsView != null) {
+      TotalsViewCell totalsViewCell = (TotalsViewCell) totalsView.getChildAt(column);
+      resizeView(totalsViewCell, dxMotion);
+      totalsViewCell.testTextWrap();
+      View neighbour = updateNeighbour(totalsView, dxMotion);
+      if(neighbour != null) {
+        totalsViewCell = (TotalsViewCell) neighbour;
+        totalsViewCell.testTextWrap();
+      }
+    }
+  }
+
   public void updateFixedTotalsCell(float dxMotion) {
     if(fixedTotalsCell != null && column == 0) {
       resizeView(fixedTotalsCell, dxMotion);
+      fixedTotalsCell.testTextWrap();
     }
   }
 

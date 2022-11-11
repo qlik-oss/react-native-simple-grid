@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.widget.LinearLayout;
 
 @SuppressLint("ViewConstructor")
 public class TotalsViewCell extends androidx.appcompat.widget.AppCompatTextView {
   Paint paint = new Paint();
   DataColumn column;
   TextWrapper textWrapper;
+  Rect bounds = new Rect();
   final TableView tableView;
   public TotalsViewCell(Context context, DataColumn dataColumn, TableView tableView) {
     super(context);
@@ -36,11 +39,12 @@ public class TotalsViewCell extends androidx.appcompat.widget.AppCompatTextView 
 
   protected void onDraw(Canvas canvas){
     super.onDraw(canvas);
+    canvas.getClipBounds(bounds);
     paint.setColor(TableTheme.borderBackgroundColor);
     paint.setStyle(Paint.Style.STROKE);
     paint.setStrokeWidth(PixelUtils.dpToPx(2));
 
     canvas.drawLine(0, 0, column.width, 0, paint);
-    canvas.drawLine(0, TableTheme.DefaultRowHeight, column.width, TableTheme.DefaultRowHeight, paint);
+    canvas.drawLine(0, bounds.height(), column.width, bounds.height(), paint);
   }
 }
