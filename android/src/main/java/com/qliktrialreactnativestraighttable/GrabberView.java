@@ -163,10 +163,6 @@ public class GrabberView extends LinearLayout {
     this.headerView = headerView;
   }
 
-  public void setScreenGuideView(ScreenGuideView screenGuideView) {
-    this.screenGuideView = screenGuideView;
-  }
-
   public void setGrabbers(List<GrabberView> grabbers) {
     this.grabbers = grabbers;
     isLastColumn = (column == grabbers.size() - 1);

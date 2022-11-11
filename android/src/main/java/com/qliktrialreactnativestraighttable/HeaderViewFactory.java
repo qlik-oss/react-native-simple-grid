@@ -100,13 +100,20 @@ public class HeaderViewFactory {
       text.setText(totalsCell.qText);
     }
     text.setPadding(padding, 0, padding, 0);
-    text.setLayoutParams(new FrameLayout.LayoutParams(column.width, TableTheme.DefaultRowHeight));
+    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(column.width, tableView.totalsHeight);
+    if(topPosition) {
+      params.gravity = Gravity.TOP;
+      params.topMargin = tableView.headerHeight;
+    } else {
+      params.gravity = Gravity.BOTTOM;
+      params.bottomMargin = TableTheme.DefaultRowHeight;
+    }
+    text.setLayoutParams(params);
+
     text.setBackgroundColor(Color.WHITE);
     text.setZ((int) PixelUtils.dpToPx(headerZ));
     text.setTextSize(tableView.cellContentStyle.fontSize);
     text.setMaxLines(1);
-    int y = topPosition ? headerHeight : tableView.getMeasuredHeight() - TableTheme.DefaultRowHeight * 2;
-    text.setY(y);
     if (!topPosition) {
       text.setOutlineProvider(null);
     }

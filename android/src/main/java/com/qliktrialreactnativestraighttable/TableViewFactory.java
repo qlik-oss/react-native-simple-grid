@@ -77,6 +77,8 @@ public class TableViewFactory {
     updateFirstColumnHeaderHeight();
     updateTotalsViewHeight();
 
+    dataProvider.notifyDataSetChanged();
+
     tableView.post(new Runnable() {
       @Override
       public void run() {
@@ -299,7 +301,6 @@ public class TableViewFactory {
     }
   }
 
-
   public void updateHeaderViewLineCount() {
     int maxLineCount = headerView.getMaxLineCount();
     int headerHeight = (maxLineCount * tableView.headerContentStyle.lineHeight) + (CellView.PADDING_X_2);
@@ -359,7 +360,9 @@ public class TableViewFactory {
       ViewGroup.LayoutParams params = firstColumnHeaderCell.getLayoutParams();
       params.height = tableView.headerHeight;
       firstColumnHeaderCell.setLayoutParams(params);
-      firstColumnHeaderCell.setMaxLines(tableView.headerHeight / tableView.headerContentStyle.lineHeight);
+      if(tableView.headerContentStyle.wrap) {
+        firstColumnHeaderCell.setMaxLines(tableView.headerHeight / tableView.headerContentStyle.lineHeight);
+      }
     }
   }
 
@@ -392,10 +395,14 @@ public class TableViewFactory {
         fp.height = totalsViewHeight;
         if(headerViewFactory.topPosition) {
           fp.topMargin = tableView.headerHeight;
+        } else {
+          fp.bottomMargin = TableTheme.DefaultRowHeight;
         }
 
         firstColumnTotalsCell.setLayoutParams(fp);
-        firstColumnTotalsCell.setMaxLines(totalsViewHeight / tableView.cellContentStyle.lineHeight);
+        if(tableView.headerContentStyle.wrap) {
+          firstColumnTotalsCell.setMaxLines(totalsViewHeight / tableView.cellContentStyle.lineHeight);
+        }
       }
 
       tableView.post(new Runnable() {

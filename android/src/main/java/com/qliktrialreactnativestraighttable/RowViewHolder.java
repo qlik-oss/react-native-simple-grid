@@ -81,7 +81,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         if(column.representation.type.equals("url")) {
           setupHyperLink(textView, column.representation, cell);
         }
-        if(column.isDim) {
+        if(column.isDim && cellContentStyle.wrap) {
           textView.setMaxLines(rowHeight/cellContentStyle.lineHeight);
         } else {
           textView.setMaxLines(1);
