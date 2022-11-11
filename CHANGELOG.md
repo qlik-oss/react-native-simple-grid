@@ -1,3 +1,10 @@
+# [1.1.0-alpha.69](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.68...v1.1.0-alpha.69) (2022-11-11)
+
+
+### Bug Fixes
+
+* fontsizes ([#133](https://github.com/qlik-oss/react-native-simple-grid/issues/133)) ([75a36b4](https://github.com/qlik-oss/react-native-simple-grid/commit/75a36b4dc20aaef74c4ad70fba0b05536fc35c9c))
+
 # [1.1.0-alpha.68](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.67...v1.1.0-alpha.68) (2022-11-11)
 
 
