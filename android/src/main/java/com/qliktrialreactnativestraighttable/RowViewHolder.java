@@ -38,7 +38,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
   public void setData(DataRow dataRow, int rowHeight) {
     for(int i = 0; i < numColumns; i++) {
       DataCell cell = dataRow.cells.get(i);
-      int columnIndex = cell.colIdx;
+      int columnIndex = cell.rawColIdx;
       DataColumn column = dataProvider.dataColumns.get(columnIndex);
 
       if(column.representation.type.equals("image")) {
