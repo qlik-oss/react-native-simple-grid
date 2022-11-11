@@ -125,6 +125,8 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
             } else {
               imageView.backgroundColor = .clear
             }
+            imageView.delegate = self
+            imageView.menuTranslations = menuTranslations
             imageView.setData(data: element, representedAs: representation, index: index)
             imageView.setNeedsDisplay()
           }
@@ -143,15 +145,17 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
             label.menuTranslations = self.menuTranslations
             label.delegate = self
             label.font = cellStyle?.font ?? UIFont.systemFont(ofSize: 14)
+            label.numberOfLines = self.numberOfLines
             
             if representation.type == "indicator", let indicator = element.indicator, let uniChar = DataCellView.iconMap[indicator.icon ?? "m"] {
+              label.textColor = getForegroundColor(col: col, element: element, withStyle: styleInfo[index])
               label.setAttributedText(element.qText ?? "", withIcon: uniChar, element: element)
             } else if representation.type == "url" {
               let index = col.stylingInfo?.firstIndex(of: "url")
               label.setupUrl(col, cell: element, index: index)
             } else  {
               label.text = element.qText
-              label.textColor = getForgroundColor(col: col, element: element, withStyle: styleInfo[index])
+              label.textColor = getForegroundColor(col: col, element: element, withStyle: styleInfo[index])
             }
           }
         }
@@ -188,7 +192,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
     return .clear
   }
   
-  fileprivate func getForgroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
+  fileprivate func getForegroundColor(col: DataColumn, element: DataCell, withStyle styleInfo: StylingInfo) -> UIColor {
     if isDataView {
       return cellColor!
     }

@@ -10,17 +10,25 @@ import Foundation
 class ImageCell: UIView, ConstraintCellProtocol {
   
   var dynamicWidth = NSLayoutConstraint()
+  let contextMenu = ContextMenu()
   weak var imageView: UIImageView?
+  weak var delegate: ExpandedCellProtocol?
   var imagedata: Data?
   var representation: Representation?
+  var menuTranslations: MenuTranslations?
+  var cell: DataCell?
   
   init() {
     super.init(frame: CGRect.zero)
-    
+    showMenus()
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  override var canBecomeFirstResponder: Bool {
+    return true
   }
   
   func getDynamicWidth() -> NSLayoutConstraint {
@@ -35,8 +43,42 @@ class ImageCell: UIView, ConstraintCellProtocol {
     return 1
   }
   
+  
+  func showMenus() {
+    isUserInteractionEnabled = true
+    let longPress = UILongPressGestureRecognizer(target: self, action: #selector(showMenu))
+    self.addGestureRecognizer(longPress)
+  }
+
+  @objc func showMenu(_ sender: UILongPressGestureRecognizer) {
+    self.becomeFirstResponder()
+    contextMenu.menuTranslations = self.menuTranslations
+    contextMenu.cell = self.cell
+    contextMenu.showMenu(sender, view: self)
+  }
+  
+  @objc func handleCopy(_ controller: UIMenuController) {
+
+    let format = UIGraphicsImageRendererFormat()
+    format.scale = UIScreen.main.scale
+    if let img = imageView?.image {
+      let board = UIPasteboard.general
+      board.image = img
+    }
+    controller.setMenuVisible(false, animated: true)
+    self.resignFirstResponder()
+  }
+
+  @objc func handleExpand(_ controller: UIMenuController) {
+    guard let cell = self.cell else { return }
+    guard let delegate = self.delegate else { return }
+    delegate.onExpandedCell(cell: cell)
+    self.resignFirstResponder()
+  }
+  
   func setData(data: DataCell, representedAs rep: Representation, index: Int?) {
     self.representation = rep
+    self.cell = data
     guard let qAttrExps = data.qAttrExps else {return}
     guard let qValues = qAttrExps.qValues else {return}
     guard let attrIndex = index else { return }
@@ -45,8 +87,8 @@ class ImageCell: UIView, ConstraintCellProtocol {
       guard let url = URL(string: urlString) else {return}
       DispatchQueue.global(qos: .background).async {
         do {
-          let data = try Data.init(contentsOf: url)
-          self.imagedata = data
+          let imageData = try Data.init(contentsOf: url)
+          self.imagedata = imageData
           DispatchQueue.main.async {
             self.setNeedsLayout()
           }
