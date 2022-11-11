@@ -137,11 +137,6 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     }
     String urlText = cell.qText;
     int attrIndex = column.stylingInfo.indexOf("url");
-    if(cell.qAttrExps == null) {
-      this.linkUrl = "error";
-      this.linkLabel = "Error";
-      return;
-    }
     if(attrIndex != -1) {
       HashMap<String, String> value = (HashMap<String, String>) cell.qAttrExps.get(attrIndex);
       urlText = value.get("qText");
