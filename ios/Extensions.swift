@@ -9,7 +9,7 @@ import Foundation
 
 extension UIView {
   func addBottomShadow() {
-    layer.shadowRadius = 3
+    layer.shadowRadius = 2
     layer.shadowOpacity = 0.25
     layer.shadowColor = UIColor.black.cgColor
     layer.shadowOffset = CGSize(width: 0, height: 1)
@@ -24,7 +24,7 @@ extension UIView {
   func addTopShadow() {
     self.clipsToBounds = false
     layer.shadowRadius = 2
-    layer.shadowOpacity = 0.15
+    layer.shadowOpacity = 0.25
     layer.shadowColor = UIColor.black.cgColor
     layer.shadowOffset = CGSize(width: 0, height: 1)
     layer.shadowPath = UIBezierPath(rect: CGRect(x: 0,

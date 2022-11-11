@@ -97,7 +97,11 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   
   @objc func handleCopy(_ controller: UIMenuController) {
     let board = UIPasteboard.general
-    board.string = self.text
+    if self.attributedText != nil {
+      board.string = cell?.qText
+    } else {
+      board.string = self.text
+    }
     controller.setMenuVisible(false, animated: true)
     self.resignFirstResponder()
   }
