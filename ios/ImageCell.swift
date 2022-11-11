@@ -13,6 +13,7 @@ class ImageCell: UIView, ConstraintCellProtocol {
   let contextMenu = ContextMenu()
   weak var imageView: UIImageView?
   weak var delegate: ExpandedCellProtocol?
+  var workItem: URLSessionDataTask?
   var imagedata: Data?
   var representation: Representation?
   var menuTranslations: MenuTranslations?
@@ -85,17 +86,19 @@ class ImageCell: UIView, ConstraintCellProtocol {
     if qValues.count > 0 {
       guard let urlString = qValues[attrIndex].qText else {return}
       guard let url = URL(string: urlString) else {return}
-      DispatchQueue.global(qos: .background).async {
-        do {
-          let imageData = try Data.init(contentsOf: url)
-          self.imagedata = imageData
-          DispatchQueue.main.async {
-            self.setNeedsLayout()
-          }
-        } catch let error {
-          print(error)
-        }
+      self.imagedata = nil;
+      if var pendingWorkItem = self.workItem {
+        pendingWorkItem.cancel();
       }
+      let task = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
+        guard let data = data, error == nil else { return }
+        DispatchQueue.main.async {
+          self.imagedata = data
+          self.setNeedsLayout()
+        }
+      })
+      self.workItem = task;
+      task.resume()
     }
   }
   
