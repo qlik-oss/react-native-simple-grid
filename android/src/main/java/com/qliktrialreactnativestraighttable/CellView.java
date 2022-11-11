@@ -29,6 +29,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
   final boolean isInFirstColumnRecyclerView;
   GestureDetector gestureDetector;
   int padding = (int)PixelUtils.dpToPx(16);
+  static int PADDING_X_2 =  (int)PixelUtils.dpToPx(32);
 
   CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean isInFirstColumnRecyclerView, DataColumn dataColumn) {
     super(context);

@@ -58,6 +58,7 @@ public class HeaderViewFactory {
     }
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.Q)
   public static HeaderCell buildFixedColumnCell(FrameLayout rootView, DataColumn column, TableView tableView, boolean topPosition) {
     int headerHeight = tableView.tableViewFactory.headerView.getMeasuredHeight();
     int padding = (int) PixelUtils.dpToPx(16);
@@ -66,6 +67,7 @@ public class HeaderViewFactory {
     TextView textView = fixedFirstHeaderCell.cell;
     textView.setMaxLines(1);
     textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+    textView.setTextSize(tableView.headerContentStyle.fontSize);
     textView.setEllipsize(TextUtils.TruncateAt.END);
     textView.setTextColor(tableView.headerContentStyle.color);
     textView.setText(column.label);
@@ -84,23 +86,10 @@ public class HeaderViewFactory {
     return fixedFirstHeaderCell;
   }
 
-  public static TextView buildFixedTotalsCell(TableView tableView, DataColumn column, TotalsCell totalsCell, boolean topPosition) {
+  public static TotalsViewCell buildFixedTotalsCell(TableView tableView, DataColumn column, TotalsCell totalsCell, boolean topPosition) {
     int headerHeight = tableView.tableViewFactory.headerView.getMeasuredHeight();
     int padding = (int) PixelUtils.dpToPx(16);
-    TextView text = new androidx.appcompat.widget.AppCompatTextView(tableView.getContext()){
-      Paint paint = new Paint();
-
-      @Override
-      protected void onDraw(Canvas canvas){
-        super.onDraw(canvas);
-        paint.setColor(TableTheme.borderBackgroundColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(PixelUtils.dpToPx(2));
-        canvas.drawLine(0, 0, column.width, 0, paint);
-        canvas.drawLine(0, TableTheme.rowHeightFactor, column.width, TableTheme.rowHeightFactor, paint);
-      }
-    };
-    text.setMaxLines(1);
+    TotalsViewCell text = new TotalsViewCell(tableView.getContext(), column, tableView);
     text.setTypeface(text.getTypeface(), Typeface.BOLD);
     text.setEllipsize(TextUtils.TruncateAt.END);
     if (column.isDim) {
@@ -111,11 +100,20 @@ public class HeaderViewFactory {
       text.setText(totalsCell.qText);
     }
     text.setPadding(padding, 0, padding, 0);
-    text.setLayoutParams(new FrameLayout.LayoutParams(column.width, TableTheme.rowHeightFactor));
+    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(column.width, tableView.totalsHeight);
+    if(topPosition) {
+      params.gravity = Gravity.TOP;
+      params.topMargin = tableView.headerHeight;
+    } else {
+      params.gravity = Gravity.BOTTOM;
+      params.bottomMargin = TableTheme.DefaultRowHeight;
+    }
+    text.setLayoutParams(params);
+
     text.setBackgroundColor(Color.WHITE);
     text.setZ((int) PixelUtils.dpToPx(headerZ));
-    int y = topPosition ? headerHeight : tableView.getMeasuredHeight() - TableTheme.rowHeightFactor * 2;
-    text.setY(y);
+    text.setTextSize(tableView.cellContentStyle.fontSize);
+    text.setMaxLines(1);
     if (!topPosition) {
       text.setOutlineProvider(null);
     }
@@ -125,7 +123,7 @@ public class HeaderViewFactory {
 
   private void buildHeader(Context context) {
     int padding = (int) PixelUtils.dpToPx(16);
-    int headerHeight = TableTheme.rowHeightFactor;
+    int headerHeight = tableView.headerHeight;
     headerView = new HeaderView(context);
     headerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, headerHeight));
     headerView.setOrientation(LinearLayout.HORIZONTAL);
@@ -143,6 +141,7 @@ public class HeaderViewFactory {
       text.setTextColor(headerContentStyle.color);
       text.setText(column.label);
       text.setMaxLines(1);
+      text.setTextSize(headerContentStyle.fontSize);
       text.setBackgroundColor(headerContentStyle.backgroundColor);
       headerView.addView(headerCell, layoutParams);
     }
@@ -150,17 +149,18 @@ public class HeaderViewFactory {
   }
 
   private void buildTotals(Context context) {
-    totalsView = new TotalsView(context);
+    totalsView = new TotalsView(context, tableView);
     totalsView.setDataColumns(dataColumns);
 
-    totalsView.post(() -> {
-      int headerHeight = headerView.getMeasuredHeight();
+      int headerHeight = tableView.headerHeight;
       totalsView.setOrientation(LinearLayout.HORIZONTAL);
       totalsView.setElevation((int) PixelUtils.dpToPx(headerZ));
       totalsView.setBackgroundColor(Color.WHITE);
-      FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TableTheme.rowHeightFactor);
+      FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, tableView.totalsHeight);
       layoutParams.topMargin = headerHeight;
-      layoutParams.bottomMargin = TableTheme.rowHeightFactor;
+      if(!topPosition) {
+        layoutParams.bottomMargin = TableTheme.DefaultRowHeight;
+      }
       layoutParams.gravity = topPosition ? Gravity.TOP : Gravity.BOTTOM;
       totalsView.setLayoutParams(layoutParams);
       if(!topPosition) {
@@ -170,25 +170,11 @@ public class HeaderViewFactory {
       int j = 0;
       for (int i = 0; i < dataColumns.size(); i++) {
         DataColumn column = dataColumns.get(i);
-        TextView text = new androidx.appcompat.widget.AppCompatTextView(tableView.getContext()){
-          Paint paint = new Paint();
-
-          @Override
-          protected void onDraw(Canvas canvas){
-            super.onDraw(canvas);
-            paint.setColor(TableTheme.borderBackgroundColor);
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(PixelUtils.dpToPx(2));
-
-            canvas.drawLine(0, 0, column.width, 0, paint);
-            canvas.drawLine(0, TableTheme.rowHeightFactor, column.width, TableTheme.rowHeightFactor, paint);
-          }
-        };
-
+        TotalsViewCell text = new TotalsViewCell(tableView.getContext(), column, tableView);
         int padding = (int) PixelUtils.dpToPx(16);
         text.setTypeface(text.getTypeface(), Typeface.BOLD);
         text.setEllipsize(TextUtils.TruncateAt.END);
-        text.setMaxLines(1);
+        text.setTextSize(tableView.cellContentStyle.fontSize);
         text.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
         if (column.isDim && i == 0) {
           text.setText(totalsLabel);
@@ -200,11 +186,10 @@ public class HeaderViewFactory {
           }
         }
         text.setPadding(padding, 0, padding, 0);
-
-        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(column.width, TableTheme.rowHeightFactor);
+        text.setMaxLines(1);
+        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
         totalsView.addView(text, textParams);
       }
-    });
 
   }
 

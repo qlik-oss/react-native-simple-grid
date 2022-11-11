@@ -37,11 +37,11 @@ public class RowCountView extends RelativeLayout {
 
     container = new RelativeLayout(context);
     container.setGravity(Gravity.RIGHT);
-    FrameLayout.LayoutParams frameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, TableTheme.rowHeightFactor);
+    FrameLayout.LayoutParams frameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, TableTheme.DefaultRowHeight);
     container.setLayoutParams(frameLayout);
     container.setZ(PixelUtils.dpToPx(4));
     container.setElevation(PixelUtils.dpToPx(4));
-    container.setY(height - TableTheme.rowHeightFactor);
+    container.setY(height - TableTheme.DefaultRowHeight);
     container.setBackgroundColor(Color.WHITE);
 
     container.addView(textView);
@@ -61,7 +61,7 @@ public class RowCountView extends RelativeLayout {
     int height = tableView.getMeasuredHeight();
     int width = tableView.getMeasuredWidth();
     textView.setMinimumWidth(width / 2);
-    container.setY(height - TableTheme.rowHeightFactor);
+    container.setY(height - TableTheme.DefaultRowHeight);
 
     super.onLayout(changed, l, t, r, b);
   }

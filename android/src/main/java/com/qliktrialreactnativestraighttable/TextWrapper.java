@@ -42,6 +42,9 @@ public class TextWrapper {
     measureLineCount();
   }
 
+  public void testOnlyTextWrap() {
+    measureLineCountNoUpdate();
+  }
   void measureLineCount() {
     if (wordCount > 1) {
       int lines = calculateLineCount();
@@ -52,12 +55,21 @@ public class TextWrapper {
     }
   }
 
+  void measureLineCountNoUpdate() {
+    if (wordCount > 1) {
+      int lines = calculateLineCount();
+      if (lines != lineCount) {
+        lineCount = Math.min(lines, wordCount);
+      }
+    }
+  }
+
   protected int calculateLineCount() {
-    int width = column.width - textView.getPaddingLeft() - textView.getPaddingRight() - additionalPadding;
+    int width = column.width -  additionalPadding;
     measureTextPaint.setTypeface(textView.getTypeface());
     StaticLayout.Builder builder = StaticLayout.Builder.obtain(textView.getText(), 0, textView.getText().length(), measureTextPaint, width);
     builder.setIncludePad(true);
-
+    builder.setMaxLines(wordCount);
     builder.setAlignment(Layout.Alignment.ALIGN_NORMAL);
     builder.setLineSpacing(1, 1);
     StaticLayout layout = builder.build();

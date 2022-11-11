@@ -13,5 +13,5 @@ public class TableTheme {
   static int borderBackgroundColor = Color.argb(0.1f, 0, 0, 0);
   static int selectedBackground = Color.parseColor("#009845");
   static Typeface iconFonts = null;
-  static int rowHeightFactor =(int)PixelUtils.dpToPx(40);
+  static int DefaultRowHeight =(int)PixelUtils.dpToPx(40);
 }

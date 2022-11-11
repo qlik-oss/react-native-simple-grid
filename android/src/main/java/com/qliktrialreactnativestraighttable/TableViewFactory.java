@@ -32,7 +32,7 @@ public class TableViewFactory {
   public List<GrabberView> grabbers = null;
   public List<TotalsCell> totalsCells = null;
   public HeaderCell firstColumnHeaderCell = null;
-  public TextView firstColumnTotalsCell = null;
+  public TotalsViewCell firstColumnTotalsCell = null;
   public ScreenGuideView screenGuideView = null;
   private List<DataColumn> dataColumns = null;
   public String totalsPosition;
@@ -65,10 +65,20 @@ public class TableViewFactory {
     scrollView.addView(rootLayout);
 
     if(tableView.headerContentStyle.wrap) {
+      if(totalsView != null) {
+        totalsView.testTextWrap();
+      }
+      if(firstColumnTotalsCell != null) {
+        firstColumnTotalsCell.testTextWrap();
+      }
       headerView.testTextWrap();
-      updateFirstColumnHeaderHeight();
-      updateTotalsViewHeight();
     }
+
+    updateFirstColumnHeaderHeight();
+    updateTotalsViewHeight();
+
+    dataProvider.notifyDataSetChanged();
+
     tableView.post(new Runnable() {
       @Override
       public void run() {
@@ -78,8 +88,9 @@ public class TableViewFactory {
   }
 
   protected void updateRowHeights() {
-    tableView.themedRowHeight = tableView.cellContentStyle.rowHeight * TableTheme.rowHeightFactor;
-    tableView.rowHeight = tableView.themedRowHeight;
+    tableView.rowHeight = tableView.cellContentStyle.getLineHeight() + CellView.PADDING_X_2;
+    tableView.headerHeight = tableView.headerContentStyle.getLineHeight() + CellView.PADDING_X_2;
+    tableView.totalsHeight = tableView.cellContentStyle.getLineHeight() + CellView.PADDING_X_2;
   }
 
   protected void createScrollView() {
@@ -127,10 +138,9 @@ public class TableViewFactory {
     coupledRecyclerView.setZ(0);
     coupledRecyclerView.setElevation(0);
 
-    headerView.post(() -> {
-      int headerHeight = headerView.getMeasuredHeight();
+      int headerHeight = tableView.headerHeight;
       int marginTop = headerHeight + extraTopMargin;
-      int marginBottom = TableTheme.rowHeightFactor;
+      int marginBottom = TableTheme.DefaultRowHeight;
 
       linearLayout.recyclerView = coupledRecyclerView;
       coupledRecyclerView.setAdapter(dataProvider);
@@ -150,7 +160,7 @@ public class TableViewFactory {
         dataProvider.setFirstColumnFrozen(true);
         coupledRecyclerView.setViewToScrollCouple(firstColumnRecyclerView);
         firstColumnRecyclerView.setViewToScrollCouple(coupledRecyclerView);
-
+        firstColumnRecyclerView.setZ(1);
         if(totalsCells != null) {
           firstColumnTotalsCell = HeaderViewFactory.buildFixedTotalsCell(tableView, dataColumns.get(0), totalsCells.get(0), headerViewFactory.topPosition);
           tableView.addView(firstColumnTotalsCell);
@@ -161,8 +171,6 @@ public class TableViewFactory {
       }
 
       createRowCount();
-    });
-
   }
 
   protected void createRowCount() {
@@ -217,18 +225,6 @@ public class TableViewFactory {
     }
   }
 
-  protected void createScreenGuide(int width) {
-    if (screenGuideView == null && grabbers != null) {
-      screenGuideView = new ScreenGuideView(context);
-      FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT);
-      params.gravity = Gravity.CENTER_VERTICAL;
-      rootLayout.addView(screenGuideView, params);
-      for (GrabberView grabberView : grabbers) {
-        grabberView.setScreenGuideView(screenGuideView);
-      }
-    }
-  }
-
   void invalidateLayout() {
     if (this.coupledRecyclerView != null) {
       int width = dataColumns.get(0).width;
@@ -277,7 +273,7 @@ public class TableViewFactory {
         case "top":
         default:
           topPosition = true;
-          extraTopMargin = TableTheme.rowHeightFactor;
+          extraTopMargin = tableView.totalsHeight;
           break;
       }
 
@@ -288,7 +284,7 @@ public class TableViewFactory {
   public void updateGrabbers() {
     if (grabbers != null) {
       int maxLineHeight = headerView.getMaxLineCount();
-      int headerHeight = maxLineHeight * TableTheme.rowHeightFactor;
+      int headerHeight = maxLineHeight * tableView.headerContentStyle.lineHeight + CellView.PADDING_X_2;
       List<DataColumn> dataColumns = dataProvider.getDataColumns();
       int dragWidth = (int) PixelUtils.dpToPx(40);
       int offset = dragWidth / 2;
@@ -305,29 +301,23 @@ public class TableViewFactory {
     }
   }
 
-  private void updateScreenGuide() {
-    if(screenGuideView == null) {
-      return;
-    }
-    ViewGroup.LayoutParams params = screenGuideView.getLayoutParams();
-    params.width = tableView.getWidth();
-    screenGuideView.setLayoutParams(params);
-  }
-
   public void updateHeaderViewLineCount() {
     int maxLineCount = headerView.getMaxLineCount();
-    int headerHeight = maxLineCount * TableTheme.rowHeightFactor;
+    int headerHeight = (maxLineCount * tableView.headerContentStyle.lineHeight) + (CellView.PADDING_X_2);
     tableView.headerHeight = headerHeight;
+
+    updateTotalsViewHeight();
+    updateFirstColumnsHeights();
 
     ViewGroup.LayoutParams params = headerView.getLayoutParams();
     params.height = headerHeight;
     headerView.setLayoutParams(params);
     FrameLayout.LayoutParams recyclerParams = (FrameLayout.LayoutParams) coupledRecyclerView.getLayoutParams();
-    recyclerParams.topMargin = headerHeight + TableTheme.rowHeightFactor;
+    recyclerParams.topMargin = headerHeight;
+    if(headerViewFactory.topPosition && totalsView != null) {
+      recyclerParams.topMargin += tableView.totalsHeight;
+    }
     coupledRecyclerView.setLayoutParams(recyclerParams);
-
-    updateTotalsViewHeight();
-    updateFirstColumnsHeights();
 
     tableView.post(new Runnable() {
       @Override
@@ -355,7 +345,10 @@ public class TableViewFactory {
     if(firstColumnRecyclerView != null && tableView != null) {
       FrameLayout.LayoutParams dd = (FrameLayout.LayoutParams) firstColumnRecyclerView.getLayoutParams();
       if(dd != null) {
-        dd.topMargin = tableView.headerHeight;
+        dd.topMargin = tableView.headerHeight ;
+        if(headerViewFactory.topPosition && totalsView != null) {
+          dd.topMargin += tableView.totalsHeight;
+        }
         firstColumnRecyclerView.setLayoutParams(dd);
         updateFirstColumnHeaderHeight();
       }
@@ -367,6 +360,9 @@ public class TableViewFactory {
       ViewGroup.LayoutParams params = firstColumnHeaderCell.getLayoutParams();
       params.height = tableView.headerHeight;
       firstColumnHeaderCell.setLayoutParams(params);
+      if(tableView.headerContentStyle.wrap) {
+        firstColumnHeaderCell.setMaxLines(tableView.headerHeight / tableView.headerContentStyle.lineHeight);
+      }
     }
   }
 
@@ -383,9 +379,41 @@ public class TableViewFactory {
 
   public void updateTotalsViewHeight() {
     if(totalsView != null) {
+      int maxLineCount = totalsView.getMaxLineCount();
+      int totalsViewHeight = (maxLineCount * tableView.cellContentStyle.lineHeight) + (CellView.PADDING_X_2);
+      tableView.totalsHeight = totalsViewHeight;
+
       FrameLayout.LayoutParams pp = (FrameLayout.LayoutParams)totalsView.getLayoutParams();
-      pp.topMargin = tableView.headerHeight;
+      if(headerViewFactory.topPosition) {
+        pp.topMargin = tableView.headerHeight;
+      }
+      pp.height = totalsViewHeight;
       totalsView.setLayoutParams(pp);
+
+      if(firstColumnTotalsCell != null) {
+        FrameLayout.LayoutParams fp = (FrameLayout.LayoutParams) firstColumnTotalsCell.getLayoutParams();
+        fp.height = totalsViewHeight;
+        if(headerViewFactory.topPosition) {
+          fp.topMargin = tableView.headerHeight;
+        } else {
+          fp.bottomMargin = TableTheme.DefaultRowHeight;
+        }
+
+        firstColumnTotalsCell.setLayoutParams(fp);
+        if(tableView.headerContentStyle.wrap) {
+          firstColumnTotalsCell.setMaxLines(totalsViewHeight / tableView.cellContentStyle.lineHeight);
+        }
+      }
+
+      tableView.post(new Runnable() {
+        @Override
+        public void run() {
+          totalsView.requestLayout();
+          if(firstColumnTotalsCell != null) {
+            firstColumnTotalsCell.requestLayout();
+          }
+        }
+      });
     }
   }
 }
