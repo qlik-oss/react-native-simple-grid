@@ -1,3 +1,10 @@
+# [1.1.0-alpha.68](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.67...v1.1.0-alpha.68) (2022-11-11)
+
+
+### Bug Fixes
+
+* **md-3816:** links not working cause reordered columns android ([#134](https://github.com/qlik-oss/react-native-simple-grid/issues/134)) ([e89a90b](https://github.com/qlik-oss/react-native-simple-grid/commit/e89a90b174ae5a69f4dcf724f657bb75988c48d6))
+
 # [1.1.0-alpha.67](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.66...v1.1.0-alpha.67) (2022-11-11)
 
 
