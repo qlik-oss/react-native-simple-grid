@@ -67,6 +67,7 @@ class TableViewFactory {
     containerView.hScrollViewDelegate.columnWidths = containerView.columnWidths
     containerView.hScrollViewDelegate.freezeFirstCol = containerView.freezeFirstColumn
     containerView.hScrollViewDelegate.captureFirstColumnWidth()
+    containerView.hScrollViewDelegate.containerView = containerView
     containerView.horizontalScrollView = horizontalScrollView
     containerView.addSubview(horizontalScrollView)
     horizontalScrollView.addSubview(firstColumnTableView)
@@ -74,7 +75,7 @@ class TableViewFactory {
     horizontalScrollView.delegate = containerView.hScrollViewDelegate
     createHScrollView()
     addShadowsToHeadersIfNeeded()
-    wireHeaders()
+    finalizeSetup()
 
   }
 
@@ -435,12 +436,17 @@ class TableViewFactory {
     }
   }
 
-  func wireHeaders() {
+  func finalizeSetup() {
     firstColumnTableView.adjacentTable = multiColumnTableView
     firstColumnTableView.layer.zPosition = 2
     horizontalScrollView.bringSubviewToFront(firstColumnTableView)
     if let firstGrabber = firstColumnTableView.firstGrabber {
       firstGrabber.superview?.bringSubviewToFront(firstGrabber)
+    }
+    if(dataColumns.count < 2 ) {
+      firstColumnTableView.dataCollectionView?.childCollectionView?.showsVerticalScrollIndicator = true
+    } else {
+      firstColumnTableView.dataCollectionView?.childCollectionView?.showsVerticalScrollIndicator = false
     }
   }
 }

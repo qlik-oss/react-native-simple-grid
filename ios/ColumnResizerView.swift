@@ -127,7 +127,7 @@ class ColumnResizerView: UIView {
       }
       data.childCollectionView?.collectionViewLayout.invalidateLayout()
       
-      containerView?.multiColumnTable?.dataCollectionView?.childCollectionView?.showsVerticalScrollIndicator = false
+     
       containerView?.updateVScrollPos()
       updateHeader(translation)
       updateTotals(translation)

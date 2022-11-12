@@ -218,6 +218,7 @@ class ContainerView: UIView {
           self.horizontalScrollView?.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
           self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
           self.testTruncation()
+          self.updateVScrollPos()
         }
       } else {
         guard let firstColumnTable = self.firstColumnTable else { return }
@@ -228,6 +229,7 @@ class ContainerView: UIView {
         DispatchQueue.main.async {
           self.testTruncation()
           self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
+          self.updateVScrollPos()
         }
       }
     }
@@ -315,9 +317,12 @@ class ContainerView: UIView {
   func updateVScrollPos() {
     let totalWidth = columnWidths.getTotalWidth()
     let rawX = firstColumnTable?.horizontalScrolLView?.contentOffset.x ?? 0.0
-    let right = max(abs(self.frame.width  -  totalWidth) - rawX, 0)
+    var right = max(abs(self.frame.width  -  totalWidth) - rawX, 0)
+    if(totalWidth < frame.width) {
+      right = 2.0
+    }
+    firstColumnTable?.dataCollectionView?.childCollectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: right)
     multiColumnTable?.dataCollectionView?.childCollectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: right)
-    multiColumnTable?.dataCollectionView?.childCollectionView?.showsVerticalScrollIndicator = true
   }
 
 }
