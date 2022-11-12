@@ -19,7 +19,8 @@ class ColumnWidths {
   func count() -> Int {
     return columnWidths.count
   }
-
+  
+  
   func loadDefaultWidths(_ frame: CGRect, columnCount: Int, dataRows: [DataRow], dataCols: [DataColumn]) {
     if !loadFromStorage(columnCount) {
       let defaultWidth = frame.width / Double(columnCount)
