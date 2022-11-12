@@ -14,7 +14,7 @@ class MiniBarChart: MiniChartRenderer {
     if rect.size.height == 0 {return}
     ctx.clear(rect)
     getBandWidth(rect: rect, data: data)
-    getScale(rect: rect, data: data)
+    resetScales(rect)
     var x = padding + horizontalPadding / 2
     var index = 0
     for row in rows {

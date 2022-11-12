@@ -24,12 +24,12 @@ class MiniDotGraph: MiniSparkLineChart {
     if rect.size.height == 0 {return}
     ctx.clear(rect)
     getBandWidth(rect: rect, data: data)
-    getScale(rect: rect, data: data)
+    resetScales(rect)
 
     var x = padding + horizontalPadding / 2
     var index = 1
     let halfLine = rect.height / 2
-    startPath(rows, ctx, x, rect)
+    startPath(rows, ctx, x, rect, zeroLine: zeroLine)
     x += padding * 2 + bandWidth
     for row in rows.dropFirst() {
       let value = row[1].qNum ?? 1.0

@@ -27,6 +27,13 @@ class MiniChartRenderer {
   var verticalPadding = 8.0
   var horizontalPadding = 8.0
   var showDots = false
+  var zeroLine = 0.0
+  var yPosition = "auto"
+  var posScale = 0.0
+  var negScale = 0.0
+  var halfScale = 0.0
+  var isHalfScale = false
+  var yAxis: YAxis?
 
   init() {
 
@@ -68,18 +75,46 @@ class MiniChartRenderer {
     mainColor.set()
   }
 
+ 
+  func resetScales(_ rect: CGRect) {
+    guard let yAxis = yAxis else {return}
+    if(yAxis.scale == "global") {
+      if(yAxis.position == "zeroBaseline") {
+        let min = min(globalMinValue, 0.0)
+        yScale = globalMaxValue - min
+      } else {
+        yScale = globalMaxValue
+      }
+    } else {
+      if(yAxis.position == "zeroBaseline") {
+        let min = min(minValue, 0.0)
+        yScale = maxValue - min
+      } else {
+        yScale = maxValue
+      }
+    }
+    setScales(rect)
+  }
+  
+  func setScales(_ rect: CGRect) {
+    var height = rect.height - verticalPadding
+    scale = height / yScale
+    zeroLine = minValue < 0.0 ? height + minValue * scale : height
+    if( yAxis?.position == "zeroCenter") {
+      height = rect.height/2.0 - verticalPadding
+      scale = height / yScale
+      zeroLine = rect.height/2.0 - verticalPadding
+    }
+  }
+  
   func getBandWidth(rect: CGRect, data: Matrix) {
     let count = data.qMatrix?.count ?? 1
     let width = rect.width - horizontalPadding
-    let totalBandWidth =  width / CGFloat(count)
+    let totalBandWidth = min(width*0.1, width / CGFloat(count))
     bandWidth = totalBandWidth * 0.8
     padding = totalBandWidth * 0.1
   }
 
-  func getScale(rect: CGRect, data: Matrix) {
-    let height = rect.height  - verticalPadding
-    scale =   height / yScale
-  }
 
   func render(_ ctx: CGContext, rect: CGRect) {}
 }

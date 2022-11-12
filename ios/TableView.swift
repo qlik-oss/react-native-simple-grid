@@ -61,6 +61,7 @@ class TableView: UIView {
     if let horizontalScrollView = horizontalScrolLView {
       let totalWidth = columnWidths.getTotalWidth()
       horizontalScrollView.contentSize = CGSize(width: totalWidth, height: 0)
+      horizontalScrollView.setContentOffset(CGPoint.zero, animated: true)
     }
   }
 
@@ -79,8 +80,7 @@ class TableView: UIView {
     }
 
     if let firstGrabber = firstGrabber {
-      let width = columnWidths.getTotalWidth(range: 0..<1)
-      firstGrabber.centerConstraint.constant = width
+      firstGrabber.centerConstraint.constant = columnWidths.columnWidths[0]
       firstGrabber.layoutIfNeeded()
     }
 

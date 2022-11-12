@@ -222,14 +222,12 @@ class ContainerView: UIView {
       } else {
         guard let firstColumnTable = self.firstColumnTable else { return }
         guard let multiColumnTable = self.multiColumnTable else { return }
+        hScrollViewDelegate.captureFirstColumnWidth()
         firstColumnTable.resizeCells()
         multiColumnTable.resizeCells()
-        testTruncation()
         DispatchQueue.main.async {
-          if let horizontalScrollView = self.horizontalScrollView {
-            horizontalScrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
-            self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
-          }
+          self.testTruncation()
+          self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
         }
       }
     }
