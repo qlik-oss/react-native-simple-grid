@@ -46,11 +46,9 @@ class HorizontalScrollViewDelegate: NSObject, UIScrollViewDelegate {
       if rawX <= 0 {
         let x = width - rawX
         let translation = CGPoint(x: x, y: 0)
-        columnWidths.columnWidths[0] = x
         tableView.setWidth(x)
-        _ = tableView.dataCollectionView?.updateSize(translation, withColumn: 0)
-        tableView.dataCollectionView?.childCollectionView?.collectionViewLayout.invalidateLayout()
         grabber.setPosition(x)
+        containerView.testTruncation()
       }
       
       let offset = shadowOffsetX/100.0

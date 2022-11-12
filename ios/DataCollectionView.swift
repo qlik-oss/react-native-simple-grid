@@ -134,10 +134,12 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   
   func syncScrolling() {
     if let coupled = coupled, let childCollectionView = childCollectionView {
+      coupled.selectionBand?.clearRect()
       if let child = coupled.childCollectionView {
         let y = childCollectionView.contentOffset.y
         child.contentOffset.y = y
       }
+      selectionBand?.clearRect()
     }
     signalVisibleRows()
   }
