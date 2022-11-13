@@ -1,3 +1,10 @@
+# [1.1.0-alpha.72](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.71...v1.1.0-alpha.72) (2022-11-13)
+
+
+### Bug Fixes
+
+* totals on converted charts ([5cbaebf](https://github.com/qlik-oss/react-native-simple-grid/commit/5cbaebf106c2735a0cd5968497ca89e0384c541b))
+
 # [1.1.0-alpha.71](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.70...v1.1.0-alpha.71) (2022-11-13)
 
 
