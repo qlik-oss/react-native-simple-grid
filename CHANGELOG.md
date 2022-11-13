@@ -1,3 +1,10 @@
+# [1.1.0-alpha.70](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.69...v1.1.0-alpha.70) (2022-11-13)
+
+
+### Bug Fixes
+
+* ios copy paste ([#135](https://github.com/qlik-oss/react-native-simple-grid/issues/135)) ([a8195f3](https://github.com/qlik-oss/react-native-simple-grid/commit/a8195f3a379278d848fefd9e524ef24459b8c707))
+
 # [1.1.0-alpha.69](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.68...v1.1.0-alpha.69) (2022-11-11)
 
 
