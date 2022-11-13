@@ -1,3 +1,10 @@
+# [1.1.0-alpha.74](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.73...v1.1.0-alpha.74) (2022-11-13)
+
+
+### Bug Fixes
+
+* **MD-3815:** select images ([3e581c7](https://github.com/qlik-oss/react-native-simple-grid/commit/3e581c7dee295ed51590b066e79e1b2f89db7553))
+
 # [1.1.0-alpha.73](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.72...v1.1.0-alpha.73) (2022-11-13)
 
 
