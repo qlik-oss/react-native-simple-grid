@@ -125,7 +125,9 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
             } else {
               imageView.backgroundColor = .clear
             }
+            imageView.prevBackgroundColor = imageView.backgroundColor ?? .clear
             imageView.delegate = self
+            imageView.selectionBand = self.selectionBand
             imageView.menuTranslations = menuTranslations
             imageView.setData(data: element, representedAs: representation, index: index)
             imageView.setNeedsDisplay()
@@ -215,8 +217,13 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
             view = miniChartView
             self.contentView.addSubview(miniChartView)
           } else if representation.type == "image" && !isDataView {
-            let imageCell = ImageCell()
+            let imageCell = ImageCell(selectionBand: selectionBand)
             view = imageCell
+            if col.isDim == true {
+              if let selectionsEngine = selectionsEngine {
+                imageCell.makeSelectable(selectionsEngine: selectionsEngine)
+              }
+            }
             self.contentView.addSubview(imageCell)
           } else {
             let label = PaddedLabel(frame: .zero, selectionBand: self.selectionBand)

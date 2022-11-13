@@ -7,8 +7,8 @@
 
 import Foundation
 
-class ImageCell: UIView, ConstraintCellProtocol {
-  
+class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
+  var id: Int = 0
   var dynamicWidth = NSLayoutConstraint()
   let contextMenu = ContextMenu()
   weak var imageView: UIImageView?
@@ -18,10 +18,57 @@ class ImageCell: UIView, ConstraintCellProtocol {
   var representation: Representation?
   var menuTranslations: MenuTranslations?
   var cell: DataCell?
+  var selectionsEngine: SelectionsEngine?
+  var selectionBand: SelectionBand?
+  var selected = false
+  let selectedBackgroundColor = ColorParser.fromCSS(cssString: "#009845")
+  var prevBackgroundColor = UIColor.clear
   
-  init() {
+  
+  init( selectionBand: SelectionBand?) {
+    self.selectionBand = selectionBand
     super.init(frame: CGRect.zero)
+    if let selectionBand = self.selectionBand {
+      selectionBand.notificationCenter.addObserver(self, selector: #selector(onTappedSelectionBand), name: Notification.Name.onTappedSelectionBand, object: nil)
+      selectionBand.notificationCenter.addObserver(self, selector: #selector(onSelectionDragged), name: Notification.Name.onSelectionDragged, object: nil)
+    }
+    
     showMenus()
+  }
+  
+  @objc func onTappedSelectionBand(notificaiton: Notification) {
+    guard let point = notificaiton.object as? CGPoint else {return}
+    guard let selectionBand = self.selectionBand else { return }
+    let hitTestPoint = selectionBand.convert(point, to: self)
+    if self.frame.contains(hitTestPoint) {
+      toggleSelection()
+      if !selected {
+        
+        selectionBand.notificationCenter.post(name: Notification.Name.onClearSelectionBand, object: nil)
+        
+      }
+    }
+  }
+  
+  @objc func onSelectionDragged(notificaiton: Notification) {
+    if !selected {
+      guard let envelope = notificaiton.object as? SelectionBandEnvelope else {return}
+      guard let selectionBand = self.selectionBand else { return }
+      if envelope.sender === selectionBand {
+        let convertedFrame = convertLocalFrameToSelectionBandFrame(selectionBand)
+        if envelope.frame.contains(convertedFrame) {
+          addToSelections()
+        }
+      }
+    }
+  }
+  
+  fileprivate func addToSelections() {
+    guard let selectionsEngine = self.selectionsEngine else { return }
+    let sig = SelectionsEngine.buildSelectionSignator(from: cell!)
+    selectionsEngine.addSelection(sig)
+    selected = true
+    updateBackground()
   }
   
   required init?(coder: NSCoder) {
@@ -50,7 +97,7 @@ class ImageCell: UIView, ConstraintCellProtocol {
     let longPress = UILongPressGestureRecognizer(target: self, action: #selector(showMenu))
     self.addGestureRecognizer(longPress)
   }
-
+  
   @objc func showMenu(_ sender: UILongPressGestureRecognizer) {
     self.becomeFirstResponder()
     contextMenu.menuTranslations = self.menuTranslations
@@ -59,7 +106,7 @@ class ImageCell: UIView, ConstraintCellProtocol {
   }
   
   @objc func handleCopy(_ controller: UIMenuController) {
-
+    
     let format = UIGraphicsImageRendererFormat()
     format.scale = UIScreen.main.scale
     if let img = imageView?.image {
@@ -69,7 +116,7 @@ class ImageCell: UIView, ConstraintCellProtocol {
     controller.setMenuVisible(false, animated: true)
     self.resignFirstResponder()
   }
-
+  
   @objc func handleExpand(_ controller: UIMenuController) {
     guard let cell = self.cell else { return }
     guard let delegate = self.delegate else { return }
@@ -87,7 +134,7 @@ class ImageCell: UIView, ConstraintCellProtocol {
       guard let urlString = qValues[attrIndex].qText else {return}
       guard let url = URL(string: urlString) else {return}
       self.imagedata = nil;
-      if var pendingWorkItem = self.workItem {
+      if let pendingWorkItem = self.workItem {
         pendingWorkItem.cancel();
       }
       let task = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
@@ -130,7 +177,7 @@ class ImageCell: UIView, ConstraintCellProtocol {
         if rep.imagePosition == "centerCenter" {
           imageView.fitToView(self)
         } else {
-          var leadingAnchor = rep.imagePosition == "topCenter" ?
+          let leadingAnchor = rep.imagePosition == "topCenter" ?
           imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor) :
           imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
           
@@ -153,7 +200,7 @@ class ImageCell: UIView, ConstraintCellProtocol {
         let width = imageView.widthAnchor.constraint(lessThanOrEqualToConstant: maxWidth)
         let leading = rep.imagePosition == "topCenter" ? imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor) :
         imageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: -maxWidth)
-       
+        
         
         var constraints = [
           leading,
@@ -213,4 +260,84 @@ class ImageCell: UIView, ConstraintCellProtocol {
     }
   }
   
+  func makeSelectable(selectionsEngine: SelectionsEngine) {
+    isUserInteractionEnabled = true
+    self.selectionsEngine = selectionsEngine
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageCliked(_:)))
+    
+    addGestureRecognizer(tapGesture)
+    selectionsEngine.addListener(listener: self)
+    
+  }
+  
+  @objc func imageCliked(_ sender: UITapGestureRecognizer) {
+    let menu = UIMenuController.shared
+    if menu.isMenuVisible {
+      menu.setMenuVisible(false, animated: true)
+    }
+    
+    guard let selectionsEngine = self.selectionsEngine else {return}
+    guard let selectionBand = self.selectionBand else { return }
+    if selectionsEngine.canSelect(self.cell!) {
+      if !selected {
+        let convertedFrame = convertLocalFrameToSelectionBandFrame(selectionBand)
+        let envelope = SelectionBandEnvelope(convertedFrame, sender: self, colIdx: self.cell?.colIdx ?? -1.0)
+        selectionBand.handleActivation(envelope)
+        selectionBand.notificationCenter.post(name: Notification.Name.onTappedSelection, object: envelope)
+      }
+      toggleSelection()
+    }
+  }
+  
+  fileprivate func toggleSelection() {
+    let sig = SelectionsEngine.buildSelectionSignator(from: cell!)
+    if let selectionsEngine = selectionsEngine {
+      selectionsEngine.toggleSelected(sig)
+    }
+  }
+  
+  fileprivate func convertLocalFrameToSelectionBandFrame(_ selectionBand: UIView) -> CGRect {
+    let convertedFrame = convert(self.frame, from: self.superview)
+    // account for the 1 width colunm grabber line
+    return convert(convertedFrame, to: selectionBand).insetBy(dx: 0.5, dy: 0).offsetBy(dx: -0.5, dy: 0)
+  }
+  
+  func toggleSelected(data: String) {
+    let sig = SelectionsEngine.signatureKey(from: data)
+    let comp = SelectionsEngine.signatureKey(from: cell!)
+    if sig == comp {
+      selected = !selected
+      updateBackground()
+    }
+  }
+  
+  func clearSelected() {
+    selected = false
+    updateBackground()
+  }
+  
+  func addedToSelection(data: String) {
+    let sig = SelectionsEngine.signatureKey(from: data)
+    let comp = SelectionsEngine.signatureKey(from: cell!)
+    if sig == comp {
+      selected = true
+      updateBackground()
+    }
+  }
+  
+  fileprivate func updateBackground() {
+    animateBackgroundColor(to: selected ? selectedBackgroundColor : prevBackgroundColor)
+  }
+  
+  fileprivate func animateBackgroundColor(to: UIColor) {
+    UIView.animate(withDuration: 0.3, animations: {
+      self.layer.backgroundColor = to.cgColor
+    })
+  }
+  
+  deinit {
+    if let selectionBand = self.selectionBand {
+      selectionBand.notificationCenter.removeObserver(self.onTappedSelectionBand)
+    }
+  }
 }
