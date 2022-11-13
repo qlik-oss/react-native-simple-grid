@@ -34,6 +34,7 @@ class MiniChartRenderer {
   var halfScale = 0.0
   var isHalfScale = false
   var yAxis: YAxis?
+  var totalBandWidth = 0.0
 
   init() {
 
@@ -110,9 +111,15 @@ class MiniChartRenderer {
   func getBandWidth(rect: CGRect, data: Matrix) {
     let count = data.qMatrix?.count ?? 1
     let width = rect.width - horizontalPadding
-    let totalBandWidth = min(width*0.1, width / CGFloat(count))
+    totalBandWidth = min(width*0.1, width / CGFloat(count))
     bandWidth = totalBandWidth * 0.8
     padding = totalBandWidth * 0.1
+        
+    let threshHold = rect.width * 0.4;
+    let totalWidth = bandWidth * Double(data.qMatrix?.count ?? 1)
+    if (totalWidth < threshHold) {
+      horizontalPadding = (rect.width - totalWidth)
+    }
   }
 
 
