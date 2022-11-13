@@ -18,29 +18,28 @@ class MiniSparkLineChart: MiniChartRenderer {
   override func render(_ ctx: CGContext, rect: CGRect) {
     guard let data = data else {return}
     guard let rows = data.qMatrix else {return}
-    linePath.removeAllPoints()
     horizontalPadding = 16
     verticalPadding = 16
+    linePath.removeAllPoints()
+   
     clearDots()
     if rect.size.height == 0 {return}
     ctx.clear(rect)
     getBandWidth(rect: rect, data: data)
-    getScale(rect: rect, data: data)
+    resetScales(rect)
   
     var x = horizontalPadding / 2
     var index = 1
-    startPath(rows, ctx, x, rect)
+    startPath(rows, ctx, x, rect, zeroLine: zeroLine)
     x += padding * 2 + bandWidth
-    let halfLine = rect.height / 2
-   
     
     
     for row in rows.dropFirst() {
       let value = row[1].qNum ?? 1.0
-      let height = value * scale
-      let y = rect.height - height
+      
+      let y = getY(value, rect: rect)
       let x2 = x + padding * 2 + bandWidth
-      let vpadding = getVerticalPadding(y, halfLine: halfLine)
+      let vpadding = getVerticalPadding(y, halfLine: zeroLine)
       linePath.addLine(to: CGPoint(x: x2, y: y + vpadding))
       drawDot(index, value: value, count: rows.count, x: x2, y: y + vpadding)
       x = x2
@@ -51,10 +50,18 @@ class MiniSparkLineChart: MiniChartRenderer {
       ctx.addPath(linePath.cgPath)
       ctx.strokePath()
     }
-
+    
     drawDots(ctx)
   }
 
+ 
+  
+  func getY(_ value: Double, rect: CGRect) -> Double {
+    let height = value * scale
+    let y = zeroLine - height
+    return y
+  }
+  
   func getVerticalPadding(_ y: Double, halfLine: Double) -> Double {
     let vp = verticalPadding / 2
     return y > halfLine ? -vp : vp
@@ -102,14 +109,15 @@ class MiniSparkLineChart: MiniChartRenderer {
     path.close()
   }
 
-  func startPath(_ rows: [[MatrixCell]], _ ctx: CGContext, _ x: Double, _ rect: CGRect) {
+  func startPath(_ rows: [[MatrixCell]], _ ctx: CGContext, _ x: Double, _ rect: CGRect, zeroLine: Double) {
     if rows.isEmpty {
       return
     }
     let startValue = rows[0][1].qNum ?? 0
-    let height = startValue * scale
-    let y = rect.height - height
-    let vpadding = getVerticalPadding(y, halfLine: rect.height / 2)
+    
+   
+    let y = getY(startValue, rect: rect)
+    let vpadding = getVerticalPadding(y, halfLine: zeroLine)
     linePath.move(to: CGPoint(x: x, y: y + vpadding))
     drawDot(0, value: startValue, count: rows.count, x: x, y: y + vpadding)
   }

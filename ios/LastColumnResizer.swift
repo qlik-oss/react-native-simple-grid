@@ -29,6 +29,7 @@ class LastColumnResizer: MultiColumnResizer {
       updateHeader(translation)
       updateTotals(translation)
       selectionsBand?.updateSize(translation, withColumn: index + 1)
+      containerView?.updateVScrollPos()
       containerView?.testTruncation()
     }
   }

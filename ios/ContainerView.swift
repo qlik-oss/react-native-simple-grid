@@ -26,6 +26,7 @@ class ContainerView: UIView {
   var maxHeaderLineCount = 1
   var maxTotalsLineCount = 1
   var maxCollectionViewsLineCount = 1
+  var needsInvalidation = false
   weak var firstColumnTable: TableView?
   weak var multiColumnTable: TableView?
 
@@ -92,11 +93,15 @@ class ContainerView: UIView {
       do {
         let json = try JSONSerialization.data(withJSONObject: cols)
         let decodedCols = try JSONDecoder().decode(Cols.self, from: json)
+        if(dataColumns != nil && decodedCols.header?.count != dataColumns?.count) {
+          self.needsInvalidation = true
+          return
+        }
         dataColumns = decodedCols.header
         totals = decodedCols.totals
         guard let firstTable = self.firstColumnTable else { return }
         guard let multiTable = self.multiColumnTable else { return }
-
+        
         if let firstTotals = firstTable.totalView, let multiTotals = multiTable.totalView {
           firstTotals.resetTotals(totals)
           multiTotals.resetTotals(totals)
@@ -120,6 +125,9 @@ class ContainerView: UIView {
         NotificationCenter.default.post(name: Notification.Name.onClearSelectionBand, object: nil)
         let json = try JSONSerialization.data(withJSONObject: rows)
         let decodedRows = try JSONDecoder().decode(RowsObject.self, from: json)
+        if(dataRows != nil && dataRows?[0].cells.count != decodedRows.rows?[0].cells.count) {
+          return
+        }
         if dataRows == nil || decodedRows.reset == true {
           self.dataRows = decodedRows.rows
           if self.dataRows != nil {
@@ -218,18 +226,18 @@ class ContainerView: UIView {
           self.horizontalScrollView?.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
           self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
           self.testTruncation()
+          self.updateVScrollPos()
         }
       } else {
         guard let firstColumnTable = self.firstColumnTable else { return }
         guard let multiColumnTable = self.multiColumnTable else { return }
+        hScrollViewDelegate.captureFirstColumnWidth()
         firstColumnTable.resizeCells()
         multiColumnTable.resizeCells()
-        testTruncation()
         DispatchQueue.main.async {
-          if let horizontalScrollView = self.horizontalScrollView {
-            horizontalScrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
-            self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
-          }
+          self.testTruncation()
+          self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
+          self.updateVScrollPos()
         }
       }
     }
@@ -317,9 +325,12 @@ class ContainerView: UIView {
   func updateVScrollPos() {
     let totalWidth = columnWidths.getTotalWidth()
     let rawX = firstColumnTable?.horizontalScrolLView?.contentOffset.x ?? 0.0
-    let right = max(abs(self.frame.width  -  totalWidth) - rawX, 0)
+    var right = max(abs(self.frame.width  -  totalWidth) - rawX, 0)
+    if(totalWidth < frame.width) {
+      right = 2.0
+    }
+    firstColumnTable?.dataCollectionView?.childCollectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: right)
     multiColumnTable?.dataCollectionView?.childCollectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: right)
-    multiColumnTable?.dataCollectionView?.childCollectionView?.showsVerticalScrollIndicator = true
   }
 
 }

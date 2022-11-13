@@ -58,9 +58,7 @@ class ReactNativeMiniChartView: UIView {
       miniChart.globalMaxValue = rep.globalMax ?? Double.infinity
       miniChart.globalMinValue = rep.globalMin ?? -Double.infinity
       miniChart.yScale = miniChart.maxValue
-      if rep.miniChart?.yAxis?.scale == "global" {
-        miniChart.yScale = miniChart.globalMaxValue
-      }
+      miniChart.yAxis = rep.miniChart?.yAxis
     }
   }
 
