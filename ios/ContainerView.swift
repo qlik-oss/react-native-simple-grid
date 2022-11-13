@@ -26,7 +26,6 @@ class ContainerView: UIView {
   var maxHeaderLineCount = 1
   var maxTotalsLineCount = 1
   var maxCollectionViewsLineCount = 1
-  var needsInvalidation = false
   weak var firstColumnTable: TableView?
   weak var multiColumnTable: TableView?
 
@@ -94,7 +93,6 @@ class ContainerView: UIView {
         let json = try JSONSerialization.data(withJSONObject: cols)
         let decodedCols = try JSONDecoder().decode(Cols.self, from: json)
         if(dataColumns != nil && decodedCols.header?.count != dataColumns?.count) {
-          self.needsInvalidation = true
           return
         }
         dataColumns = decodedCols.header

@@ -147,25 +147,15 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   
   func signalVisibleRows() {
     if let childCollectionView = childCollectionView {
-      var min = Int.max
-      var max = Int.min
-      for cell in childCollectionView.visibleCells {
-        let indexPath = childCollectionView.indexPath(for: cell)
-        if let indexPath = indexPath {
-          if let last  = indexPath.last {
-            if last < min {
-              min = last
-            }
-            if last > max {
-              max = last
-            }
-          }
-        }
+      let visibleIndexPaths = childCollectionView.indexPathsForVisibleItems.sorted()
+      let fullyVisible = visibleIndexPaths.filter { indexPath in
+        let layout = childCollectionView.layoutAttributesForItem(at: indexPath)!
+        let half = layout.frame.height / 2
+        var deflatedFrame = layout.frame.insetBy(dx: 0, dy: half).offsetBy(dx: 0, dy: -half/4.0)
+        return childCollectionView.bounds.intersects(deflatedFrame)
       }
-      
-      let arrayOfVisibleItems = childCollectionView.indexPathsForVisibleItems.sorted()
-      let firstItem = arrayOfVisibleItems.first
-      let lastItem = arrayOfVisibleItems.last
+      let firstItem = fullyVisible.first
+      let lastItem = fullyVisible.last
       if let totalCellsView = totalCellsView, let first = firstItem, let last = lastItem {
         totalCellsView.updateTotals(first: first, last: last)
       }
