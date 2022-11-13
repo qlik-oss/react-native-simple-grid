@@ -1,3 +1,10 @@
+# [1.1.0-alpha.75](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.74...v1.1.0-alpha.75) (2022-11-13)
+
+
+### Bug Fixes
+
+* center charts ([e21c22b](https://github.com/qlik-oss/react-native-simple-grid/commit/e21c22bcdc40832928e3089bb6fcccac88f66497))
+
 # [1.1.0-alpha.74](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.73...v1.1.0-alpha.74) (2022-11-13)
 
 
