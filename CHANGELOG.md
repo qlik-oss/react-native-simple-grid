@@ -1,3 +1,10 @@
+# [1.1.0-alpha.73](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.72...v1.1.0-alpha.73) (2022-11-13)
+
+
+### Bug Fixes
+
+* count 1/4 visible views ([569c8d7](https://github.com/qlik-oss/react-native-simple-grid/commit/569c8d7fd7c8c7770751e0535a376c70c801e292))
+
 # [1.1.0-alpha.72](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.71...v1.1.0-alpha.72) (2022-11-13)
 
 
