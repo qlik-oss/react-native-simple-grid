@@ -1,3 +1,10 @@
+# [1.1.0-alpha.71](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.70...v1.1.0-alpha.71) (2022-11-13)
+
+
+### Bug Fixes
+
+* passdown cardinal of dimension ([4376b78](https://github.com/qlik-oss/react-native-simple-grid/commit/4376b786ab741964ab6fecaa2b723f2481af82fd))
+
 # [1.1.0-alpha.70](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.69...v1.1.0-alpha.70) (2022-11-13)
 
 
