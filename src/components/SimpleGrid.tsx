@@ -68,8 +68,8 @@ const transformTotals = (layout: any, table: any) => {
     return '';
   });
 
-  const show = layout?.totals?.show === 'auto' ? true : layout?.totals?.show;
-  if (layout.totals.show || layout.totals.position !== 'noTotals') {
+  let show = layout?.totals?.show === 'auto' ? true : layout?.totals?.show;
+  if (layout.totals.show && table.totalsPosition !== 'noTotals') {
     totals = {
       ...layout.totals,
       rows: layout.qHyperCube.qGrandTotalRow,
