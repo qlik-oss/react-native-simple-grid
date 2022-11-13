@@ -30,6 +30,7 @@ export type SimpleGridProps = {
     qHyperCube: {
       qGrandTotalRow: number;
       qSize: number;
+      qDimensionInfo: Array<any>;
     };
   };
   name: string;
@@ -114,11 +115,11 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
     async (column: any) => {
       try {
         const props = await model.getEffectiveProperties();
-
         if (
           props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef
             .qFieldDefs[0]
         ) {
+          column.qCardinal = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qCardinal;
           column.label =
             props?.qHyperCubeDef?.qDimensions[
               column.dataColIdx
@@ -127,7 +128,7 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
         searchColumn({ searching: true, column });
       } catch (error) {}
     },
-    [model, searchColumn]
+    [model, searchColumn, layout]
   );
 
   const onSearchColumn = useCallback(
