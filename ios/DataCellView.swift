@@ -148,8 +148,9 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
             label.delegate = self
             label.font = cellStyle?.font ?? UIFont.systemFont(ofSize: 14)
             label.numberOfLines = self.numberOfLines
-            
-            if representation.type == "indicator", let indicator = element.indicator, let uniChar = DataCellView.iconMap[indicator.icon ?? "m"] {
+           
+            if representation.type == "indicator", let indicator = element.indicator {
+              let uniChar = DataCellView.iconMap[indicator.icon ?? ""] ?? 0x0
               label.textColor = getForegroundColor(col: col, element: element, withStyle: styleInfo[index])
               label.setAttributedText(element.qText ?? "", withIcon: uniChar, element: element)
             } else if representation.type == "url" {
