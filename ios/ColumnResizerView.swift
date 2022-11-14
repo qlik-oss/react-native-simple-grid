@@ -126,7 +126,6 @@ class ColumnResizerView: UIView {
         adjacentTable.layoutIfNeeded()
       }
       data.childCollectionView?.collectionViewLayout.invalidateLayout()
-      
      
       containerView?.updateVScrollPos()
       updateHeader(translation)
