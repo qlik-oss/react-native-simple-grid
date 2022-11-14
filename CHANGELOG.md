@@ -1,3 +1,10 @@
+# [1.1.0-alpha.77](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.76...v1.1.0-alpha.77) (2022-11-14)
+
+
+### Bug Fixes
+
+* color index ([7e109ac](https://github.com/qlik-oss/react-native-simple-grid/commit/7e109ac99d012badf1d5fb6d275486444f160490))
+
 # [1.1.0-alpha.76](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.75...v1.1.0-alpha.76) (2022-11-14)
 
 
