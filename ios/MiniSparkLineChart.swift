@@ -18,6 +18,7 @@ class MiniSparkLineChart: MiniChartRenderer {
   override func render(_ ctx: CGContext, rect: CGRect) {
     guard let data = data else {return}
     guard let rows = data.qMatrix else {return}
+    DEFAULT_HORIONTAL_PADDING = 16
     horizontalPadding = 16
     verticalPadding = 16
     linePath.removeAllPoints()
