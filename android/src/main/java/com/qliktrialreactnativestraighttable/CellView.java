@@ -49,8 +49,6 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
         break;
       case "image":
         wrapper = new RelativeLayout(context);
-        wrapper.setClickable(false);
-        wrapper.setFocusable(false);
         wrapperLayout = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         content = new ClickableImageView(context, selectionsEngine, tableView, this);
         wrapper.addView((View) content);
