@@ -49,7 +49,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     layout.width = tableView.rowHeight;
 
     this.setLayoutParams(layout);
-    this.setScaleType(ScaleType.FIT_CENTER);
+    this.setScaleType(ScaleType.FIT_XY);
 
     scaleType = "alwaysFit";
   }
