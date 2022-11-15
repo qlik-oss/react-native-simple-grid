@@ -1,3 +1,10 @@
+# [1.1.0-alpha.78](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.77...v1.1.0-alpha.78) (2022-11-15)
+
+
+### Bug Fixes
+
+* move last resizer to front ([f5774ab](https://github.com/qlik-oss/react-native-simple-grid/commit/f5774abb10a8d65125eecc69fd23adc36add799e))
+
 # [1.1.0-alpha.77](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.76...v1.1.0-alpha.77) (2022-11-14)
 
 
