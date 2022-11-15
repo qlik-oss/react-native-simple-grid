@@ -100,6 +100,9 @@ public class ColumnWidths {
     int averageTextSize = runningTotal / rows.size();
     // Create a string with max text
     String tempString = new String(new char[averageTextSize]).replace("\0", "X");
+    if(column.representation.type.equals("image")) {
+      return (int) (DataProvider.minWidth * 1.5f);
+    }
     float width = paint.measureText(tempString, 0, tempString.length());
     width = Math.max(DataProvider.minWidth * 1.5f, PixelUtils.dpToPx(width));
     // cast later since this is the equiv of a floor.

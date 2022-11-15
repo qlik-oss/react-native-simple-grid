@@ -165,11 +165,11 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams((int)width, tableView.rowHeight);
 
         if (column.representation.type.equals("image")) {
-          RelativeLayout wrapper = new RelativeLayout(parent.getContext());
           CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.tableView, recyclerView.firstColumnOnly, column);
-          RelativeLayout.LayoutParams cellLayoutParams = new RelativeLayout.LayoutParams(-1,-1);
-          wrapper.addView(cellView, cellLayoutParams);
-          rowView.addView(wrapper, layoutParams);
+          LinearLayout.LayoutParams cellLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+
+          rowView.addView(cellView, cellLayoutParams);
+
         } else if(column.representation.type.equals("miniChart")) {
           CellView cellView = new CellView(parent.getContext(), "miniChart", this.selectionsEngine, this.tableView, recyclerView.firstColumnOnly, column);
 

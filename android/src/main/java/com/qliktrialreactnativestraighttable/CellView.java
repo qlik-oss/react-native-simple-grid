@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.view.GestureDetector;
 import android.view.MenuItem;
@@ -19,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 @SuppressLint("ViewConstructor")
-public class CellView extends LinearLayout implements SelectionsObserver {
+public class CellView extends RelativeLayout implements SelectionsObserver {
   Content content = null;
   DataRow row;
   DataColumn column;
@@ -31,6 +32,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
   int padding = (int)PixelUtils.dpToPx(16);
   static int PADDING_X_2 =  (int)PixelUtils.dpToPx(32);
 
+  @SuppressLint("ClickableViewAccessibility")
   CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean isInFirstColumnRecyclerView, DataColumn dataColumn) {
     super(context);
     this.tableView = tableView;
@@ -38,6 +40,8 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     this.isInFirstColumnRecyclerView = isInFirstColumnRecyclerView;
     this.dragBoxEventHandler = tableView.dragBoxEventHandler;
 
+    RelativeLayout wrapper = null;
+    RelativeLayout.LayoutParams wrapperLayout = null;
     switch (type) {
       case "text":
         ClickableTextView textView = new ClickableTextView(context, selectionsEngine, tableView, this, dataColumn);
@@ -45,7 +49,10 @@ public class CellView extends LinearLayout implements SelectionsObserver {
         content = textView;
         break;
       case "image":
+        wrapper = new RelativeLayout(context);
+        wrapperLayout = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         content = new ClickableImageView(context, selectionsEngine, tableView, this);
+        wrapper.addView((View) content);
         break;
       case "miniChart":
         content = new MiniChartView(context);
@@ -75,20 +82,29 @@ public class CellView extends LinearLayout implements SelectionsObserver {
       contextMenu.add(0, 0, 0, copyString).setOnMenuItemClickListener(handleMenuItemClick);
       contextMenu.add(0, 1, 1, expandString).setOnMenuItemClickListener(handleMenuItemClick);
     };
-    View contentView = (View) content;
-    contentView.setOnCreateContextMenuListener(onCreateContextMenuListener);
-    this.addView(contentView);
+
+    if(type.equals("image")) {
+      wrapper.setOnCreateContextMenuListener(onCreateContextMenuListener);
+      this.addView(wrapper, wrapperLayout);
+    } else {
+      View contentView = (View) content;
+      contentView.setOnCreateContextMenuListener(onCreateContextMenuListener);
+      this.addView(contentView);
+    }
+  }
+
+  @Override
+  public boolean onInterceptTouchEvent(MotionEvent ev) {
+    gestureDetector.onTouchEvent(ev);
+    return super.onInterceptTouchEvent(ev);
   }
 
   public void handleDragBoxDrag(Rect dragBoxBounds, int columnId) {
     DataCell cell = content.getCell();
-    if(cell == null || columnId != cell.colIdx) {
+    if(cell == null || columnId != cell.rawColIdx) {
       return;
     }
     Rect cellBounds = getBounds();
-    if(cellBounds == null) {
-      return;
-    }
     boolean hasIntersect = dragBoxBounds.intersect(cellBounds);
     if(!this.content.isSelected() && hasIntersect) {
       selectCell();
@@ -143,7 +159,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     if (cell.isDim) {
       Rect bounds = getBounds();
       if(!content.isSelected()) {
-        tableView.showDragBox(bounds, cell.colIdx);
+        tableView.showDragBox(bounds, cell.rawColIdx);
       } else {
         tableView.hideDragBoxes();
       }
@@ -171,6 +187,18 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     if (cell != null && cell.isDim) {
       selectionsEngine.remove(this);
     }
+  }
+
+  @Override
+  protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    super.onLayout(changed, l, t, r, b);
+    LinearLayout.LayoutParams layout = (LinearLayout.LayoutParams) getLayoutParams();
+    if(column == null) {
+      return;
+    }
+    layout.height = TableTheme.rowHeightFactor;
+    layout.width = column.width;
+    setLayoutParams(layout);
   }
 
   class SingleTapListener extends GestureDetector.SimpleOnGestureListener {

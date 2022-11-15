@@ -4,14 +4,19 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.SpannableString;
+import android.text.method.MovementMethod;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,10 +27,10 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   boolean selected = false;
   String scaleType = null;
   final SelectionsEngine selectionsEngine;
-  GestureDetector gestureDetector;
   final TableView tableView;
   final CellView cellView;
   Animation fadeIn;
+  GestureDetector gestureDetector;
 
   ClickableImageView(Context context, SelectionsEngine selectionsEngine, TableView tableView, CellView cellView) {
     super(context);
@@ -35,32 +40,22 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     fadeIn = AnimationUtils.loadAnimation(context, R.anim.catalyst_fade_in);
   }
 
-  @SuppressLint("ClickableViewAccessibility")
-  @Override
-  public boolean onTouchEvent(MotionEvent e) {
-    gestureDetector.onTouchEvent(e);
-    return true;
-  }
-
   private void alwaysFit() {
-    ViewGroup parent = (ViewGroup) cellView.getParent();
-    ViewGroup.LayoutParams layout = parent.getLayoutParams();
-    layout.height = tableView.rowHeight;
-    layout.width = tableView.rowHeight + parent.getPaddingLeft() + parent.getPaddingRight();
-    parent.setLayoutParams(layout);
-    this.setScaleType(ScaleType.FIT_CENTER);
+    RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(tableView.rowHeight, tableView.rowHeight);
+    this.setLayoutParams(layout);
+
+    this.setScaleType(ScaleType.FIT_XY);
+
     scaleType = "alwaysFit";
   }
 
   private void stretchToFit(DataColumn column)          {
-    ViewGroup parent = (ViewGroup) cellView.getParent();
-    ViewGroup.LayoutParams layout = parent.getLayoutParams();
-    layout.height = tableView.rowHeight;
-    layout.width = column.width;
-    parent.setLayoutParams(layout);
-    this.setScaleType(ScaleType.FIT_XY);
-    scaleType = "stretchToFit";
+    RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(tableView.rowHeight, column.width);
+    setLayoutParams(layout);
 
+    this.setScaleType(ScaleType.FIT_XY);
+
+    scaleType = "stretchToFit";
   }
 
   private void fitToHeight(Bitmap image) {
@@ -68,14 +63,12 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     float width = image.getWidth();
     float aspectRatioMultiplier = width/height;
 
-    ViewGroup parent = (ViewGroup) cellView.getParent();
-    ViewGroup.LayoutParams layout = parent.getLayoutParams();
-    layout.height = tableView.rowHeight;
-    layout.width = Math.round(tableView.rowHeight * aspectRatioMultiplier) + parent.getPaddingLeft() + parent.getPaddingRight();
-    parent.setLayoutParams(layout);
-    this.setScaleType(ScaleType.FIT_XY);
-    scaleType = "fitToHeight";
+    RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(Math.round(tableView.rowHeight * aspectRatioMultiplier), tableView.rowHeight);
+    setLayoutParams(layout);
 
+    this.setScaleType(ScaleType.FIT_XY);
+
+    scaleType = "fitToHeight";
   }
 
   private void fitToWidth(DataColumn column, Bitmap image) {
@@ -83,29 +76,25 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     float width = image.getWidth();
     float aspectRatioMultiplier = height/width;
 
-    ViewGroup parent = (ViewGroup) cellView.getParent();
-    RelativeLayout.LayoutParams layout = (RelativeLayout.LayoutParams) parent.getLayoutParams();
-    layout.width = (int)column.width;
-    layout.height = Math.round(column.width * aspectRatioMultiplier);
-    parent.setLayoutParams(layout);
+    RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+    setLayoutParams(layout);
 
-    ViewGroup grandparent = (ViewGroup) parent.getParent();
-    ViewGroup.LayoutParams grandparentLayout = grandparent.getLayoutParams();
-    grandparentLayout.width = column.width;
-    grandparentLayout.height = Math.round(column.width * aspectRatioMultiplier);
-    grandparent.setLayoutParams(grandparentLayout);
+    RelativeLayout parent = (RelativeLayout) getParent();
+    if(parent == null) {
+      return;
+    }
+    RelativeLayout.LayoutParams wrapperLayout = (RelativeLayout.LayoutParams) parent.getLayoutParams();
+    wrapperLayout.width = column.width;
+    wrapperLayout.height = Math.round(column.width * aspectRatioMultiplier);
+    parent.setLayoutParams(wrapperLayout);
+
     this.setScaleType(ScaleType.FIT_XY);
 
-    parent.setMinimumWidth((int)column.width);
-    parent.setMinimumHeight(Math.round(column.width * aspectRatioMultiplier));
     scaleType = "fitToWidth";
   }
 
   public void setSizing(DataColumn column, Bitmap image) {
     switch (column.representation.imageSize) {
-      case "alwaysFit":
-        alwaysFit();
-        break;
       case "fill":
         stretchToFit(column);
         break;
@@ -115,13 +104,20 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
       case "fitWidth":
         fitToWidth(column, image);
         break;
+      default:
+      case "alwaysFit":
+        alwaysFit();
+        break;
     }
   }
 
   public void setAlignment(DataColumn column) {
-    ViewGroup container = (ViewGroup) cellView.getParent();
-    LinearLayout wrapper = (LinearLayout) container.getParent();
+    RelativeLayout wrapper = (RelativeLayout) getParent();
     setTranslationY(0);
+
+    if(wrapper == null) {
+      return;
+    }
 
     switch (column.representation.imagePosition) {
       case "topCenter":
@@ -129,12 +125,6 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
         break;
       case "bottomCenter":
         wrapper.setGravity(Gravity.RIGHT);
-        break;
-      case "centerCenter":
-        wrapper.setGravity(Gravity.CENTER);
-        if (scaleType.equals("fitToWidth")) {
-          setTranslationY(tableView.rowHeight / 2 - container.getMinimumHeight() / 2);
-        }
         break;
       case "centerLeft":
         if (scaleType.equals("fitToWidth")) {
@@ -146,8 +136,15 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
       case "centerRight":
         if (scaleType.equals("fitToWidth")) {
           wrapper.setGravity(Gravity.BOTTOM);
-          setTranslationY(tableView.rowHeight - container.getMinimumHeight());
+          setTranslationY(tableView.rowHeight - cellView.getMinimumHeight());
           break;
+        }
+        wrapper.setGravity(Gravity.CENTER);
+        break;
+      default:
+      case "centerCenter":
+        if (scaleType.equals("fitToWidth")) {
+          setTranslationY((float) (tableView.rowHeight / 2 - cellView.getMinimumHeight() / 2));
         }
         wrapper.setGravity(Gravity.CENTER);
         break;
@@ -156,8 +153,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
 
   public void updateBackgroundColor(boolean shouldAnimate) {
     int color = selected ? TableTheme.selectedBackground : Color.TRANSPARENT;
-    ViewGroup wrapper = (ViewGroup) cellView.getParent().getParent();
-    wrapper.setBackgroundColor(color);
+    cellView.setBackgroundColor(color);
     if(shouldAnimate) {
       startAnimation(fadeIn);
     }

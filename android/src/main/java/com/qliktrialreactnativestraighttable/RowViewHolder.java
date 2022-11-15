@@ -42,15 +42,14 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
       DataColumn column = dataProvider.dataColumns.get(columnIndex);
 
       if(column.representation.type.equals("image")) {
-        ViewGroup wrapper = (ViewGroup) row.getChildAt(columnIndex);
-        CellView cellView = (CellView) wrapper.getChildAt(0);
-        ViewGroup.LayoutParams layout = cellView.getLayoutParams();
+        CellView cellView = (CellView) row.getChildAt(columnIndex);
+        LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(column.width, rowHeight);
         layout.height = rowHeight;
         layout.width = column.width;
         cellView.setLayoutParams(layout);
         cellView.setData(cell, dataRow, column);
 
-        Bitmap imageBitmap = dataProvider.getImageData(cell.imageUrl);
+        Bitmap imageBitmap = DataProvider.getImageData(cell.imageUrl);
         if(imageBitmap == null) {
           continue;
         }
@@ -69,7 +68,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         CellView cellView = (CellView) row.getChildAt(columnIndex);
         ClickableTextView textView = (ClickableTextView) cellView.content;
 
-        LinearLayout.LayoutParams textViewLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        RelativeLayout.LayoutParams textViewLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(textViewLayoutParams);
 
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, rowHeight);
@@ -108,10 +107,9 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
       DataColumn column = dataProvider.dataColumns.get(i);
 
       if(column.representation.type.equals("image")) {
-        RelativeLayout wrapper = (RelativeLayout) row.getChildAt(i);
-        CellView cellView = (CellView) wrapper.getChildAt(0);
+        CellView cellView = (CellView) row.getChildAt(i);
         ClickableImageView imageView = (ClickableImageView) cellView.content;
-        Bitmap imageBitmap = dataProvider.getImageData(column.representation.imageUrl);
+        Bitmap imageBitmap = DataProvider.getImageData(column.representation.imageUrl);
         if(imageBitmap == null) {
           continue;
         }
