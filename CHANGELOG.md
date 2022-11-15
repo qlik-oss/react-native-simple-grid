@@ -1,3 +1,10 @@
+# [1.1.0-alpha.81](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.80...v1.1.0-alpha.81) (2022-11-15)
+
+
+### Bug Fixes
+
+* **md-3822:** image sizing & column ordering ([#136](https://github.com/qlik-oss/react-native-simple-grid/issues/136)) ([cfb0920](https://github.com/qlik-oss/react-native-simple-grid/commit/cfb0920a0c9f69822878312b2a43fa38486f70e4))
+
 # [1.1.0-alpha.80](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.79...v1.1.0-alpha.80) (2022-11-15)
 
 
