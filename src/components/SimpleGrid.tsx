@@ -124,6 +124,9 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
             props?.qHyperCubeDef?.qDimensions[
               column.dataColIdx
             ].qDef.qFieldDefs[0];
+          column.display =  props?.qHyperCubeDef?.qDimensions[
+            column.dataColIdx
+          ].qDef.qFieldLabels[0]; 
         }
         searchColumn({ searching: true, column });
       } catch (error) {}
