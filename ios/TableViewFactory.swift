@@ -440,6 +440,11 @@ class TableViewFactory {
     firstColumnTableView.adjacentTable = multiColumnTableView
     firstColumnTableView.layer.zPosition = 2
     horizontalScrollView.bringSubviewToFront(firstColumnTableView)
+    if let lastGrabber = multiColumnTableView.lastGrabber {
+      multiColumnTableView.bringSubviewToFront(lastGrabber)
+      lastGrabber.layer.zPosition = 2
+    }
+    
     if let firstGrabber = firstColumnTableView.firstGrabber {
       firstGrabber.superview?.bringSubviewToFront(firstGrabber)
     }
