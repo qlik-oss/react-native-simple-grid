@@ -156,7 +156,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
 
   public void handleSingleTap() {
     DataCell cell = content.getCell();
-    if (cell.isDim) {
+    if (cell != null && cell.isDim) {
       Rect bounds = getBounds();
       if(!content.isSelected()) {
         tableView.showDragBox(bounds, cell.rawColIdx);
