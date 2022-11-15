@@ -112,7 +112,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
   }
 
   private void expandRow() {
-    EventUtils.sendOnExpand(tableView, column, row);
+    EventUtils.sendOnExpand(tableView, row);
   }
 
   private void copyCell(){

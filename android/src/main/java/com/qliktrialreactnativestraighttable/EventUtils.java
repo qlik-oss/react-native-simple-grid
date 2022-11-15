@@ -46,17 +46,19 @@ public class EventUtils {
     }
   }
 
-  public static void sendOnExpand(View contextView, DataColumn column, DataRow row) {
+  public static void sendOnExpand(TableView tableView, DataRow row) {
     WritableMap event = Arguments.createMap();
+    List<DataColumn> columns = tableView.dataProvider.getDataColumns();
     try {
-      JSONObject columnJSONObject = column.toEvent();
       JSONArray columnJSONArray = new JSONArray();
-      columnJSONArray.put(columnJSONObject);
-
+      for (DataColumn column : columns) {
+        JSONObject columnJSONObject = column.toEvent();
+        columnJSONArray.put(columnJSONObject);
+      }
       String rowJSONString = row.toEvent();
       event.putString("row", rowJSONString);
       event.putString("col", columnJSONArray.toString());
-      EventUtils.sendEventToJSFromView(contextView, "onExpandCell", event);
+      EventUtils.sendEventToJSFromView(tableView, "onExpandCell", event);
     } catch (JSONException e) {
       e.printStackTrace();
     }
