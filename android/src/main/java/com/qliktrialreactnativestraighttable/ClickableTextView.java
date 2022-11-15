@@ -77,7 +77,6 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
         return movementMethod.onTouchEvent(this, new SpannableString(this.getText()), e);
       }
     }
-    gestureDetector.onTouchEvent(e);
     return true;
   }
 

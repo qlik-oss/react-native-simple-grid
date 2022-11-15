@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.view.GestureDetector;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
   GestureDetector gestureDetector;
   int padding = (int)PixelUtils.dpToPx(16);
 
+  @SuppressLint("ClickableViewAccessibility")
   CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean isInFirstColumnRecyclerView, DataColumn dataColumn) {
     super(context);
     this.tableView = tableView;
@@ -37,6 +39,8 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
     this.isInFirstColumnRecyclerView = isInFirstColumnRecyclerView;
     this.dragBoxEventHandler = tableView.dragBoxEventHandler;
 
+    RelativeLayout wrapper = null;
+    RelativeLayout.LayoutParams wrapperLayout = null;
     switch (type) {
       case "text":
         ClickableTextView textView = new ClickableTextView(context, selectionsEngine, tableView, this, dataColumn);
@@ -44,7 +48,12 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
         content = textView;
         break;
       case "image":
+        wrapper = new RelativeLayout(context);
+        wrapper.setClickable(false);
+        wrapper.setFocusable(false);
+        wrapperLayout = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         content = new ClickableImageView(context, selectionsEngine, tableView, this);
+        wrapper.addView((View) content);
         break;
       case "miniChart":
         content = new MiniChartView(context);
@@ -74,9 +83,21 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
       contextMenu.add(0, 0, 0, copyString).setOnMenuItemClickListener(handleMenuItemClick);
       contextMenu.add(0, 1, 1, expandString).setOnMenuItemClickListener(handleMenuItemClick);
     };
-    View contentView = (View) content;
-    contentView.setOnCreateContextMenuListener(onCreateContextMenuListener);
-    this.addView(contentView);
+
+    if(type.equals("image")) {
+      wrapper.setOnCreateContextMenuListener(onCreateContextMenuListener);
+      this.addView(wrapper, wrapperLayout);
+    } else {
+      View contentView = (View) content;
+      contentView.setOnCreateContextMenuListener(onCreateContextMenuListener);
+      this.addView(contentView);
+    }
+  }
+
+  @Override
+  public boolean onInterceptTouchEvent(MotionEvent ev) {
+    gestureDetector.onTouchEvent(ev);
+    return super.onInterceptTouchEvent(ev);
   }
 
   public void handleDragBoxDrag(Rect dragBoxBounds, int columnId) {
@@ -85,9 +106,6 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
       return;
     }
     Rect cellBounds = getBounds();
-    if(cellBounds == null) {
-      return;
-    }
     boolean hasIntersect = dragBoxBounds.intersect(cellBounds);
     if(!this.content.isSelected() && hasIntersect) {
       selectCell();
