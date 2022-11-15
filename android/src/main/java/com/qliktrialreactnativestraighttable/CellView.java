@@ -196,7 +196,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
     if(column == null) {
       return;
     }
-    layout.height = TableTheme.rowHeightFactor;
+    layout.height = TableTheme.DefaultRowHeight;
     layout.width = column.width;
     setLayoutParams(layout);
   }
