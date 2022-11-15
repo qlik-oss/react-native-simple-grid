@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 @SuppressLint("ViewConstructor")
-public class CellView extends LinearLayout implements SelectionsObserver {
+public class CellView extends RelativeLayout implements SelectionsObserver {
   Content content = null;
   DataRow row;
   DataColumn column;
@@ -81,7 +81,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
 
   public void handleDragBoxDrag(Rect dragBoxBounds, int columnId) {
     DataCell cell = content.getCell();
-    if(cell == null || columnId != cell.colIdx) {
+    if(cell == null || columnId != cell.rawColIdx) {
       return;
     }
     Rect cellBounds = getBounds();
@@ -142,7 +142,7 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     if (cell.isDim) {
       Rect bounds = getBounds();
       if(!content.isSelected()) {
-        tableView.showDragBox(bounds, cell.colIdx);
+        tableView.showDragBox(bounds, cell.rawColIdx);
       } else {
         tableView.hideDragBoxes();
       }
@@ -170,6 +170,18 @@ public class CellView extends LinearLayout implements SelectionsObserver {
     if (cell != null && cell.isDim) {
       selectionsEngine.remove(this);
     }
+  }
+
+  @Override
+  protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    super.onLayout(changed, l, t, r, b);
+    LinearLayout.LayoutParams layout = (LinearLayout.LayoutParams) getLayoutParams();
+    if(column == null) {
+      return;
+    }
+    layout.height = TableTheme.rowHeightFactor;
+    layout.width = column.width;
+    setLayoutParams(layout);
   }
 
   class SingleTapListener extends GestureDetector.SimpleOnGestureListener {
