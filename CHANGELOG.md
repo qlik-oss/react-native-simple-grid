@@ -1,3 +1,10 @@
+# [1.1.0-alpha.80](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.79...v1.1.0-alpha.80) (2022-11-15)
+
+
+### Bug Fixes
+
+* push display title down ([2810a5e](https://github.com/qlik-oss/react-native-simple-grid/commit/2810a5e0837cb09b50b7f73df7629901f751d1bd))
+
 # [1.1.0-alpha.79](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.78...v1.1.0-alpha.79) (2022-11-15)
 
 
