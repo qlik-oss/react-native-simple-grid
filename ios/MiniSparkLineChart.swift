@@ -78,23 +78,23 @@ class MiniSparkLineChart: MiniChartRenderer {
   }
 
   func drawDot(_ index: Int, value: Double, count: Int, x: CGFloat, y: CGFloat) {
-    if index == 0 && firstColor != .clear {
-      addArc(firstDot, x: x, y: y)
-      return
-    }
-
-    if index == count - 1 && lastColor != .clear {
-      addArc(lastDot, x: x, y: y)
-      return
-    }
-
+    
     if value == maxValue && maxColor != .clear {
       addArc(maxDots, x: x, y: y)
       return
     }
-
+    
     if value == minValue && minColor != .clear {
       addArc(minDots, x: x, y: y)
+      return
+    }
+    
+    if index == 0 && firstColor != .clear {
+      addArc(firstDot, x: x, y: y)
+    }
+
+    if index == count - 1 && lastColor != .clear {
+      addArc(lastDot, x: x, y: y)
       return
     }
 
@@ -124,35 +124,36 @@ class MiniSparkLineChart: MiniChartRenderer {
   }
 
   func drawDots(_ ctx: CGContext) {
-    if maxColor != .clear {
-      maxColor.set()
-      ctx.addPath(maxDots.cgPath)
+    
+    if showDots {
+      mainColor.set()
+      ctx.addPath(mainDots.cgPath)
       ctx.fillPath()
-
     }
-
+    
+    if lastColor != .clear {
+      lastColor.set()
+      ctx.addPath(lastDot.cgPath)
+      ctx.fillPath()
+    }
+    
+    if firstColor != .clear {
+      firstColor.set()
+      ctx.addPath(firstDot.cgPath)
+      ctx.fillPath()
+    }
+    
     if minColor != .clear {
       minColor.set()
       ctx.addPath(minDots.cgPath)
       ctx.fillPath()
     }
 
-    if firstColor != .clear {
-      firstColor.set()
-      ctx.addPath(firstDot.cgPath)
+    if maxColor != .clear {
+      maxColor.set()
+      ctx.addPath(maxDots.cgPath)
       ctx.fillPath()
-    }
 
-    if lastColor != .clear {
-      lastColor.set()
-      ctx.addPath(lastDot.cgPath)
-      ctx.fillPath()
-    }
-
-    if showDots {
-      mainColor.set()
-      ctx.addPath(mainDots.cgPath)
-      ctx.fillPath()
     }
   }
 }
