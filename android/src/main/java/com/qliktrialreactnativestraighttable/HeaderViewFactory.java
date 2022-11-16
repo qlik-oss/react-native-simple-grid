@@ -60,7 +60,7 @@ public class HeaderViewFactory {
 
   @RequiresApi(api = Build.VERSION_CODES.Q)
   public static HeaderCell buildFixedColumnCell(FrameLayout rootView, DataColumn column, TableView tableView, boolean topPosition) {
-    int headerHeight = tableView.tableViewFactory.headerView.getMeasuredHeight();
+    int headerHeight = tableView.headerHeight;
     int padding = (int) PixelUtils.dpToPx(16);
 
     HeaderCell fixedFirstHeaderCell = new HeaderCell(rootView.getContext(), column, tableView);
@@ -87,7 +87,7 @@ public class HeaderViewFactory {
   }
 
   public static TotalsViewCell buildFixedTotalsCell(TableView tableView, DataColumn column, TotalsCell totalsCell, boolean topPosition) {
-    int headerHeight = tableView.tableViewFactory.headerView.getMeasuredHeight();
+    int headerHeight = tableView.headerHeight;
     int padding = (int) PixelUtils.dpToPx(16);
     TotalsViewCell text = new TotalsViewCell(tableView.getContext(), column, tableView);
     text.setTypeface(text.getTypeface(), Typeface.BOLD);

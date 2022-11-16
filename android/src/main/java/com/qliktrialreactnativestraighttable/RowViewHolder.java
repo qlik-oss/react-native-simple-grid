@@ -43,8 +43,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
 
       if(column.representation.type.equals("image")) {
         CellView cellView = (CellView) row.getChildAt(columnIndex);
-        LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(column.width, rowHeight);
-        layout.height = rowHeight;
+        LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
         layout.width = column.width;
         cellView.setLayoutParams(layout);
         cellView.setData(cell, dataRow, column);
@@ -59,7 +58,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         imageView.setAlignment(column);
       } else if(column.representation.type.equals("miniChart")) {
         CellView cellView = (CellView) row.getChildAt(columnIndex);
-        LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, rowHeight);
+        LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
         cellView.setLayoutParams(cellViewLayoutParams);
 
         MiniChartView miniChartView = (MiniChartView) cellView.content;
@@ -70,9 +69,10 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
 
         RelativeLayout.LayoutParams textViewLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(textViewLayoutParams);
-
-        LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, rowHeight);
+        LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
+        cellViewLayoutParams.gravity = Gravity.TOP;
         cellView.setLayoutParams(cellViewLayoutParams);
+
         if(column.representation.type.equals("text")) {
           cell.indicator = null;
         }
