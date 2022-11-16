@@ -1,3 +1,11 @@
+# [1.1.0-alpha.86](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.85...v1.1.0-alpha.86) (2022-11-16)
+
+
+### Bug Fixes
+
+* hide dragbox on touch up ([#139](https://github.com/qlik-oss/react-native-simple-grid/issues/139)) ([eda6ae2](https://github.com/qlik-oss/react-native-simple-grid/commit/eda6ae22d495b9b85f441bf1f828446c615a6aed))
+* **md-3843:** fix expand row android ([#138](https://github.com/qlik-oss/react-native-simple-grid/issues/138)) ([3417796](https://github.com/qlik-oss/react-native-simple-grid/commit/34177966a5d07305c5767ed50b0530d9369af097))
+
 # [1.1.0-alpha.85](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.84...v1.1.0-alpha.85) (2022-11-16)
 
 
