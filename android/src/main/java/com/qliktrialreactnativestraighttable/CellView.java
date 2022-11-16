@@ -24,6 +24,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
   Content content = null;
   DataRow row;
   DataColumn column;
+  RelativeLayout wrapper = null;
   final DragBoxEventHandler dragBoxEventHandler;
   final SelectionsEngine selectionsEngine;
   final TableView tableView;
@@ -40,7 +41,6 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
     this.isInFirstColumnRecyclerView = isInFirstColumnRecyclerView;
     this.dragBoxEventHandler = tableView.dragBoxEventHandler;
 
-    RelativeLayout wrapper = null;
     RelativeLayout.LayoutParams wrapperLayout = null;
     switch (type) {
       case "text":
@@ -156,7 +156,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
 
   public void handleSingleTap() {
     DataCell cell = content.getCell();
-    if (cell.isDim) {
+    if (cell != null && cell.isDim) {
       Rect bounds = getBounds();
       if(!content.isSelected()) {
         tableView.showDragBox(bounds, cell.rawColIdx);
@@ -196,9 +196,16 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
     if(column == null) {
       return;
     }
-    layout.height = TableTheme.DefaultRowHeight;
+    layout.height = tableView.rowHeight;
     layout.width = column.width;
     setLayoutParams(layout);
+
+    if(wrapper != null) {
+      RelativeLayout.LayoutParams wrapperLayout = (RelativeLayout.LayoutParams) wrapper.getLayoutParams();
+      wrapperLayout.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+      wrapperLayout.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+      wrapper.setLayoutParams(wrapperLayout);
+    }
   }
 
   class SingleTapListener extends GestureDetector.SimpleOnGestureListener {

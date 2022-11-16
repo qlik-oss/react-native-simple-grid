@@ -132,6 +132,7 @@ public class DragBox extends View {
         }
         case MotionEvent.ACTION_UP: {
           pressed = false;
+          hide();
           tableView.scrollView.setDisableIntercept(false);
           return true;
         }

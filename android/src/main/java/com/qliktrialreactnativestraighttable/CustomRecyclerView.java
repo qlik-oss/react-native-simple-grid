@@ -39,6 +39,7 @@ public class CustomRecyclerView extends RecyclerView {
     DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
     OnScrollListener sharedScrollListener = new OnScrollListener(linearLayout);
 
+    this.setFocusableInTouchMode(true);
     this.setLayoutManager(linearLayout);
     this.addItemDecoration(itemDecorator);
     this.setHasFixedSize(true);

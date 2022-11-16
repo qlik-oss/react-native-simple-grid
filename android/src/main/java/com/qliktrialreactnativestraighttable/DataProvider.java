@@ -285,7 +285,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     int next = column + 1;
     if (next < dataColumns.size()) {
-      dataColumns.get(next).width -= (int)deltaWidth;
+//      dataColumns.get(next).width -= (int)deltaWidth;
     }
 
     dataColumns.get(column).width += (int)deltaWidth;

@@ -51,6 +51,6 @@ public class ScreenGuideView extends View {
     Rect rect = canvas.getClipBounds();
     int x = rect.left + rect.width();
     int y = rect.height();
-    canvas.drawLine(x, 0, x, y, paint);
+//    canvas.drawLine(x, 0, x, y, paint);
   }
 }

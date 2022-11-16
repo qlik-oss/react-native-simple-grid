@@ -37,6 +37,7 @@ public class GrabberView extends LinearLayout {
   class TouchListener implements OnTouchListener {
     float dX = 0;
     float lastX = 0;
+
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
       int action = motionEvent.getAction();
@@ -55,17 +56,21 @@ public class GrabberView extends LinearLayout {
           return true;
         }
         case MotionEvent.ACTION_MOVE: {
-          float x = motionEvent.getRawX() + dX;
           float motionDx = motionEvent.getRawX() - lastX;
           motionDx = (float) Math.round(motionDx);
           if (dataProvider.updateWidth(motionDx, GrabberView.this.column)) {
             // cast here to avoid drift
-            GrabberView.this.setTranslationX((int)x);
+            for(GrabberView grabber : tableView.grabbers) {
+              if(grabber.getX() >= GrabberView.this.getX()) {
+                grabber.setTranslationX((int) (grabber.getTranslationX() + motionDx));
+              }
+            }
             GrabberView.this.updateTotals(motionDx);
             GrabberView.this.updateHeader(motionDx);
             GrabberView.this.updateFixedTotalsCell(motionDx);
             GrabberView.this.updateFirstColumnHeader(motionDx);
             lastX = motionEvent.getRawX();
+
             if(isLastColumn && motionDx > 0) {
               GrabberView.this.rootLayout.requestLayout();
               GrabberView.this.recyclerView.requestLayout();
@@ -91,7 +96,6 @@ public class GrabberView extends LinearLayout {
           if(screenGuideView != null) {
             screenGuideView.fade(1, 0);
           }
-
           return  true;
         }
       }
@@ -176,24 +180,15 @@ public class GrabberView extends LinearLayout {
     HeaderCell headerCell = (HeaderCell)headerView.getChildAt(column);
     resizeView(headerCell, dxMotion);
     headerCell.cell.testTextWrap();
-    View neighbour = updateNeighbour(headerView, dxMotion);
-    if(neighbour != null) {
-      headerCell = (HeaderCell) neighbour;
-      headerCell.cell.testTextWrap();
-    }
   }
 
   public void updateTotals(float dxMotion) {
     TotalsView totalsView = tableView.getTotalsView();
     if(totalsView != null) {
-      TotalsViewCell totalsViewCell = (TotalsViewCell) totalsView.getChildAt(column);
-      resizeView(totalsViewCell, dxMotion);
-      totalsViewCell.testTextWrap();
-      View neighbour = updateNeighbour(totalsView, dxMotion);
-      if(neighbour != null) {
-        totalsViewCell = (TotalsViewCell) neighbour;
-        totalsViewCell.testTextWrap();
-      }
+      totalsView.updateLayout();
+//      TotalsViewCell totalsViewCell = (TotalsViewCell) totalsView.getChildAt(column);
+//      resizeView(totalsViewCell, dxMotion);
+      totalsView.testTextWrap();
     }
   }
 
@@ -208,15 +203,6 @@ public class GrabberView extends LinearLayout {
     if(firstColumnHeader != null && column == 0) {
       resizeView(firstColumnHeader, dxMotion);
     }
-  }
-
-  public View updateNeighbour(LinearLayout container, float dxMotion) {
-    if(column + 1 < container.getChildCount()) {
-      View neighbour = container.getChildAt(column + 1);
-      resizeView(neighbour, -dxMotion);
-      return neighbour;
-    }
-    return null;
   }
 
   public void resizeView(View view, float dxMotion) {
