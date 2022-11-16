@@ -86,9 +86,9 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     float height = image.getHeight();
     float width = image.getWidth();
 
-    RelativeLayout parent = (RelativeLayout) getParent();
-    RelativeLayout.LayoutParams wrapperLayout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-    parent.setLayoutParams(wrapperLayout);
+//    RelativeLayout parent = (RelativeLayout) getParent();
+//    RelativeLayout.LayoutParams wrapperLayout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+//    parent.setLayoutParams(wrapperLayout);
 
     switch (column.representation.imageSize) {
       case "fill":

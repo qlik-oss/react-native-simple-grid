@@ -60,17 +60,13 @@ public class GrabberView extends LinearLayout {
           motionDx = (float) Math.round(motionDx);
           if (dataProvider.updateWidth(motionDx, GrabberView.this.column)) {
             // cast here to avoid drift
-            for(GrabberView grabber : tableView.grabbers) {
-              if(grabber.getX() >= GrabberView.this.getX()) {
-                grabber.setTranslationX((int) (grabber.getTranslationX() + motionDx));
-              }
-            }
-            GrabberView.this.updateTotals(motionDx);
+
+            GrabberView.this.updateGrabbers(motionDx);
+            GrabberView.this.updateTotals();
             GrabberView.this.updateHeader(motionDx);
             GrabberView.this.updateFixedTotalsCell(motionDx);
             GrabberView.this.updateFirstColumnHeader(motionDx);
             lastX = motionEvent.getRawX();
-
             if(isLastColumn && motionDx > 0) {
               GrabberView.this.rootLayout.requestLayout();
               GrabberView.this.recyclerView.requestLayout();
@@ -182,12 +178,18 @@ public class GrabberView extends LinearLayout {
     headerCell.cell.testTextWrap();
   }
 
-  public void updateTotals(float dxMotion) {
+  public void updateGrabbers(float dxMotion) {
+    for(GrabberView grabber : tableView.grabbers) {
+      if(grabber.getX() >= GrabberView.this.getX()) {
+        grabber.setTranslationX((int) (grabber.getTranslationX() + dxMotion));
+      }
+    }
+  }
+
+  public void updateTotals() {
     TotalsView totalsView = tableView.getTotalsView();
     if(totalsView != null) {
       totalsView.updateLayout();
-//      TotalsViewCell totalsViewCell = (TotalsViewCell) totalsView.getChildAt(column);
-//      resizeView(totalsViewCell, dxMotion);
       totalsView.testTextWrap();
     }
   }
