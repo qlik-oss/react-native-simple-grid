@@ -1,3 +1,10 @@
+# [1.1.0-alpha.83](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.82...v1.1.0-alpha.83) (2022-11-16)
+
+
+### Bug Fixes
+
+* check for empty lable ([897dd67](https://github.com/qlik-oss/react-native-simple-grid/commit/897dd674459016d438259a3a25b1f426affe8ccd))
+
 # [1.1.0-alpha.82](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.81...v1.1.0-alpha.82) (2022-11-15)
 
 
