@@ -41,7 +41,6 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     this.tableView = tableView;
     this.selectionsEngine = selectionsEngine;
     this.cellView = cellView;
-    setBackgroundColor(Color.MAGENTA);
     fadeIn = AnimationUtils.loadAnimation(context, R.anim.catalyst_fade_in);
   }
 
@@ -74,7 +73,6 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
 
   private void fitToWidth(DataColumn column, float aspectRatioMultiplier) {
     this.setScaleType(ScaleType.MATRIX);
-//    this.setScaleType(ScaleType.FIT_XY);
 
     imageHeight = Math.round(column.width * aspectRatioMultiplier);
     imageWidth = column.width;
