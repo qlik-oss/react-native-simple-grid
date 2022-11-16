@@ -20,9 +20,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 @SuppressLint("ViewConstructor")
 public class ClickableImageView extends androidx.appcompat.widget.AppCompatImageView implements Content {
+  int imageHeight;
+  int imageWidth;
+
   DataCell cell = null;
   boolean selected = false;
   String scaleType = null;
@@ -37,116 +41,118 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     this.tableView = tableView;
     this.selectionsEngine = selectionsEngine;
     this.cellView = cellView;
+    setBackgroundColor(Color.MAGENTA);
     fadeIn = AnimationUtils.loadAnimation(context, R.anim.catalyst_fade_in);
   }
 
   private void alwaysFit() {
-    RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(tableView.rowHeight, tableView.rowHeight);
-    this.setLayoutParams(layout);
-
     this.setScaleType(ScaleType.FIT_XY);
+
+    imageHeight = tableView.rowHeight;
+    imageWidth = imageHeight;
 
     scaleType = "alwaysFit";
   }
 
-  private void stretchToFit(DataColumn column)          {
-    RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(tableView.rowHeight, column.width);
-    setLayoutParams(layout);
-
+  private void stretchToFit(DataColumn column) {
     this.setScaleType(ScaleType.FIT_XY);
+
+    imageHeight = tableView.rowHeight;
+    imageWidth = column.width;
 
     scaleType = "stretchToFit";
   }
 
-  private void fitToHeight(Bitmap image) {
-    float height = image.getHeight();
-    float width = image.getWidth();
-    float aspectRatioMultiplier = width/height;
-
-    RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(Math.round(tableView.rowHeight * aspectRatioMultiplier), tableView.rowHeight);
-    setLayoutParams(layout);
-
+  private void fitToHeight(float aspectRatioMultiplier) {
     this.setScaleType(ScaleType.FIT_XY);
+
+    imageHeight = tableView.rowHeight;
+    imageWidth = Math.round(tableView.rowHeight * aspectRatioMultiplier);
 
     scaleType = "fitToHeight";
   }
 
-  private void fitToWidth(DataColumn column, Bitmap image) {
-    float height = image.getHeight();
-    float width = image.getWidth();
-    float aspectRatioMultiplier = height/width;
+  private void fitToWidth(DataColumn column, float aspectRatioMultiplier) {
+    this.setScaleType(ScaleType.MATRIX);
+//    this.setScaleType(ScaleType.FIT_XY);
 
-    RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-    setLayoutParams(layout);
-
-    RelativeLayout parent = (RelativeLayout) getParent();
-    if(parent == null) {
-      return;
-    }
-    RelativeLayout.LayoutParams wrapperLayout = (RelativeLayout.LayoutParams) parent.getLayoutParams();
-    wrapperLayout.width = column.width;
-    wrapperLayout.height = Math.round(column.width * aspectRatioMultiplier);
-    parent.setLayoutParams(wrapperLayout);
-
-    this.setScaleType(ScaleType.FIT_XY);
+    imageHeight = Math.round(column.width * aspectRatioMultiplier);
+    imageWidth = column.width;
 
     scaleType = "fitToWidth";
   }
 
-  public void setSizing(DataColumn column, Bitmap image) {
+  public void scaleAndPositionImage(DataColumn column, Bitmap image) {
+    setSizing(column, image);
+    setAlignment(column);
+    FrameLayout.LayoutParams layout = new FrameLayout.LayoutParams(imageWidth, imageHeight);
+    setLayoutParams(layout);
+  }
+
+  private void shrinkParentToBounds() {
+    FrameLayout wrapper = (FrameLayout) getParent();
+    RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(imageWidth, imageHeight);
+    wrapper.setLayoutParams(layout);
+  }
+
+  private void setSizing(DataColumn column, Bitmap image) {
+    float height = image.getHeight();
+    float width = image.getWidth();
+
     switch (column.representation.imageSize) {
       case "fill":
         stretchToFit(column);
+        shrinkParentToBounds();
         break;
       case "fitHeight":
-        fitToHeight(image);
+        fitToHeight(width/height);
+        shrinkParentToBounds();
         break;
       case "fitWidth":
-        fitToWidth(column, image);
+        fitToWidth(column, height/width);
+        FrameLayout wrapper = (FrameLayout) getParent();
+        RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        wrapper.setLayoutParams(layout);
         break;
       default:
       case "alwaysFit":
         alwaysFit();
+        shrinkParentToBounds();
         break;
     }
   }
 
-  public void setAlignment(DataColumn column) {
-    RelativeLayout wrapper = (RelativeLayout) getParent();
+  private void setAlignment(DataColumn column) {
     setTranslationY(0);
-
-    if(wrapper == null) {
-      return;
-    }
 
     switch (column.representation.imagePosition) {
       case "topCenter":
-        wrapper.setGravity(Gravity.LEFT);
+        cellView.setGravity(Gravity.LEFT);
         break;
       case "bottomCenter":
-        wrapper.setGravity(Gravity.RIGHT);
+        cellView.setGravity(Gravity.RIGHT);
         break;
       case "centerLeft":
         if (scaleType.equals("fitToWidth")) {
-          wrapper.setGravity(Gravity.TOP);
+          cellView.setGravity(Gravity.TOP);
           break;
         }
-        wrapper.setGravity(Gravity.CENTER);
+        cellView.setGravity(Gravity.CENTER);
         break;
       case "centerRight":
         if (scaleType.equals("fitToWidth")) {
-          wrapper.setGravity(Gravity.BOTTOM);
-          setTranslationY(tableView.rowHeight - cellView.getMinimumHeight());
+          cellView.setGravity(Gravity.BOTTOM);
+          setTranslationY(tableView.rowHeight - imageHeight);
           break;
         }
-        wrapper.setGravity(Gravity.CENTER);
+        cellView.setGravity(Gravity.CENTER);
         break;
       default:
       case "centerCenter":
         if (scaleType.equals("fitToWidth")) {
-          setTranslationY((float) (tableView.rowHeight / 2 - cellView.getMinimumHeight() / 2));
+          setTranslationY((float) (tableView.rowHeight - imageHeight) / 2);
         }
-        wrapper.setGravity(Gravity.CENTER);
+        cellView.setGravity(Gravity.CENTER);
         break;
     }
   }

@@ -18,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 @SuppressLint("ViewConstructor")
 public class CellView extends RelativeLayout implements SelectionsObserver {
@@ -40,7 +41,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
     this.isInFirstColumnRecyclerView = isInFirstColumnRecyclerView;
     this.dragBoxEventHandler = tableView.dragBoxEventHandler;
 
-    RelativeLayout wrapper = null;
+    FrameLayout wrapper = null;
     RelativeLayout.LayoutParams wrapperLayout = null;
     switch (type) {
       case "text":
@@ -49,7 +50,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
         content = textView;
         break;
       case "image":
-        wrapper = new RelativeLayout(context);
+        wrapper = new FrameLayout(context);
         wrapperLayout = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         content = new ClickableImageView(context, selectionsEngine, tableView, this);
         wrapper.addView((View) content);
@@ -196,7 +197,6 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
     if(column == null) {
       return;
     }
-    
     layout.width = column.width;
     setLayoutParams(layout);
   }

@@ -54,8 +54,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         }
         ClickableImageView imageView = (ClickableImageView) cellView.content;
         imageView.setImageBitmap(imageBitmap);
-        imageView.setSizing(column, imageBitmap);
-        imageView.setAlignment(column);
+        imageView.scaleAndPositionImage(column, imageBitmap);
       } else if(column.representation.type.equals("miniChart")) {
         CellView cellView = (CellView) row.getChildAt(columnIndex);
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -113,8 +112,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         if(imageBitmap == null) {
           continue;
         }
-        imageView.setSizing(column, imageBitmap);
-        imageView.setAlignment(column);
+        imageView.scaleAndPositionImage(column, imageBitmap);
       }
     }
   }
