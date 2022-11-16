@@ -115,6 +115,7 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
     async (column: any) => {
       try {
         const props = await model.getEffectiveProperties();
+        console.log(props, column);
         if (
           props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef
             .qFieldDefs[0]
@@ -124,10 +125,13 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
             props?.qHyperCubeDef?.qDimensions[
               column.dataColIdx
             ].qDef.qFieldDefs[0];
-          column.display =  props?.qHyperCubeDef?.qDimensions[
-            column.dataColIdx
-          ].qDef.qFieldLabels[0]; 
+            const fieldLabel = props?.qHyperCubeDef?.qDimensions[
+              column.dataColIdx
+            ].qDef.qFieldLabels[0]; 
+          column.display =  fieldLabel.length === 0 ? column.label : fieldLabel;
+
         }
+       
         searchColumn({ searching: true, column });
       } catch (error) {}
     },
