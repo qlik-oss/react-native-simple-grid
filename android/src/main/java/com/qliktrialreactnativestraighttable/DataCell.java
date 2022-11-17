@@ -34,6 +34,7 @@ public class DataCell {
   int cellBackgroundColor;
   boolean cellForegroundColorValid = false;
   boolean cellBackgroundColorValid = false;
+  ReadableType qNumType = ReadableType.Null;
   List<Object> qAttrExps;
   public DataCell(ReadableMap source, DataColumn column) {
     type = column.representation.type;
@@ -45,7 +46,9 @@ public class DataCell {
     columnIndex = column.columnIndex;
     rawRowIdx =  source.getInt("rawRowIdx");
     rawColIdx =  source.getInt("rawColIdx");
-    ReadableType qNumType = source.getType("qNum");
+    if (source.hasKey("qNum")) {
+      qNumType = source.getType("qNum");
+    }
     isNumber = qNumType == ReadableType.Number;
     if (source.hasKey("isDim")) {
       isDim =  source.getBoolean("isDim");
