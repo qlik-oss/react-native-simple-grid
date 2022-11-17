@@ -1,3 +1,10 @@
+# [1.1.0-alpha.88](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.87...v1.1.0-alpha.88) (2022-11-17)
+
+
+### Bug Fixes
+
+* wrapping ([#140](https://github.com/qlik-oss/react-native-simple-grid/issues/140)) ([a9223cf](https://github.com/qlik-oss/react-native-simple-grid/commit/a9223cfd5040da110111f5feb6f20bf3d3ad4e1b))
+
 # [1.1.0-alpha.87](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.86...v1.1.0-alpha.87) (2022-11-17)
 
 
