@@ -1,3 +1,10 @@
+# [1.1.0-alpha.89](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.88...v1.1.0-alpha.89) (2022-11-17)
+
+
+### Bug Fixes
+
+* **md-3858:** cell gap and image position/scaling ([#143](https://github.com/qlik-oss/react-native-simple-grid/issues/143)) ([c73dc39](https://github.com/qlik-oss/react-native-simple-grid/commit/c73dc39d8b598f5f99256e592d881c2711785684))
+
 # [1.1.0-alpha.88](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.87...v1.1.0-alpha.88) (2022-11-17)
 
 
