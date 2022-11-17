@@ -88,7 +88,8 @@ public class TableViewFactory {
   }
 
   protected void updateRowHeights() {
-    tableView.rowHeight = tableView.cellContentStyle.getLineHeight() + CellView.PADDING_X_2;
+    tableView.cellContentStyle.themedRowHeight = (tableView.cellContentStyle.getLineHeight() * tableView.cellContentStyle.lineCount) + CellView.PADDING_X_2;
+    tableView.rowHeight = tableView.cellContentStyle.themedRowHeight;
     tableView.headerHeight = tableView.headerContentStyle.getLineHeight() + CellView.PADDING_X_2;
     tableView.totalsHeight = tableView.cellContentStyle.getLineHeight() + CellView.PADDING_X_2;
   }
