@@ -1,3 +1,10 @@
+# [1.1.0-alpha.90](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.89...v1.1.0-alpha.90) (2022-11-18)
+
+
+### Bug Fixes
+
+* add last grabber to scrollView ([67e2506](https://github.com/qlik-oss/react-native-simple-grid/commit/67e25060de9cb8864e6e2b7175aee5dbcb1f7ef5))
+
 # [1.1.0-alpha.89](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.88...v1.1.0-alpha.89) (2022-11-17)
 
 
