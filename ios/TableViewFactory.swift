@@ -288,7 +288,7 @@ class TableViewFactory {
       resizer.selectionsBand = multiColumnTableView.dataCollectionView?.selectionBand
       grabbers.append({[weak resizer] in return resizer})
       let width = columnWidths.getTotalWidth(range: 1..<columnWidths.count())
-      multiColumnTableView.addSubview(resizer)
+      horizontalScrollView.addSubview(resizer)
       resizer.centerConstraint = resizer.centerXAnchor.constraint(equalTo: multiColumnTableView.leadingAnchor, constant: width)
       let constraints = [
         resizer.topAnchor.constraint(equalTo: multiColumnTableView.topAnchor),
@@ -297,7 +297,7 @@ class TableViewFactory {
         resizer.centerConstraint
       ]
       NSLayoutConstraint.activate(constraints)
-      multiColumnTableView.addConstraints(constraints)
+      horizontalScrollView.addConstraints(constraints)
       multiColumnTableView.lastGrabber = resizer
     }
     coupleCollectionViews()
