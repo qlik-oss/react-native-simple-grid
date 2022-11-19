@@ -50,6 +50,9 @@ public class HeaderCell extends LinearLayout {
     this.column = column;
     setBackgroundColor(TableTheme.headerBackgroundColor);
     cell.setBackgroundColor(Color.TRANSPARENT);
+    if(column != null && column.label != null) {
+      cell.setText(column.label);
+    }
     if (column.active) {
       if (column.sortDirection == null || column.sortDirection.compareToIgnoreCase("desc") == 0) {
         sortIndicatorState = "top";

@@ -12,6 +12,7 @@ class HeaderView: HeaderStyleView {
   var dynamicHeightAnchor = NSLayoutConstraint()
   var onHeaderPressed: RCTDirectEventBlock?
   var onSearchColumn: RCTDirectEventBlock?
+  var headerContentStyle: HeaderContentStyle?
   weak var columnWidths: ColumnWidths?
   weak var bottomBorder: CALayer?
 
@@ -45,6 +46,7 @@ class HeaderView: HeaderStyleView {
   func addLabels(columns: [DataColumn], headerStyle incomingHeaderStyle: HeaderContentStyle?) {
     guard let headerStyle = incomingHeaderStyle else {return}
     guard let columnWidths = self.columnWidths else {return}
+    self.headerContentStyle = incomingHeaderStyle
     var prev: HeaderCell?
     columns[dataRange].enumerated().forEach {(index, column) in
       let label = HeaderCell(dataColumn: column, onHeaderPressed: onHeaderPressed, onSearchColumn: onSearchColumn)
@@ -99,7 +101,9 @@ class HeaderView: HeaderStyleView {
   func updateColumns(_ dataColumns: [DataColumn]) {
     dataColumns[dataRange].enumerated().forEach { (index, element) in
       if let label = subviews[index] as? HeaderCell {
+        let fontSize = headerContentStyle?.fontSize ?? 14
         label.dataColumn = element
+        label.setText(element.label ?? "", textColor: ColorParser.fromCSS(cssString: headerContentStyle?.color ?? "black"), align: getTextAlignment(element), fontSize: Double(fontSize))
         updateSortIndicator(element, forLabel: label)
         label.layer.backgroundColor = UIColor.clear.cgColor
         label.setNeedsDisplay()
