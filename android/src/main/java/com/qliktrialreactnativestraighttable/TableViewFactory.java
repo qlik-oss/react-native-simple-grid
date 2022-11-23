@@ -162,7 +162,7 @@ public class TableViewFactory {
         coupledRecyclerView.setViewToScrollCouple(firstColumnRecyclerView);
         firstColumnRecyclerView.setViewToScrollCouple(coupledRecyclerView);
         firstColumnRecyclerView.setZ(1);
-        if(totalsCells != null) {
+        if(totalsCells != null && totalsCells.size() > 0) {
           firstColumnTotalsCell = HeaderViewFactory.buildFixedTotalsCell(tableView, dataColumns.get(0), totalsCells.get(0), headerViewFactory.topPosition);
           tableView.addView(firstColumnTotalsCell);
         }

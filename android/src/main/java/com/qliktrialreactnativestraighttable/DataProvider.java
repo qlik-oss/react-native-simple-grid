@@ -81,6 +81,14 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   public void setFirstColumnFrozen(boolean firstColumnFrozen) {
     this.isFirstColumnFrozen = firstColumnFrozen;
   }
+  public static DataColumn getDataColumnByIdx(int idx, List<DataColumn> columns) {
+    for(DataColumn column : columns) {
+      if(column.dataColIdx == idx) {
+        return column;
+      }
+    }
+    return null;
+  }
 
   public List<DataColumn> getDataColumns() {
     return dataColumns;
@@ -134,7 +142,11 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
   }
 
-  public class ProgressHolder extends RecyclerView.ViewHolder {
+    public boolean isInitialized() {
+      return dataColumns != null && rows != null;
+    }
+
+    public class ProgressHolder extends RecyclerView.ViewHolder {
     private final RelativeLayout row;
     public ProgressHolder(View view) {
       super(view);
@@ -162,7 +174,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       for (int i = 0; i < numColumns; i++) {
         DataColumn column = dataColumns.get(i);
         float width = column.width;
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams((int)width, tableView.rowHeight);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)width, tableView.rowHeight);
 
         if (column.representation.type.equals("image")) {
           CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.tableView, recyclerView.firstColumnOnly, column);
@@ -266,13 +278,6 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       return this.rows.size() < this.dataSize.qcy;
     }
     return false;
-  }
-
-  public void updateRepresentation() {
-    for(RecyclerView.ViewHolder holder : cachedViewHolders) {
-      RowViewHolder viewHolder = (RowViewHolder) holder;
-      viewHolder.updateColumnRepresentation();
-    }
   }
 
   public boolean updateWidth(float deltaWidth, int column) {

@@ -6,6 +6,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,8 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     row.setBackgroundColor(color);
   }
   public void setData(DataRow dataRow, int rowHeight, CellContentStyle cellContentStyle) {
-    for(int i = 0; i < numColumns; i++) {
+    int numColumnsInUse = Math.min(numColumns, dataRow.cells.size()); // ignore extra data after column removal
+    for(int i = 0; i < numColumnsInUse; i++) {
       DataCell cell = dataRow.cells.get(i);
       int columnIndex = cell.rawColIdx;
       DataColumn column = dataProvider.dataColumns.get(columnIndex);
@@ -46,6 +48,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
         layout.width = column.width;
         cellView.setLayoutParams(layout);
+        cellView.convertCellContentType("image", column);
         cellView.setData(cell, dataRow, column);
 
         Bitmap imageBitmap = DataProvider.getImageData(cell.imageUrl);
@@ -60,12 +63,14 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
         cellView.setLayoutParams(cellViewLayoutParams);
 
+        cellView.convertCellContentType("miniChart", column);
         MiniChartView miniChartView = (MiniChartView) cellView.content;
         miniChartView.setData(cell, column);
       } else {
         CellView cellView = (CellView) row.getChildAt(columnIndex);
-        ClickableTextView textView = (ClickableTextView) cellView.content;
+        cellView.convertCellContentType("text", column);
 
+        ClickableTextView textView = (ClickableTextView) cellView.content;
         RelativeLayout.LayoutParams textViewLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(textViewLayoutParams);
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -75,6 +80,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         if(column.representation.type.equals("text")) {
           cell.indicator = null;
         }
+
         cellView.setData(cell, dataRow, column);
         if(column.representation.type.equals("url")) {
           setupHyperLink(textView);
@@ -99,22 +105,6 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     // this must be set for elipse to show.  Weird but true.
     // https://stackoverflow.com/questions/1141651/how-to-set-a-long-string-in-a-text-view-in-a-single-line-with-horizontal-scroll
     textView.setHorizontallyScrolling(true);
-  }
-
-  public void updateColumnRepresentation() {
-    for(int i = 0; i < this.row.getChildCount(); i++) {
-      DataColumn column = dataProvider.dataColumns.get(i);
-
-      if(column.representation.type.equals("image")) {
-        CellView cellView = (CellView) row.getChildAt(i);
-        ClickableImageView imageView = (ClickableImageView) cellView.content;
-        Bitmap imageBitmap = DataProvider.getImageData(column.representation.imageUrl);
-        if(imageBitmap == null) {
-          continue;
-        }
-        imageView.scaleAndPositionImage(column, imageBitmap);
-      }
-    }
   }
 
   public void onRecycled() {

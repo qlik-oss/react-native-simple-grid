@@ -25,10 +25,13 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
   Content content = null;
   DataRow row;
   DataColumn column;
+  FrameLayout wrapper = null;
+  RelativeLayout.LayoutParams wrapperLayout = null;
   final DragBoxEventHandler dragBoxEventHandler;
   final SelectionsEngine selectionsEngine;
   final TableView tableView;
   final boolean isInFirstColumnRecyclerView;
+  final View.OnCreateContextMenuListener onCreateContextMenuListener;
   GestureDetector gestureDetector;
   int padding = (int)PixelUtils.dpToPx(16);
   static int PADDING_X_2 =  (int)PixelUtils.dpToPx(32);
@@ -41,25 +44,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
     this.isInFirstColumnRecyclerView = isInFirstColumnRecyclerView;
     this.dragBoxEventHandler = tableView.dragBoxEventHandler;
 
-    FrameLayout wrapper = null;
-    RelativeLayout.LayoutParams wrapperLayout = null;
-    switch (type) {
-      case "text":
-        ClickableTextView textView = new ClickableTextView(context, selectionsEngine, tableView, this, dataColumn);
-        textView.setPadding(padding, 0, padding, 0);
-        content = textView;
-        break;
-      case "image":
-        wrapper = new FrameLayout(context);
-        wrapperLayout = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        content = new ClickableImageView(context, selectionsEngine, tableView, this);
-        wrapper.addView((View) content);
-        break;
-      case "miniChart":
-        content = new MiniChartView(context);
-        this.setPadding(padding, 0, padding, 0);
-        break;
-    }
+    createContent(type, dataColumn);
 
     dragBoxEventHandler.addDragBoxListener(this::handleDragBoxDrag);
     gestureDetector = new GestureDetector(getContext(), new CellView.SingleTapListener());
@@ -79,11 +64,34 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
     String copyString = tableView.getTranslation("menu", content.getCopyMenuString());
     String expandString = tableView.getTranslation("menu", "expand");
 
-    View.OnCreateContextMenuListener onCreateContextMenuListener = (contextMenu, view, contextMenuInfo) -> {
+    onCreateContextMenuListener = (contextMenu, view, contextMenuInfo) -> {
       contextMenu.add(0, 0, 0, copyString).setOnMenuItemClickListener(handleMenuItemClick);
       contextMenu.add(0, 1, 1, expandString).setOnMenuItemClickListener(handleMenuItemClick);
     };
+    addContentView(type);
+  }
 
+  private void createContent(String type, DataColumn dataColumn) {
+    switch (type) {
+      case "text":
+        ClickableTextView textView = new ClickableTextView(getContext(), selectionsEngine, tableView, this, dataColumn);
+        textView.setPadding(padding, 0, padding, 0);
+        content = textView;
+        break;
+      case "image":
+        wrapper = new FrameLayout(getContext());
+        wrapperLayout = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        content = new ClickableImageView(getContext(), selectionsEngine, tableView, this);
+        wrapper.addView((View) content);
+        break;
+      case "miniChart":
+        content = new MiniChartView(getContext());
+        this.setPadding(padding, 0, padding, 0);
+        break;
+    }
+  }
+
+  private void addContentView(String type) {
     if(type.equals("image")) {
       wrapper.setOnCreateContextMenuListener(onCreateContextMenuListener);
       this.addView(wrapper, wrapperLayout);
@@ -92,6 +100,15 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
       contentView.setOnCreateContextMenuListener(onCreateContextMenuListener);
       this.addView(contentView);
     }
+  }
+
+  public void convertCellContentType(String type, DataColumn dataColumn) {
+    wrapper = null;
+    wrapperLayout = null;
+    column = dataColumn;
+    removeAllViews();
+    createContent(type, dataColumn);
+    addContentView(type);
   }
 
   @Override

@@ -19,8 +19,15 @@ public class DataRow {
       String key = iterator.nextKey();
       if(!key.equalsIgnoreCase("key")) {
         ReadableMap cellItem = source.getMap(key);
-        int rawColIdx = cellItem.getInt("rawColIdx");
-        cells.add(new DataCell(cellItem, columns.get(rawColIdx)));
+        if(cellItem == null) {
+          continue;
+        }
+        int colIdx = cellItem.getInt("colIdx");
+        DataColumn column = DataProvider.getDataColumnByIdx(colIdx, columns);
+        if(column == null) {
+          continue;
+        }
+        cells.add(new DataCell(cellItem, column));
       }
     }
     Collections.sort(cells, (a, b) -> a.rawColIdx - b.rawColIdx);

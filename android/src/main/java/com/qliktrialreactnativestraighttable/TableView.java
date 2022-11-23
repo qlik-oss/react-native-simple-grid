@@ -29,7 +29,7 @@ public class TableView extends FrameLayout {
   String totalsPosition = null;
   String totalsLabel = null;
   RootLayout rootLayout;
-  CustomHorizontalScrollView  scrollView;
+  CustomHorizontalScrollView scrollView;
   final DragBox dragBox;
   DragBox firstColumnDragBox = null;
   HeaderView headerView = null;
@@ -64,6 +64,10 @@ public class TableView extends FrameLayout {
     firstColumnDragBox = new DragBox(context, this, dragBoxEventHandler, true);
     dragBoxEventHandler.setDragBoxes(dragBox, firstColumnDragBox);
     tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider, dragBox, firstColumnDragBox);
+  }
+
+  public boolean isInitialized() {
+    return dataProvider.isInitialized();
   }
 
   public int getContentTop() {
@@ -145,9 +149,9 @@ public class TableView extends FrameLayout {
   }
 
   public void setDataColumns(List<DataColumn> cols) {
+    columnWidths.dataColumns = null;
     dataProvider.setDataColumns(cols);
     columnWidths.updateWidths(cols);
-    dataProvider.updateRepresentation();
     if(headerView != null) {
       headerView.update(cols);
     }
@@ -203,6 +207,9 @@ public class TableView extends FrameLayout {
   @Override
   protected void onSizeChanged(int w, int h, int oldw, int oldh) {
     super.onSizeChanged(w, h, oldw, oldh);
+    if(!this.isInitialized()) {
+      return;
+    }
     columnWidths.loadWidths(w, dataProvider.dataColumns, dataProvider.rows);
     if(recyclerView == null) {
       createRecyclerView();
