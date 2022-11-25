@@ -11,7 +11,7 @@ export type ImageCellProps = {
 const ImageCell: React.FC<ImageCellProps> = ({ rowData, colData, style }) => {
   const imageUrl = useMemo(() => {
     const imageIndex = colData?.stylingInfo?.indexOf('imageUrl');
-    if (imageIndex !== -1) {
+    if (imageIndex !== -1 && rowData.qAttrExps) {
       return rowData.qAttrExps.qValues[imageIndex].qText;
     }
     return undefined;

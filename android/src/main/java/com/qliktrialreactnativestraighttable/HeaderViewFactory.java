@@ -58,7 +58,6 @@ public class HeaderViewFactory {
     }
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.Q)
   public static HeaderCell buildFixedColumnCell(FrameLayout rootView, DataColumn column, TableView tableView, boolean topPosition) {
     int headerHeight = tableView.headerHeight;
     int padding = (int) PixelUtils.dpToPx(16);
@@ -121,31 +120,47 @@ public class HeaderViewFactory {
     return text;
   }
 
-  private void buildHeader(Context context) {
+  public static HeaderCell createHeaderCell(Context context, DataColumn column, HeaderContentStyle headerContentStyle, TableView tableView) {
     int padding = (int) PixelUtils.dpToPx(16);
+    HeaderCell headerCell = new HeaderCell(context, column, tableView);
+    headerCell.setPadding(padding, 0, 0, 0);
+    TextView text = headerCell.cell;
+    text.setTypeface(text.getTypeface(), Typeface.BOLD);
+    text.setEllipsize(TextUtils.TruncateAt.END);
+    text.setTextColor(headerContentStyle.color);
+    text.setText(column.label);
+    text.setMaxLines(1);
+    text.setTextSize(headerContentStyle.fontSize);
+    text.setBackgroundColor(headerContentStyle.backgroundColor);
+    return headerCell;
+  }
+
+  private void buildHeader(Context context) {
     int headerHeight = tableView.headerHeight;
-    headerView = new HeaderView(context);
+    headerView = new HeaderView(context, tableView);
     headerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, headerHeight));
     headerView.setOrientation(LinearLayout.HORIZONTAL);
     headerView.setElevation((int) PixelUtils.dpToPx(headerZ));
     headerView.setBackgroundColor(TableTheme.headerBackgroundColor);
     for (int i = 0; i < dataColumns.size(); i++) {
       DataColumn column = dataColumns.get(i);
-
-      HeaderCell headerCell = new HeaderCell(headerView.getContext(), column, this.tableView);
-      headerCell.setPadding(padding, 0, 0, 0);
+      HeaderCell headerCell = createHeaderCell(headerView.getContext(), column, headerContentStyle, this.tableView);
       LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
-      TextView text = headerCell.cell;
-      text.setTypeface(text.getTypeface(), Typeface.BOLD);
-      text.setEllipsize(TextUtils.TruncateAt.END);
-      text.setTextColor(headerContentStyle.color);
-      text.setText(column.label);
-      text.setMaxLines(1);
-      text.setTextSize(headerContentStyle.fontSize);
-      text.setBackgroundColor(headerContentStyle.backgroundColor);
       headerView.addView(headerCell, layoutParams);
     }
     headerView.setDataColumns(dataColumns);
+  }
+
+  public static TotalsViewCell createTotalsCell(Context context, DataColumn column, TableView tableView) {
+    TotalsViewCell text = new TotalsViewCell(context, column, tableView);
+    int padding = (int) PixelUtils.dpToPx(16);
+    text.setTypeface(text.getTypeface(), Typeface.BOLD);
+    text.setEllipsize(TextUtils.TruncateAt.END);
+    text.setTextSize(tableView.cellContentStyle.fontSize);
+    text.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+    text.setPadding(padding, 0, padding, 0);
+    text.setMaxLines(1);
+    return text;
   }
 
   private void buildTotals(Context context) {
@@ -170,12 +185,7 @@ public class HeaderViewFactory {
       int j = 0;
       for (int i = 0; i < dataColumns.size(); i++) {
         DataColumn column = dataColumns.get(i);
-        TotalsViewCell text = new TotalsViewCell(tableView.getContext(), column, tableView);
-        int padding = (int) PixelUtils.dpToPx(16);
-        text.setTypeface(text.getTypeface(), Typeface.BOLD);
-        text.setEllipsize(TextUtils.TruncateAt.END);
-        text.setTextSize(tableView.cellContentStyle.fontSize);
-        text.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+        TotalsViewCell text = createTotalsCell(context, column, tableView);
         if (column.isDim && i == 0) {
           text.setText(totalsLabel);
         }
@@ -185,8 +195,6 @@ public class HeaderViewFactory {
             text.setText(totalsCells.get(j++).qText);
           }
         }
-        text.setPadding(padding, 0, padding, 0);
-        text.setMaxLines(1);
         LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
         totalsView.addView(text, textParams);
       }

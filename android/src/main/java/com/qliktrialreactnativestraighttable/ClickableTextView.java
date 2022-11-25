@@ -36,7 +36,7 @@ import kotlin.text.Charsets;
 
 @SuppressLint("ViewConstructor")
 public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements Content {
-  final DataColumn column;
+  DataColumn column;
   final CellView cellView;
   final SelectionsEngine selectionsEngine;
   final TableView tableView;
@@ -153,7 +153,8 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   }
 
   @Override
-  public void setCell(DataCell cell) {
+  public void setCellData(DataCell cell, DataRow row, DataColumn column) {
+    this.column = column;
     this.cell = cell;
     if(cell.indicator != null) {
       buildSpannableText();

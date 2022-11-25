@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -81,6 +83,14 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   public void setFirstColumnFrozen(boolean firstColumnFrozen) {
     this.isFirstColumnFrozen = firstColumnFrozen;
   }
+  public static DataColumn getDataColumnByIdx(int idx, List<DataColumn> columns) {
+    for(DataColumn column : columns) {
+      if(column.dataColIdx == idx) {
+        return column;
+      }
+    }
+    return null;
+  }
 
   public List<DataColumn> getDataColumns() {
     return dataColumns;
@@ -134,7 +144,11 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
   }
 
-  public class ProgressHolder extends RecyclerView.ViewHolder {
+    public boolean isInitialized() {
+      return dataColumns != null && rows != null;
+    }
+
+    public class ProgressHolder extends RecyclerView.ViewHolder {
     private final RelativeLayout row;
     public ProgressHolder(View view) {
       super(view);
@@ -150,7 +164,6 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   }
 
 
-
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     CustomRecyclerView recyclerView = (CustomRecyclerView) parent;
@@ -162,7 +175,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       for (int i = 0; i < numColumns; i++) {
         DataColumn column = dataColumns.get(i);
         float width = column.width;
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams((int)width, tableView.rowHeight);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)width, tableView.rowHeight);
 
         if (column.representation.type.equals("image")) {
           CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.tableView, recyclerView.firstColumnOnly, column);
@@ -186,7 +199,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
           rowView.addView(cellView);
         }
       }
-      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, tableView.rowHeight);
+      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, tableView.rowHeight);
       rowView.setLayoutParams(layoutParams);
       RowViewHolder rowViewHolder = new RowViewHolder(rowView, this, recyclerView.firstColumnOnly);
       viewHolder = rowViewHolder;
@@ -199,7 +212,6 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   @Override
   public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
-    fetchImages();
     if(viewHolder instanceof RowViewHolder) {
       RowViewHolder holder = (RowViewHolder) viewHolder;
       if (this.isDataView) {
@@ -242,10 +254,22 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       }
       this.notifyDataSetChanged();
     }
+    fetchImages();
     setLoading(false);
   }
   public void setDataColumns(List<DataColumn> cols) {
-    this.dataColumns = cols;
+    if(dataColumns == null) {
+      dataColumns = cols;
+      return;
+    }
+
+    dataColumns = cols.stream().peek(col -> {
+      DataColumn column = dataColumns.stream()
+        .filter(dataCol -> dataCol.dataColIdx == col.dataColIdx)
+        .findAny()
+        .orElse(col);
+      col.width = column.width == 0 ? columnWidths.resizeColumnByAverage(column, rows, true) : column.width;
+    }).collect(Collectors.toList());
   }
 
   public void setDataSize(DataSize dataSize) {
@@ -266,13 +290,6 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       return this.rows.size() < this.dataSize.qcy;
     }
     return false;
-  }
-
-  public void updateRepresentation() {
-    for(RecyclerView.ViewHolder holder : cachedViewHolders) {
-      RowViewHolder viewHolder = (RowViewHolder) holder;
-      viewHolder.updateColumnRepresentation();
-    }
   }
 
   public boolean updateWidth(float deltaWidth, int column) {
