@@ -29,11 +29,9 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 public class ReactNativeStraightTableViewManager extends SimpleViewManager<View> {
-    ReadableMap cols;
-    ReadableMap rows;
-    Boolean isFreezeFirstColumn;
-    DataSize dataSize;
-    boolean alreadyInitialized = false;
+  ReadableMap cols;
+  ReadableMap rows;
+  DataSize dataSize;
 
   public static final String REACT_CLASS = "ReactNativeStraightTableView";
     @Override
@@ -50,21 +48,22 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       return table;
     }
 
-    private void resetProps() {
-      cols = null;
-      rows = null;
-      isFreezeFirstColumn = null;
-      alreadyInitialized = false;
+    private boolean isAllFetched() {
+      return cols != null && rows != null;
     }
 
-    public void initializeWhenReady(View view) {
-      if(cols == null || rows == null || isFreezeFirstColumn == null) {
-        return;
-      }
-      TableView tableView = (TableView) (view);
+    private List<DataRow> processRows(TableView tableView, List<DataColumn> dataColumns) {
+      ReadableArray dataRows = rows.getArray("rows");
+      boolean resetData = rows.getBoolean("reset");
+      RowFactory factory = new RowFactory(dataRows, dataColumns);
+      List<DataRow> transformedRows = factory.getRows();
+      tableView.setRows(transformedRows, resetData);
+      return transformedRows;
+    }
+
+    private List<DataColumn> processColumns(TableView tableView) {
       String totalsLabel = null, totalsPosition = null;
       ReadableArray totalsRows = null;
-      tableView.setFirstColumnFrozen(isFreezeFirstColumn);
 
       ReadableArray columns = cols.getArray("header");
       ReadableArray footer = cols.getArray("footer");
@@ -83,13 +82,17 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
         dataColumns.add(column);
       }
 
-      ReadableArray dataRows = rows.getArray("rows");
-      boolean resetData = rows.getBoolean("reset");
-      RowFactory factory = new RowFactory(dataRows, dataColumns);
+      return dataColumns;
+    }
 
-      tableView.setRows(factory.getRows(), resetData);
+    private void initializeWhenReady(TableView tableView) {
+      if(!isAllFetched()) {
+        return;
+      }
+
+      List<DataColumn> dataColumns = processColumns(tableView);
+      processRows(tableView, dataColumns);
       tableView.setDataColumns(dataColumns);
-      alreadyInitialized = true;
     }
 
     @ReactProp(name = "theme")
@@ -107,21 +110,16 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
     }
 
     @ReactProp(name = "freezeFirstColumn")
-    public void setFreezeFirstColumn(View view, Boolean value) {
-      if(alreadyInitialized) {
-        resetProps();
-      }
-      isFreezeFirstColumn = value;
-      initializeWhenReady(view);
+    public void setFreezeFirstColumn(View view, Boolean isFreezeFirstColumn) {
+      TableView tableView = (TableView) (view);
+      tableView.setFirstColumnFrozen(isFreezeFirstColumn);
     }
 
     @ReactProp(name = "cols")
     public void setCols(View view,  @Nullable ReadableMap source) {
-      if(alreadyInitialized) {
-        resetProps();
-      }
       cols = source;
-      initializeWhenReady(view);
+      TableView tableView = (TableView) (view);
+      initializeWhenReady(tableView);
     }
 
     @ReactProp(name = "isDataView")
@@ -129,7 +127,7 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       TableView tableView = (TableView) (view);
       tableView.setDataView(isDataView);
 
-      initializeWhenReady(view);
+      initializeWhenReady(tableView);
     }
 
     @ReactProp(name = "rows")
@@ -139,17 +137,11 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       boolean resetData = rows.getBoolean("reset");
 
       if(resetData) {
-        if(alreadyInitialized) {
-          resetProps();
-        }
-        initializeWhenReady(view);
+        initializeWhenReady(tableView);
         return;
       }
 
-      ReadableArray dataRows = rows.getArray("rows");
-      RowFactory factory = new RowFactory(dataRows, tableView.getColumns());
-
-      tableView.setRows(factory.getRows(), resetData);
+      processRows(tableView, tableView.getColumns());
     }
 
     @ReactProp(name = "size")

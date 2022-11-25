@@ -139,39 +139,39 @@ public class TableViewFactory {
     coupledRecyclerView.setZ(0);
     coupledRecyclerView.setElevation(0);
 
-      int headerHeight = tableView.headerHeight;
-      int marginTop = headerHeight + extraTopMargin;
-      int marginBottom = TableTheme.DefaultRowHeight;
+    int headerHeight = tableView.headerHeight;
+    int marginTop = headerHeight + extraTopMargin;
+    int marginBottom = TableTheme.DefaultRowHeight;
 
-      linearLayout.recyclerView = coupledRecyclerView;
-      coupledRecyclerView.setAdapter(dataProvider);
+    linearLayout.recyclerView = coupledRecyclerView;
+    coupledRecyclerView.setAdapter(dataProvider);
 
-      recyclerViewLayoutParams.topMargin = marginTop;
-      recyclerViewLayoutParams.bottomMargin = marginBottom;
-      rootLayout.addView(coupledRecyclerView, recyclerViewLayoutParams);
+    recyclerViewLayoutParams.topMargin = marginTop;
+    recyclerViewLayoutParams.bottomMargin = marginBottom;
+    rootLayout.addView(coupledRecyclerView, recyclerViewLayoutParams);
 
-      firstColumnLinearLayout.recyclerView = firstColumnRecyclerView;
-      firstColumnRecyclerView.setAdapter(dataProvider);
-      FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-      firstColumnViewLayoutParams.topMargin = marginTop;
-      firstColumnViewLayoutParams.bottomMargin = marginBottom;
+    firstColumnLinearLayout.recyclerView = firstColumnRecyclerView;
+    firstColumnRecyclerView.setAdapter(dataProvider);
+    FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    firstColumnViewLayoutParams.topMargin = marginTop;
+    firstColumnViewLayoutParams.bottomMargin = marginBottom;
 
-      if(tableView.isFirstColumnFrozen) {
-        firstColumnHeaderCell = HeaderViewFactory.buildFixedColumnCell(rootLayout, dataColumns.get(0), tableView, headerViewFactory.topPosition);
-        dataProvider.setFirstColumnFrozen(true);
-        coupledRecyclerView.setViewToScrollCouple(firstColumnRecyclerView);
-        firstColumnRecyclerView.setViewToScrollCouple(coupledRecyclerView);
-        firstColumnRecyclerView.setZ(1);
-        if(totalsCells != null && totalsCells.size() > 0) {
-          firstColumnTotalsCell = HeaderViewFactory.buildFixedTotalsCell(tableView, dataColumns.get(0), totalsCells.get(0), headerViewFactory.topPosition);
-          tableView.addView(firstColumnTotalsCell);
-        }
-        tableView.addView(firstColumnRecyclerView, firstColumnViewLayoutParams);
-        tableView.addView(firstColumnHeaderCell);
-        tableView.addView(firstColumnDragBox);
+    if(tableView.isFirstColumnFrozen) {
+      firstColumnHeaderCell = HeaderViewFactory.buildFixedColumnCell(rootLayout, dataColumns.get(0), tableView, headerViewFactory.topPosition);
+      dataProvider.setFirstColumnFrozen(true);
+      coupledRecyclerView.setViewToScrollCouple(firstColumnRecyclerView);
+      firstColumnRecyclerView.setViewToScrollCouple(coupledRecyclerView);
+      firstColumnRecyclerView.setZ(1);
+      if(totalsCells != null && totalsCells.size() > 0) {
+        firstColumnTotalsCell = HeaderViewFactory.buildFixedTotalsCell(tableView, dataColumns.get(0), totalsCells.get(0), headerViewFactory.topPosition);
+        tableView.addView(firstColumnTotalsCell);
       }
+      tableView.addView(firstColumnRecyclerView, firstColumnViewLayoutParams);
+      tableView.addView(firstColumnHeaderCell);
+      tableView.addView(firstColumnDragBox);
+    }
 
-      createRowCount();
+    createRowCount();
   }
 
   protected void createRowCount() {
@@ -208,6 +208,28 @@ public class TableViewFactory {
         }
       }
     }
+
+    setupGrabbers();
+  }
+
+  protected void createMoreGrabbers(int n) {
+      List<DataColumn> dataColumns = dataProvider.getDataColumns();
+      int dragWidth = (int) PixelUtils.dpToPx(40);
+      int startOffset = (int) grabbers.get(grabbers.size() - 1).getTranslationX();
+
+      for (int i = 0; i < n; i++) {
+        DataColumn column = dataColumns.get(grabbers.size() + i);
+        GrabberView grabberView = new GrabberView(column.columnIndex, context, scrollView, tableView);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dragWidth, ViewGroup.LayoutParams.MATCH_PARENT);
+        startOffset += column.width;
+
+        grabberView.setLayoutParams(layoutParams);
+        grabberView.setBackgroundColor(Color.TRANSPARENT);
+        grabberView.setTranslationX(startOffset);
+        grabbers.add(grabberView);
+        grabberView.setGrabbers(grabbers);
+        rootLayout.addView(grabberView);
+      }
 
     setupGrabbers();
   }

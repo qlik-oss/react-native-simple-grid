@@ -26,7 +26,7 @@ public class RootLayout extends FrameLayout {
         MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.UNSPECIFIED),
         MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
       int l = getLeft();
-      int r = l + (int)columnWidths.getTotalWidth() + getPaddingRight();
+      int r = l + columnWidths.getTotalWidth() + getPaddingRight();
       layout(getLeft(), getTop(), r, getBottom());
     }
   };

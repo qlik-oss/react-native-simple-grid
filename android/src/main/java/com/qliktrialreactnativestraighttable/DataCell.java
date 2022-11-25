@@ -67,7 +67,6 @@ public class DataCell {
     updateCellColors(source);
     miniChart = source.hasKey("qMiniChart") ? new qMiniChart(source.getMap("qMiniChart")) : null;
     indicator = source.hasKey("indicator") ? new Indicator(source.getMap("indicator")) : null;
-
   }
 
   private void updateCellColors(ReadableMap data) {

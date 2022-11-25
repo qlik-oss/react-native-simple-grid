@@ -142,7 +142,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
   public void setData(DataCell cell, DataRow row, DataColumn column) {
     this.row = row;
     this.column = column;
-    content.setCell(cell);
+    content.setCellData(cell, row, column);
     if (cell.isDim) {
       selectionsEngine.observe(this);
       content.setSelected(selectionsEngine.contains(cell));

@@ -8,7 +8,7 @@ public interface Content {
   void setSelected(boolean selected);
   void toggleSelected();
   boolean isSelected();
-  void setCell(DataCell cell);
+  void setCellData(DataCell cell, DataRow row, DataColumn column);
   DataCell getCell();
   String getCopyMenuString();
   void copyToClipBoard();

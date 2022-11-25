@@ -174,7 +174,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   }
 
   @Override
-  public void setCell(DataCell cell) {
+  public void setCellData(DataCell cell, DataRow row, DataColumn column) {
     this.cell = cell;
   }
 

@@ -22,31 +22,42 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
   private int startIndex, numColumns;
   private final LinearLayout row;
   private final DataProvider dataProvider;
+  private boolean firstColumnOnly = false;
 
   public RowViewHolder(View view, DataProvider dp, boolean firstColumnOnly) {
     super(view);
+    this.firstColumnOnly = firstColumnOnly;
     row = (LinearLayout) view;
     dataProvider = dp;
-    numColumns = dataProvider.dataColumns.size();
-    if(firstColumnOnly) {
-      numColumns = 1;
-    }
   }
 
   public void setBackGroundColor(int color) {
     row.setBackgroundColor(color);
   }
   public void setData(DataRow dataRow, int rowHeight, CellContentStyle cellContentStyle) {
-    int numColumnsInUse = Math.min(numColumns, dataRow.cells.size()); // ignore extra data after column removal
-    for(int i = 0; i < numColumnsInUse; i++) {
+    numColumns = dataProvider.dataColumns.size();
+    if(firstColumnOnly) {
+      numColumns = 1;
+    }
+    int numCells = row.getChildCount();
+    int extraCells = row.getChildCount() - numColumns;
+    if(extraCells > 0) {
+      row.removeViews(numCells - extraCells, extraCells);
+    }
+      for(int i = 0; i < numColumns; i++) {
       DataCell cell = dataRow.cells.get(i);
+      DataColumn column = DataProvider.getDataColumnByIdx(cell.colIdx, dataProvider.dataColumns);
       int columnIndex = cell.rawColIdx;
-      DataColumn column = dataProvider.dataColumns.get(columnIndex);
 
+      if(columnIndex >= row.getChildCount()) {
+        TableView tableView = dataProvider.tableView;
+        CellView cellView = new CellView(tableView.getContext(), column.representation.type, tableView.selectionsEngine, tableView, tableView.isFirstColumnFrozen, column);
+        row.addView(cellView);
+      }
+
+      CellView cellView = (CellView) row.getChildAt(columnIndex);
       if(column.representation.type.equals("image")) {
-        CellView cellView = (CellView) row.getChildAt(columnIndex);
         LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
-        layout.width = column.width;
         cellView.setLayoutParams(layout);
         cellView.convertCellContentType("image", column);
         cellView.setData(cell, dataRow, column);
@@ -59,7 +70,6 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         imageView.setImageBitmap(imageBitmap);
         imageView.scaleAndPositionImage(column, imageBitmap);
       } else if(column.representation.type.equals("miniChart")) {
-        CellView cellView = (CellView) row.getChildAt(columnIndex);
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
         cellView.setLayoutParams(cellViewLayoutParams);
 
@@ -67,7 +77,6 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         MiniChartView miniChartView = (MiniChartView) cellView.content;
         miniChartView.setData(cell, column);
       } else {
-        CellView cellView = (CellView) row.getChildAt(columnIndex);
         cellView.convertCellContentType("text", column);
 
         ClickableTextView textView = (ClickableTextView) cellView.content;

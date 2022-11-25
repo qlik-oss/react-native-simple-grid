@@ -1,15 +1,19 @@
 package com.qliktrialreactnativestraighttable;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.ViewGroup;
 
 import java.util.List;
 
+@SuppressLint("ViewConstructor")
 public class HeaderView extends AutoLinearLayout{
+  final TableView tableView;
   List<DataColumn> dataColumns = null;
-  HeaderView(Context context) {
+  HeaderView(Context context, TableView tableView) {
     super(context);
+    this.tableView = tableView;
   }
 
   public void setDataColumns(List<DataColumn> dataColumns) {

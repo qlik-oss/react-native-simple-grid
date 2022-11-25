@@ -73,7 +73,7 @@ public class MiniChartView extends View implements Content {
   }
 
   @Override
-  public void setCell(DataCell cell) {
+  public void setCellData(DataCell cell, DataRow row, DataColumn column)  {
     dataCell = cell;
   }
 

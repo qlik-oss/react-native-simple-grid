@@ -21,6 +21,10 @@ public class TotalsViewCell extends androidx.appcompat.widget.AppCompatTextView 
     textWrapper = new TextWrapper(column, tableView, this);
   }
 
+  public void setColumn(DataColumn col) {
+    this.column = col;
+  }
+
   public void testTextWrap() {
     if(tableView.headerContentStyle.wrap) {
       textWrapper.testOnlyTextWrap();

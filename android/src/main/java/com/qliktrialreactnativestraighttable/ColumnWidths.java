@@ -46,7 +46,7 @@ public class ColumnWidths {
   private void loadDefaultWidths(int frameWidth, List<DataRow> rows) {
     int runningTotal = 0;
     for (DataColumn col : dataColumns) {
-      col.width = resizeColumnByAverage(col, rows);
+      col.width = resizeColumnByAverage(col, rows, false);
       runningTotal += col.width;
     }
 
@@ -82,16 +82,15 @@ public class ColumnWidths {
     return false;
   }
 
-  private int resizeColumnByAverage(DataColumn column, List<DataRow> rows) {
+  public int resizeColumnByAverage(DataColumn column, List<DataRow> rows, boolean shouldAddWidth) {
     int runningTotal = 0;
     Paint paint = new Paint();
     for(DataRow row : rows) {
       if (row != null) {
-        String text = row.cells.get(column.columnIndex).qText;
+        String text = column.columnIndex < row.cells.size() ? row.cells.get(column.columnIndex).qText : null;
         if(text != null) {
           runningTotal += text.length();
-        }
-        else {
+        } else {
           // give it something
           runningTotal += DataProvider.minWidth;
         }
@@ -103,9 +102,12 @@ public class ColumnWidths {
     if(column.representation.type.equals("image")) {
       return (int) (DataProvider.minWidth * 1.5f);
     }
+
     float width = paint.measureText(tempString, 0, tempString.length());
     width = Math.max(DataProvider.minWidth * 1.5f, PixelUtils.dpToPx(width));
-    // cast later since this is the equiv of a floor.
+    if(shouldAddWidth) {
+      widths.add((int)width);
+    }
     return (int)width;
   }
 
@@ -113,20 +115,27 @@ public class ColumnWidths {
     if(dataColumns == null) {
       return;
     }
-    if(dataColumns.size() == widths.size()) {
-      dataColumns = columns;
-      for (int i = 0; i < widths.size(); i++) {
-        DataColumn column = dataColumns.get(i);
+    dataColumns = columns;
+    for (int i = 0; i < dataColumns.size(); i++) {
+      DataColumn column = dataColumns.get(i);
+      if(i < widths.size()) {
         column.width = widths.get(i);
       }
+    }
+    if(dataColumns.size() < widths.size()) {
+      widths = widths.subList(0, dataColumns.size());
     }
   }
 
   public void updateWidths() {
-    if(dataColumns.size() == widths.size()) {
-      for (int i = 0; i < dataColumns.size(); i++) {
-        widths.set(i, dataColumns.get(i).width);
+    for (int i = 0; i < dataColumns.size(); i++) {
+      DataColumn column = dataColumns.get(i);
+      if(i < widths.size()) {
+        widths.set(i, column.width);
       }
+    }
+    if(dataColumns.size() < widths.size()) {
+      widths = widths.subList(0, dataColumns.size());
     }
   }
 
