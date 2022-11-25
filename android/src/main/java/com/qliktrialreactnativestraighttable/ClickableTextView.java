@@ -143,11 +143,12 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     if(urlLabel.isEmpty()) {
       urlLabel = cell.qText != null ? cell.qText : "link";
     }
-    if(urlText == null) {
-      urlText = "";
+    if(urlText != null) {
+      String spaceEncodedUrl = urlText.replaceAll(" ", "%20");
+      this.linkUrl = spaceEncodedUrl;
+    } else {
+      this.linkUrl = "";
     }
-    String spaceEncodedUrl = urlText.replaceAll(" ", "%20");
-    this.linkUrl = spaceEncodedUrl;
     this.linkLabel = urlLabel;
   }
 
