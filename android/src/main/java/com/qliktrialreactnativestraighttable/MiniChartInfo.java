@@ -4,6 +4,9 @@ import android.graphics.Color;
 
 import com.facebook.react.bridge.ReadableMap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MiniChartInfo {
   public String type;
   public Boolean showDots;
@@ -16,6 +19,13 @@ public class MiniChartInfo {
     public YAxis(ReadableMap data) {
       position = data.hasKey("position") ? data.getString("position") : "";
       scale = data.hasKey("scale") ? data.getString("scale") : "";
+    }
+
+    public JSONObject toEvent() throws JSONException {
+      JSONObject json = new JSONObject();
+      json.put("position", position);
+      json.put("scale", scale);
+      return json;
     }
   }
 
@@ -31,6 +41,14 @@ public class MiniChartInfo {
         color = Color.parseColor(colorValue);
         valid = true;
       }
+    }
+
+    public JSONObject toEvent() throws JSONException {
+      JSONObject json = new JSONObject();
+      json.put("index", index);
+      json.put("color", colorValue);
+      json.put("valid", valid);
+      return json;
     }
   }
 
@@ -59,6 +77,19 @@ public class MiniChartInfo {
       positive = getMiniChartColor("positive", data);
       main = getMiniChartColor("main", data);
     }
+
+    public JSONObject toEvent() throws JSONException {
+      JSONObject json = new JSONObject();
+      json.put("first", first.toEvent());
+      json.put("last", last.toEvent());
+      json.put("min", min.toEvent());
+      json.put("max", max.toEvent());
+      json.put("negative", negative.toEvent());
+      json.put("positive", positive.toEvent());
+      json.put("main", main.toEvent());
+
+      return json;
+    }
   }
 
   MiniChartInfo(ReadableMap data) {
@@ -66,5 +97,14 @@ public class MiniChartInfo {
     showDots = data.hasKey("showDots") ? data.getBoolean("showDots") : false;
     yAxis = data.hasKey("yAxis") ? new YAxis(data.getMap("yAxis")) : null;
     colors = data.hasKey("colors") ? new ChartColors(data.getMap("colors")) : null;
+  }
+
+  public JSONObject toEvent() throws JSONException {
+    JSONObject json = new JSONObject();
+    json.put("type", type);
+    json.put("showDots", showDots);
+    json.put("yAxis", yAxis.toEvent());
+    json.put("colors", colors.toEvent());
+    return json;
   }
 }

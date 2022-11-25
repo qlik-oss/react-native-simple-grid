@@ -32,7 +32,9 @@ public class DataColumn {
   public DataColumn(ReadableMap source, int index) {
     ReadableMap representationMap = source.getMap("representation");
     representation = new Representation(representationMap);
-    stylingInfo = source.getArray("stylingInfo").toArrayList();
+    if(source.hasKey("stylingInfo")) {
+      stylingInfo = source.getArray("stylingInfo").toArrayList();
+    }
     align = source.getString("align");
     isDim = source.getBoolean("isDim");
     label = source.getString("label");

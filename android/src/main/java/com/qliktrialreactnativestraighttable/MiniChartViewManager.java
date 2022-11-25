@@ -49,11 +49,9 @@ public class MiniChartViewManager extends SimpleViewManager<View> {
   }
 
   @ReactProp(name = "rowData")
-  public void setRow(View view, ReadableMap row) {
+  public void setCell(View view, ReadableMap cell) {
     MiniChartView miniChartView = (MiniChartView) view;
-    ReadableArray cells = row.getArray("cells");
-    Log.d("CHECKECHK:", "setRow: " + cells.size());
-    cell = cells.getMap(0);
+    this.cell = cell;
 
     if (column != null) {
       setupMiniChart(miniChartView);

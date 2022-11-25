@@ -38,7 +38,6 @@ public class EventUtils {
     WritableMap event = Arguments.createMap();
     try {
       String columnJSONString = column.toEvent().toString();
-      Log.d("foo", columnJSONString);
       event.putString("column", columnJSONString);
       EventUtils.sendEventToJSFromView(contextView, "onHeaderPressed", event);
     } catch (JSONException e) {
