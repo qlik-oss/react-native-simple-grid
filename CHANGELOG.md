@@ -1,3 +1,10 @@
+# [1.1.0-alpha.93](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.92...v1.1.0-alpha.93) (2022-11-25)
+
+
+### Bug Fixes
+
+* **md-3832:** edit table crash android ([#145](https://github.com/qlik-oss/react-native-simple-grid/issues/145)) ([4613a1f](https://github.com/qlik-oss/react-native-simple-grid/commit/4613a1fee2bd7cde24ea61a9713e2bba243f8cd2))
+
 # [1.1.0-alpha.92](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.91...v1.1.0-alpha.92) (2022-11-25)
 
 
