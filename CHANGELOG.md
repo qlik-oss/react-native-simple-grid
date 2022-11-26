@@ -1,3 +1,10 @@
+# [1.1.0-alpha.94](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.93...v1.1.0-alpha.94) (2022-11-26)
+
+
+### Bug Fixes
+
+* search in column ([66884f5](https://github.com/qlik-oss/react-native-simple-grid/commit/66884f5b1fca7dcf0eabe16e69c69b6073563b6f))
+
 # [1.1.0-alpha.93](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.92...v1.1.0-alpha.93) (2022-11-25)
 
 
