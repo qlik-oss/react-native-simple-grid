@@ -129,12 +129,10 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
             ].qDef.qFieldLabels?.[0]; 
             console.log(fieldLabel);
           column.display =  fieldLabel.length === 0 ? column.label : fieldLabel;
-            console.log(column);
         } else {
-          column.label = layout.qHyperCube.qDimensionInfo[column.dataColIdx].title;
+          column.label = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle;
           column.display = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle;
         }
-       
         searchColumn({ searching: true, column });
       } catch (error) {}
     },
