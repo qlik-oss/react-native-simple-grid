@@ -1,3 +1,10 @@
+# [1.1.0-alpha.95](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.94...v1.1.0-alpha.95) (2022-11-27)
+
+
+### Bug Fixes
+
+* fallback to qFallbackTitle ([9f27d25](https://github.com/qlik-oss/react-native-simple-grid/commit/9f27d258628307e18c1b9b13e984673106fd36bc))
+
 # [1.1.0-alpha.94](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.93...v1.1.0-alpha.94) (2022-11-26)
 
 
