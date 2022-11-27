@@ -127,8 +127,10 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
             const fieldLabel = props?.qHyperCubeDef?.qDimensions[
               column.dataColIdx
             ].qDef.qFieldLabels?.[0]; 
-            console.log(fieldLabel);
           column.display =  fieldLabel.length === 0 ? column.label : fieldLabel;
+          if(layout?.qHyperCube?.qDimensionInfo[column.dataColIdx]?.qFallbackTitle?.length > 0) {
+            column.display = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle 
+          }
         } else {
           column.label = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle;
           column.display = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle;
