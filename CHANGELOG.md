@@ -1,3 +1,10 @@
+# [1.1.0-alpha.96](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.95...v1.1.0-alpha.96) (2022-11-28)
+
+
+### Bug Fixes
+
+* **md-3857:** android minichart expose ([#147](https://github.com/qlik-oss/react-native-simple-grid/issues/147)) ([15960d1](https://github.com/qlik-oss/react-native-simple-grid/commit/15960d10fd7185633faf08dbc4f9ef07dbfa4506))
+
 # [1.1.0-alpha.95](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.94...v1.1.0-alpha.95) (2022-11-27)
 
 
