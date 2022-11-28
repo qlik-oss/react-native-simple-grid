@@ -72,7 +72,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
       } else if(column.representation.type.equals("miniChart")) {
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
         cellView.setLayoutParams(cellViewLayoutParams);
-
+        cellView.setData(cell, dataRow, column);
         cellView.convertCellContentType("miniChart", column);
         MiniChartView miniChartView = (MiniChartView) cellView.content;
         miniChartView.setData(cell, column);

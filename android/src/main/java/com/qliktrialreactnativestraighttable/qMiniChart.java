@@ -20,10 +20,14 @@ public class qMiniChart {
   }
 
   public JSONObject toEvent() throws JSONException {
+
     JSONObject json = new JSONObject();
     json.put("qMin", qMin);
     json.put("qMax", qMax);
-    json.put("matrix", matrix);
+    if(matrix != null) {
+      String foo = matrix.toEvent().toString();
+      json.put("qMatrix", matrix.toEvent());
+    }
     return json;
   }
 }

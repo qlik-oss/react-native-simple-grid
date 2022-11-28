@@ -104,7 +104,7 @@ public class DataCell {
     cell.put("rawColIdx", rawColIdx);
     cell.put("isNumber", isNumber);
     if(miniChart != null) {
-      cell.put("miniChart", miniChart.toEvent());
+      cell.put("qMiniChart", miniChart.toEvent());
     }
     if(indicator != null) {
       cell.put("indicator", indicator.toEvent());
