@@ -132,7 +132,11 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
       String qText = value.get("qText");
       urlLabel = qText != null ? qText : "";
     } else {
-      urlLabel = column.representation.urlPosition.equals("dimension") ? (column.representation.linkUrl != null ? column.representation.linkUrl : "") : (cell.qText != null ? cell.qText : "");
+      if(column.representation.urlPosition != null) {
+        urlLabel = column.representation.urlPosition.equals("dimension") ? (column.representation.linkUrl != null ? column.representation.linkUrl : "") : (cell.qText != null ? cell.qText : "");
+      } else {
+        urlLabel = cell.qText == null ? "" : cell.qText;
+      }
     }
     String urlText = cell.qText;
     int attrIndex = column.stylingInfo.indexOf("url");

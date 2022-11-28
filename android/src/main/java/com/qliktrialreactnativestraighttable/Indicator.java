@@ -4,6 +4,9 @@ import android.graphics.Color;
 
 import com.facebook.react.bridge.ReadableMap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Indicator {
   boolean applySegmentColors = false;
   int color = Color.BLACK;
@@ -26,6 +29,15 @@ public class Indicator {
       color = Color.parseColor(data.getString("color"));
     }
     getIcon(data);
+  }
+
+  public JSONObject toEvent() throws JSONException {
+    JSONObject json = new JSONObject();
+    json.put("applySegmentColors", applySegmentColors);
+    json.put("showTextValues", showTextValues);
+    json.put("position", position);
+    json.put("index", index);
+    return json;
   }
 
   private void getIcon(ReadableMap data) {

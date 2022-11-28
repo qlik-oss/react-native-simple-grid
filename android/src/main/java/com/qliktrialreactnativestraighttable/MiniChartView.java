@@ -20,6 +20,7 @@ public class MiniChartView extends View implements Content {
   Rect bounds = new Rect();
   Paint paint = new Paint();
   DataCell dataCell = null;
+  DataColumn dataColumn = null;
   MiniChartRenderer miniChartRenderer = null;
 
   public MiniChartView(Context context) {
@@ -28,6 +29,8 @@ public class MiniChartView extends View implements Content {
   }
 
   public void setData(DataCell cell, DataColumn column) {
+    this.dataCell = cell;
+    this.dataColumn = column;
     if(miniChartRenderer == null) {
       if (cell.miniChart != null && column.representation != null) {
         if (column.representation.miniChart != null) {

@@ -27,7 +27,7 @@ public class DataCell {
   boolean  isDim = false;
   int rawRowIdx;
   int  rawColIdx;
-  boolean isNumber;
+  boolean isNumber = false;
   qMiniChart miniChart;
   Indicator indicator;
   int cellForegroundColor;
@@ -45,8 +45,10 @@ public class DataCell {
     columnIndex = column.columnIndex;
     rawRowIdx =  source.getInt("rawRowIdx");
     rawColIdx =  source.getInt("rawColIdx");
-    ReadableType qNumType = source.getType("qNum");
-    isNumber = qNumType == ReadableType.Number;
+    if(source.hasKey("qNum")) {
+      ReadableType qNumType = source.getType("qNum");
+      isNumber = qNumType == ReadableType.Number;
+    }
     if (source.hasKey("isDim")) {
       isDim =  source.getBoolean("isDim");
     }
@@ -101,8 +103,12 @@ public class DataCell {
     cell.put("rawRowIdx", rawRowIdx);
     cell.put("rawColIdx", rawColIdx);
     cell.put("isNumber", isNumber);
-    cell.put("miniChart", miniChart);
-    cell.put("indicator", indicator);
+    if(miniChart != null) {
+      cell.put("qMiniChart", miniChart.toEvent());
+    }
+    if(indicator != null) {
+      cell.put("indicator", indicator.toEvent());
+    }
 
     return cell;
   }

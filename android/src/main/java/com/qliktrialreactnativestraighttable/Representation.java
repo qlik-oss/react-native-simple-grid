@@ -1,5 +1,7 @@
 package com.qliktrialreactnativestraighttable;
 
+import android.util.Log;
+
 import com.facebook.react.bridge.ReadableMap;
 
 import org.json.JSONException;
@@ -44,7 +46,9 @@ public class Representation {
     column.put("urlPosition", urlPosition);
     column.put("globalMax", globalMax);
     column.put("globalMin", globalMin);
-    column.put("miniChart", miniChart);
+    if(miniChart != null) {
+      column.put("miniChart", miniChart.toEvent());
+    }
 
     return column;
   }
