@@ -160,14 +160,17 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   public void setCellData(DataCell cell, DataRow row, DataColumn column) {
     this.column = column;
     this.cell = cell;
+
     if(cell.indicator != null) {
       buildSpannableText();
     } else {
-      setTextColor(cell.cellForegroundColorValid ? cell.cellForegroundColor : tableView.cellContentStyle.color);
-      setBackgroundColor(cell.cellBackgroundColorValid ? cell.cellBackgroundColor : Color.TRANSPARENT);
       setText(cell.qText);
       textWrapper.countWords(cell.qText);
     }
+
+    setTextColor(cell.cellForegroundColorValid ? cell.cellForegroundColor : tableView.cellContentStyle.color);
+    setBackgroundColor(cell.cellBackgroundColorValid ? cell.cellBackgroundColor : Color.TRANSPARENT);
+
     if(cell.type.equals("url")) {
       setupUrl();
     }
