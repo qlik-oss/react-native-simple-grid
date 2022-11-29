@@ -9,7 +9,6 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -79,11 +78,6 @@ public class DataColumn {
     column.put("sortDirection", sortDirection);
     column.put("dataColIdx", dataColIdx);
     column.put("active", active);
-    if(stylingInfo.size() > 0) {
-      JSONArray json = new JSONArray();
-      stylingInfo.forEach(json::put);
-      column.put("stylingInfo", json);
-    }
     column.put("representation", representation.toEvent());
 
     return column;

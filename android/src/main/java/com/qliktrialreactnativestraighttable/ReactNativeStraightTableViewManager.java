@@ -43,22 +43,24 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
     @SuppressLint("NewApi")
     @Override
     @NonNull
-    public View createViewInstance(ThemedReactContext reactContext) {
-      TableView table = new TableView(reactContext);
-      return table;
+    public View createViewInstance(@NonNull ThemedReactContext reactContext) {
+      return new TableView(reactContext);
     }
 
     private boolean isAllFetched() {
       return cols != null && rows != null;
     }
 
-    private List<DataRow> processRows(TableView tableView, List<DataColumn> dataColumns) {
-      ReadableArray dataRows = rows.getArray("rows");
-      boolean resetData = rows.getBoolean("reset");
-      RowFactory factory = new RowFactory(dataRows, dataColumns);
-      List<DataRow> transformedRows = factory.getRows();
-      tableView.setRows(transformedRows, resetData);
-      return transformedRows;
+    private void processRows(TableView tableView, List<DataColumn> dataColumns) {
+      if(rows != null) {
+        ReadableArray dataRows = rows.getArray("rows");
+        if(dataRows != null) {
+          boolean resetData = rows.getBoolean("reset");
+          RowFactory factory = new RowFactory(dataRows, dataColumns);
+          List<DataRow> transformedRows = factory.getRows();
+          tableView.setRows(transformedRows, resetData);
+        }
+      }
     }
 
     private List<DataColumn> processColumns(TableView tableView) {
@@ -66,7 +68,6 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       ReadableArray totalsRows = null;
 
       ReadableArray columns = cols.getArray("header");
-      ReadableArray footer = cols.getArray("footer");
       ReadableMap totals = cols.getMap("totals");
 
       if(totals != null) {
@@ -77,9 +78,11 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       }
 
       List<DataColumn> dataColumns = new ArrayList<>();
-      for(int i = 0; i < columns.size(); i++) {
-        DataColumn column = new DataColumn(columns.getMap(i), i);
-        dataColumns.add(column);
+      if(columns != null) {
+        for (int i = 0; i < columns.size(); i++) {
+          DataColumn column = new DataColumn(columns.getMap(i), i);
+          dataColumns.add(column);
+        }
       }
 
       return dataColumns;
@@ -117,9 +120,11 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
 
     @ReactProp(name = "cols")
     public void setCols(View view,  @Nullable ReadableMap source) {
-      cols = source;
-      TableView tableView = (TableView) (view);
-      initializeWhenReady(tableView);
+      if(source != null ) {
+        cols = source;
+        TableView tableView = (TableView) (view);
+        initializeWhenReady(tableView);
+      }
     }
 
     @ReactProp(name = "isDataView")
@@ -132,23 +137,27 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
 
     @ReactProp(name = "rows")
     public void setRows(View view, @Nullable ReadableMap source) {
-      TableView tableView = (TableView) (view);
-      rows = source;
-      boolean resetData = rows.getBoolean("reset");
+      if (source != null) {
+        TableView tableView = (TableView) (view);
+        rows = source;
+        boolean resetData = rows.getBoolean("reset");
 
-      if(resetData) {
-        initializeWhenReady(tableView);
-        return;
+        if (resetData) {
+          initializeWhenReady(tableView);
+          return;
+        }
+
+        processRows(tableView, tableView.getColumns());
       }
-
-      processRows(tableView, tableView.getColumns());
     }
 
     @ReactProp(name = "size")
     public void setSize(View view, @Nullable ReadableMap source) {
-      TableView tableView = (TableView) view;
-      dataSize = new DataSize(source);
-      tableView.setDataSize(dataSize);
+      if(source != null) {
+        TableView tableView = (TableView) view;
+        dataSize = new DataSize(source);
+        tableView.setDataSize(dataSize);
+      }
     }
 
     @ReactProp(name = "containerWidth")
