@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.text.Html;
 import android.util.Log;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -153,7 +154,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     } else {
       this.linkUrl = "";
     }
-    this.linkLabel = urlLabel;
+    this.linkLabel = Html.escapeHtml(urlLabel);
   }
 
   @Override
