@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DataCell {
   String type;
@@ -34,7 +35,7 @@ public class DataCell {
   int cellBackgroundColor;
   boolean cellForegroundColorValid = false;
   boolean cellBackgroundColorValid = false;
-  List<Object> qAttrExps;
+  qValues qAttrExpValues;
   public DataCell(ReadableMap source, DataColumn column) {
     type = column.representation.type;
     qText = source.getString("qText");
@@ -56,15 +57,22 @@ public class DataCell {
       isDim = source.getBoolean("isSelectable");
     }
     if(source.hasKey("qAttrExps")) {
-      qAttrExps = source.getMap("qAttrExps").getArray("qValues").toArrayList();
-      int urlId = column.stylingInfo.indexOf("imageUrl");
-      if(urlId != -1) {
-        String url = ((HashMap<String, String>) qAttrExps.get(urlId)).get("qText");
-        if (URLUtil.isValidUrl(url)) {
-          imageUrl = url;
-          DataProvider.addImagePath(imageUrl);
+      ReadableMap qAttrExps = source.getMap("qAttrExps");
+      if(qAttrExps != null) {
+        List<qValue> values = qAttrExps.getArray("qValues").toArrayList().stream().map(valueSource -> {
+          return new qValue((HashMap<String, String>) valueSource);
+        }).collect(Collectors.toList());
+        qAttrExpValues = new qValues(values);
+        int urlId = column.stylingInfo.indexOf("imageUrl");
+        if(urlId != -1) {
+          String url = qAttrExpValues.get(urlId).qText;
+          if (URLUtil.isValidUrl(url)) {
+            imageUrl = url;
+            DataProvider.addImagePath(imageUrl);
+          }
         }
       }
+
     }
     updateCellColors(source);
     miniChart = source.hasKey("qMiniChart") ? new qMiniChart(source.getMap("qMiniChart")) : null;
@@ -103,6 +111,12 @@ public class DataCell {
     cell.put("rawRowIdx", rawRowIdx);
     cell.put("rawColIdx", rawColIdx);
     cell.put("isNumber", isNumber);
+
+    if(qAttrExpValues != null) {
+      JSONObject qAttrExps = new JSONObject();
+      qAttrExps.put("qValues", qAttrExpValues.toEvent());
+      cell.put("qAttrExps", qAttrExps);
+    }
     if(miniChart != null) {
       cell.put("qMiniChart", miniChart.toEvent());
     }

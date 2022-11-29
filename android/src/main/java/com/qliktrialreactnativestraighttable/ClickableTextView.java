@@ -129,8 +129,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     int urlLabelIndex = column.stylingInfo.indexOf("urlLabel");
     String urlLabel = "";
     if(urlLabelIndex != -1) {
-      HashMap<String, String> value = (HashMap<String, String>) cell.qAttrExps.get(urlLabelIndex);
-      String qText = value.get("qText");
+      String qText = cell.qAttrExpValues.get(urlLabelIndex).qText;
       urlLabel = qText != null ? qText : "";
     } else {
       if(column.representation.urlPosition != null) {
@@ -142,8 +141,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     String urlText = cell.qText;
     int attrIndex = column.stylingInfo.indexOf("url");
     if(attrIndex != -1) {
-      HashMap<String, String> value = (HashMap<String, String>) cell.qAttrExps.get(attrIndex);
-      urlText = value.get("qText");
+      urlText = cell.qAttrExpValues.get(attrIndex).qText;
     }
     if(urlLabel.isEmpty()) {
       urlLabel = cell.qText != null ? cell.qText : "link";
