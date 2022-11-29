@@ -1,3 +1,10 @@
+# [1.1.0-alpha.100](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.99...v1.1.0-alpha.100) (2022-11-29)
+
+
+### Bug Fixes
+
+* cast error and better touch handling ([#153](https://github.com/qlik-oss/react-native-simple-grid/issues/153)) ([5ff32b1](https://github.com/qlik-oss/react-native-simple-grid/commit/5ff32b1a4b816effe8ecaa1cd6a0006684902ae5))
+
 # [1.1.0-alpha.99](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.98...v1.1.0-alpha.99) (2022-11-29)
 
 
