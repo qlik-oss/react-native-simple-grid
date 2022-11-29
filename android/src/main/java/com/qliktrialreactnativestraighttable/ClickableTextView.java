@@ -46,7 +46,6 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   DataCell cell = null;
   boolean selected = false;
   int defaultTextColor = Color.BLACK;
-  GestureDetector gestureDetector;
   Animation fadeIn;
   ClickableTextWrapper textWrapper;
   ClickableTextView(Context context, SelectionsEngine selectionsEngine, TableView tableView, CellView cellView, DataColumn column) {
@@ -62,7 +61,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
 
   @SuppressLint("ClickableViewAccessibility")
   @Override
-  public boolean onTouchEvent(MotionEvent e) {
+  public boolean handleTouch(MotionEvent e) {
     // Checks to see if there's a link, if there is and the user
     // tapped on the link text, then forward the event to the movementMethod.
     // otherwise forward the event to the gesture detector
@@ -110,11 +109,6 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     if(shouldAnimate) {
       startAnimation(fadeIn);
     }
-  }
-
-  @Override
-  public void setGestureDetector(GestureDetector gestureDetector) {
-    this.gestureDetector = gestureDetector;
   }
 
   @Override

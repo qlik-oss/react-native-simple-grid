@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.io.ByteArrayOutputStream;
@@ -66,8 +67,8 @@ public class MiniChartView extends View implements Content {
   }
 
   @Override
-  public void setGestureDetector(GestureDetector gestureDetector) {
-
+  public boolean handleTouch(MotionEvent e) {
+    return true;
   }
 
   @Override

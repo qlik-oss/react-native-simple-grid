@@ -48,7 +48,6 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
 
     dragBoxEventHandler.addDragBoxListener(this::handleDragBoxDrag);
     gestureDetector = new GestureDetector(getContext(), new CellView.SingleTapListener());
-    content.setGestureDetector(gestureDetector);
 
     MenuItem.OnMenuItemClickListener handleMenuItemClick = item -> {
       switch (item.getItemId()) {
@@ -112,9 +111,12 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
   }
 
   @Override
-  public boolean onInterceptTouchEvent(MotionEvent ev) {
-    gestureDetector.onTouchEvent(ev);
-    return super.onInterceptTouchEvent(ev);
+  public boolean onTouchEvent(MotionEvent event) {
+    gestureDetector.onTouchEvent(event);
+    if(content != null) {
+      return content.handleTouch(event);
+    }
+    return super.onTouchEvent(event);
   }
 
   public void handleDragBoxDrag(Rect dragBoxBounds, int columnId) {
