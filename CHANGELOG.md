@@ -1,3 +1,10 @@
+# [1.1.0-alpha.101](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.100...v1.1.0-alpha.101) (2022-11-29)
+
+
+### Bug Fixes
+
+* broken select ([#154](https://github.com/qlik-oss/react-native-simple-grid/issues/154)) ([944b6f3](https://github.com/qlik-oss/react-native-simple-grid/commit/944b6f37277bed18188af79e7cb463e8cb9a9e3d))
+
 # [1.1.0-alpha.100](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.99...v1.1.0-alpha.100) (2022-11-29)
 
 
