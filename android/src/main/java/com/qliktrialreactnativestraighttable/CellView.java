@@ -67,6 +67,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
       contextMenu.add(0, 0, 0, copyString).setOnMenuItemClickListener(handleMenuItemClick);
       contextMenu.add(0, 1, 1, expandString).setOnMenuItemClickListener(handleMenuItemClick);
     };
+    setOnCreateContextMenuListener(onCreateContextMenuListener);
     addContentView(type);
   }
 
@@ -92,11 +93,9 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
 
   private void addContentView(String type) {
     if(type.equals("image")) {
-      wrapper.setOnCreateContextMenuListener(onCreateContextMenuListener);
       this.addView(wrapper, wrapperLayout);
     } else {
       View contentView = (View) content;
-      contentView.setOnCreateContextMenuListener(onCreateContextMenuListener);
       this.addView(contentView);
     }
   }
