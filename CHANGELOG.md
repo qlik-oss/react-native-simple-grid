@@ -1,3 +1,11 @@
+# [1.1.0-alpha.98](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.97...v1.1.0-alpha.98) (2022-11-29)
+
+
+### Bug Fixes
+
+* background color when indicator set ([#150](https://github.com/qlik-oss/react-native-simple-grid/issues/150)) ([f8f2809](https://github.com/qlik-oss/react-native-simple-grid/commit/f8f2809eee3a9cccf3c89c4c93ec09250546c7aa))
+* expand ([#148](https://github.com/qlik-oss/react-native-simple-grid/issues/148)) ([7264f58](https://github.com/qlik-oss/react-native-simple-grid/commit/7264f580e0800724608af0df015d4fa105e2b46c))
+
 # [1.1.0-alpha.97](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.96...v1.1.0-alpha.97) (2022-11-29)
 
 
