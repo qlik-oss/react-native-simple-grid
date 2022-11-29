@@ -1,10 +1,11 @@
 package com.qliktrialreactnativestraighttable;
 
 import android.view.GestureDetector;
+import android.view.MotionEvent;
 
 public interface Content {
   void updateBackgroundColor(boolean shouldAnimate);
-  void setGestureDetector(GestureDetector gestureDetector);
+  boolean handleTouch(MotionEvent e);
   void setSelected(boolean selected);
   void toggleSelected();
   boolean isSelected();

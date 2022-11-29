@@ -60,7 +60,7 @@ public class DataCell {
       ReadableMap qAttrExps = source.getMap("qAttrExps");
       if(qAttrExps != null) {
         List<qValue> values = qAttrExps.getArray("qValues").toArrayList().stream().map(valueSource -> {
-          return new qValue((HashMap<String, String>) valueSource);
+          return new qValue((HashMap<String, Object>) valueSource);
         }).collect(Collectors.toList());
         qAttrExpValues = new qValues(values);
         int urlId = column.stylingInfo.indexOf("imageUrl");

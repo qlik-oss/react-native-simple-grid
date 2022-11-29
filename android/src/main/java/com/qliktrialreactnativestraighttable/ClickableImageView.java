@@ -34,7 +34,6 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   final TableView tableView;
   final CellView cellView;
   Animation fadeIn;
-  GestureDetector gestureDetector;
 
   ClickableImageView(Context context, SelectionsEngine selectionsEngine, TableView tableView, CellView cellView) {
     super(context);
@@ -164,8 +163,8 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   }
 
   @Override
-  public void setGestureDetector(GestureDetector gestureDetector) {
-    this.gestureDetector = gestureDetector;
+  public boolean handleTouch(MotionEvent e) {
+    return true;
   }
 
   @Override
