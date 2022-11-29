@@ -1,3 +1,10 @@
+# [1.1.0-alpha.97](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.96...v1.1.0-alpha.97) (2022-11-29)
+
+
+### Bug Fixes
+
+* escape link label ([#149](https://github.com/qlik-oss/react-native-simple-grid/issues/149)) ([c6ab3ba](https://github.com/qlik-oss/react-native-simple-grid/commit/c6ab3ba592d99839579f9f9febe2469e280f5a39))
+
 # [1.1.0-alpha.96](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.95...v1.1.0-alpha.96) (2022-11-28)
 
 
