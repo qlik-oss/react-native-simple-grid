@@ -1,3 +1,10 @@
+# [1.1.0-alpha.105](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.104...v1.1.0-alpha.105) (2022-12-01)
+
+
+### Bug Fixes
+
+* **md-3839:** scrollbars and crash ([#155](https://github.com/qlik-oss/react-native-simple-grid/issues/155)) ([b8d0e87](https://github.com/qlik-oss/react-native-simple-grid/commit/b8d0e87e86125ff883b87bbdbdd4da20e7bfe0c4))
+
 # [1.1.0-alpha.104](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.103...v1.1.0-alpha.104) (2022-12-01)
 
 
