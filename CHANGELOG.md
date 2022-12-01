@@ -1,3 +1,10 @@
+# [1.1.0-alpha.103](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.102...v1.1.0-alpha.103) (2022-12-01)
+
+
+### Bug Fixes
+
+* cell background color on expand row ([eae6ec5](https://github.com/qlik-oss/react-native-simple-grid/commit/eae6ec586e1dbbe91a01f13880fd24d315e05abf))
+
 # [1.1.0-alpha.102](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.101...v1.1.0-alpha.102) (2022-12-01)
 
 
