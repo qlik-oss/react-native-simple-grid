@@ -188,6 +188,7 @@ public class TableViewFactory {
     FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
     firstColumnViewLayoutParams.topMargin = marginTop;
     firstColumnViewLayoutParams.bottomMargin = TableTheme.DefaultRowHeight;
+    firstColumnRecyclerView.setLayoutParams(firstColumnViewLayoutParams);
 
     if(tableView.isFirstColumnFrozen) {
       firstColumnHeaderCell = HeaderViewFactory.buildFixedColumnCell(rootLayout, dataColumns.get(0), tableView, headerViewFactory.topPosition);
@@ -199,7 +200,7 @@ public class TableViewFactory {
         firstColumnTotalsCell = HeaderViewFactory.buildFixedTotalsCell(tableView, dataColumns.get(0), totalsCells.get(0), headerViewFactory.topPosition);
         tableView.addView(firstColumnTotalsCell);
       }
-      tableView.addView(firstColumnRecyclerView, firstColumnViewLayoutParams);
+      tableView.addView(firstColumnRecyclerView);
       tableView.addView(firstColumnHeaderCell);
       tableView.addView(firstColumnDragBox);
     }

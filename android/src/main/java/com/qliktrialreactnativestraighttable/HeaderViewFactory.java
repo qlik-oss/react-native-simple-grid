@@ -173,9 +173,6 @@ public class HeaderViewFactory {
       totalsView.setBackgroundColor(Color.WHITE);
       FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, tableView.totalsHeight);
       layoutParams.topMargin = headerHeight;
-      if(!topPosition) {
-        layoutParams.bottomMargin = TableTheme.DefaultRowHeight;
-      }
       layoutParams.gravity = topPosition ? Gravity.TOP : Gravity.BOTTOM;
       totalsView.setLayoutParams(layoutParams);
       if(!topPosition) {
