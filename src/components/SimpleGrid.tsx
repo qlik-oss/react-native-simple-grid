@@ -132,7 +132,12 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
             column.display = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle 
           }
         } else {
-          column.label = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle;
+          const qDimInfo = layout.qHyperCube.qDimensionInfo[column.dataColIdx];
+          if(qDimInfo.qGroupFieldDefs?.[0].length > 0) {
+            column.label = qDimInfo.qGroupFieldDefs?.[0];
+          } else {
+            column.label = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle;
+          }
           column.display = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle;
         }
         searchColumn({ searching: true, column });
