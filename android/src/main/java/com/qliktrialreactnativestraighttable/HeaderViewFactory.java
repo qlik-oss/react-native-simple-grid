@@ -60,7 +60,7 @@ public class HeaderViewFactory {
 
   public static HeaderCell buildFixedColumnCell(FrameLayout rootView, DataColumn column, TableView tableView, boolean topPosition) {
     int headerHeight = tableView.headerHeight;
-    int padding = (int) PixelUtils.dpToPx(16);
+    int padding = CellView.PADDING;
 
     HeaderCell fixedFirstHeaderCell = new HeaderCell(rootView.getContext(), column, tableView);
     TextView textView = fixedFirstHeaderCell.cell;
@@ -121,7 +121,7 @@ public class HeaderViewFactory {
   }
 
   public static HeaderCell createHeaderCell(Context context, DataColumn column, HeaderContentStyle headerContentStyle, TableView tableView) {
-    int padding = CellView.PADDING_X_2;
+    int padding = CellView.PADDING;
     HeaderCell headerCell = new HeaderCell(context, column, tableView);
     headerCell.setPadding(padding, 0, 0, 0);
     TextView text = headerCell.cell;
