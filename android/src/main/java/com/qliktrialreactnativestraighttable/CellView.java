@@ -33,8 +33,8 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
   final boolean isInFirstColumnRecyclerView;
   final View.OnCreateContextMenuListener onCreateContextMenuListener;
   GestureDetector gestureDetector;
-  int padding = (int)PixelUtils.dpToPx(16);
-  static int PADDING_X_2 =  (int)PixelUtils.dpToPx(32);
+  static final int PADDING = TableTheme.CellPadding;
+  static final int PADDING_X_2 = TableTheme.CellPadding * 2;
 
   @SuppressLint("ClickableViewAccessibility")
   CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean isInFirstColumnRecyclerView, DataColumn dataColumn) {
@@ -75,7 +75,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
     switch (type) {
       case "text":
         ClickableTextView textView = new ClickableTextView(getContext(), selectionsEngine, tableView, this, dataColumn);
-        textView.setPadding(padding, 0, padding, 0);
+        textView.setPadding(PADDING, 0, PADDING, 0);
         content = textView;
         break;
       case "image":
@@ -86,7 +86,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
         break;
       case "miniChart":
         content = new MiniChartView(getContext());
-        this.setPadding(padding, 0, padding, 0);
+        this.setPadding(PADDING, 0, PADDING, 0);
         break;
     }
   }
