@@ -36,7 +36,7 @@ const TextCell: React.FC<TextCellProps> = ({ rowData, colData }) => {
     } else if (rowData.cellForegroundColor) {
       color = rowData.cellForegroundColor;
     }
-    return { color, backgroundColor: rowData };
+    return { color, backgroundColor: rowData.cellBackgroundColor };
   }, [rowData]);
 
   const iconStyle = useMemo(() => {
