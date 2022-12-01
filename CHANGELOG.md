@@ -1,3 +1,10 @@
+# [1.1.0-alpha.107](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.106...v1.1.0-alpha.107) (2022-12-01)
+
+
+### Bug Fixes
+
+* master dimensions ([60c816d](https://github.com/qlik-oss/react-native-simple-grid/commit/60c816d6c462518efa88c609d31b5e5c7e47900e))
+
 # [1.1.0-alpha.106](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.105...v1.1.0-alpha.106) (2022-12-01)
 
 
