@@ -1,3 +1,10 @@
+# [1.1.0-alpha.106](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.105...v1.1.0-alpha.106) (2022-12-01)
+
+
+### Bug Fixes
+
+* use same cell padding ([#156](https://github.com/qlik-oss/react-native-simple-grid/issues/156)) ([3ce0604](https://github.com/qlik-oss/react-native-simple-grid/commit/3ce0604339c161eacd0d294353ab63aa51efa310))
+
 # [1.1.0-alpha.105](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.104...v1.1.0-alpha.105) (2022-12-01)
 
 
