@@ -81,9 +81,9 @@ class SelectionBand: UIView {
 
   override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
     guard let dragBox = self.dragBox else { return false }
-
-    if dragBox.hitTest(convert(point, to: dragBox), with: event) != nil {
-      return true
+    let rect = dragBox.bounds.insetBy(dx: -16, dy: -32) // give the user some space
+    if rect.contains(convert(point, to: dragBox)) {
+      return true;
     }
     return false
   }
