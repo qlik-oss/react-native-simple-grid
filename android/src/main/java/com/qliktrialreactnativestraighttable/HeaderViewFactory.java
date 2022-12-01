@@ -121,7 +121,7 @@ public class HeaderViewFactory {
   }
 
   public static HeaderCell createHeaderCell(Context context, DataColumn column, HeaderContentStyle headerContentStyle, TableView tableView) {
-    int padding = (int) PixelUtils.dpToPx(16);
+    int padding = CellView.PADDING_X_2;
     HeaderCell headerCell = new HeaderCell(context, column, tableView);
     headerCell.setPadding(padding, 0, 0, 0);
     TextView text = headerCell.cell;

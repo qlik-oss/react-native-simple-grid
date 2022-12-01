@@ -36,6 +36,7 @@ public class TableView extends FrameLayout {
   String totalsLabel = null;
   RootLayout rootLayout;
   CustomHorizontalScrollView scrollView;
+  MockVerticalScrollView verticalScrollBar;
   final DragBox dragBox;
   DragBox firstColumnDragBox = null;
   HeaderView headerView = null;
@@ -52,6 +53,7 @@ public class TableView extends FrameLayout {
   DragBoxEventHandler dragBoxEventHandler = new DragBoxEventHandler(this);
   HeaderContentStyle headerContentStyle;
   CellContentStyle cellContentStyle;
+  ImageLoader imageLoader;
   List<GrabberView> grabbers = null;
   int rowHeight = 0;
   int headerHeight = 0;
@@ -67,6 +69,7 @@ public class TableView extends FrameLayout {
     firstColumnDragBox = new DragBox(context, this, dragBoxEventHandler, true);
     dragBoxEventHandler.setDragBoxes(dragBox, firstColumnDragBox);
     tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider, dragBox, firstColumnDragBox);
+    imageLoader = new ImageLoader();
   }
 
   public boolean isInitialized() {
@@ -305,8 +308,12 @@ public class TableView extends FrameLayout {
     headerView = tableViewFactory.headerView;
     rootLayout = tableViewFactory.rootLayout;
     scrollView = tableViewFactory.scrollView;
+    verticalScrollBar = tableViewFactory.verticalScrollBar;
     screenGuideView = tableViewFactory.screenGuideView;
     firstColumnView = tableViewFactory.firstColumnRecyclerView;
+    post(() -> {
+      tableViewFactory.updateScrollbarBounds();
+    });
   }
 
   void invalidateLayout() {

@@ -36,7 +36,7 @@ public class DataCell {
   boolean cellForegroundColorValid = false;
   boolean cellBackgroundColorValid = false;
   qValues qAttrExpValues;
-  public DataCell(ReadableMap source, DataColumn column) {
+  public DataCell(ReadableMap source, DataColumn column, ImageLoader imageLoader) {
     type = column.representation.type;
     qText = source.getString("qText");
     qElemNumber =  source.getInt("qElemNumber");
@@ -68,7 +68,7 @@ public class DataCell {
           String url = qAttrExpValues.get(urlId).qText;
           if (URLUtil.isValidUrl(url)) {
             imageUrl = url;
-            DataProvider.addImagePath(imageUrl);
+            imageLoader.addImagePath(imageUrl);
           }
         }
       }

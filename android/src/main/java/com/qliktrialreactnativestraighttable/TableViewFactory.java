@@ -23,6 +23,8 @@ public class TableViewFactory {
   public int extraTopMargin = 0;
   public HeaderViewFactory headerViewFactory = null;
   public CustomHorizontalScrollView scrollView = null;
+  public MockVerticalScrollView verticalScrollBar = null;
+  public MockHorizontalScrollView horizontalScrollView = null;
   public RootLayout rootLayout = null;
   public HeaderView headerView = null;
   public RowCountView rowCountView = null;
@@ -60,9 +62,12 @@ public class TableViewFactory {
     updateRowHeights();
     createHeaderFactory();
     createScrollView();
+    createMockScrollBar();
 
     tableView.addView(scrollView);
     scrollView.addView(rootLayout);
+    tableView.addView(verticalScrollBar);
+    tableView.addView(horizontalScrollView);
 
     if(tableView.headerContentStyle.wrap) {
       if(totalsView != null) {
@@ -87,6 +92,26 @@ public class TableViewFactory {
     });
   }
 
+  private void setMockScrollLayouts() {
+    FrameLayout.LayoutParams verticalFrameLayout = new FrameLayout.LayoutParams((int) PixelUtils.dpToPx(5), FrameLayout.LayoutParams.MATCH_PARENT);
+    verticalFrameLayout.gravity = Gravity.RIGHT;
+    int headerHeight = headerView.getMeasuredHeight() > 0 ? headerView.getMeasuredHeight() : tableView.headerHeight;
+    verticalFrameLayout.topMargin = headerHeight + extraTopMargin;
+    verticalFrameLayout.bottomMargin = TableTheme.DefaultRowHeight;
+    verticalScrollBar.setLayoutParams(verticalFrameLayout);
+
+    FrameLayout.LayoutParams horizontalFrameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) PixelUtils.dpToPx(5));
+    horizontalFrameLayout.gravity = Gravity.BOTTOM;
+    horizontalFrameLayout.bottomMargin = TableTheme.DefaultRowHeight;
+    horizontalScrollView.setLayoutParams(horizontalFrameLayout);
+  }
+
+  protected void updateScrollbarBounds() {
+    setMockScrollLayouts();
+    this.verticalScrollBar.requestLayout();
+    this.horizontalScrollView.requestLayout();
+  }
+
   protected void updateRowHeights() {
     tableView.cellContentStyle.themedRowHeight = (tableView.cellContentStyle.getLineHeight() * tableView.cellContentStyle.lineCount) + CellView.PADDING_X_2;
     tableView.rowHeight = tableView.cellContentStyle.themedRowHeight;
@@ -94,9 +119,19 @@ public class TableViewFactory {
     tableView.totalsHeight = tableView.cellContentStyle.getLineHeight() + CellView.PADDING_X_2;
   }
 
+  protected void createMockScrollBar() {
+    verticalScrollBar = new MockVerticalScrollView(context, tableView);
+    horizontalScrollView = new MockHorizontalScrollView(context, tableView);
+
+    scrollView.setScrollbar(horizontalScrollView);
+    coupledRecyclerView.setScrollbar(verticalScrollBar);
+  }
+
   protected void createScrollView() {
     this.scrollView = new CustomHorizontalScrollView(context);
-    this.scrollView.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
+    ScrollView.LayoutParams scrollLayoutParams = new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT);
+    scrollLayoutParams.bottomMargin = TableTheme.DefaultRowHeight;
+    this.scrollView.setLayoutParams(scrollLayoutParams);
     this.scrollView.setFillViewport(true);
 
     createRootLayout();
@@ -141,20 +176,18 @@ public class TableViewFactory {
 
     int headerHeight = tableView.headerHeight;
     int marginTop = headerHeight + extraTopMargin;
-    int marginBottom = TableTheme.DefaultRowHeight;
 
     linearLayout.recyclerView = coupledRecyclerView;
     coupledRecyclerView.setAdapter(dataProvider);
 
     recyclerViewLayoutParams.topMargin = marginTop;
-    recyclerViewLayoutParams.bottomMargin = marginBottom;
     rootLayout.addView(coupledRecyclerView, recyclerViewLayoutParams);
 
     firstColumnLinearLayout.recyclerView = firstColumnRecyclerView;
     firstColumnRecyclerView.setAdapter(dataProvider);
     FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
     firstColumnViewLayoutParams.topMargin = marginTop;
-    firstColumnViewLayoutParams.bottomMargin = marginBottom;
+    firstColumnViewLayoutParams.bottomMargin = TableTheme.DefaultRowHeight;
 
     if(tableView.isFirstColumnFrozen) {
       firstColumnHeaderCell = HeaderViewFactory.buildFixedColumnCell(rootLayout, dataColumns.get(0), tableView, headerViewFactory.topPosition);
@@ -196,15 +229,15 @@ public class TableViewFactory {
         startOffset += (dataColumns.get(i).width) - offset;
         offset = 0;
 
-        grabberView.setLayoutParams(layoutParams);
         grabberView.setBackgroundColor(Color.TRANSPARENT);
         grabberView.setTranslationX(startOffset);
         grabbers.add(grabberView);
         if (tableView.isFirstColumnFrozen && i == 0) {
-          tableView.addView(grabberView);
+          layoutParams.bottomMargin = TableTheme.DefaultRowHeight;
+          tableView.addView(grabberView, layoutParams);
           grabberView.setElevation(PixelUtils.dpToPx(19));
         } else {
-          rootLayout.addView(grabberView);
+          rootLayout.addView(grabberView, layoutParams);
         }
       }
     }
@@ -251,6 +284,15 @@ public class TableViewFactory {
   void invalidateLayout() {
     if (this.coupledRecyclerView != null) {
       int width = dataColumns.get(0).width;
+      int marginTop = tableView.headerHeight + extraTopMargin;
+
+      FrameLayout.LayoutParams recyclerViewLayoutParams = (FrameLayout.LayoutParams) coupledRecyclerView.getLayoutParams();
+      recyclerViewLayoutParams.topMargin = marginTop;
+      coupledRecyclerView.setLayoutParams(recyclerViewLayoutParams);
+
+      FrameLayout.LayoutParams firstColumnRecyclerViewLayoutParams = (FrameLayout.LayoutParams) firstColumnRecyclerView.getLayoutParams();
+      firstColumnRecyclerViewLayoutParams.topMargin = marginTop;
+      firstColumnRecyclerView.setLayoutParams(firstColumnRecyclerViewLayoutParams);
 
       if (this.firstColumnHeaderCell != null) {
         ViewGroup.LayoutParams params = firstColumnHeaderCell.getLayoutParams();
@@ -271,6 +313,8 @@ public class TableViewFactory {
 
       this.headerView.updateLayout();
       this.headerView.requestLayout();
+
+      updateScrollbarBounds();
 
       this.dataProvider.invalidateLayout();
       if (this.firstColumnRecyclerView != null) {

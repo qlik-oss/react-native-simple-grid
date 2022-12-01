@@ -66,6 +66,7 @@ public class GrabberView extends LinearLayout {
             GrabberView.this.updateHeader(motionDx);
             GrabberView.this.updateFixedTotalsCell(motionDx);
             GrabberView.this.updateFirstColumnHeader(motionDx);
+            GrabberView.this.tableView.tableViewFactory.updateScrollbarBounds();
             lastX = motionEvent.getRawX();
             if(isLastColumn && motionDx > 0) {
               GrabberView.this.rootLayout.requestLayout();
@@ -112,11 +113,11 @@ public class GrabberView extends LinearLayout {
     this.tableView = tableView;
     grabberButton = new GrabberButton(this);
     grabberButton.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, tableView.headerHeight));
-    this.addView(grabberButton);
     grabberButton.setBackgroundColor(Color.TRANSPARENT);
     grabberButton.setOnTouchListener(new TouchListener());
     linePaint.setColor(TableTheme.borderBackgroundColor);
     linePaint.setStrokeWidth(PixelUtils.dpToPx(1));
+    this.addView(grabberButton);
   }
 
   public void setHeaderHeight(int height) {
@@ -140,7 +141,7 @@ public class GrabberView extends LinearLayout {
     int width = getWidth() / 2;
     int top = 0;
     int height = getHeight() - top;
-    canvas.drawLine(width, top, width, height - TableTheme.DefaultRowHeight, linePaint);
+    canvas.drawLine(width, top, width, height, linePaint);
   }
 
   public void setFirstColumnHeader(HeaderCell cell) {

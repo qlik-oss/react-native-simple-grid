@@ -44,7 +44,10 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     if(extraCells > 0) {
       row.removeViews(numCells - extraCells, extraCells);
     }
-      for(int i = 0; i < numColumns; i++) {
+    if(dataRow.cells.size() < numColumns) {
+      return;
+    }
+    for(int i = 0; i < numColumns; i++) {
       DataCell cell = dataRow.cells.get(i);
       DataColumn column = DataProvider.getDataColumnByIdx(cell.colIdx, dataProvider.dataColumns);
       int columnIndex = cell.rawColIdx;
@@ -62,7 +65,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         cellView.convertCellContentType("image", column);
         cellView.setData(cell, dataRow, column);
 
-        Bitmap imageBitmap = DataProvider.getImageData(cell.imageUrl);
+        Bitmap imageBitmap = dataProvider.tableView.imageLoader.getImageData(cell.imageUrl);
         if(imageBitmap == null) {
           continue;
         }
