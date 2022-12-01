@@ -1,3 +1,10 @@
+# [1.1.0-alpha.102](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.101...v1.1.0-alpha.102) (2022-12-01)
+
+
+### Bug Fixes
+
+* check for both totals.show and position ([3c8f6a3](https://github.com/qlik-oss/react-native-simple-grid/commit/3c8f6a3e64f371603603b0895193b3919cb4eb05))
+
 # [1.1.0-alpha.101](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.100...v1.1.0-alpha.101) (2022-11-29)
 
 
