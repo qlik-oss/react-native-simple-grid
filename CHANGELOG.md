@@ -1,3 +1,10 @@
+# [1.1.0-alpha.104](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.103...v1.1.0-alpha.104) (2022-12-01)
+
+
+### Bug Fixes
+
+* ios - increase dragbox hit size ([b48f4c0](https://github.com/qlik-oss/react-native-simple-grid/commit/b48f4c0033348a92df889d9f6454b3cbada855f9))
+
 # [1.1.0-alpha.103](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.102...v1.1.0-alpha.103) (2022-12-01)
 
 
