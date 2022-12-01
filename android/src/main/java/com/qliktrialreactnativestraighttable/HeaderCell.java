@@ -136,7 +136,7 @@ public class HeaderCell extends LinearLayout {
       this.setLayoutParams(new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
       textWrapper = new TextWrapper(column, tableView, this);
       if(column.isDim) {
-        textWrapper.additionalPadding = (int)PixelUtils.dpToPx(16) * 2;
+        textWrapper.additionalPadding = TableTheme.CellPadding * 2;
       }
       this.setBackgroundColor(Color.TRANSPARENT);
       this.setGravity(Gravity.CENTER_VERTICAL);

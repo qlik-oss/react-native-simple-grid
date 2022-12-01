@@ -33,8 +33,8 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
   final boolean isInFirstColumnRecyclerView;
   final View.OnCreateContextMenuListener onCreateContextMenuListener;
   GestureDetector gestureDetector;
-  static final int PADDING = (int)PixelUtils.dpToPx(8);
-  static final int PADDING_X_2 =  (int)PixelUtils.dpToPx(16);
+  static final int PADDING = TableTheme.CellPadding;
+  static final int PADDING_X_2 = TableTheme.CellPadding * 2;
 
   @SuppressLint("ClickableViewAccessibility")
   CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean isInFirstColumnRecyclerView, DataColumn dataColumn) {
