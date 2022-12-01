@@ -26,6 +26,7 @@ public class CustomRecyclerView extends RecyclerView {
   public boolean firstColumnOnly;
   public boolean active = false;
   public CustomRecyclerView scrollCoupledView = null;
+  public MockVerticalScrollView verticalScrollBar = null;
   Paint paint = new Paint();
 
   public CustomRecyclerView(Context context, boolean onlyFirstColumn, DataProvider dp, TableView tv, LinearLayoutManager ll, DragBox db, DragBox firstColumnDb) {
@@ -47,12 +48,14 @@ public class CustomRecyclerView extends RecyclerView {
     if (onlyFirstColumn) {
       return;
     }
-    this.setVerticalScrollBarEnabled(true);
-    this.setScrollbarFadingEnabled(true);
-    this.setVerticalScrollbarThumbDrawable(new ScrollBarDrawable());
+    this.setVerticalScrollBarEnabled(false);
 
     dragBox.setScrollListener(this);
     firstColumnDb.setScrollListener(this);
+  }
+
+  public void setScrollbar(MockVerticalScrollView verticalScrollBar){
+    this.verticalScrollBar = verticalScrollBar;
   }
 
   @Override
@@ -101,6 +104,10 @@ public class CustomRecyclerView extends RecyclerView {
       super.onScrolled(rv, dx, dy);
       if (active && scrollCoupledView != null) {
         scrollCoupledView.scrollBy(dx, dy);
+      }
+      if (verticalScrollBar != null) {
+        verticalScrollBar.setContentHeight(rv.computeVerticalScrollRange());
+        verticalScrollBar.setScrollY(rv.computeVerticalScrollOffset());
       }
 
       if (linearLayoutManager.findLastCompletelyVisibleItemPosition() >= dataProvider.getItemCount() - 50

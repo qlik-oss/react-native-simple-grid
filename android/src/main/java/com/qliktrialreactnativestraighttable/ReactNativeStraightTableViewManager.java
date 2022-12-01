@@ -29,9 +29,6 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 public class ReactNativeStraightTableViewManager extends SimpleViewManager<View> {
-  ReadableMap cols;
-  ReadableMap rows;
-  DataSize dataSize;
 
   public static final String REACT_CLASS = "ReactNativeStraightTableView";
     @Override
@@ -47,21 +44,17 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       return new TableView(reactContext);
     }
 
-    private boolean isAllFetched() {
-      return cols != null && rows != null;
-    }
-
-    private void processRows(TableView tableView, List<DataColumn> dataColumns) {
+    private void processRows(TableView tableView, ReadableMap rows) {
       ReadableArray dataRows = rows.getArray("rows");
       if(dataRows != null) {
         boolean resetData = rows.getBoolean("reset");
-        RowFactory factory = new RowFactory(dataRows, dataColumns);
+        RowFactory factory = new RowFactory(dataRows, tableView.getColumns(), tableView.imageLoader);
         List<DataRow> transformedRows = factory.getRows();
         tableView.setRows(transformedRows, resetData);
       }
     }
 
-    private List<DataColumn> processColumns(TableView tableView) {
+    private List<DataColumn> processColumns(TableView tableView, ReadableMap cols) {
       String totalsLabel = null, totalsPosition = null;
       ReadableArray totalsRows = null;
 
@@ -86,16 +79,6 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       return dataColumns;
     }
 
-    private void initializeWhenReady(TableView tableView) {
-      if(!isAllFetched()) {
-        return;
-      }
-
-      List<DataColumn> dataColumns = processColumns(tableView);
-      processRows(tableView, dataColumns);
-      tableView.setDataColumns(dataColumns);
-    }
-
     @ReactProp(name = "theme")
     public void setTheme(View view, ReadableMap theme) {
 
@@ -118,42 +101,35 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
 
     @ReactProp(name = "cols")
     public void setCols(View view,  @Nullable ReadableMap source) {
-      if(source != null) {
-        cols = source;
-        TableView tableView = (TableView) (view);
-        initializeWhenReady(tableView);
+      if(source == null) {
+        return;
       }
+      TableView tableView = (TableView) (view);
+      List<DataColumn> dataColumns = processColumns(tableView, source);
+      tableView.setDataColumns(dataColumns);
     }
 
     @ReactProp(name = "isDataView")
     public void setDataView(View view, boolean isDataView) {
       TableView tableView = (TableView) (view);
       tableView.setDataView(isDataView);
-
-      initializeWhenReady(tableView);
     }
 
     @ReactProp(name = "rows")
     public void setRows(View view, @Nullable ReadableMap source) {
-      if(source != null) {
-        TableView tableView = (TableView) (view);
-        rows = source;
-        boolean resetData = rows.getBoolean("reset");
-
-        if (resetData) {
-          initializeWhenReady(tableView);
-          return;
-        }
-
-        processRows(tableView, tableView.getColumns());
+      if(source == null) {
+        return;
       }
+
+      TableView tableView = (TableView) (view);
+      processRows(tableView, source);
     }
 
     @ReactProp(name = "size")
     public void setSize(View view, @Nullable ReadableMap source) {
       if(source != null) {
         TableView tableView = (TableView) view;
-        dataSize = new DataSize(source);
+        DataSize dataSize = new DataSize(source);
         tableView.setDataSize(dataSize);
       }
     }

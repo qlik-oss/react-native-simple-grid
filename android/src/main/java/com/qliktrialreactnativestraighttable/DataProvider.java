@@ -33,8 +33,6 @@ import okhttp3.Response;
 
 @SuppressLint("NotifyDataSetChanged")
 public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-  public static Set<String> imagePaths = new HashSet<>();
-  public static Map<String, Bitmap> imageData = new HashMap<>();
   private final int NUM_LINES = 1;
   private final int FONT_SIZE = 14;
   private final int VIEW_TYPE_ITEM = 0;
@@ -96,59 +94,12 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return dataColumns;
   }
 
-  public static Bitmap getImageData(String url) {
-    return imageData.get(url);
+
+  public boolean isInitialized() {
+    return dataColumns != null && rows != null;
   }
 
-  public static void addImagePath(String imageUrl) {
-    if(!URLUtil.isValidUrl(imageUrl)) {
-      return;
-    }
-    imagePaths.add(imageUrl);
-  }
-
-  public static void fetchImages() {
-    final CountDownLatch latch = new CountDownLatch(imagePaths.size());
-    Iterator<String> iterator = imagePaths.iterator();
-    while (iterator.hasNext()) {
-      String imageUrl = iterator.next();
-      boolean isDuplicateImageUrl = imageData.containsKey(imageUrl);
-      if(isDuplicateImageUrl || !URLUtil.isValidUrl(imageUrl)) {
-        latch.countDown();
-        continue;
-      }
-      imageData.put(imageUrl, null);
-      try {
-        HttpUtils.get(imageUrl, new Callback() {
-            public void onResponse(Call call, Response response) {
-              InputStream inputStream = response.body().byteStream();
-              Bitmap bitmap = PixelUtils.byteStreamToBitmap(inputStream);
-              imageData.replace(imageUrl, bitmap);
-              latch.countDown();
-            }
-
-            public void onFailure(Call call, IOException e) {
-              latch.countDown();
-            }
-        });
-      } catch(Exception e) {
-        latch.countDown();
-        imageData.remove(imageUrl);
-        e.printStackTrace();
-      }
-    }
-    try {
-      latch.await();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-  }
-
-    public boolean isInitialized() {
-      return dataColumns != null && rows != null;
-    }
-
-    public class ProgressHolder extends RecyclerView.ViewHolder {
+  public class ProgressHolder extends RecyclerView.ViewHolder {
     private final RelativeLayout row;
     public ProgressHolder(View view) {
       super(view);
@@ -254,7 +205,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       }
       this.notifyDataSetChanged();
     }
-    fetchImages();
+    tableView.imageLoader.fetchImages();
     setLoading(false);
   }
   public void setDataColumns(List<DataColumn> cols) {

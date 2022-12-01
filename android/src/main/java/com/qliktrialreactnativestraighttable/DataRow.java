@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DataRow {
   public List<DataCell> cells = new ArrayList<>();
-  public DataRow(ReadableMap source, List<DataColumn> columns) {
+  public DataRow(ReadableMap source, List<DataColumn> columns, ImageLoader imageLoader) {
     ReadableMapKeySetIterator iterator = source.keySetIterator();
     while (iterator.hasNextKey()) {
       String key = iterator.nextKey();
@@ -27,7 +27,7 @@ public class DataRow {
         if(column == null) {
           continue;
         }
-        cells.add(new DataCell(cellItem, column));
+        cells.add(new DataCell(cellItem, column, imageLoader));
       }
     }
     Collections.sort(cells, (a, b) -> a.rawColIdx - b.rawColIdx);
