@@ -1,3 +1,10 @@
+# [1.1.0-alpha.112](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.111...v1.1.0-alpha.112) (2022-12-02)
+
+
+### Bug Fixes
+
+* background color image views ([#162](https://github.com/qlik-oss/react-native-simple-grid/issues/162)) ([f104ae5](https://github.com/qlik-oss/react-native-simple-grid/commit/f104ae57e1cc88904b470ff12c88ddcda505d9d8))
+
 # [1.1.0-alpha.111](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.110...v1.1.0-alpha.111) (2022-12-02)
 
 
