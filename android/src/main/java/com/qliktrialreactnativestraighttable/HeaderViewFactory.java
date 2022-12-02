@@ -108,7 +108,7 @@ public class HeaderViewFactory {
       params.bottomMargin = TableTheme.DefaultRowHeight;
     }
     text.setLayoutParams(params);
-
+    text.setTextColor(tableView.cellContentStyle.color);
     text.setBackgroundColor(Color.WHITE);
     text.setZ((int) PixelUtils.dpToPx(headerZ));
     text.setTextSize(tableView.cellContentStyle.fontSize);

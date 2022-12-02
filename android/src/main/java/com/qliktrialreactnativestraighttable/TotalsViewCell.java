@@ -3,6 +3,7 @@ package com.qliktrialreactnativestraighttable;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.widget.LinearLayout;
@@ -19,6 +20,9 @@ public class TotalsViewCell extends androidx.appcompat.widget.AppCompatTextView 
     this.column = dataColumn;
     this.tableView = tableView;
     textWrapper = new TextWrapper(column, tableView, this);
+
+    int textColor = tableView.cellContentStyle.color;
+    setTextColor(textColor);
   }
 
   public void setColumn(DataColumn col) {
