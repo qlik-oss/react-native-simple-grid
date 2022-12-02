@@ -1,3 +1,10 @@
+# [1.1.0-alpha.110](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.109...v1.1.0-alpha.110) (2022-12-02)
+
+
+### Bug Fixes
+
+* use rawColIdx ([#160](https://github.com/qlik-oss/react-native-simple-grid/issues/160)) ([1214b24](https://github.com/qlik-oss/react-native-simple-grid/commit/1214b245a69cf042d7f9b2e4ebbbf5db23926b4e))
+
 # [1.1.0-alpha.109](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.108...v1.1.0-alpha.109) (2022-12-02)
 
 
