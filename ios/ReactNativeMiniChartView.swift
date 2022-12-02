@@ -10,6 +10,7 @@ import Foundation
 class ReactNativeMiniChartView: UIView {
   var cell: DataCell?
   var col: DataColumn?
+  var fillColor = UIColor.clear
   var miniChart = MiniChartRenderer()
 
   @objc var rowData: NSDictionary = [:] {
@@ -18,6 +19,11 @@ class ReactNativeMiniChartView: UIView {
         let json = try JSONSerialization.data(withJSONObject: rowData)
         let decodedCellData = try JSONDecoder().decode(DataCell.self, from: json)
         cell = decodedCellData
+        if let cellBackground = cell?.cellBackgroundColor {
+          self.fillColor = ColorParser.fromCSS(cssString: cellBackground)
+        } else {
+          self.fillColor = .clear
+        }
       } catch {
         print(error)
       }
@@ -64,6 +70,8 @@ class ReactNativeMiniChartView: UIView {
 
   override func draw(_ rect: CGRect) {
     guard let ctx = UIGraphicsGetCurrentContext() else { return }
+    ctx.setFillColor(fillColor.cgColor)
+    ctx.fill(rect)
     miniChart.render(ctx, rect: rect)
   }
 

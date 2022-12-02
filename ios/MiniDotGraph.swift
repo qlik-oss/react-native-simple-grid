@@ -22,7 +22,6 @@ class MiniDotGraph: MiniSparkLineChart {
     horizontalPadding = 16
     clearDots()
     if rect.size.height == 0 {return}
-    ctx.clear(rect)
     getBandWidth(rect: rect, data: data)
     resetScales(rect)
 

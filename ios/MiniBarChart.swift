@@ -12,7 +12,6 @@ class MiniBarChart: MiniChartRenderer {
     guard let data = data else {return}
     guard let rows = data.qMatrix else {return}
     if rect.size.height == 0 {return}
-    ctx.clear(rect)
     getBandWidth(rect: rect, data: data)
     resetScales(rect)
     var x = padding + horizontalPadding / 2
