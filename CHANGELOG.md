@@ -1,3 +1,11 @@
+# [1.1.0-alpha.108](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.107...v1.1.0-alpha.108) (2022-12-02)
+
+
+### Bug Fixes
+
+* **md-3896:** expand row text color ([#158](https://github.com/qlik-oss/react-native-simple-grid/issues/158)) ([b5ba7fc](https://github.com/qlik-oss/react-native-simple-grid/commit/b5ba7fcf0875238cce6d9963bf29f4a2652c9614))
+* text only view data ([#157](https://github.com/qlik-oss/react-native-simple-grid/issues/157)) ([8ffed04](https://github.com/qlik-oss/react-native-simple-grid/commit/8ffed0409098e396df2d49c73a285342aeada5fb))
+
 # [1.1.0-alpha.107](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.106...v1.1.0-alpha.107) (2022-12-01)
 
 
