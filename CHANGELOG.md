@@ -1,3 +1,10 @@
+# [1.1.0-alpha.113](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.112...v1.1.0-alpha.113) (2022-12-02)
+
+
+### Bug Fixes
+
+* padding on charts ([4f3aa53](https://github.com/qlik-oss/react-native-simple-grid/commit/4f3aa537f36886b05e6748ac728ad6e43cdbee84))
+
 # [1.1.0-alpha.112](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.111...v1.1.0-alpha.112) (2022-12-02)
 
 
