@@ -112,6 +112,11 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
         if representation.type == "miniChart" && !isDataView {
           if let miniChart = views[index] as? MiniChartView {
             miniChart.menuTranslations = menuTranslations
+            if let cellBackground = element.cellBackgroundColor {
+              miniChart.fillColor = ColorParser.fromCSS(cssString: cellBackground)
+            } else {
+              miniChart.fillColor = .clear
+            }
             miniChart.cell = element
             miniChart.setChartData(data: element, representedAs: representation)
             miniChart.delegate = self

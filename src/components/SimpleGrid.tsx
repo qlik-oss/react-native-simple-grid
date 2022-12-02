@@ -56,10 +56,8 @@ export type SimpleGridProps = {
 const transformTotals = (layout: any, table: any) => {
   let totals;
   let rowIndex = 0;
-  let firstCol = true;
-  let values = table?.columns?.map((col: any) => {
-    if (col.isDim && firstCol) {
-      firstCol = false;
+  let values = table?.columns?.map((col: any, index: number) => {
+    if (col.isDim && index === 0) {
       return layout.totals.label || 'Totals';
     }
     if (!col.isDim && rowIndex < layout.qHyperCube.qGrandTotalRow.length) {

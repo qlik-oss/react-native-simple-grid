@@ -12,6 +12,7 @@ class MiniChartView: UIView, ConstraintCellProtocol {
   var miniChart = MiniChartRenderer()
   var dynamicWidth = NSLayoutConstraint()
   let contextMenu = ContextMenu()
+  var fillColor = UIColor.clear
   var cell: DataCell?
   var menuTranslations: MenuTranslations?
   weak var delegate: ExpandedCellProtocol?
@@ -84,6 +85,9 @@ class MiniChartView: UIView, ConstraintCellProtocol {
 
   override func draw(_ rect: CGRect) {
     guard let ctx = UIGraphicsGetCurrentContext() else { return }
+    ctx.clear(rect)
+    ctx.setFillColor(fillColor.cgColor)
+    ctx.fill(rect);
     miniChart.render(ctx, rect: rect)
   }
 
