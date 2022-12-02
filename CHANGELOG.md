@@ -1,3 +1,10 @@
+# [1.1.0-alpha.111](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.110...v1.1.0-alpha.111) (2022-12-02)
+
+
+### Bug Fixes
+
+* background for non text cells and minichart potential crash fix ([#161](https://github.com/qlik-oss/react-native-simple-grid/issues/161)) ([9805a03](https://github.com/qlik-oss/react-native-simple-grid/commit/9805a03732f24196743157e5a70b10a44f4509b9))
+
 # [1.1.0-alpha.110](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.109...v1.1.0-alpha.110) (2022-12-02)
 
 
