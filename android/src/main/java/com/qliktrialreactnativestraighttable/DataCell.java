@@ -111,7 +111,14 @@ public class DataCell {
     cell.put("rawRowIdx", rawRowIdx);
     cell.put("rawColIdx", rawColIdx);
     cell.put("isNumber", isNumber);
-
+    if(cellForegroundColorValid) {
+      String hexColor = String.format("#%06X", 0xFFFFFF & cellForegroundColor);
+      cell.put("cellForegroundColor", hexColor);
+    }
+    if(cellBackgroundColorValid) {
+      String hexColor = String.format("#%06X", 0xFFFFFF & cellBackgroundColor);
+      cell.put("cellBackgroundColor", hexColor);
+    }
     if(qAttrExpValues != null) {
       JSONObject qAttrExps = new JSONObject();
       qAttrExps.put("qValues", qAttrExpValues.toEvent());
