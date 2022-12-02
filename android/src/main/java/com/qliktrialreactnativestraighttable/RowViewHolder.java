@@ -78,7 +78,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         cellView.setData(cell, dataRow, column);
         cellView.convertCellContentType("miniChart", column);
         MiniChartView miniChartView = (MiniChartView) cellView.content;
-        miniChartView.setData(cell, column);
+        miniChartView.setData(cell, column, cellView);
       } else {
         cellView.convertCellContentType("text", column);
         ClickableTextView textView = (ClickableTextView) cellView.content;
