@@ -22,8 +22,8 @@ public class DataRow {
         if(cellItem == null) {
           continue;
         }
-        int colIdx = cellItem.getInt("colIdx");
-        DataColumn column = DataProvider.getDataColumnByIdx(colIdx, columns);
+        int rawColIdx = cellItem.getInt("rawColIdx");
+        DataColumn column = DataProvider.getDataColumnByRawIdx(rawColIdx, columns);
         if(column == null) {
           continue;
         }
