@@ -155,7 +155,8 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   }
 
   public void updateBackgroundColor(boolean shouldAnimate) {
-    int color = selected ? TableTheme.selectedBackground : Color.TRANSPARENT;
+    int bgColor = cell.cellBackgroundColorValid ? cell.cellBackgroundColor : Color.TRANSPARENT;
+    int color = selected ? TableTheme.selectedBackground : bgColor;
     cellView.setBackgroundColor(color);
     if(shouldAnimate) {
       startAnimation(fadeIn);
@@ -175,6 +176,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   @Override
   public void setCellData(DataCell cell, DataRow row, DataColumn column) {
     this.cell = cell;
+    cellView.setBackgroundColor(cell.cellBackgroundColorValid ? cell.cellBackgroundColor : Color.TRANSPARENT);
   }
 
   @Override

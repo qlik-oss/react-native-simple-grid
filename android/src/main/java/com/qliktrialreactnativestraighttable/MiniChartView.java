@@ -15,12 +15,17 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.facebook.react.bridge.ReadableMap;
+
 import java.io.ByteArrayOutputStream;
 
 public class MiniChartView extends View implements Content {
+  ReadableMap column = null;
+  ReadableMap cell = null;
   Rect bounds = new Rect();
   Paint paint = new Paint();
   DataCell dataCell = null;
+  CellView cellView = null;
   DataColumn dataColumn = null;
   MiniChartRenderer miniChartRenderer = null;
 
@@ -29,9 +34,10 @@ public class MiniChartView extends View implements Content {
     paint.setColor(Color.BLUE);
   }
 
-  public void setData(DataCell cell, DataColumn column) {
+  public void setData(DataCell cell, DataColumn column, CellView cellView) {
     this.dataCell = cell;
     this.dataColumn = column;
+    this.cellView = cellView;
     if(miniChartRenderer == null) {
       if (cell.miniChart != null && column.representation != null) {
         if (column.representation.miniChart != null) {
@@ -79,6 +85,11 @@ public class MiniChartView extends View implements Content {
   @Override
   public void setCellData(DataCell cell, DataRow row, DataColumn column)  {
     dataCell = cell;
+    if(cellView == null) {
+      return;
+    }
+    int color = cell.cellBackgroundColorValid ? cell.cellBackgroundColor : Color.TRANSPARENT;
+    cellView.setBackgroundColor(color);
   }
 
   @Override

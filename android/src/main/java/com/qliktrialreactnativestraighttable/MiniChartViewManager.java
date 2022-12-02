@@ -22,8 +22,7 @@ import java.util.Map;
 
 public class MiniChartViewManager extends SimpleViewManager<View> {
   public static final String REACT_CLASS = "MiniChartView";
-  public ReadableMap column = null;
-  public ReadableMap cell = null;
+
   @Override
   @NonNull
   public String getName() {
@@ -41,9 +40,9 @@ public class MiniChartViewManager extends SimpleViewManager<View> {
   @ReactProp(name = "colData")
   public void setCol(View view, ReadableMap col) {
     MiniChartView miniChartView = (MiniChartView) view;
-    column = col;
+    miniChartView.column = col;
 
-    if (cell != null) {
+    if (miniChartView.cell != null) {
       setupMiniChart(miniChartView);
     }
   }
@@ -51,17 +50,17 @@ public class MiniChartViewManager extends SimpleViewManager<View> {
   @ReactProp(name = "rowData")
   public void setCell(View view, ReadableMap cell) {
     MiniChartView miniChartView = (MiniChartView) view;
-    this.cell = cell;
+    miniChartView.cell = cell;
 
-    if (column != null) {
+    if (miniChartView.column != null) {
       setupMiniChart(miniChartView);
     }
   }
 
   public void setupMiniChart(MiniChartView miniChartView) {
-    DataColumn dataColumn = new DataColumn(column, 0);
-    DataCell dataCell = new DataCell(cell, dataColumn, null);
+    DataColumn dataColumn = new DataColumn(miniChartView.column, 0);
+    DataCell dataCell = new DataCell(miniChartView.cell, dataColumn, null);
 
-    miniChartView.setData(dataCell, dataColumn);
+    miniChartView.setData(dataCell, dataColumn, null);
   }
 }

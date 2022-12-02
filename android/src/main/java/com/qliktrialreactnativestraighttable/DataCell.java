@@ -63,12 +63,14 @@ public class DataCell {
           return new qValue((HashMap<String, Object>) valueSource);
         }).collect(Collectors.toList());
         qAttrExpValues = new qValues(values);
-        int urlId = column.stylingInfo.indexOf("imageUrl");
-        if(urlId != -1) {
-          String url = qAttrExpValues.get(urlId).qText;
-          if (URLUtil.isValidUrl(url)) {
-            imageUrl = url;
-            imageLoader.addImagePath(imageUrl);
+        if(column.stylingInfo != null) {
+          int urlId = column.stylingInfo.indexOf("imageUrl");
+          if(urlId != -1) {
+            String url = qAttrExpValues.get(urlId).qText;
+            if (URLUtil.isValidUrl(url)) {
+              imageUrl = url;
+              imageLoader.addImagePath(imageUrl);
+            }
           }
         }
       }
