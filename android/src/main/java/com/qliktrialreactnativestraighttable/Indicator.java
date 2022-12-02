@@ -14,11 +14,12 @@ public class Indicator {
   String position = null;
   boolean showTextValues = false;
   char icon;
+  String iconKey;
   boolean hasIcon = false;
 
   Indicator(ReadableMap data) {
-    applySegmentColors = data.hasKey("applySegmentColors") ? data.getBoolean("applySegmentColors") : false;
-    showTextValues = data.hasKey("showTextValues") ? data.getBoolean("showTextValues") : false;
+    applySegmentColors = data.hasKey("applySegmentColors") && data.getBoolean("applySegmentColors");
+    showTextValues = data.hasKey("showTextValues") && data.getBoolean("showTextValues");
     position = data.hasKey("position") ? data.getString("position") : null;
     index = data.hasKey("index") ? data.getInt("index") : -1;
     parseColor(data);
@@ -37,13 +38,16 @@ public class Indicator {
     json.put("showTextValues", showTextValues);
     json.put("position", position);
     json.put("index", index);
+    String hexColor = String.format("#%06X", 0xFFFFFF & color);
+    json.put("color", hexColor);
+    json.put("icon", iconKey);
     return json;
   }
 
   private void getIcon(ReadableMap data) {
     if (data.hasKey("icon")) {
       hasIcon = true;
-      String iconKey = data.getString("icon");
+      iconKey = data.getString("icon");
       switch (iconKey) {
         case "m":
           icon = 0xe96c;

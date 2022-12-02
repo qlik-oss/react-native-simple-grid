@@ -59,7 +59,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
       }
 
       CellView cellView = (CellView) row.getChildAt(columnIndex);
-      if(column.representation.type.equals("image")) {
+      if(column.representation.type.equals("image") && !dataProvider.isDataView) {
         LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
         cellView.setLayoutParams(layout);
         cellView.convertCellContentType("image", column);
@@ -72,7 +72,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         ClickableImageView imageView = (ClickableImageView) cellView.content;
         imageView.setImageBitmap(imageBitmap);
         imageView.scaleAndPositionImage(column, imageBitmap);
-      } else if(column.representation.type.equals("miniChart")) {
+      } else if(column.representation.type.equals("miniChart") && !dataProvider.isDataView) {
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
         cellView.setLayoutParams(cellViewLayoutParams);
         cellView.setData(cell, dataRow, column);
@@ -81,7 +81,6 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         miniChartView.setData(cell, column);
       } else {
         cellView.convertCellContentType("text", column);
-
         ClickableTextView textView = (ClickableTextView) cellView.content;
         RelativeLayout.LayoutParams textViewLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(textViewLayoutParams);
@@ -89,12 +88,12 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         cellViewLayoutParams.gravity = Gravity.TOP;
         cellView.setLayoutParams(cellViewLayoutParams);
 
-        if(column.representation.type.equals("text")) {
+        if(column.representation.type.equals("text") || dataProvider.isDataView) {
           cell.indicator = null;
         }
 
         cellView.setData(cell, dataRow, column);
-        if(column.representation.type.equals("url")) {
+        if(column.representation.type.equals("url") && !dataProvider.isDataView) {
           setupHyperLink(textView);
         }
         if(column.isDim && cellContentStyle.wrap) {
