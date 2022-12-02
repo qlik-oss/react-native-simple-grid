@@ -230,7 +230,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   }
 
   public void copyToClipBoard() {
-    String text = cell.qText != null ? cell.qText : "";
+    String text = cell != null ? cell.qText : "";
     ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
     ClipData clip = ClipData.newPlainText(text, text);
     clipboard.setPrimaryClip(clip);

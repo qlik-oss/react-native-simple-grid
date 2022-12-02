@@ -49,8 +49,8 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     }
     for(int i = 0; i < numColumns; i++) {
       DataCell cell = dataRow.cells.get(i);
-      DataColumn column = DataProvider.getDataColumnByIdx(cell.colIdx, dataProvider.dataColumns);
       int columnIndex = cell.rawColIdx;
+      DataColumn column = DataProvider.getDataColumnByRawIdx(columnIndex, dataProvider.dataColumns);
 
       if(columnIndex >= row.getChildCount()) {
         TableView tableView = dataProvider.tableView;

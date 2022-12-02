@@ -90,6 +90,15 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return null;
   }
 
+  public static DataColumn getDataColumnByRawIdx(int idx, List<DataColumn> columns) {
+    for(DataColumn column : columns) {
+      if(column.columnIndex == idx) {
+        return column;
+      }
+    }
+    return null;
+  }
+
   public List<DataColumn> getDataColumns() {
     return dataColumns;
   }
