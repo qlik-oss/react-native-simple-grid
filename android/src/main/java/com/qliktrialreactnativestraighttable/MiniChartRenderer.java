@@ -12,7 +12,7 @@ public class MiniChartRenderer {
   Rect bounds = new Rect();
   Paint paint = new Paint();
   float horizontalPadding = 20.0f;
-  float verticalPadding = 8.0f;
+  float verticalPadding = 16.0f;
   float bandwidth = 0.0f;
   float padding = 0.0f;
   float scale = 0.0f;
@@ -57,7 +57,8 @@ public class MiniChartRenderer {
   protected void setScales() {
     float height = bounds.height() - (verticalPadding * 2.0f);
     scale = height / yScale;
-    xAxis = miniChartData.qMin < 0.0 ?  (float)bounds.height() + ((float)miniChartData.qMin * scale) : bounds.height();
+    xAxis = miniChartData.qMin < 0.0 ? height + ((float)miniChartData.qMin * scale) : height;
+    xAxis = xAxis + (verticalPadding * 1.25f );
   }
 
   protected void setColor(int index, float value, int count) {

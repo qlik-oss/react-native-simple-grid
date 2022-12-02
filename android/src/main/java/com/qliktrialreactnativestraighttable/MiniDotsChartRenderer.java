@@ -18,7 +18,7 @@ public class MiniDotsChartRenderer extends MiniChartRenderer{
     for(int i = 0; i < miniChartData.matrix.rows.size(); i++) {
       float value = (float) miniChartData.matrix.rows.get(i).columns.get(1).qNum;
       float height = value * scale;
-      float y = xAxis - height  ;
+      float y = xAxis - height;
       setColor(i, value, miniChartData.matrix.rows.size());
       canvas.drawCircle(x, y, dotRadius, paint);
       x += padding * 2.0f + bandwidth;
