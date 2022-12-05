@@ -9,18 +9,21 @@ import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 public class MockVerticalScrollView extends ScrollView {
+  int overScrolled = 0;
   View content;
 
-  public MockVerticalScrollView(Context context, TableView tableView) {
+  public MockVerticalScrollView(Context context) {
     super(context);
     setVerticalScrollBarEnabled(true);
     setZ(PixelUtils.dpToPx(4));
 
     content = new View(context);
     content.setBackgroundColor(Color.TRANSPARENT);
-    int total = tableView.dataProvider.dataSize.qcy;
-    content.setMinimumHeight(total * tableView.rowHeight);
     addView(content);
+  }
+
+  public void setOverScrolled(int overScrolled) {
+    this.overScrolled = overScrolled;
   }
 
   public void setContentHeight(int height){
