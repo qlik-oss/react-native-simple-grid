@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +23,7 @@ import java.util.List;
 
 public class TableViewFactory {
   public int extraTopMargin = 0;
+  public int extraBottomMargin = 0;
   public HeaderViewFactory headerViewFactory = null;
   public CustomHorizontalScrollView scrollView = null;
   public MockVerticalScrollView verticalScrollBar = null;
@@ -38,6 +41,7 @@ public class TableViewFactory {
   public ScreenGuideView screenGuideView = null;
   private List<DataColumn> dataColumns = null;
   public String totalsPosition;
+  private Space endSpace;
   private final Context context;
   private final ColumnWidths columnWidths;
   private final DataProvider dataProvider;
@@ -97,7 +101,7 @@ public class TableViewFactory {
     verticalFrameLayout.gravity = Gravity.RIGHT;
     int headerHeight = headerView.getMeasuredHeight() > 0 ? headerView.getMeasuredHeight() : tableView.headerHeight;
     verticalFrameLayout.topMargin = headerHeight + extraTopMargin;
-    verticalFrameLayout.bottomMargin = TableTheme.DefaultRowHeight;
+    verticalFrameLayout.bottomMargin = TableTheme.DefaultRowHeight + extraBottomMargin;
     verticalScrollBar.setLayoutParams(verticalFrameLayout);
 
     FrameLayout.LayoutParams horizontalFrameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) PixelUtils.dpToPx(5));
@@ -129,8 +133,9 @@ public class TableViewFactory {
 
   protected void createScrollView() {
     this.scrollView = new CustomHorizontalScrollView(context);
-    ScrollView.LayoutParams scrollLayoutParams = new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT);
+    LinearLayout.LayoutParams scrollLayoutParams = new LinearLayout.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT);
     scrollLayoutParams.bottomMargin = TableTheme.DefaultRowHeight;
+
     this.scrollView.setLayoutParams(scrollLayoutParams);
     this.scrollView.setFillViewport(true);
 
@@ -138,10 +143,8 @@ public class TableViewFactory {
   }
 
   protected void createRootLayout() {
-    FrameLayout.LayoutParams frameLayout = new FrameLayout.LayoutParams(0, FrameLayout.LayoutParams.MATCH_PARENT);
     this.rootLayout = new RootLayout(context, columnWidths);
-    this.rootLayout.setPadding(0, 0, (int) PixelUtils.dpToPx(25), 0);
-    this.rootLayout.setLayoutParams(frameLayout);
+    this.rootLayout.setPadding(0,0, (int) PixelUtils.dpToPx(25),0);
     this.rootLayout.addView(dragBox);
     this.rootLayout.setZ(PixelUtils.dpToPx(1));
 
@@ -336,6 +339,7 @@ public class TableViewFactory {
       switch(this.totalsPosition) {
         case "bottom":
           topPosition = false;
+          extraBottomMargin = tableView.totalsHeight;
           break;
         case "noTotals":
         case "top":
