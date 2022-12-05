@@ -35,9 +35,7 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
     horizontalScrollBar.setScrollX(scrollX);
 
     int overScroll = scrollX + horizontalScrollBar.getMeasuredWidth() - scrollRange + (int) PixelUtils.dpToPx(50);
-    verticalScrollBar.setOverScrolled(Math.max(0, overScroll));
-    verticalScrollBar.setTranslationX(-verticalScrollBar.overScrolled);
-
+    verticalScrollBar.setTranslationX(-Math.max(0, overScroll));
   }
 
   public void setScrollbars(MockHorizontalScrollView horizontalScrollBar, MockVerticalScrollView verticalScrollBar){
