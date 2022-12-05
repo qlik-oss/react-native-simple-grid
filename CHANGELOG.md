@@ -1,3 +1,10 @@
+# [1.1.0-alpha.114](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.113...v1.1.0-alpha.114) (2022-12-05)
+
+
+### Bug Fixes
+
+* threaded loader and search alignment ([#164](https://github.com/qlik-oss/react-native-simple-grid/issues/164)) ([29f9bbc](https://github.com/qlik-oss/react-native-simple-grid/commit/29f9bbc8d915ecda17601c1812ba25c3dff50d80))
+
 # [1.1.0-alpha.113](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.112...v1.1.0-alpha.113) (2022-12-02)
 
 
