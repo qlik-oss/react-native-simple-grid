@@ -41,7 +41,6 @@ public class TableViewFactory {
   public ScreenGuideView screenGuideView = null;
   private List<DataColumn> dataColumns = null;
   public String totalsPosition;
-  private Space endSpace;
   private final Context context;
   private final ColumnWidths columnWidths;
   private final DataProvider dataProvider;
