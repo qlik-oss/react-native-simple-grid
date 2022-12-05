@@ -11,15 +11,13 @@ import android.widget.ScrollView;
 public class MockVerticalScrollView extends ScrollView {
   View content;
 
-  public MockVerticalScrollView(Context context, TableView tableView) {
+  public MockVerticalScrollView(Context context) {
     super(context);
     setVerticalScrollBarEnabled(true);
     setZ(PixelUtils.dpToPx(4));
 
     content = new View(context);
     content.setBackgroundColor(Color.TRANSPARENT);
-    int total = tableView.dataProvider.dataSize.qcy;
-    content.setMinimumHeight(total * tableView.rowHeight);
     addView(content);
   }
 

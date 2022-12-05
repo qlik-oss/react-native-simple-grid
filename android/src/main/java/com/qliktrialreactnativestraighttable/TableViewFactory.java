@@ -106,6 +106,8 @@ public class TableViewFactory {
     FrameLayout.LayoutParams horizontalFrameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) PixelUtils.dpToPx(5));
     horizontalFrameLayout.gravity = Gravity.BOTTOM;
     horizontalFrameLayout.bottomMargin = TableTheme.DefaultRowHeight;
+    horizontalFrameLayout.rightMargin = (int) PixelUtils.dpToPx(25);
+
     horizontalScrollView.setLayoutParams(horizontalFrameLayout);
   }
 
@@ -123,10 +125,10 @@ public class TableViewFactory {
   }
 
   protected void createMockScrollBar() {
-    verticalScrollBar = new MockVerticalScrollView(context, tableView);
-    horizontalScrollView = new MockHorizontalScrollView(context, tableView);
+    verticalScrollBar = new MockVerticalScrollView(context);
+    horizontalScrollView = new MockHorizontalScrollView(context);
 
-    scrollView.setScrollbar(horizontalScrollView);
+    scrollView.setScrollbars(horizontalScrollView, verticalScrollBar);
     coupledRecyclerView.setScrollbar(verticalScrollBar);
   }
 

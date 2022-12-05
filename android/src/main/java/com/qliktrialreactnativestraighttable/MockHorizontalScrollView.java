@@ -11,14 +11,13 @@ import android.widget.ScrollView;
 public class MockHorizontalScrollView extends HorizontalScrollView {
   View content;
 
-  public MockHorizontalScrollView(Context context, TableView tableView) {
+  public MockHorizontalScrollView(Context context) {
     super(context);
     setHorizontalScrollBarEnabled(true);
     setZ(PixelUtils.dpToPx(4));
 
     content = new View(context);
     content.setBackgroundColor(Color.TRANSPARENT);
-    content.setMinimumWidth(tableView.totalWidth);
     content.setMinimumHeight((int) PixelUtils.dpToPx(6));
     addView(content);
   }
