@@ -1,3 +1,10 @@
+# [1.1.0-alpha.115](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.114...v1.1.0-alpha.115) (2022-12-05)
+
+
+### Bug Fixes
+
+* **md-3897:** align scrollbars android ([#165](https://github.com/qlik-oss/react-native-simple-grid/issues/165)) ([86346a4](https://github.com/qlik-oss/react-native-simple-grid/commit/86346a4c497924d201b5b14fbe704b066f447032))
+
 # [1.1.0-alpha.114](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.113...v1.1.0-alpha.114) (2022-12-05)
 
 
