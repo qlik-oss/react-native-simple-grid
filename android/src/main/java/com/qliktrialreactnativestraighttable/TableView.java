@@ -69,7 +69,7 @@ public class TableView extends FrameLayout {
     firstColumnDragBox = new DragBox(context, this, dragBoxEventHandler, true);
     dragBoxEventHandler.setDragBoxes(dragBox, firstColumnDragBox);
     tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider, dragBox, firstColumnDragBox);
-    imageLoader = new ImageLoader();
+    imageLoader = new ImageLoader(this);
   }
 
   public boolean isInitialized() {
@@ -269,14 +269,8 @@ public class TableView extends FrameLayout {
     layout(getLeft(), getTop(), getRight(), getBottom());
   };
 
-  @Override
-  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-    super.onSizeChanged(w, h, oldw, oldh);
-    totalWidth = w;
-    if(!this.isInitialized()) {
-      return;
-    }
-    columnWidths.loadWidths(w, dataProvider.dataColumns, dataProvider.rows);
+  public void initialize() {
+    columnWidths.loadWidths(totalWidth, dataProvider.dataColumns, dataProvider.rows);
     if(recyclerView == null) {
       createRecyclerView();
       post(new Runnable() {
@@ -298,6 +292,16 @@ public class TableView extends FrameLayout {
         }
       });
     }
+  }
+
+  @Override
+  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    super.onSizeChanged(w, h, oldw, oldh);
+    totalWidth = w;
+    if(!this.isInitialized() || imageLoader.loading) {
+      return;
+    }
+    initialize();
   }
 
   void createRecyclerView() {

@@ -214,7 +214,7 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       }
       this.notifyDataSetChanged();
     }
-    tableView.imageLoader.fetchImages();
+    tableView.imageLoader.loadImages();
     setLoading(false);
   }
   public void setDataColumns(List<DataColumn> cols) {

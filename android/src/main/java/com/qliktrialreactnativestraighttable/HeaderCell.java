@@ -9,7 +9,10 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Space;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -30,15 +33,13 @@ public class HeaderCell extends LinearLayout {
     this.cell = new HeaderText(context, column, tableView);
     this.searchButton = new SearchButton(context, tableView, column);
 
-    LinearLayoutCompat.LayoutParams layoutParams = new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    layoutParams.gravity = Gravity.LEFT;
-    layoutParams.weight = column.width;
+    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    layoutParams.weight = 1;
     cell.setLayoutParams(layoutParams);
     addView(cell);
 
     if(column.isDim) {
       LinearLayout.LayoutParams searchLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-      searchLayoutParams.gravity = Gravity.RIGHT;
       searchLayoutParams.weight = 0;
       searchButton.setLayoutParams(searchLayoutParams);
       addView(searchButton);
@@ -133,7 +134,7 @@ public class HeaderCell extends LinearLayout {
       super(context);
       this.column = column;
       this.tableView = tableView;
-      this.setLayoutParams(new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+      this.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
       textWrapper = new TextWrapper(column, tableView, this);
       if(column.isDim) {
         textWrapper.additionalPadding = TableTheme.CellPadding * 2;
