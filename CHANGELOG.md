@@ -1,3 +1,10 @@
+# [1.1.0-alpha.118](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.117...v1.1.0-alpha.118) (2022-12-06)
+
+
+### Bug Fixes
+
+* display image label urls ([44309c0](https://github.com/qlik-oss/react-native-simple-grid/commit/44309c0bf874533b2384122c9eb337bd145394f0))
+
 # [1.1.0-alpha.117](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.116...v1.1.0-alpha.117) (2022-12-06)
 
 
