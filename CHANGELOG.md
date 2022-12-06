@@ -1,3 +1,10 @@
+# [1.1.0-alpha.116](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.115...v1.1.0-alpha.116) (2022-12-06)
+
+
+### Bug Fixes
+
+* ios check for image label ([44c8cfa](https://github.com/qlik-oss/react-native-simple-grid/commit/44c8cfa86c09d926f03fbbf79b2865c4e9bafc60))
+
 # [1.1.0-alpha.115](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.114...v1.1.0-alpha.115) (2022-12-05)
 
 
