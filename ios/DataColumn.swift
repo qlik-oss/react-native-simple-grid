@@ -40,6 +40,7 @@ struct Representation: Codable {
   let globalMax: Double?
   let globalMin: Double?
   let imageSize: String?
+  let imageSetting: String?
   let imagePosition: String?
   let linkUrl: String?
   let urlLabel: String?

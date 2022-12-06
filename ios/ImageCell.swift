@@ -127,26 +127,40 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
   func setData(data: DataCell, representedAs rep: Representation, index: Int?) {
     self.representation = rep
     self.cell = data
-    guard let qAttrExps = data.qAttrExps else {return}
-    guard let qValues = qAttrExps.qValues else {return}
-    guard let attrIndex = index else { return }
-    if qValues.count > 0 {
-      guard let urlString = qValues[attrIndex].qText else {return}
-      guard let url = URL(string: urlString) else {return}
-      self.imagedata = nil;
-      if let pendingWorkItem = self.workItem {
-        pendingWorkItem.cancel();
-      }
-      let task = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
-        guard let data = data, error == nil else { return }
-        DispatchQueue.main.async {
-          self.imagedata = data
-          self.setNeedsLayout()
-        }
-      })
-      self.workItem = task;
-      task.resume()
+    
+    guard let urlString = getUrlString(data: data, representedAs: rep, index: index) else { return }
+    guard let url = URL(string: urlString) else {return}
+    self.imagedata = nil;
+    if let pendingWorkItem = self.workItem {
+      pendingWorkItem.cancel();
     }
+    let task = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
+      guard let data = data, error == nil else { return }
+      DispatchQueue.main.async {
+        self.imagedata = data
+        self.setNeedsLayout()
+      }
+    })
+    self.workItem = task;
+    task.resume()
+  }
+  
+  func getUrlString(data: DataCell, representedAs rep: Representation, index: Int?) -> String? {
+    var urlString = ""
+    if(rep.imageSetting == "label") {
+      urlString = data.qText ?? ""
+      return urlString
+    }
+    
+    guard let qAttrExps = data.qAttrExps else {return nil}
+    guard let qValues = qAttrExps.qValues else {return nil}
+    guard let attrIndex = index else { return nil }
+    
+    if qValues.count > 0 {
+      guard let urlString = qValues[attrIndex].qText else {return nil}
+      return urlString
+    }
+    return nil
   }
   
   override func layoutSubviews() {
