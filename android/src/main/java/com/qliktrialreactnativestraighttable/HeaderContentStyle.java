@@ -15,6 +15,7 @@ public class HeaderContentStyle {
   int fontSize;
   boolean wrap = true;
   int lineHeight = 1;
+  int rowHeight = 1;
 
   HeaderContentStyle (ReadableMap data) {
     String bgColor = JsonUtils.getString(data, "backgroundColor");
@@ -26,6 +27,7 @@ public class HeaderContentStyle {
     fontFamily = JsonUtils.getString(data, "fontFamily");
     fontSize = JsonUtils.getInt(data, "fontSize", 14);
     wrap = JsonUtils.getBoolean(data, "wrap", true);
+    rowHeight = JsonUtils.getInt(data,"rowHeight", 1);
   }
 
   public int getLineHeight() {
@@ -35,6 +37,6 @@ public class HeaderContentStyle {
     textPaint.setTextSize(this.fontSize);
     Paint.FontMetrics fm = textPaint.getFontMetrics();
     lineHeight = (int)Math.ceil(fm.bottom - fm.top + textPaint.getFontSpacing() * 2);
-    return lineHeight;
+    return lineHeight * rowHeight;
   }
 }
