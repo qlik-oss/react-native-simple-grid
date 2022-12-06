@@ -1,3 +1,10 @@
+# [1.1.0-alpha.117](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.116...v1.1.0-alpha.117) (2022-12-06)
+
+
+### Bug Fixes
+
+* **MD-3890:** increase line height some more ([#166](https://github.com/qlik-oss/react-native-simple-grid/issues/166)) ([9478a58](https://github.com/qlik-oss/react-native-simple-grid/commit/9478a58e36e682673b06e59f8b88158778c9b67b))
+
 # [1.1.0-alpha.116](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.115...v1.1.0-alpha.116) (2022-12-06)
 
 
