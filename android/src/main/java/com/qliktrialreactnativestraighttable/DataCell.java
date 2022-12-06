@@ -62,23 +62,34 @@ public class DataCell {
         List<qValue> values = qAttrExps.getArray("qValues").toArrayList().stream().map(valueSource -> {
           return new qValue((HashMap<String, Object>) valueSource);
         }).collect(Collectors.toList());
+
         qAttrExpValues = new qValues(values);
-        if(column.stylingInfo != null) {
-          int urlId = column.stylingInfo.indexOf("imageUrl");
-          if(urlId != -1) {
-            String url = qAttrExpValues.get(urlId).qText;
-            if (URLUtil.isValidUrl(url)) {
-              imageUrl = url;
-              imageLoader.addImagePath(imageUrl);
-            }
-          }
+        imageUrl = getImageUrl(column);
+        if(URLUtil.isValidUrl(imageUrl)) {
+          imageLoader.addImagePath(imageUrl);
         }
       }
-
     }
     updateCellColors(source);
     miniChart = source.hasKey("qMiniChart") ? new qMiniChart(source.getMap("qMiniChart")) : null;
     indicator = source.hasKey("indicator") ? new Indicator(source.getMap("indicator")) : null;
+  }
+
+  private String getImageUrl(DataColumn column) {
+
+    if(column.representation.imageSetting != null) {
+      if(column.representation.imageSetting.compareTo("label") == 0) {
+        return qText;
+      }
+    }
+
+    if(column.stylingInfo != null) {
+      int urlId = column.stylingInfo.indexOf("imageUrl");
+      if(urlId != -1) {
+        return qAttrExpValues.get(urlId).qText;
+      }
+    }
+    return null;
   }
 
   private void updateCellColors(ReadableMap data) {

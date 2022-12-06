@@ -18,6 +18,7 @@ public class Representation {
   public String linkUrl;
   public String linkLabel;
   public String urlPosition;
+  public String imageSetting;
 
   Representation(ReadableMap data) {
     type = data.getString("type");
@@ -30,6 +31,7 @@ public class Representation {
     linkUrl = JsonUtils.getString(data, "linkUrl");
     linkLabel = JsonUtils.getString(data, "linkLabel");
     urlPosition = JsonUtils.getString(data, "urlPosition");
+    imageSetting = JsonUtils.getString(data, "imageSetting");
     globalMax = data.hasKey("globalMax") ? data.getDouble("globalMax") : 0.0;
     globalMin = data.hasKey("globalMin") ? data.getDouble("globalMin") : 0.0;
     miniChart = data.hasKey("miniChart") ? new MiniChartInfo(data.getMap("miniChart")) : null;
