@@ -99,13 +99,21 @@ public class TableViewFactory {
     FrameLayout.LayoutParams verticalFrameLayout = new FrameLayout.LayoutParams((int) PixelUtils.dpToPx(5), FrameLayout.LayoutParams.MATCH_PARENT);
     verticalFrameLayout.gravity = Gravity.RIGHT;
     int headerHeight = headerView.getMeasuredHeight() > 0 ? headerView.getMeasuredHeight() : tableView.headerHeight;
-    verticalFrameLayout.topMargin = headerHeight + extraTopMargin;
-    verticalFrameLayout.bottomMargin = TableTheme.DefaultRowHeight + extraBottomMargin;
+    int extraTop = 0;
+    int extraBottom = 0;
+    if (tableView.totalsPosition.equals("top")) {
+      extraTop = tableView.totalsHeight;
+    } else if(tableView.totalsPosition.equals("bottom")) {
+      extraBottom = tableView.totalsHeight;
+    }
+
+    verticalFrameLayout.topMargin = headerHeight + extraTop;
+    verticalFrameLayout.bottomMargin = TableTheme.DefaultRowHeight + extraBottom;
     verticalScrollBar.setLayoutParams(verticalFrameLayout);
 
     FrameLayout.LayoutParams horizontalFrameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) PixelUtils.dpToPx(5));
     horizontalFrameLayout.gravity = Gravity.BOTTOM;
-    horizontalFrameLayout.bottomMargin = TableTheme.DefaultRowHeight;
+    horizontalFrameLayout.bottomMargin = tableView.totalsHeight;
     horizontalFrameLayout.rightMargin = (int) PixelUtils.dpToPx(25);
 
     horizontalScrollView.setLayoutParams(horizontalFrameLayout);
@@ -172,7 +180,6 @@ public class TableViewFactory {
     CustomLinearLayoutManger linearLayout = new CustomLinearLayoutManger(context);
     coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout, dragBox, firstColumnDragBox);
     FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    coupledRecyclerView.setLayoutParams(recyclerViewLayoutParams);
     CustomLinearLayoutManger firstColumnLinearLayout = new CustomLinearLayoutManger(context);
     firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout, dragBox, firstColumnDragBox);
     coupledRecyclerView.setZ(0);
@@ -185,6 +192,7 @@ public class TableViewFactory {
     coupledRecyclerView.setAdapter(dataProvider);
 
     recyclerViewLayoutParams.topMargin = marginTop;
+    coupledRecyclerView.setLayoutParams(recyclerViewLayoutParams);
     rootLayout.addView(coupledRecyclerView, recyclerViewLayoutParams);
 
     firstColumnLinearLayout.recyclerView = firstColumnRecyclerView;
@@ -387,8 +395,11 @@ public class TableViewFactory {
     headerView.setLayoutParams(params);
     FrameLayout.LayoutParams recyclerParams = (FrameLayout.LayoutParams) coupledRecyclerView.getLayoutParams();
     recyclerParams.topMargin = headerHeight;
+
     if(headerViewFactory.topPosition && totalsView != null) {
       recyclerParams.topMargin += tableView.totalsHeight;
+    } else if(!headerViewFactory.topPosition && totalsView != null) {
+      recyclerParams.bottomMargin = tableView.totalsHeight;
     }
     coupledRecyclerView.setLayoutParams(recyclerParams);
 
