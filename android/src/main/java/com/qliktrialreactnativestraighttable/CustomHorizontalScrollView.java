@@ -16,9 +16,15 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
   MockVerticalScrollView verticalScrollBar;
 
   boolean disableIntercept = false;
-  public CustomHorizontalScrollView(Context context) {
+  public CustomHorizontalScrollView(Context context, TableView tableView) {
     super(context);
     setHorizontalScrollBarEnabled(false);
+  }
+
+  public int getOverScrollOffset() {
+    int scrollRange = computeHorizontalScrollRange();
+    int scrollX = computeHorizontalScrollOffset();
+    return scrollX + getMeasuredWidth() - scrollRange + (int) PixelUtils.dpToPx(25);
   }
 
   @Override
@@ -34,8 +40,7 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
     horizontalScrollBar.setContentWidth(scrollRange);
     horizontalScrollBar.setScrollX(scrollX);
 
-    int overScroll = scrollX + horizontalScrollBar.getMeasuredWidth() - scrollRange + (int) PixelUtils.dpToPx(50);
-    verticalScrollBar.setTranslationX(-Math.max(0, overScroll));
+    verticalScrollBar.setOverScrollOffset(getOverScrollOffset());
   }
 
   public void setScrollbars(MockHorizontalScrollView horizontalScrollBar, MockVerticalScrollView verticalScrollBar){
