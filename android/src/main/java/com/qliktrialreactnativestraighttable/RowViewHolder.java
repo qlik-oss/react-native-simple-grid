@@ -137,13 +137,11 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     int currentWidth = dataProvider.dataColumns.get(column).width;
     float newWidth = currentWidth + deltaWidth;
 
-    if(newWidth < dataProvider.minWidth) {
+    if(newWidth < DataProvider.minWidth) {
       return false;
     }
 
-    if (!updateNeighbour(deltaWidth, column)) {
-      return false;
-    }
+    updateNeighbour(deltaWidth, column);
     ViewGroup.LayoutParams params = view.getLayoutParams();
     params.width = (int) newWidth;
     view.setLayoutParams(params);
