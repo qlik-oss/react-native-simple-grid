@@ -137,13 +137,13 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         float width = column.width;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)width, tableView.rowHeight);
 
-        if (column.representation.type.equals("image")) {
+        if (column.representation.type.equals("image") && !isDataView) {
           CellView cellView = new CellView(parent.getContext(), "image", this.selectionsEngine, this.tableView, recyclerView.firstColumnOnly, column);
           LinearLayout.LayoutParams cellLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
 
           rowView.addView(cellView, cellLayoutParams);
 
-        } else if(column.representation.type.equals("miniChart")) {
+        } else if(column.representation.type.equals("miniChart")  && !isDataView) {
           CellView cellView = new CellView(parent.getContext(), "miniChart", this.selectionsEngine, this.tableView, recyclerView.firstColumnOnly, column);
 
           rowView.addView(cellView);
@@ -214,7 +214,9 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       }
       this.notifyDataSetChanged();
     }
-    tableView.imageLoader.loadImages();
+    if(!isDataView) {
+      tableView.imageLoader.loadImages();
+    }
     setLoading(false);
   }
   public void setDataColumns(List<DataColumn> cols) {

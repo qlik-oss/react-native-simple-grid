@@ -31,7 +31,8 @@ public class TotalsViewCell extends androidx.appcompat.widget.AppCompatTextView 
 
   public void testTextWrap() {
     if(tableView.headerContentStyle.wrap) {
-      textWrapper.testOnlyTextWrap();
+      textWrapper.countWords(getText().toString());
+      textWrapper.testTextWrap();
     }
   }
 

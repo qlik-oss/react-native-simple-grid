@@ -86,8 +86,7 @@ public class HeaderViewFactory {
   }
 
   public static TotalsViewCell buildFixedTotalsCell(TableView tableView, DataColumn column, TotalsCell totalsCell, boolean topPosition) {
-    int headerHeight = tableView.headerHeight;
-    int padding = (int) PixelUtils.dpToPx(16);
+    int padding = TableTheme.CellPadding;
     TotalsViewCell text = new TotalsViewCell(tableView.getContext(), column, tableView);
     text.setTypeface(text.getTypeface(), Typeface.BOLD);
     text.setEllipsize(TextUtils.TruncateAt.END);
@@ -153,7 +152,7 @@ public class HeaderViewFactory {
 
   public static TotalsViewCell createTotalsCell(Context context, DataColumn column, TableView tableView) {
     TotalsViewCell text = new TotalsViewCell(context, column, tableView);
-    int padding = (int) PixelUtils.dpToPx(16);
+    int padding = TableTheme.CellPadding;
     text.setTypeface(text.getTypeface(), Typeface.BOLD);
     text.setEllipsize(TextUtils.TruncateAt.END);
     text.setTextSize(tableView.cellContentStyle.fontSize);

@@ -29,7 +29,6 @@ public class DataColumn {
   public int dataColIdx = 0;
   public boolean active = false;
   public int textAlignment = Gravity.LEFT;
-  public int rowHeight = TableTheme.DefaultRowHeight;
   public DataColumn(ReadableMap source, int index) {
     ReadableMap representationMap = source.getMap("representation");
     representation = new Representation(representationMap);

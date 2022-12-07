@@ -133,7 +133,7 @@ public class TableViewFactory {
   }
 
   protected void createScrollView() {
-    this.scrollView = new CustomHorizontalScrollView(context);
+    this.scrollView = new CustomHorizontalScrollView(context, tableView);
     LinearLayout.LayoutParams scrollLayoutParams = new LinearLayout.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT);
     scrollLayoutParams.bottomMargin = TableTheme.DefaultRowHeight;
 

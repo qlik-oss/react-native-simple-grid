@@ -44,6 +44,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   String linkUrl = null;
   String linkLabel = null;
   DataCell cell = null;
+  boolean isDataView = false;
   boolean selected = false;
   int defaultTextColor = Color.BLACK;
   Animation fadeIn;
@@ -57,6 +58,13 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     defaultTextColor = getCurrentTextColor();
     fadeIn = AnimationUtils.loadAnimation(context, R.anim.catalyst_fade_in);
     textWrapper = new ClickableTextWrapper(tableView, this);
+  }
+
+  public void setIsDataView(boolean isDataView) {
+    this.isDataView = isDataView;
+    if(cell != null) {
+      cell.setIsDataView(isDataView);
+    }
   }
 
   @SuppressLint("ClickableViewAccessibility")
@@ -98,8 +106,8 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   }
 
   public void updateBackgroundColor(boolean shouldAnimate) {
-    int bgColor = cell.cellBackgroundColorValid ? cell.cellBackgroundColor : Color.TRANSPARENT;
-    int fgColor = cell.cellForegroundColorValid ? cell.cellForegroundColor : tableView.cellContentStyle.color;
+    int bgColor = cell.showBackground ? cell.cellBackgroundColor : Color.TRANSPARENT;
+    int fgColor = cell.showForeground ? cell.cellForegroundColor : tableView.cellContentStyle.color;
     int color = selected ? TableTheme.selectedBackground : bgColor ;
     int textColor = selected ? Color.WHITE : fgColor ;
     cellView.setBackgroundColor(color);
@@ -154,15 +162,15 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     this.column = column;
     this.cell = cell;
 
+    cell.setIsDataView(isDataView);
     if(cell.indicator != null) {
       buildSpannableText();
     } else {
       setText(cell.qText);
       textWrapper.countWords(cell.qText);
     }
-
-    setTextColor(cell.cellForegroundColorValid ? cell.cellForegroundColor : tableView.cellContentStyle.color);
-    setBackgroundColor(cell.cellBackgroundColorValid ? cell.cellBackgroundColor : Color.TRANSPARENT);
+    setTextColor(cell.showForeground ? cell.cellForegroundColor : tableView.cellContentStyle.color);
+    setBackgroundColor(cell.showBackground ? cell.cellBackgroundColor : Color.TRANSPARENT);
 
     if(cell.type.equals("url")) {
       setupUrl();

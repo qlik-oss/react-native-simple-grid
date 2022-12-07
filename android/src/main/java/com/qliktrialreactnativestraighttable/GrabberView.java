@@ -60,19 +60,24 @@ public class GrabberView extends LinearLayout {
           motionDx = (float) Math.round(motionDx);
           if (dataProvider.updateWidth(motionDx, GrabberView.this.column)) {
             // cast here to avoid drift
-
             GrabberView.this.updateGrabbers(motionDx);
             GrabberView.this.updateTotals();
             GrabberView.this.updateHeader(motionDx);
             GrabberView.this.updateFixedTotalsCell(motionDx);
             GrabberView.this.updateFirstColumnHeader(motionDx);
-            GrabberView.this.tableView.tableViewFactory.updateScrollbarBounds();
             lastX = motionEvent.getRawX();
             if(isLastColumn && motionDx > 0) {
               GrabberView.this.rootLayout.requestLayout();
               GrabberView.this.recyclerView.requestLayout();
               GrabberView.this.scrollView.updateLayout();
               GrabberView.this.scrollView.scrollBy((int) motionDx, 0);
+            }
+            GrabberView.this.tableView.tableViewFactory.updateScrollbarBounds();
+            int overScroll = GrabberView.this.tableView.scrollView.getOverScrollOffset();
+            if (overScroll > 0) {
+              GrabberView.this.tableView.verticalScrollBar.setTranslationX(GrabberView.this.tableView.verticalScrollBar.getTranslationX() + motionDx);
+            } else {
+              GrabberView.this.tableView.verticalScrollBar.setTranslationX(0);
             }
           }
           return true;

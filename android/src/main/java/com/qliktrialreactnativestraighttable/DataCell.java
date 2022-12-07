@@ -35,6 +35,8 @@ public class DataCell {
   int cellBackgroundColor;
   boolean cellForegroundColorValid = false;
   boolean cellBackgroundColorValid = false;
+  boolean showForeground = false;
+  boolean showBackground = false;
   qValues qAttrExpValues;
   public DataCell(ReadableMap source, DataColumn column, ImageLoader imageLoader) {
     type = column.representation.type;
@@ -108,6 +110,12 @@ public class DataCell {
     } catch (Exception e) {
       Log.e("ReactNativeSimpleGrid", e.getMessage());
     }
+  }
+
+
+  public void setIsDataView(boolean isDataView) {
+    showForeground = !isDataView && cellForegroundColorValid;
+    showBackground = !isDataView && cellBackgroundColorValid;
   }
 
   public JSONObject toEvent() throws JSONException {

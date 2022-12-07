@@ -13,8 +13,9 @@ public class ClickableTextWrapper extends TextWrapper{
       int lines = calculateLineCount();
       if(lines != lineCount && lines <= wordCount) {
         lineCount = lines;
-        tableView.updateRecyclerViewLineCount(column);
       }
+      // Update rendered line height as it needs to decrease as well as increase with line count
+      tableView.updateRecyclerViewLineCount(column);
     }
   }
   int getMeasureLinedCount(DataColumn column) {

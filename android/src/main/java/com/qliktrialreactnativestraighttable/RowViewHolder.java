@@ -82,6 +82,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
       } else {
         cellView.convertCellContentType("text", column);
         ClickableTextView textView = (ClickableTextView) cellView.content;
+        textView.setIsDataView(dataProvider.isDataView);
         RelativeLayout.LayoutParams textViewLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(textViewLayoutParams);
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
