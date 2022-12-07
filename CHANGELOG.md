@@ -1,3 +1,10 @@
+# [1.1.0-alpha.120](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.119...v1.1.0-alpha.120) (2022-12-07)
+
+
+### Bug Fixes
+
+* missing row & update mock scroll on totals update ([#169](https://github.com/qlik-oss/react-native-simple-grid/issues/169)) ([7279816](https://github.com/qlik-oss/react-native-simple-grid/commit/727981609135fc8070e00e145bd739370f43d33f))
+
 # [1.1.0-alpha.119](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.118...v1.1.0-alpha.119) (2022-12-07)
 
 
