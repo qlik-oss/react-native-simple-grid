@@ -101,12 +101,13 @@ public class TableViewFactory {
     int headerHeight = headerView.getMeasuredHeight() > 0 ? headerView.getMeasuredHeight() : tableView.headerHeight;
     int extraTop = 0;
     int extraBottom = 0;
-    if (tableView.totalsPosition.equals("top")) {
-      extraTop = tableView.totalsHeight;
-    } else if(tableView.totalsPosition.equals("bottom")) {
-      extraBottom = tableView.totalsHeight;
+    if(tableView.totalsPosition != null) {
+      if (tableView.totalsPosition.equals("top")) {
+        extraTop = tableView.totalsHeight;
+      } else if(tableView.totalsPosition.equals("bottom")) {
+        extraBottom = tableView.totalsHeight;
+      }
     }
-
     verticalFrameLayout.topMargin = headerHeight + extraTop;
     verticalFrameLayout.bottomMargin = TableTheme.DefaultRowHeight + extraBottom;
     verticalScrollBar.setLayoutParams(verticalFrameLayout);
