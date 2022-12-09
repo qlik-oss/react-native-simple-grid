@@ -190,10 +190,6 @@ public class TableView extends FrameLayout {
       tableViewFactory.firstColumnHeaderCell.setColumn(cols.get(0));
     }
 
-    if(tableViewFactory.firstColumnTotalsCell != null) {
-      tableViewFactory.firstColumnTotalsCell.setText(totalsLabel);
-    }
-
     if(grabbers != null) {
       for(GrabberView grabberView : grabbers) {
         grabberView.setDataProvider(dataProvider);
