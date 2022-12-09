@@ -54,7 +54,7 @@ public class HeaderView extends AutoLinearLayout{
 
     for(int i = 0; i < this.dataColumns.size(); i++) {
       HeaderCell headerCell = (HeaderCell)this.getChildAt(i);
-      headerCell.cell.setMaxLines(lineCount);
+      headerCell.cell.setMaxLines(lineCount, dataColumns.get(i));
     }
     return lineCount;
   }

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -217,9 +218,8 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     return selected;
   }
 
-  @Override
-  public void setMaxLines(int maxLines) {
-    maxLines = textWrapper.setMaxLines(maxLines);
+  public void setMaxLines(int maxLines, DataColumn column) {
+    maxLines = textWrapper.setMaxLines(maxLines, column);
     super.setMaxLines(maxLines);
   }
 
@@ -230,6 +230,9 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   }
 
   public int getMeasuredLineCount() {
+    if(column != null && !column.isDim) {
+      return 1;
+    }
     return textWrapper.getMeasuredLinedCount();
   }
 
@@ -247,4 +250,5 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   public String getCopyMenuString() {
     return "copy";
   }
+
 }
