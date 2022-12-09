@@ -1,3 +1,10 @@
+# [1.1.0-alpha.124](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.123...v1.1.0-alpha.124) (2022-12-09)
+
+
+### Bug Fixes
+
+* Wrapping in header and view data height ([#174](https://github.com/qlik-oss/react-native-simple-grid/issues/174)) ([fa361bc](https://github.com/qlik-oss/react-native-simple-grid/commit/fa361bca7435368a1f5bb2d2d74fba5fd7008625))
+
 # [1.1.0-alpha.123](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.122...v1.1.0-alpha.123) (2022-12-09)
 
 
