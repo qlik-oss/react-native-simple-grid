@@ -19,7 +19,7 @@ const iconMap = new Map([
   ['Q', 'remove'],
   ['è', 'warning'],
   ['¢', 'clean-hands'],
-  ['©', 'lag'],
+  ['©', 'flag'],
   ['23F4', 'lightbulb'],
   ['2013', 'stop'],
   ['&', 'pie-chart'],
