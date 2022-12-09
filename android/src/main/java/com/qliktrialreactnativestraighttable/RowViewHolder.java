@@ -142,7 +142,6 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
       return false;
     }
 
-    updateNeighbour(deltaWidth, column);
     ViewGroup.LayoutParams params = view.getLayoutParams();
     params.width = (int) newWidth;
     view.setLayoutParams(params);
@@ -160,7 +159,6 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     }
   }
 
-
   public boolean setWidth(int width, int column) {
     if(column > numColumns - 1) {
       return true;
@@ -171,21 +169,6 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     params.width = width;
     view.setLayoutParams(params);
 
-    return true;
-  }
-
-  private boolean updateNeighbour(float deltaWidth, int column) {
-    if (column + 1 < numColumns ) {
-      View neighbour =  row.getChildAt(column + 1);
-      int currentWidth = dataProvider.dataColumns.get(column + 1).width;
-      float newWidth = currentWidth - deltaWidth;
-      if (newWidth < dataProvider.minWidth) {
-        return false;
-      }
-      ViewGroup.LayoutParams params = neighbour.getLayoutParams();
-      params.width = (int)newWidth;
-      neighbour.setLayoutParams(params);
-    }
     return true;
   }
 
