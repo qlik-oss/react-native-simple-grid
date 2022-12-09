@@ -48,6 +48,7 @@ public class Representation {
     column.put("urlPosition", urlPosition);
     column.put("globalMax", globalMax);
     column.put("globalMin", globalMin);
+    column.put("imageSetting", imageSetting);
     if(miniChart != null) {
       column.put("miniChart", miniChart.toEvent());
     }
