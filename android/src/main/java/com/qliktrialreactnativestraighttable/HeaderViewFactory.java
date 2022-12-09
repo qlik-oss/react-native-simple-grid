@@ -55,7 +55,7 @@ public class HeaderViewFactory {
     this.bottomPosition = totalsPosition.equals("bottom");
     this.headerContentStyle = contentStyle;
     buildHeader(context);
-    if (totalsCells != null && !totalsPosition.equals("noTotals")) {
+    if (totalsCells != null) {
       buildTotals(context);
     }
   }

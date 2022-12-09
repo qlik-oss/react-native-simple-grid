@@ -65,6 +65,7 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
         totalsPosition = totals.getString("position");
         totalsLabel = totals.getString("label");
         totalsRows = totals.getArray("rows");
+
         tableView.setTotals(totalsRows, totalsPosition, totalsLabel);
       }
 

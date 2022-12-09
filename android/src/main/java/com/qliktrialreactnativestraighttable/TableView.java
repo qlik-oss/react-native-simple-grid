@@ -91,8 +91,23 @@ public class TableView extends FrameLayout {
   public void setTotals(ReadableArray totalsRows, String totalsPosition, String totalsLabel) {
     this.totalsLabel = totalsLabel;
     this.totalsRows = totalsRows;
-    this.totalsPosition = totalsPosition;
-    dataProvider.setTotals(totalsRows, totalsLabel, totalsPosition);
+
+    if(totalsPosition == null) {
+      this.totalsPosition = "noTotals";
+    } else {
+      switch(totalsPosition) {
+        case "bottom":
+          this.totalsPosition = totalsPosition;
+          break;
+        default:
+        case "noTotals":
+        case "top":
+          this.totalsPosition = "top";
+          break;
+      }
+    }
+
+    dataProvider.setTotals(totalsRows, totalsLabel, this.totalsPosition);
   }
 
   public void clearSelections() {
@@ -270,7 +285,7 @@ public class TableView extends FrameLayout {
   }
 
   void createRecyclerView() {
-    dataProvider.setTotals(totalsRows, totalsLabel, totalsPosition);
+    setTotals(totalsRows, totalsPosition, totalsLabel);
     tableViewFactory.createAll();
     recyclerView = tableViewFactory.coupledRecyclerView;
     grabbers = tableViewFactory.grabbers;
@@ -280,9 +295,6 @@ public class TableView extends FrameLayout {
     verticalScrollBar = tableViewFactory.verticalScrollBar;
     screenGuideView = tableViewFactory.screenGuideView;
     firstColumnView = tableViewFactory.firstColumnRecyclerView;
-    post(() -> {
-      tableViewFactory.updateScrollbarBounds();
-    });
   }
 
   void invalidateLayout() {
