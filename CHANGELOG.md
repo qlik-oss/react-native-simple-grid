@@ -1,3 +1,10 @@
+# [1.1.0-alpha.125](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.124...v1.1.0-alpha.125) (2022-12-09)
+
+
+### Bug Fixes
+
+* check for position ([12b6b94](https://github.com/qlik-oss/react-native-simple-grid/commit/12b6b94ab0c62044f3dff447141a26ef7eeefa9f))
+
 # [1.1.0-alpha.124](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.123...v1.1.0-alpha.124) (2022-12-09)
 
 
