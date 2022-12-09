@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TableViewFactory {
-  public int extraTopMargin = 0;
-  public int extraBottomMargin = 0;
   public HeaderViewFactory headerViewFactory = null;
   public CustomHorizontalScrollView scrollView = null;
   public MockVerticalScrollView verticalScrollBar = null;
@@ -114,7 +112,8 @@ public class TableViewFactory {
 
     FrameLayout.LayoutParams horizontalFrameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) PixelUtils.dpToPx(5));
     horizontalFrameLayout.gravity = Gravity.BOTTOM;
-    horizontalFrameLayout.bottomMargin = tableView.totalsHeight;
+    // When first column is frozen it is a child of tableView and requires extra bottom margin
+    horizontalFrameLayout.bottomMargin = tableView.isFirstColumnFrozen ? TableTheme.DefaultRowHeight : 0;
     horizontalFrameLayout.rightMargin = (int) PixelUtils.dpToPx(25);
 
     horizontalScrollView.setLayoutParams(horizontalFrameLayout);
@@ -187,7 +186,9 @@ public class TableViewFactory {
     coupledRecyclerView.setElevation(0);
 
     int headerHeight = tableView.headerHeight;
-    int marginTop = headerHeight + extraTopMargin;
+    int extraTop = tableView.totalsPosition.equals("top") ? tableView.totalsHeight : 0;
+    int extraBottom = tableView.totalsPosition.equals("bottom") ? tableView.totalsHeight : 0;
+    int marginTop = headerHeight + extraTop;
 
     linearLayout.recyclerView = coupledRecyclerView;
     coupledRecyclerView.setAdapter(dataProvider);
@@ -200,7 +201,7 @@ public class TableViewFactory {
     firstColumnRecyclerView.setAdapter(dataProvider);
     FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
     firstColumnViewLayoutParams.topMargin = marginTop;
-    firstColumnViewLayoutParams.bottomMargin = TableTheme.DefaultRowHeight;
+    firstColumnViewLayoutParams.bottomMargin = TableTheme.DefaultRowHeight + extraBottom;
     firstColumnRecyclerView.setLayoutParams(firstColumnViewLayoutParams);
 
     if(tableView.isFirstColumnFrozen) {
@@ -298,15 +299,6 @@ public class TableViewFactory {
   void invalidateLayout() {
     if (this.coupledRecyclerView != null) {
       int width = dataColumns.get(0).width;
-      int marginTop = tableView.headerHeight + extraTopMargin;
-
-      FrameLayout.LayoutParams recyclerViewLayoutParams = (FrameLayout.LayoutParams) coupledRecyclerView.getLayoutParams();
-      recyclerViewLayoutParams.topMargin = marginTop;
-      coupledRecyclerView.setLayoutParams(recyclerViewLayoutParams);
-
-      FrameLayout.LayoutParams firstColumnRecyclerViewLayoutParams = (FrameLayout.LayoutParams) firstColumnRecyclerView.getLayoutParams();
-      firstColumnRecyclerViewLayoutParams.topMargin = marginTop;
-      firstColumnRecyclerView.setLayoutParams(firstColumnRecyclerViewLayoutParams);
 
       if (this.firstColumnHeaderCell != null) {
         ViewGroup.LayoutParams params = firstColumnHeaderCell.getLayoutParams();
@@ -327,15 +319,26 @@ public class TableViewFactory {
 
       this.headerView.updateLayout();
       this.headerView.requestLayout();
-
-      updateScrollbarBounds();
-
       this.dataProvider.invalidateLayout();
+
+      int extraTop = tableView.totalsPosition.equals("top") ? tableView.totalsHeight : 0;
+      int extraBottom = tableView.totalsPosition.equals("bottom") ? tableView.totalsHeight : 0;
+      int marginTop = tableView.headerHeight + extraTop;
+
+      FrameLayout.LayoutParams recyclerViewLayoutParams = (FrameLayout.LayoutParams) coupledRecyclerView.getLayoutParams();
+      recyclerViewLayoutParams.topMargin = marginTop;
+      coupledRecyclerView.setLayoutParams(recyclerViewLayoutParams);
+
       if (this.firstColumnRecyclerView != null) {
+        FrameLayout.LayoutParams firstColumnRecyclerViewLayoutParams = (FrameLayout.LayoutParams) firstColumnRecyclerView.getLayoutParams();
+        firstColumnRecyclerViewLayoutParams.topMargin = marginTop;
+        firstColumnRecyclerViewLayoutParams.bottomMargin = TableTheme.DefaultRowHeight + extraBottom;
+        firstColumnRecyclerView.setLayoutParams(firstColumnRecyclerViewLayoutParams);
         this.firstColumnRecyclerView.requestLayout();
       }
       this.coupledRecyclerView.requestLayout();
 
+      updateScrollbarBounds();
       updateGrabbers();
 
       this.rootLayout.requestLayout();
@@ -344,23 +347,7 @@ public class TableViewFactory {
   }
 
   private void createHeaderFactory() {
-    boolean topPosition = false;
-    if(this.totalsCells != null) {
-      switch(this.totalsPosition) {
-        case "bottom":
-          topPosition = false;
-          extraBottomMargin = tableView.totalsHeight;
-          break;
-        case "noTotals":
-        case "top":
-        default:
-          topPosition = true;
-          extraTopMargin = tableView.totalsHeight;
-          break;
-      }
-
-    }
-    this.headerViewFactory = new HeaderViewFactory(dataColumns, totalsCells, dataProvider.totalsLabel, topPosition, tableView, tableView.headerContentStyle, context);
+    this.headerViewFactory = new HeaderViewFactory(dataColumns, totalsCells, dataProvider.totalsLabel, totalsPosition, tableView, tableView.headerContentStyle, context);
   }
 
   public void updateGrabbers() {
@@ -399,7 +386,7 @@ public class TableViewFactory {
 
     if(headerViewFactory.topPosition && totalsView != null) {
       recyclerParams.topMargin += tableView.totalsHeight;
-    } else if(!headerViewFactory.topPosition && totalsView != null) {
+    } else if(headerViewFactory.bottomPosition && totalsView != null) {
       recyclerParams.bottomMargin = tableView.totalsHeight;
     }
     coupledRecyclerView.setLayoutParams(recyclerParams);
@@ -430,9 +417,11 @@ public class TableViewFactory {
     if(firstColumnRecyclerView != null && tableView != null) {
       FrameLayout.LayoutParams dd = (FrameLayout.LayoutParams) firstColumnRecyclerView.getLayoutParams();
       if(dd != null) {
-        dd.topMargin = tableView.headerHeight ;
+        dd.topMargin = tableView.headerHeight;
         if(headerViewFactory.topPosition && totalsView != null) {
           dd.topMargin += tableView.totalsHeight;
+        } else if(headerViewFactory.bottomPosition && totalsView != null) {
+          dd.bottomMargin = TableTheme.DefaultRowHeight + tableView.totalsHeight;
         }
         firstColumnRecyclerView.setLayoutParams(dd);
         updateFirstColumnHeaderHeight();
