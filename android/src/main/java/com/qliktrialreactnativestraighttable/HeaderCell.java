@@ -120,8 +120,8 @@ public class HeaderCell extends LinearLayout {
   }
 
   void setMaxLines(int maxLineCount) {
-    if(this.cell != null) {
-      this.cell.setMaxLines(maxLineCount);
+    if(this.cell != null && this.column != null) {
+      this.cell.setMaxLines(maxLineCount, this.column);
     }
   }
   @SuppressLint("ViewConstructor")
@@ -149,9 +149,8 @@ public class HeaderCell extends LinearLayout {
       }
     }
 
-    @Override
-    public void setMaxLines(int maxLines) {
-      maxLines = textWrapper.setMaxLines(maxLines);
+    public void setMaxLines(int maxLines, DataColumn column) {
+      maxLines = textWrapper.setMaxLines(maxLines, column);
       super.setMaxLines(maxLines);
     }
 

@@ -36,13 +36,15 @@ public class TotalsViewCell extends androidx.appcompat.widget.AppCompatTextView 
     }
   }
 
-  @Override
-  public void setMaxLines(int maxLines) {
-    maxLines = textWrapper.setMaxLines(maxLines);
+  public void setMaxLines(int maxLines, DataColumn column) {
+    maxLines = textWrapper.setMaxLines(maxLines, column);
     super.setMaxLines(maxLines);
   }
 
   int getMeasuredLinedCount() {
+    if(column != null && !column.isDim) {
+      return 1;
+    }
     return textWrapper.getMeasuredLinedCount();
   }
 

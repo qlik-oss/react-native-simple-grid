@@ -217,9 +217,8 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     return selected;
   }
 
-  @Override
-  public void setMaxLines(int maxLines) {
-    maxLines = textWrapper.setMaxLines(maxLines);
+  public void setMaxLines(int maxLines, DataColumn column) {
+    maxLines = textWrapper.setMaxLines(maxLines, column);
     super.setMaxLines(maxLines);
   }
 
@@ -230,6 +229,9 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   }
 
   public int getMeasuredLineCount() {
+    if(column != null && !column.isDim) {
+      return 1;
+    }
     return textWrapper.getMeasuredLinedCount();
   }
 

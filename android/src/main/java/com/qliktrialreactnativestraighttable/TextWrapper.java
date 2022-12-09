@@ -65,7 +65,7 @@ public class TextWrapper {
   }
 
   protected int calculateLineCount() {
-    int width = column.width - additionalPadding;
+    int width = Math.max(textView.getMeasuredWidth() - textView.getPaddingRight() - textView.getPaddingLeft(), 0);
     measureTextPaint.setTypeface(textView.getTypeface());
     StaticLayout.Builder builder = StaticLayout.Builder.obtain(textView.getText(), 0, textView.getText().length(), measureTextPaint, width);
     builder.setIncludePad(true);
@@ -81,10 +81,16 @@ public class TextWrapper {
     return lineCount;
   }
 
-  public int setMaxLines(int maxLines) {
-    countWords(textView.getText().toString());
-    maxLines = wordCount > 1 ? maxLines : 1;
+  public int setMaxLines(int maxLines, DataColumn column) {
+    if(column.isDim) {
+      countWords(textView.getText().toString());
+      maxLines = wordCount > 1 ? maxLines : 1;
+    } else {
+      maxLines = 1;
+      wordCount = 1;
+    }
     return maxLines;
+
   }
 
   public void countWords(String text) {

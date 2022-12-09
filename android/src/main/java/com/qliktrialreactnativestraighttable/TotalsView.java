@@ -48,7 +48,7 @@ public class TotalsView extends AutoLinearLayout{
 
     for(int i = 0; i < this.dataColumns.size(); i++) {
       TotalsViewCell totalsCell = (TotalsViewCell)this.getChildAt(i);
-      totalsCell.setMaxLines(lineCount);
+      totalsCell.setMaxLines(lineCount, dataColumns.get(i));
     }
     return lineCount;
   }

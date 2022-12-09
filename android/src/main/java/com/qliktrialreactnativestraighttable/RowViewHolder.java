@@ -98,7 +98,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
           setupHyperLink(textView);
         }
         if(column.isDim && cellContentStyle.wrap) {
-          textView.setMaxLines(rowHeight/cellContentStyle.lineHeight);
+          textView.setMaxLines(rowHeight/cellContentStyle.lineHeight, column);
         } else {
           textView.setMaxLines(1);
         }
@@ -149,16 +149,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
 
     DataColumn dataColumn = dataProvider.dataColumns.get(column);
     checkTextWrap(dataColumn);
-    checkNeighbourTextWrap(column);
-
     return true;
-  }
-
-  private void checkNeighbourTextWrap(int column) {
-    if (column + 1 < numColumns ) {
-      DataColumn dataColumn = dataProvider.dataColumns.get(column);
-      checkTextWrap(dataColumn);
-    }
   }
 
   private void checkTextWrap(DataColumn dataColumn) {
@@ -233,7 +224,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         if(column.columnIndex < row.getChildCount()) {
           CellView cellView = (CellView) row.getChildAt(column.columnIndex);
           ClickableTextView clickableTextView = (ClickableTextView) cellView.content;
-          clickableTextView.setMaxLines(lines);
+          clickableTextView.setMaxLines(lines, column);
           clickableTextView.setGravity(column.textAlignment | Gravity.CENTER_VERTICAL);
           clickableTextView.requestLayout();
         }
