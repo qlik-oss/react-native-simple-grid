@@ -78,7 +78,7 @@ public class TableView extends FrameLayout {
 
   public int getContentTop() {
     int top = headerHeight ;
-    if(dataProvider.totalsPosition.equals("top")){
+    if(dataProvider.totalsPosition != null && dataProvider.totalsPosition.equals("top")){
       top += headerHeight;
     }
     return top;
