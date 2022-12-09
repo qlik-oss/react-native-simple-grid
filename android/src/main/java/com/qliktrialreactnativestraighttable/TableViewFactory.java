@@ -114,8 +114,7 @@ public class TableViewFactory {
 
     FrameLayout.LayoutParams horizontalFrameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) PixelUtils.dpToPx(5));
     horizontalFrameLayout.gravity = Gravity.BOTTOM;
-    // When first column is frozen it is a child of tableView and requires extra bottom margin
-    horizontalFrameLayout.bottomMargin = tableView.isFirstColumnFrozen ? TableTheme.DefaultRowHeight : 0;
+    horizontalFrameLayout.bottomMargin = TableTheme.DefaultRowHeight;
     horizontalFrameLayout.rightMargin = (int) PixelUtils.dpToPx(25);
 
     horizontalScrollView.setLayoutParams(horizontalFrameLayout);
