@@ -65,7 +65,7 @@ public class TextWrapper {
   }
 
   protected int calculateLineCount() {
-    int width = Math.max(textView.getMeasuredWidth() - textView.getPaddingRight() - textView.getPaddingLeft(), 0);
+    int width = Math.max(column.width - textView.getPaddingRight() - textView.getPaddingLeft(), 0);
     measureTextPaint.setTypeface(textView.getTypeface());
     StaticLayout.Builder builder = StaticLayout.Builder.obtain(textView.getText(), 0, textView.getText().length(), measureTextPaint, width);
     builder.setIncludePad(true);

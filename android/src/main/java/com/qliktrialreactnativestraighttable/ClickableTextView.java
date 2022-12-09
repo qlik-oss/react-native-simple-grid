@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -248,5 +249,15 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
 
   public String getCopyMenuString() {
     return "copy";
+  }
+
+  @Override
+  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    super.onSizeChanged(w, h, oldw, oldh);
+//    int foo = getMaxLines();
+//    TextUtils.TruncateAt bar = getEllipsize();
+//    setEllipsize(TextUtils.TruncateAt.END);
+//    int total = getPaddingLeft() + getPaddingRight();
+//    int ww = total;
   }
 }

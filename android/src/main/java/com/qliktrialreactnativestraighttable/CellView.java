@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
+import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -76,6 +77,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
       case "text":
         ClickableTextView textView = new ClickableTextView(getContext(), selectionsEngine, tableView, this, dataColumn);
         textView.setPadding(PADDING, 0, PADDING, 0);
+        textView.setEllipsize(TextUtils.TruncateAt.END);
         content = textView;
         break;
       case "image":
@@ -209,15 +211,20 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
   }
 
   @Override
-  protected void onLayout(boolean changed, int l, int t, int r, int b) {
-    super.onLayout(changed, l, t, r, b);
-    LinearLayout.LayoutParams layout = (LinearLayout.LayoutParams) getLayoutParams();
-    if(column == null) {
-      return;
-    }
-    layout.width = column.width;
-    setLayoutParams(layout);
+  public void requestLayout() {
+    super.requestLayout();
+    post(measureAndLayout);
   }
+
+  private final Runnable measureAndLayout = new Runnable() {
+    @Override
+    public void run() {
+      measure(
+        MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+        MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+      layout(getLeft(), getTop(), getRight(), getBottom());
+    }
+  };
 
   class SingleTapListener extends GestureDetector.SimpleOnGestureListener {
     @Override
