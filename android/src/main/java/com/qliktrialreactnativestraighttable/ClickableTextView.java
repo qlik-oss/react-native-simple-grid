@@ -251,13 +251,4 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     return "copy";
   }
 
-  @Override
-  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-    super.onSizeChanged(w, h, oldw, oldh);
-//    int foo = getMaxLines();
-//    TextUtils.TruncateAt bar = getEllipsize();
-//    setEllipsize(TextUtils.TruncateAt.END);
-//    int total = getPaddingLeft() + getPaddingRight();
-//    int ww = total;
-  }
 }
