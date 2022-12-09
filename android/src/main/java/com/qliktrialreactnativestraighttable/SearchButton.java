@@ -13,8 +13,6 @@ public class SearchButton extends androidx.appcompat.widget.AppCompatImageButton
   final DataColumn column;
   final TableView tableView;
   final int defaultColor = Color.TRANSPARENT;
-  final int pressedColor = Color.parseColor("#595959");
-  final int textColor = Color.parseColor("#404040");
 
   public SearchButton(Context context, TableView tableView, DataColumn column) {
     super(context);
@@ -26,38 +24,14 @@ public class SearchButton extends androidx.appcompat.widget.AppCompatImageButton
     this.setBackgroundColor(defaultColor);
   }
 
-  public void handleTouchDown(){
-    this.setBackgroundColor(pressedColor);
-
-    icon.setTint(Color.WHITE);
-    this.setImageDrawable(icon);
-    postInvalidate();
-  }
-
-
-  public void handleTouchUp(){
-    this.setBackgroundColor(defaultColor);
-
-    icon.setTint(textColor);
-    this.setImageDrawable(icon);
-  }
-
   @SuppressLint("ClickableViewAccessibility")
   @Override
   public boolean onTouchEvent(MotionEvent event) {
     int action = event.getAction();
 
-    switch(action) {
-      case MotionEvent.ACTION_DOWN:
-        handleTouchDown();
-        break;
-      case MotionEvent.ACTION_CANCEL:
-        handleTouchUp();
-        break;
-      case MotionEvent.ACTION_UP:
-        EventUtils.sendOnSearchColumn(tableView, column);
-        postInvalidate();
-        break;
+    if (action == MotionEvent.ACTION_UP) {
+      EventUtils.sendOnSearchColumn(tableView, column);
+      postInvalidate();
     }
     return super.onTouchEvent(event);
   }

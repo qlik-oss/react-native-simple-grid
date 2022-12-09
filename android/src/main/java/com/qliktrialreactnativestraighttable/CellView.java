@@ -23,6 +23,7 @@ import android.widget.ScrollView;
 
 @SuppressLint("ViewConstructor")
 public class CellView extends RelativeLayout implements SelectionsObserver {
+  String type = "";
   Content content = null;
   DataRow row;
   DataColumn column;
@@ -91,6 +92,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
         this.setPadding(PADDING, 0, PADDING, 0);
         break;
     }
+    this.type = type;
   }
 
   private void addContentView(String type) {
@@ -103,6 +105,9 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
   }
 
   public void convertCellContentType(String type, DataColumn dataColumn) {
+    if(this.type.equals(type)) {
+      return;
+    }
     wrapper = null;
     wrapperLayout = null;
     column = dataColumn;

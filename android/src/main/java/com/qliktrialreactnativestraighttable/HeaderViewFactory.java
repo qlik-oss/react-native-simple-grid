@@ -29,6 +29,7 @@ public class HeaderViewFactory {
   HeaderViewFactory headerViewFactory;
   String totalsLabel;
   boolean topPosition;
+  boolean bottomPosition;
   HeaderView headerView = null;
   TotalsView totalsView = null;
   TableView tableView;
@@ -45,12 +46,13 @@ public class HeaderViewFactory {
     return dataColumns;
   }
 
-  public HeaderViewFactory(List<DataColumn> dataColumns, List<TotalsCell> totalsCells, String totalsLabel, boolean topPosition, TableView tableView, HeaderContentStyle contentStyle, Context context) {
+  public HeaderViewFactory(List<DataColumn> dataColumns, List<TotalsCell> totalsCells, String totalsLabel, String totalsPosition, TableView tableView, HeaderContentStyle contentStyle, Context context) {
     this.tableView = tableView;
     this.dataColumns = dataColumns;
     this.totalsCells = totalsCells;
     this.totalsLabel = totalsLabel;
-    this.topPosition = topPosition;
+    this.topPosition = totalsPosition.equals("top");
+    this.bottomPosition = totalsPosition.equals("bottom");
     this.headerContentStyle = contentStyle;
     buildHeader(context);
     if (totalsCells != null) {

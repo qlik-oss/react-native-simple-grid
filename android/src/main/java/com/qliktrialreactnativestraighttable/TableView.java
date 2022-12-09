@@ -91,8 +91,23 @@ public class TableView extends FrameLayout {
   public void setTotals(ReadableArray totalsRows, String totalsPosition, String totalsLabel) {
     this.totalsLabel = totalsLabel;
     this.totalsRows = totalsRows;
-    this.totalsPosition = totalsPosition;
-    dataProvider.setTotals(totalsRows, totalsLabel, totalsPosition);
+
+    if(totalsPosition == null) {
+      this.totalsPosition = "noTotals";
+    } else {
+      switch(totalsPosition) {
+        case "bottom":
+          this.totalsPosition = totalsPosition;
+          break;
+        default:
+        case "noTotals":
+        case "top":
+          this.totalsPosition = "top";
+          break;
+      }
+    }
+
+    dataProvider.setTotals(totalsRows, totalsLabel, this.totalsPosition);
   }
 
   public void clearSelections() {
@@ -161,42 +176,7 @@ public class TableView extends FrameLayout {
 
     TotalsView totalsView = getTotalsView();
     if(totalsView != null) {
-      totalsView.setDataColumns(cols);
-      // Create new totals when there are new columns
-      int totalCellCount = totalsView.getChildCount();
-      int numMissingCells = dataProvider.dataColumns.size() - totalCellCount;
-      int numCells = dataProvider.totalsCells.size();
-      int j = numCells - numMissingCells;
-      for(int i = totalCellCount; i < dataProvider.dataColumns.size(); i++) {
-        DataColumn column = dataProvider.dataColumns.get(i);
-        TotalsViewCell totalsViewCell = HeaderViewFactory.createTotalsCell(getContext(), column, this);
-        LinearLayout.LayoutParams totalsParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
-        if (!column.isDim && j < numCells) {
-          totalsViewCell.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-          totalsViewCell.setText(dataProvider.totalsCells.get(j).qText);
-          j++;
-        }
-        totalsView.addView(totalsViewCell, totalsParams);
-      }
-      // Update totals in case of moved columns
-      j = 0;
-      for(int i = 0; i < totalsView.getChildCount(); i++) {
-        TotalsViewCell viewCell = (TotalsViewCell) totalsView.getChildAt(i);
-        viewCell.setText("");
-
-        if(i > dataProvider.dataColumns.size() - 1) {
-          totalsView.removeView(totalsView);
-          continue;
-        }
-
-        DataColumn column = dataProvider.dataColumns.get(i);
-        viewCell.setColumn(column);
-        if(!column.isDim && j < dataProvider.totalsCells.size()) {
-          String newText = dataProvider.totalsCells.get(j).qText;
-          viewCell.setText(newText != null && newText.length() > 0 ? newText : "");
-          j++;
-        }
-      }
+      totalsView.updateTotals(cols, dataProvider);
     }
 
     if(headerView != null) {
@@ -305,7 +285,7 @@ public class TableView extends FrameLayout {
   }
 
   void createRecyclerView() {
-    dataProvider.setTotals(totalsRows, totalsLabel, totalsPosition);
+    setTotals(totalsRows, totalsPosition, totalsLabel);
     tableViewFactory.createAll();
     recyclerView = tableViewFactory.coupledRecyclerView;
     grabbers = tableViewFactory.grabbers;
@@ -315,9 +295,6 @@ public class TableView extends FrameLayout {
     verticalScrollBar = tableViewFactory.verticalScrollBar;
     screenGuideView = tableViewFactory.screenGuideView;
     firstColumnView = tableViewFactory.firstColumnRecyclerView;
-    post(() -> {
-      tableViewFactory.updateScrollbarBounds();
-    });
   }
 
   void invalidateLayout() {
