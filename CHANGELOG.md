@@ -1,3 +1,10 @@
+# [1.1.0-alpha.122](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.121...v1.1.0-alpha.122) (2022-12-09)
+
+
+### Bug Fixes
+
+* totals cell wrapping ([#173](https://github.com/qlik-oss/react-native-simple-grid/issues/173)) ([bdd27d2](https://github.com/qlik-oss/react-native-simple-grid/commit/bdd27d25ce4d3a02dfea4910b29b4464ed9a5fbd))
+
 # [1.1.0-alpha.121](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.120...v1.1.0-alpha.121) (2022-12-08)
 
 
