@@ -1,3 +1,10 @@
+# [1.1.0-alpha.128](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.127...v1.1.0-alpha.128) (2022-12-20)
+
+
+### Bug Fixes
+
+* remove two finger scrolling ([295539b](https://github.com/qlik-oss/react-native-simple-grid/commit/295539b80ed63b8efb94061e661717b36e0a2045))
+
 # [1.1.0-alpha.127](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.126...v1.1.0-alpha.127) (2022-12-15)
 
 
