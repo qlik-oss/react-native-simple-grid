@@ -175,7 +175,6 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     uiCollectionView.dataSource = self
     uiCollectionView.indicatorStyle = .black
     uiCollectionView.backgroundColor = .white
-    uiCollectionView.panGestureRecognizer.minimumNumberOfTouches = 2
     childCollectionView = uiCollectionView
     addSubview(uiCollectionView)
   }
