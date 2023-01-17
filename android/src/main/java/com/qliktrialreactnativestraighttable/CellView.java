@@ -215,6 +215,18 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
     }
   }
 
+  public void updateWidth(int newWidth) {
+    if(type.equals("image") && column.representation.imageSize.equals("fill") || column.representation.imageSize.equals("fill")) {
+      FrameLayout.LayoutParams frameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+      RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+      wrapper.setLayoutParams(layout);
+      ((View) content).setLayoutParams(frameLayout);
+    }
+    ViewGroup.LayoutParams params = getLayoutParams();
+    params.width = newWidth;
+    setLayoutParams(params);
+  }
+
   @Override
   public void requestLayout() {
     super.requestLayout();

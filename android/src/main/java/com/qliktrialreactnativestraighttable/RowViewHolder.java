@@ -134,7 +134,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     if(column > numColumns - 1) {
       return true;
     }
-    View view = row.getChildAt(column);
+    CellView view = (CellView) row.getChildAt(column);
     int currentWidth = dataProvider.dataColumns.get(column).width;
     float newWidth = currentWidth + deltaWidth;
 
@@ -142,9 +142,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
       return false;
     }
 
-    ViewGroup.LayoutParams params = view.getLayoutParams();
-    params.width = (int) newWidth;
-    view.setLayoutParams(params);
+    view.updateWidth((int) newWidth);
 
     DataColumn dataColumn = dataProvider.dataColumns.get(column);
     checkTextWrap(dataColumn);

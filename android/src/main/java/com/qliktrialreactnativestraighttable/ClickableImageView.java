@@ -43,13 +43,13 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     fadeIn = AnimationUtils.loadAnimation(context, R.anim.catalyst_fade_in);
   }
 
-  private void alwaysFit() {
+  private void fitToHeight() {
     this.setScaleType(ScaleType.FIT_XY);
 
     imageHeight = tableView.rowHeight;
     imageWidth = imageHeight;
 
-    scaleType = "alwaysFit";
+    scaleType = "fitToHeight";
   }
 
   private void stretchToFit(DataColumn column) {
@@ -61,13 +61,13 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     scaleType = "stretchToFit";
   }
 
-  private void fitToHeight(float aspectRatioMultiplier) {
+  private void alwaysFit(float aspectRatioMultiplier) {
     this.setScaleType(ScaleType.FIT_XY);
 
     imageHeight = tableView.rowHeight;
     imageWidth = Math.round(tableView.rowHeight * aspectRatioMultiplier);
 
-    scaleType = "fitToHeight";
+    scaleType = "alwaysFit";
   }
 
   private void fitToWidth(DataColumn column, float aspectRatioMultiplier) {
@@ -82,6 +82,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   public void scaleAndPositionImage(DataColumn column, Bitmap image) {
     setSizing(column, image);
     setAlignment(column);
+    
     FrameLayout.LayoutParams layout = new FrameLayout.LayoutParams(imageWidth, imageHeight);
     setLayoutParams(layout);
   }
@@ -102,7 +103,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
         shrinkParentToBounds();
         break;
       case "fitHeight":
-        fitToHeight(width/height);
+        fitToHeight();
         shrinkParentToBounds();
         break;
       case "fitWidth":
@@ -113,7 +114,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
         break;
       default:
       case "alwaysFit":
-        alwaysFit();
+        alwaysFit(width/height);
         shrinkParentToBounds();
         break;
     }
