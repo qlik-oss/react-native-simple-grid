@@ -1,3 +1,10 @@
+# [1.1.0-alpha.129](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.128...v1.1.0-alpha.129) (2023-01-18)
+
+
+### Bug Fixes
+
+* enable links in viewData ([248da16](https://github.com/qlik-oss/react-native-simple-grid/commit/248da1657d60db8f8c36a5996b55c7ebfb16bdc4))
+
 # [1.1.0-alpha.128](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.127...v1.1.0-alpha.128) (2022-12-20)
 
 
