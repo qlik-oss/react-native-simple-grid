@@ -94,7 +94,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         }
 
         cellView.setData(cell, dataRow, column);
-        if(column.representation.type.equals("url") && !dataProvider.isDataView) {
+        if(column.representation.type.equals("url")) {
           setupHyperLink(textView);
         }
         if(column.isDim && cellContentStyle.wrap) {
