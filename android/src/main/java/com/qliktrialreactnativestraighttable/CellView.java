@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
@@ -216,15 +217,20 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
   }
 
   public void updateWidth(int newWidth) {
-    if(type.equals("image") && column.representation.imageSize.equals("fill") || column.representation.imageSize.equals("fitWidth")) {
-      FrameLayout.LayoutParams frameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-      RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-      wrapper.setLayoutParams(layout);
-      ((View) content).setLayoutParams(frameLayout);
-    }
     ViewGroup.LayoutParams params = getLayoutParams();
     params.width = newWidth;
     setLayoutParams(params);
+    if(type.equals("image") && column.representation.imageSize.equals("fill") || column.representation.imageSize.equals("fitWidth")) {
+      ViewGroup.LayoutParams wrapperParams = wrapper.getLayoutParams();
+      ViewGroup.LayoutParams contentParams = ((View) content).getLayoutParams();
+      wrapperParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+      contentParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+      wrapper.setLayoutParams(wrapperParams);
+      ((ClickableImageView) content).setLayoutParams(contentParams);
+
+      Bitmap imageBitmap = tableView.imageLoader.getImageData(((ClickableImageView) content).cell.imageUrl);
+      ((ClickableImageView) content).scaleAndPositionImage(column, imageBitmap);
+    }
   }
 
   @Override
