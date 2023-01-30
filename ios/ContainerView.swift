@@ -123,7 +123,7 @@ class ContainerView: UIView {
         NotificationCenter.default.post(name: Notification.Name.onClearSelectionBand, object: nil)
         let json = try JSONSerialization.data(withJSONObject: rows)
         let decodedRows = try JSONDecoder().decode(RowsObject.self, from: json)
-        let dataRowsEmpty = dataRows?.isEmpty ?? true
+        let dataRowsEmpty = decodedRows.rows?.isEmpty ?? true
         if(dataRowsEmpty) {
           return
         }
