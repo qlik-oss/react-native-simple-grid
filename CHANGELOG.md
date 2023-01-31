@@ -1,3 +1,10 @@
+# [1.1.0-alpha.130](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.129...v1.1.0-alpha.130) (2023-01-31)
+
+
+### Bug Fixes
+
+* **QB-17856:** check for empty rows ([#182](https://github.com/qlik-oss/react-native-simple-grid/issues/182)) ([26a0c59](https://github.com/qlik-oss/react-native-simple-grid/commit/26a0c59775431f12102abd31113918619150d916))
+
 # [1.1.0-alpha.129](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.128...v1.1.0-alpha.129) (2023-01-18)
 
 
