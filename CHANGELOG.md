@@ -1,3 +1,10 @@
+# [1.1.0-alpha.131](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.130...v1.1.0-alpha.131) (2023-01-31)
+
+
+### Bug Fixes
+
+* invalid row counts ([#184](https://github.com/qlik-oss/react-native-simple-grid/issues/184)) ([73a5c52](https://github.com/qlik-oss/react-native-simple-grid/commit/73a5c52fd21ed8973748d7406c2edd8b168b0a05))
+
 # [1.1.0-alpha.130](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.129...v1.1.0-alpha.130) (2023-01-31)
 
 
