@@ -88,6 +88,11 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   }
   
   func scrollToTop() {
+    if let dataRows = dataRows {
+      if dataRows.isEmpty {
+        return
+      }
+    }
     if let childCollectionView = childCollectionView {
       childCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
     }
