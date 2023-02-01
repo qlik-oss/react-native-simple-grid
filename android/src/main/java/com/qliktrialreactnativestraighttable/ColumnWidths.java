@@ -96,7 +96,8 @@ public class ColumnWidths {
         }
       }
     }
-    int averageTextSize = runningTotal / rows.size();
+    
+    int averageTextSize = rows.size() > 0 ? runningTotal / rows.size() : 1;
     // Create a string with max text
     String tempString = new String(new char[averageTextSize]).replace("\0", "X");
     if(column.representation.type.equals("image")) {

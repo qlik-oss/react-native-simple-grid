@@ -151,6 +151,13 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   
   
   func signalVisibleRows() {
+    if let dataRows = self.dataRows {
+      if(dataRows.isEmpty) {
+        totalCellsView?.updateZeroTotals();
+        return;
+      }
+    }
+    
     if let childCollectionView = childCollectionView {
       let visibleIndexPaths = childCollectionView.indexPathsForVisibleItems.sorted()
       let fullyVisible = visibleIndexPaths.filter { indexPath in
