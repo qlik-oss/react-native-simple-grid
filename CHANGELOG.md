@@ -1,3 +1,10 @@
+# [1.1.0-alpha.132](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.131...v1.1.0-alpha.132) (2023-02-01)
+
+
+### Bug Fixes
+
+* **md-3924:** image sizing ([#180](https://github.com/qlik-oss/react-native-simple-grid/issues/180)) ([c4a09c3](https://github.com/qlik-oss/react-native-simple-grid/commit/c4a09c348abd1fe642f5892f84fa141b93ba5d6b))
+
 # [1.1.0-alpha.131](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.130...v1.1.0-alpha.131) (2023-01-31)
 
 
