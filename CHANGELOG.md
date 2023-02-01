@@ -1,3 +1,10 @@
+# [1.1.0-alpha.133](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.132...v1.1.0-alpha.133) (2023-02-01)
+
+
+### Bug Fixes
+
+* avoid dived by zero and display zero rows total ([#185](https://github.com/qlik-oss/react-native-simple-grid/issues/185)) ([d9ed113](https://github.com/qlik-oss/react-native-simple-grid/commit/d9ed11356d51c05a4f7a8429688bcaa974166f4b))
+
 # [1.1.0-alpha.132](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0-alpha.131...v1.1.0-alpha.132) (2023-02-01)
 
 
