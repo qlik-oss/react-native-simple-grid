@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -43,13 +44,13 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     fadeIn = AnimationUtils.loadAnimation(context, R.anim.catalyst_fade_in);
   }
 
-  private void alwaysFit() {
+  private void fitToHeight(float aspectRatioMultiplier) {
     this.setScaleType(ScaleType.FIT_XY);
-
+      
     imageHeight = tableView.rowHeight;
-    imageWidth = imageHeight;
+    imageWidth = Math.round(tableView.rowHeight * aspectRatioMultiplier);
 
-    scaleType = "alwaysFit";
+    scaleType = "fitToHeight";
   }
 
   private void stretchToFit(DataColumn column) {
@@ -61,27 +62,65 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     scaleType = "stretchToFit";
   }
 
-  private void fitToHeight(float aspectRatioMultiplier) {
+  
+  private void alwaysFit(DataColumn column, float aspectRatio) {
+    int newWidth;
+    int newHeight;
+    int cellWidth = column.width;
+    int cellHeight = tableView.rowHeight;
     this.setScaleType(ScaleType.FIT_XY);
+    
+    if(cellWidth / aspectRatio <= cellHeight) {
+      newWidth = cellWidth;
+      newHeight = (int) (cellWidth / aspectRatio);
+    } else {
+      newWidth = (int) (cellHeight * aspectRatio);
+      newHeight = cellHeight;
+    }
+    imageHeight = newHeight;
+    imageWidth = newWidth;
 
-    imageHeight = tableView.rowHeight;
-    imageWidth = Math.round(tableView.rowHeight * aspectRatioMultiplier);
+    scaleType = "alwaysFit";
+  }
+  
+  private void scaleView(int minHeight, int newWidth) {
+    Bitmap image = ((BitmapDrawable) this.getDrawable()).getBitmap();
+    int imageWidth = image.getWidth();
+    int imageHeight = image.getHeight();
+    
+    float aspectRatio = (float) imageWidth / imageHeight;
+    
+    int newHeight = Math.round(newWidth / aspectRatio);
+    
+    if(newHeight < minHeight) {
+      newHeight = minHeight;
+      newWidth = Math.round((newHeight * aspectRatio));
+    }
+    
+    Matrix matrix = new Matrix();
+    matrix.setScale((float) newWidth / imageWidth, (float) newHeight / imageHeight);
 
-    scaleType = "fitToHeight";
+    this.setScaleType(ScaleType.MATRIX);
+    this.setImageMatrix(matrix);
   }
 
-  private void fitToWidth(DataColumn column, float aspectRatioMultiplier) {
+  private void fitToWidth(DataColumn column, float graphicWidth, float graphicHeight) {
     this.setScaleType(ScaleType.MATRIX);
-
-    imageHeight = Math.round(column.width * aspectRatioMultiplier);
+    scaleView(tableView.rowHeight, column.width);
+    
+    imageHeight = Math.max(tableView.rowHeight, Math.round(column.width * (graphicHeight/graphicWidth)));
     imageWidth = column.width;
-
+    FrameLayout wrapper = (FrameLayout) getParent();
+    RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(imageWidth, imageHeight);
+    wrapper.setLayoutParams(layout);
+    
     scaleType = "fitToWidth";
   }
 
   public void scaleAndPositionImage(DataColumn column, Bitmap image) {
     setSizing(column, image);
     setAlignment(column);
+    
     FrameLayout.LayoutParams layout = new FrameLayout.LayoutParams(imageWidth, imageHeight);
     setLayoutParams(layout);
   }
@@ -106,14 +145,11 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
         shrinkParentToBounds();
         break;
       case "fitWidth":
-        fitToWidth(column, height/width);
-        FrameLayout wrapper = (FrameLayout) getParent();
-        RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        wrapper.setLayoutParams(layout);
+        fitToWidth(column, width, height);
         break;
       default:
       case "alwaysFit":
-        alwaysFit();
+        alwaysFit(column, width/height);
         shrinkParentToBounds();
         break;
     }
