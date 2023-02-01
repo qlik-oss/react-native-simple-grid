@@ -240,8 +240,10 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   public void setDataSize(DataSize dataSize) {
     this.dataSize = dataSize;
     if (needsMore()) {
-      if (this.rows.get(this.rows.size() - 1) != null) {
-        this.rows.add(null);
+      if(!this.rows.isEmpty()) {
+        if (this.rows.get(this.rows.size() - 1) != null) {
+          this.rows.add(null);
+        }
       }
     }
   }
