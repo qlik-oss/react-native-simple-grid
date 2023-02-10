@@ -117,26 +117,37 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
           props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef
             .qFieldDefs?.[0]
         ) {
-          column.qCardinal = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qCardinal;
+          column.qCardinal =
+            layout.qHyperCube.qDimensionInfo[column.dataColIdx].qCardinal;
           column.label =
             props?.qHyperCubeDef?.qDimensions[
               column.dataColIdx
             ].qDef.qFieldDefs?.[0];
-            const fieldLabel = props?.qHyperCubeDef?.qDimensions[
-              column.dataColIdx
-            ].qDef.qFieldLabels?.[0]; 
-          column.display =  fieldLabel.length === 0 ? column.label : fieldLabel;
-          if(layout?.qHyperCube?.qDimensionInfo[column.dataColIdx]?.qFallbackTitle?.length > 0) {
-            column.display = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle 
+          const fieldLabel =
+            props?.qHyperCubeDef?.qDimensions[column.dataColIdx].qDef
+              .qFieldLabels?.[0];
+          column.display = fieldLabel.length === 0 ? column.label : fieldLabel;
+          if (
+            layout?.qHyperCube?.qDimensionInfo[column.dataColIdx]
+              ?.qFallbackTitle?.length > 0
+          ) {
+            column.display =
+              layout.qHyperCube.qDimensionInfo[
+                column.dataColIdx
+              ].qFallbackTitle;
           }
         } else {
           const qDimInfo = layout.qHyperCube.qDimensionInfo[column.dataColIdx];
-          if(qDimInfo.qGroupFieldDefs?.[0].length > 0) {
+          if (qDimInfo.qGroupFieldDefs?.[0].length > 0) {
             column.label = qDimInfo.qGroupFieldDefs?.[0];
           } else {
-            column.label = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle;
+            column.label =
+              layout.qHyperCube.qDimensionInfo[
+                column.dataColIdx
+              ].qFallbackTitle;
           }
-          column.display = layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle;
+          column.display =
+            layout.qHyperCube.qDimensionInfo[column.dataColIdx].qFallbackTitle;
         }
         searchColumn({ searching: true, column });
       } catch (error) {}
