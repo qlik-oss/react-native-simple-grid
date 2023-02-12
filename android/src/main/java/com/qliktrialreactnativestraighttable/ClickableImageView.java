@@ -35,6 +35,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   final TableView tableView;
   final CellView cellView;
   Animation fadeIn;
+  Bitmap bitmap = null;
 
   ClickableImageView(Context context, SelectionsEngine selectionsEngine, TableView tableView, CellView cellView) {
     super(context);
@@ -46,7 +47,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
 
   private void fitToHeight(float aspectRatioMultiplier) {
     this.setScaleType(ScaleType.FIT_XY);
-      
+
     imageHeight = tableView.rowHeight;
     imageWidth = Math.round(tableView.rowHeight * aspectRatioMultiplier);
 
@@ -62,14 +63,14 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     scaleType = "stretchToFit";
   }
 
-  
+
   private void alwaysFit(DataColumn column, float aspectRatio) {
     int newWidth;
     int newHeight;
     int cellWidth = column.width;
     int cellHeight = tableView.rowHeight;
     this.setScaleType(ScaleType.FIT_XY);
-    
+
     if(cellWidth / aspectRatio <= cellHeight) {
       newWidth = cellWidth;
       newHeight = (int) (cellWidth / aspectRatio);
@@ -82,21 +83,25 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
 
     scaleType = "alwaysFit";
   }
-  
+
   private void scaleView(int minHeight, int newWidth) {
-    Bitmap image = ((BitmapDrawable) this.getDrawable()).getBitmap();
+
+    if(bitmap == null) {
+      return;
+    }
+    Bitmap image = bitmap;
     int imageWidth = image.getWidth();
     int imageHeight = image.getHeight();
-    
+
     float aspectRatio = (float) imageWidth / imageHeight;
-    
+
     int newHeight = Math.round(newWidth / aspectRatio);
-    
+
     if(newHeight < minHeight) {
       newHeight = minHeight;
       newWidth = Math.round((newHeight * aspectRatio));
     }
-    
+
     Matrix matrix = new Matrix();
     matrix.setScale((float) newWidth / imageWidth, (float) newHeight / imageHeight);
 
@@ -107,22 +112,29 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
   private void fitToWidth(DataColumn column, float graphicWidth, float graphicHeight) {
     this.setScaleType(ScaleType.MATRIX);
     scaleView(tableView.rowHeight, column.width);
-    
+
     imageHeight = Math.max(tableView.rowHeight, Math.round(column.width * (graphicHeight/graphicWidth)));
     imageWidth = column.width;
     FrameLayout wrapper = (FrameLayout) getParent();
     RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(imageWidth, imageHeight);
     wrapper.setLayoutParams(layout);
-    
+
     scaleType = "fitToWidth";
   }
 
   public void scaleAndPositionImage(DataColumn column, Bitmap image) {
-    setSizing(column, image);
-    setAlignment(column);
-    
-    FrameLayout.LayoutParams layout = new FrameLayout.LayoutParams(imageWidth, imageHeight);
-    setLayoutParams(layout);
+    bitmap = image;
+    scaleAndPositionImage(column);
+  }
+
+  public void scaleAndPositionImage(DataColumn column) {
+    if( bitmap != null) {
+      setSizing(column, bitmap);
+      setAlignment(column);
+
+      FrameLayout.LayoutParams layout = new FrameLayout.LayoutParams(imageWidth, imageHeight);
+      setLayoutParams(layout);
+    }
   }
 
   private void shrinkParentToBounds() {
@@ -227,9 +239,7 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
 
   public void copyToClipBoard() {
     ImageShare imageShare = new ImageShare();
-    BitmapDrawable drawable = (BitmapDrawable) this.getDrawable();
-    if(drawable != null) {
-      Bitmap bitmap = drawable.getBitmap();
+    if(bitmap != null) {
       imageShare.share(bitmap, getContext());
     }
   }

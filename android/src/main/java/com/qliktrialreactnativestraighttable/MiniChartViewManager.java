@@ -59,7 +59,7 @@ public class MiniChartViewManager extends SimpleViewManager<View> {
 
   public void setupMiniChart(MiniChartView miniChartView) {
     DataColumn dataColumn = new DataColumn(miniChartView.column, 0);
-    DataCell dataCell = new DataCell(miniChartView.cell, dataColumn, null);
+    DataCell dataCell = new DataCell(miniChartView.cell, dataColumn);
 
     miniChartView.setData(dataCell, dataColumn, null);
   }
