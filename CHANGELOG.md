@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0...v1.2.0) (2023-02-13)
+
+
+### Features
+
+* improved image handling ([#190](https://github.com/qlik-oss/react-native-simple-grid/issues/190)) ([7d62524](https://github.com/qlik-oss/react-native-simple-grid/commit/7d6252454f40d4b8b95045dcfad6d854c20015e3))
+
 # [1.1.0](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.11...v1.1.0) (2023-02-10)
 
 
