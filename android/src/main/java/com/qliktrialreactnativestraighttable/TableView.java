@@ -297,6 +297,7 @@ public class TableView extends FrameLayout {
 
   void invalidateLayout() {
     tableViewFactory.invalidateLayout();
+    updateHeaderViewLineCount();
     requestLayout();
   }
 
