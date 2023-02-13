@@ -184,9 +184,6 @@ public class CustomRecyclerView extends RecyclerView {
     tableView.post(new Runnable() {
       @Override
       public void run() {
-        if(tableView.imageLoader.loading) {
-          return;
-        }
         for (int i = 0; i < childCount; i++) {
           View view = getChildAt(i);
           RowViewHolder viewHolder = (RowViewHolder) getChildViewHolder(view);

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SDWebImage
 
 class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
   var id: Int = 0
@@ -13,8 +14,6 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
   let contextMenu = ContextMenu()
   weak var imageView: UIImageView?
   weak var delegate: ExpandedCellProtocol?
-  var workItem: URLSessionDataTask?
-  var imagedata: Data?
   var representation: Representation?
   var menuTranslations: MenuTranslations?
   var cell: DataCell?
@@ -130,19 +129,17 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
     
     guard let urlString = getUrlString(data: data, representedAs: rep, index: index) else { return }
     guard let url = URL(string: urlString) else {return}
-    self.imagedata = nil;
-    if let pendingWorkItem = self.workItem {
-      pendingWorkItem.cancel();
-    }
-    let task = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
-      guard let data = data, error == nil else { return }
-      DispatchQueue.main.async {
-        self.imagedata = data
-        self.setNeedsLayout()
+    if let downloadedImage = SDImageCache.shared.imageFromCache(forKey: urlString) {
+      self.displayImage(with: downloadedImage)
+    } else {
+      SDWebImageDownloader.shared.downloadImage(with: url) {(image, data, error, finished) in
+        if let image = image {
+          DispatchQueue.main.async {
+            self.displayImage(with: image)
+          }
+        }
       }
-    })
-    self.workItem = task;
-    task.resume()
+    }
   }
   
   func getUrlString(data: DataCell, representedAs rep: Representation, index: Int?) -> String? {
@@ -165,17 +162,17 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
   
   override func layoutSubviews() {
     super.layoutSubviews()
-    guard let data = imagedata else { return }
+    updateContentScaleFactorIfNeeded()
+  }
+  
+  func displayImage(with image: UIImage) {
     if self.imageView == nil {
-      let im = UIImageView(frame: CGRect.zero)
-      let image = UIImage(data: data)
-      im.image = image
-      addSubview(im)
-      setupConstraints(imageView: im)
-      self.imageView = im
+      let imageView = UIImageView()
+      imageView.image = image
+      addSubview(imageView)
+      setupConstraints(imageView: imageView)
+      self.imageView = imageView
       displayImage()
-    } else {
-      updateContentScaleFactorIfNeeded()
     }
   }
   
@@ -189,7 +186,15 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
         let width = height * aspectRatio
         
         if rep.imagePosition == "centerCenter" {
-          imageView.fitToView(self)
+         let constraints = [
+              imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+              imageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+              imageView.heightAnchor.constraint(equalTo: self.heightAnchor),
+              imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: aspectRatio)
+          ]
+          NSLayoutConstraint.activate(constraints)
+          addConstraints(constraints)
+          
         } else {
           let leadingAnchor = rep.imagePosition == "topCenter" ?
           imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor) :
@@ -253,8 +258,9 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
       } else if rep.imagePosition == "centerLeft" {
         imageView.contentMode = .top
       }
-      imageView.clipsToBounds = true
     }
+    imageView.clipsToBounds = true
+    self.clipsToBounds = true
     self.setNeedsLayout()
     imageView.setNeedsLayout()
     DispatchQueue.main.async {

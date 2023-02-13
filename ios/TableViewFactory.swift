@@ -105,7 +105,7 @@ class TableViewFactory {
     firstColumnTableView.dataRange = 0..<1
     firstColumnTableView.isFirst = true
     firstColumnTableView.dynamicWidth = firstColumnTableView.widthAnchor.constraint(equalToConstant: width)
-    firstColumnTableView.backgroundColor = .white
+    firstColumnTableView.backgroundColor = .white.withAlphaComponent(0.0)
     let leadingAnchor = containerView.freezeFirstColumn ? horizontalScrollView.frameLayoutGuide.leadingAnchor : horizontalScrollView.leadingAnchor
 
     let constraints = [
