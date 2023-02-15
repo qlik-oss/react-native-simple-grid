@@ -20,8 +20,12 @@ const ExpandedTableCell = () => {
   return (
     <DataTable>
       <DataTable.Header style={styles.header}>
-        <DataTable.Title style={styles.title}>Column Data</DataTable.Title>
-        <DataTable.Title style={styles.title}>Row Data</DataTable.Title>
+        <DataTable.Title textStyle={styles.titleTextStyle} style={styles.title}>
+          {expandedCell.titles?.[0] ?? 'Column Value'}
+        </DataTable.Title>
+        <DataTable.Title textStyle={styles.titleTextStyle} style={styles.title}>
+          {expandedCell.titles?.[1] ?? 'Row Value'}
+        </DataTable.Title>
       </DataTable.Header>
       <ScrollView
         contentContainerStyle={{
@@ -55,6 +59,11 @@ const styles = StyleSheet.create({
   },
   title: {
     paddingHorizontal: 8,
+  },
+  titleTextStyle: {
+    color: '#404040',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   cell: {
     flex: 1,
