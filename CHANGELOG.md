@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.0...v1.2.1) (2023-02-15)
+
+
+### Bug Fixes
+
+* make first column background color opaque ([#193](https://github.com/qlik-oss/react-native-simple-grid/issues/193)) ([71699cd](https://github.com/qlik-oss/react-native-simple-grid/commit/71699cd092b44a0ed9c44cf7e04388243938f24c))
+
 # [1.2.0](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0...v1.2.0) (2023-02-13)
 
 
