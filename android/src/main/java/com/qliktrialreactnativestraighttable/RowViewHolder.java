@@ -77,19 +77,24 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
 
         ClickableImageView imageView = (ClickableImageView) cellView.content;
         if(cell.imageUrl != null) {
-          Glide.with(cellView.getContext()).asBitmap().listener(new RequestListener<Bitmap>() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-              return false;
-            }
+          String svgTag = "data:image/svg+xml,";
+          if(cell.imageUrl.startsWith(svgTag)) {
+            loadSVG(cell, imageView);
+          } else {
+            Glide.with(cellView.getContext()).asBitmap().listener(new RequestListener<Bitmap>() {
+              @Override
+              public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                return false;
+              }
 
-            @Override
-            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+              @Override
+              public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
 
-              imageView.scaleAndPositionImage(column, resource);
-              return false;
-            }
-          }).load(cell.imageUrl).into(imageView);
+                imageView.scaleAndPositionImage(column, resource);
+                return false;
+              }
+            }).load(cell.imageUrl).into(imageView);
+          }
         } else if(cell.qText != null) {
           loadSVG(cell, imageView);
         }
