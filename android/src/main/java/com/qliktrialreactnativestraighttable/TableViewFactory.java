@@ -82,6 +82,7 @@ public class TableViewFactory {
 
     updateFirstColumnHeaderHeight();
     updateTotalsViewHeight();
+    tempListenForLayoutChanges();
 
     dataProvider.notifyDataSetChanged();
 
@@ -91,8 +92,23 @@ public class TableViewFactory {
         updateGrabbers();
         updateScrollbarBounds();
         updateRecyclerViewMargins();
+        testTextWrap();
       }
     });
+  }
+
+  private void tempListenForLayoutChanges() {
+    // add a temporary listener to do text wrapping
+    if(coupledRecyclerView != null) {
+      coupledRecyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+        @Override
+        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+          if(coupledRecyclerView.testTextWrap(false)) {
+            coupledRecyclerView.removeOnLayoutChangeListener(this);
+          }
+        }
+      });
+    }
   }
 
   private void setMockScrollLayouts() {
@@ -488,4 +504,15 @@ public class TableViewFactory {
       });
     }
   }
+
+  private  void testTextWrap() {
+    if(firstColumnRecyclerView != null) {
+      firstColumnRecyclerView.testTextWrap(true);
+    }
+    if(coupledRecyclerView != null) {
+      coupledRecyclerView.testTextWrap(true);
+    }
+  }
 }
+
+

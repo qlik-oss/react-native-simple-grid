@@ -23,7 +23,8 @@ class ColumnWidths {
   
   func loadDefaultWidths(_ frame: CGRect, columnCount: Int, dataRows: [DataRow], dataCols: [DataColumn]) {
     if !loadFromStorage(columnCount) {
-      let defaultWidth = frame.width / Double(columnCount)
+      // 0.75 looks ugly with single column
+      let defaultWidth = columnCount == 1 ? frame.width * 0.9 : frame.width / Double(columnCount)
       let widths = [Double](repeating: defaultWidth, count: columnCount)
       resetColumnWidths(widths: widths)
       calculateDefaultColWidth(dataRows: dataRows, dataCols: dataCols, defaultWidth: defaultWidth, columnCount: columnCount, frame: frame)
@@ -71,7 +72,7 @@ class ColumnWidths {
     var widths = [Double](repeating: defaultWidth, count: columnCount)
     var totalWidth = 0.0
     columnWidths.enumerated().forEach { (index, _) in
-      let averageWidth = getAverageWidth(dataRows: dataRows, dataCols: dataCols, index: index)
+      let averageWidth = getAverageWidth(frame, dataRows: dataRows, dataCols: dataCols, index: index)
       widths[index] = averageWidth
       totalWidth += averageWidth
     }
@@ -84,7 +85,7 @@ class ColumnWidths {
 
   }
 
-  fileprivate func getAverageWidth(dataRows: [DataRow], dataCols: [DataColumn], index: Int) -> Double {
+  fileprivate func getAverageWidth(_ frame: CGRect, dataRows: [DataRow], dataCols: [DataColumn], index: Int) -> Double {
     if dataRows.count == 0 {
       return DataCellView.minWidth
     }
@@ -101,7 +102,7 @@ class ColumnWidths {
     tempLabel.text = String(repeating: "M", count: average)
     tempLabel.sizeToFit()
     let newWidth = max(tempLabel.frame.width + (Double(PaddedLabel.PaddingSize) * 2.5), DataCellView.minWidth)
-    return newWidth
+    return min(newWidth, frame.width * 0.75)
   }
 
   func getTotalWidth() -> Double {
