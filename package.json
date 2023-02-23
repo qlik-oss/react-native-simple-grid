@@ -47,7 +47,7 @@
     "@types/react": "17.0.39",
     "@types/react-native": "0.66.15",
     "@types/react-native-vector-icons": "^6.4.13",
-    "eslint": "7.2.0",
+    "eslint": "8.34.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "3.4.1",
     "jest": "27.5.1",
