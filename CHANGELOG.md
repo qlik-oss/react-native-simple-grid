@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.1...v1.2.2) (2023-02-23)
+
+
+### Bug Fixes
+
+* **SESI-264:** increase font size, change labels, and darken up the font color ([ed0ed12](https://github.com/qlik-oss/react-native-simple-grid/commit/ed0ed122832da23fa1b67f31bab1983065ae02a5))
+
 ## [1.2.1](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.0...v1.2.1) (2023-02-15)
 
 
