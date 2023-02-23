@@ -43,15 +43,15 @@ public class ColumnWidths {
     }
   }
 
-  private void loadDefaultWidths(int frameWidth, List<DataRow> rows) {
+  private void loadDefaultWidths(float frameWidth, List<DataRow> rows) {
     int runningTotal = 0;
     for (DataColumn col : dataColumns) {
-      col.width = resizeColumnByAverage(col, rows, false);
+      col.width = resizeColumnByAverage(col, rows, false, frameWidth);
       runningTotal += col.width;
     }
 
     if (runningTotal < frameWidth) {
-      int defaultWidth = frameWidth / dataColumns.size();
+      int defaultWidth = (int) (frameWidth / dataColumns.size());
       for (DataColumn column : dataColumns) {
         column.width = defaultWidth;
       }
@@ -59,30 +59,30 @@ public class ColumnWidths {
   }
 
   private boolean loadWidthsFromStorage() {
-    String key = buildTableKey();
-    String value = preferences.getString(key, null);
-    if(value == null) {
-      return false;
-    }
-    try {
-      JSONArray jsonArray = new JSONArray(value);
-      for(int i = 0; i< jsonArray.length(); i++) {
-        JSONArray jsonWidths = jsonArray.getJSONArray(i);
-        if(jsonWidths.length() != dataColumns.size()) {
-          return false;
-        }
-        for(int j = 0; j < jsonWidths.length(); j++) {
-          dataColumns.get(j).width = jsonWidths.getInt(j);
-        }
-      }
-      return true;
-    } catch (Exception exception) {
-      Log.e("ColumnWidths", exception.getMessage());
-    }
+   String key = buildTableKey();
+   String value = preferences.getString(key, null);
+   if(value == null) {
+     return false;
+   }
+   try {
+     JSONArray jsonArray = new JSONArray(value);
+     for(int i = 0; i< jsonArray.length(); i++) {
+       JSONArray jsonWidths = jsonArray.getJSONArray(i);
+       if(jsonWidths.length() != dataColumns.size()) {
+         return false;
+       }
+       for(int j = 0; j < jsonWidths.length(); j++) {
+         dataColumns.get(j).width = jsonWidths.getInt(j);
+       }
+     }
+     return true;
+   } catch (Exception exception) {
+     Log.e("ColumnWidths", exception.getMessage());
+   }
     return false;
   }
 
-  public int resizeColumnByAverage(DataColumn column, List<DataRow> rows, boolean shouldAddWidth) {
+  public int resizeColumnByAverage(DataColumn column, List<DataRow> rows, boolean shouldAddWidth, float frameWidth) {
     int runningTotal = 0;
     Paint paint = new Paint();
     for(DataRow row : rows) {
@@ -96,7 +96,7 @@ public class ColumnWidths {
         }
       }
     }
-    
+
     int averageTextSize = rows.size() > 0 ? runningTotal / rows.size() : 1;
     // Create a string with max text
     String tempString = new String(new char[averageTextSize]).replace("\0", "X");
@@ -106,6 +106,7 @@ public class ColumnWidths {
 
     float width = paint.measureText(tempString, 0, tempString.length());
     width = Math.max(DataProvider.minWidth * 1.5f, PixelUtils.dpToPx(width));
+    width = Math.min(width, frameWidth * 0.75f);
     if(shouldAddWidth) {
       widths.add((int)width);
     }

@@ -16,7 +16,10 @@ public class CustomLinearLayoutManger extends LinearLayoutManager {
   public void onLayoutCompleted(RecyclerView.State state) {
     super.onLayoutCompleted(state);
     if(!initialized && recyclerView != null) {
-      if(recyclerView.testTextWrap()) {
+      if(recyclerView.getChildCount() == 0) {
+        return;
+      }
+      if(recyclerView.testTextWrap(true)) {
         recyclerView = null;
         initialized = true;
       }

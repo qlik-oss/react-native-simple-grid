@@ -159,7 +159,7 @@ public class CustomRecyclerView extends RecyclerView {
 
   }
 
-  public boolean testTextWrap() {
+  public boolean testTextWrap( boolean recursive ) {
     if(!tableView.cellContentStyle.wrap) {
       // don't test but tell whoever is calling
       // that it's done testing
@@ -196,7 +196,9 @@ public class CustomRecyclerView extends RecyclerView {
           tableView.rootLayout.requestLayout();
         }
         requestLayout();
-        dataProvider.notifyDataSetChanged();
+        if(recursive) {
+          dataProvider.notifyDataSetChanged();
+        }
       }
     });
 
