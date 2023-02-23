@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.2...v1.2.3) (2023-02-23)
+
+
+### Bug Fixes
+
+* **SESI-261:** clamp max width column to 75% of visualization width ([#192](https://github.com/qlik-oss/react-native-simple-grid/issues/192)) ([0c2ab33](https://github.com/qlik-oss/react-native-simple-grid/commit/0c2ab3349308833f0316146fef06406d05976690))
+
 ## [1.2.2](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.1...v1.2.2) (2023-02-23)
 
 
