@@ -167,7 +167,6 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
   
   override func layoutSubviews() {
     super.layoutSubviews()
-    updateContentScaleFactorIfNeeded()
   }
   
   func displayImage(with image: UIImage) {
@@ -181,69 +180,108 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
     }
   }
   
+  fileprivate func fitToHeight(_ imageView: UIImageView, _ rep: Representation) {
+    if let image = imageView.image {
+      let aspectRatio = image.size.width/image.size.height
+      let height = self.frame.height
+      let width = height * aspectRatio
+      
+      if rep.imagePosition == "centerCenter" {
+        let constraints = [
+          imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+          imageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+          imageView.heightAnchor.constraint(equalTo: self.heightAnchor),
+          imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: aspectRatio)
+        ]
+        NSLayoutConstraint.activate(constraints)
+        addConstraints(constraints)
+        
+      } else {
+        let leadingAnchor = rep.imagePosition == "topCenter" ?
+        imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor) :
+        imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        
+        
+        let constraints = [
+          leadingAnchor,
+          imageView.heightAnchor.constraint(equalToConstant: height),
+          imageView.widthAnchor.constraint(equalToConstant: width)
+        ]
+        NSLayoutConstraint.activate(constraints)
+        addConstraints(constraints)
+      }
+    }
+  }
+  
+  fileprivate func alwaysFit(_ rep: Representation, _ imageView: UIImageView) {
+    if rep.imagePosition == "centerCenter" {
+      imageView.fitToView(self)
+    } else  if let image = imageView.image {
+      let aspectRatio = (image.size.height/image.size.width)
+      let maxWidth = self.frame.height / aspectRatio
+      let width = imageView.widthAnchor.constraint(lessThanOrEqualToConstant: maxWidth)
+      let leading = rep.imagePosition == "topCenter" ? imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor) :
+      imageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: -maxWidth)
+      
+      
+      var constraints = [
+        leading,
+        imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+        imageView.topAnchor.constraint(equalTo: self.topAnchor),
+        imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        width,
+      ]
+      // need to bind to the leading of imageView and keep trailing lower priority
+      if rep.imagePosition == "bottomCenter" {
+        let hardLeading = imageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor)
+        leading.priority = UILayoutPriority(999)
+        constraints.append(hardLeading)
+      }
+      
+      NSLayoutConstraint.activate(constraints)
+      addConstraints(constraints)
+      
+    }
+  }
+  
+  fileprivate func fitToWidth(_ rep: Representation, _ imageView: UIImageView) {
+    guard let image = imageView.image else { return }
+    let aspectRatio = (image.size.height/image.size.width)
+    var constraints = [
+      imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+      imageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+      imageView.widthAnchor.constraint(equalTo: self.widthAnchor),
+      imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: aspectRatio)
+    ]
+    if rep.imagePosition == "centerLeft" {
+      constraints = [
+        imageView.topAnchor.constraint(equalTo: self.topAnchor),
+        imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+        imageView.widthAnchor.constraint(equalTo: self.widthAnchor),
+        imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: aspectRatio)
+      ]
+    } else if rep.imagePosition == "centerRight" {
+      constraints = [
+        imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+        imageView.widthAnchor.constraint(equalTo: self.widthAnchor),
+        imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: aspectRatio)
+      ]
+    }
+    NSLayoutConstraint.activate(constraints)
+    addConstraints(constraints)
+  }
+  
+  
   func setupConstraints(imageView: UIImageView) {
     imageView.translatesAutoresizingMaskIntoConstraints = false
     guard let rep = self.representation else { return }
     if(rep.imageSize == "fitHeight" ) {
-      if let image = imageView.image {
-        let aspectRatio = image.size.width/image.size.height
-        let height = self.frame.height
-        let width = height * aspectRatio
-        
-        if rep.imagePosition == "centerCenter" {
-         let constraints = [
-              imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-              imageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-              imageView.heightAnchor.constraint(equalTo: self.heightAnchor),
-              imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: aspectRatio)
-          ]
-          NSLayoutConstraint.activate(constraints)
-          addConstraints(constraints)
-          
-        } else {
-          let leadingAnchor = rep.imagePosition == "topCenter" ?
-          imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor) :
-          imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
-          
-          
-          let constraints = [
-            leadingAnchor,
-            imageView.heightAnchor.constraint(equalToConstant: height),
-            imageView.widthAnchor.constraint(equalToConstant: width)
-          ]
-          NSLayoutConstraint.activate(constraints)
-          addConstraints(constraints)
-        }
-      }
+      fitToHeight(imageView, rep)
     } else if rep.imageSize == "alwaysFit" {
-      if rep.imagePosition == "centerCenter" {
-        imageView.fitToView(self)
-      } else  if let image = imageView.image {
-        let aspectRatio = (image.size.height/image.size.width)
-        let maxWidth = self.frame.height / aspectRatio
-        let width = imageView.widthAnchor.constraint(lessThanOrEqualToConstant: maxWidth)
-        let leading = rep.imagePosition == "topCenter" ? imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor) :
-        imageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: -maxWidth)
-        
-        
-        var constraints = [
-          leading,
-          imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-          imageView.topAnchor.constraint(equalTo: self.topAnchor),
-          imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-          width,
-        ]
-        // need to bind to the leading of imageView and keep trailing lower priority
-        if rep.imagePosition == "bottomCenter" {
-          let hardLeading = imageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor)
-          leading.priority = UILayoutPriority(999)
-          constraints.append(hardLeading)
-        }
-        
-        NSLayoutConstraint.activate(constraints)
-        addConstraints(constraints)
-        
-      }
+      alwaysFit(rep, imageView)
+    } else if(rep.imageSize == "fitWidth") {
+      fitToWidth(rep, imageView)
     }
     else {
       imageView.fitToView(self)
@@ -259,30 +297,15 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
     } else if rep.imageSize == "fitWidth" {
       imageView.contentMode = .scaleAspectFill
       if rep.imagePosition == "centerRight" {
-        imageView.contentMode = .bottom
+        imageView.contentMode = .scaleAspectFit
       } else if rep.imagePosition == "centerLeft" {
-        imageView.contentMode = .top
+        imageView.contentMode = .scaleAspectFit
       }
     }
     imageView.clipsToBounds = true
     self.clipsToBounds = true
     self.setNeedsLayout()
     imageView.setNeedsLayout()
-    DispatchQueue.main.async {
-      self.updateContentScaleFactorIfNeeded()
-    }
-  }
-  
-  
-  func updateContentScaleFactorIfNeeded() {
-    guard let imageView = self.imageView else { return }
-    guard let image = imageView.image else { return }
-    guard let rep = representation else { return }
-    if rep.imageSize == "fitWidth" && imageView.contentMode != .scaleAspectFill {
-      let widthScale = image.size.width/imageView.frame.width
-      let heightScale = image.size.height/imageView.frame.height
-      imageView.contentScaleFactor = min(widthScale, heightScale)
-    }
   }
   
   func makeSelectable(selectionsEngine: SelectionsEngine) {
