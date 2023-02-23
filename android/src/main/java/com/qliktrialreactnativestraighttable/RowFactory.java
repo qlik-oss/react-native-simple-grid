@@ -13,10 +13,10 @@ import java.util.List;
 
 public class RowFactory {
   List<DataRow> rows = new ArrayList<>();
-  public RowFactory(ReadableArray source, List<DataColumn> columns, ImageLoader imageLoader) {
+  public RowFactory(ReadableArray source, List<DataColumn> columns) {
     for(int i = 0; i < source.size(); i++ ) {
       ReadableMap map = source.getMap(i);
-      DataRow row = new DataRow(map, columns, imageLoader);
+      DataRow row = new DataRow(map, columns);
       rows.add(row);
     }
   }

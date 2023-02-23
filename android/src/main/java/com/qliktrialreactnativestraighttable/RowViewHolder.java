@@ -15,8 +15,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.Nullable;
 import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 public class RowViewHolder extends RecyclerView.ViewHolder  {
   private int startIndex, numColumns;
@@ -65,13 +72,20 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         cellView.convertCellContentType("image", column);
         cellView.setData(cell, dataRow, column);
 
-        Bitmap imageBitmap = dataProvider.tableView.imageLoader.getImageData(cell.imageUrl);
-        if(imageBitmap == null) {
-          continue;
-        }
         ClickableImageView imageView = (ClickableImageView) cellView.content;
-        imageView.setImageBitmap(imageBitmap);
-        imageView.scaleAndPositionImage(column, imageBitmap);
+        Glide.with(cellView.getContext()).asBitmap().listener(new RequestListener<Bitmap>() {
+          @Override
+          public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+            return false;
+          }
+
+          @Override
+          public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+
+            imageView.scaleAndPositionImage(column, resource);
+            return false;
+          }
+        }).load(cell.imageUrl).into(imageView);
       } else if(column.representation.type.equals("miniChart") && !dataProvider.isDataView) {
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
         cellView.setLayoutParams(cellViewLayoutParams);

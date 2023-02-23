@@ -159,7 +159,7 @@ public class CustomRecyclerView extends RecyclerView {
 
   }
 
-  public boolean testTextWrap() {
+  public boolean testTextWrap( boolean recursive ) {
     if(!tableView.cellContentStyle.wrap) {
       // don't test but tell whoever is calling
       // that it's done testing
@@ -184,9 +184,6 @@ public class CustomRecyclerView extends RecyclerView {
     tableView.post(new Runnable() {
       @Override
       public void run() {
-        if(tableView.imageLoader.loading) {
-          return;
-        }
         for (int i = 0; i < childCount; i++) {
           View view = getChildAt(i);
           RowViewHolder viewHolder = (RowViewHolder) getChildViewHolder(view);
@@ -199,7 +196,9 @@ public class CustomRecyclerView extends RecyclerView {
           tableView.rootLayout.requestLayout();
         }
         requestLayout();
-        dataProvider.notifyDataSetChanged();
+        if(recursive) {
+          dataProvider.notifyDataSetChanged();
+        }
       }
     });
 

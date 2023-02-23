@@ -1,3 +1,31 @@
+## [1.2.3](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.2...v1.2.3) (2023-02-23)
+
+
+### Bug Fixes
+
+* **SESI-261:** clamp max width column to 75% of visualization width ([#192](https://github.com/qlik-oss/react-native-simple-grid/issues/192)) ([0c2ab33](https://github.com/qlik-oss/react-native-simple-grid/commit/0c2ab3349308833f0316146fef06406d05976690))
+
+## [1.2.2](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.1...v1.2.2) (2023-02-23)
+
+
+### Bug Fixes
+
+* **SESI-264:** increase font size, change labels, and darken up the font color ([ed0ed12](https://github.com/qlik-oss/react-native-simple-grid/commit/ed0ed122832da23fa1b67f31bab1983065ae02a5))
+
+## [1.2.1](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.0...v1.2.1) (2023-02-15)
+
+
+### Bug Fixes
+
+* make first column background color opaque ([#193](https://github.com/qlik-oss/react-native-simple-grid/issues/193)) ([71699cd](https://github.com/qlik-oss/react-native-simple-grid/commit/71699cd092b44a0ed9c44cf7e04388243938f24c))
+
+# [1.2.0](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.1.0...v1.2.0) (2023-02-13)
+
+
+### Features
+
+* improved image handling ([#190](https://github.com/qlik-oss/react-native-simple-grid/issues/190)) ([7d62524](https://github.com/qlik-oss/react-native-simple-grid/commit/7d6252454f40d4b8b95045dcfad6d854c20015e3))
+
 # [1.1.0](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.0.11...v1.1.0) (2023-02-10)
 
 

@@ -227,9 +227,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
       contentParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
       wrapper.setLayoutParams(wrapperParams);
       ((ClickableImageView) content).setLayoutParams(contentParams);
-
-      Bitmap imageBitmap = tableView.imageLoader.getImageData(((ClickableImageView) content).cell.imageUrl);
-      ((ClickableImageView) content).scaleAndPositionImage(column, imageBitmap);
+      ((ClickableImageView) content).scaleAndPositionImage(column);
     }
   }
 

@@ -186,7 +186,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     uiCollectionView.delegate = self
     uiCollectionView.dataSource = self
     uiCollectionView.indicatorStyle = .black
-    uiCollectionView.backgroundColor = .white
+    uiCollectionView.backgroundColor = .white.withAlphaComponent(0.0)
     childCollectionView = uiCollectionView
     addSubview(uiCollectionView)
   }
@@ -244,7 +244,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     cell.selectionBand = self.selectionBand
     cell.menuTranslations = self.menuTranslations
     cell.dataCollectionView = self
-    cell.backgroundColor = isDataView ? indexPath.row % 2 == 0 ? .white : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0) : .white
+    cell.backgroundColor = isDataView ? indexPath.row % 2 == 0 ? .white.withAlphaComponent(0.0) : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0) : .white.withAlphaComponent(0.0)
     cell.cellColor = cellColor
     cell.onExpandedCellEvent = onExpandedCell
     cell.numberOfLines = maxRowLineCount

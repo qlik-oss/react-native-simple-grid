@@ -53,7 +53,6 @@ public class TableView extends FrameLayout {
   DragBoxEventHandler dragBoxEventHandler = new DragBoxEventHandler(this);
   HeaderContentStyle headerContentStyle;
   CellContentStyle cellContentStyle;
-  ImageLoader imageLoader;
   List<GrabberView> grabbers = null;
   int rowHeight = 0;
   int headerHeight = 0;
@@ -69,7 +68,6 @@ public class TableView extends FrameLayout {
     firstColumnDragBox = new DragBox(context, this, dragBoxEventHandler, true);
     dragBoxEventHandler.setDragBoxes(dragBox, firstColumnDragBox);
     tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider, dragBox, firstColumnDragBox);
-    imageLoader = new ImageLoader(this);
   }
 
   public boolean isInitialized() {
@@ -278,7 +276,7 @@ public class TableView extends FrameLayout {
   protected void onSizeChanged(int w, int h, int oldw, int oldh) {
     super.onSizeChanged(w, h, oldw, oldh);
     totalWidth = w;
-    if(!this.isInitialized() || imageLoader.loading) {
+    if(!this.isInitialized()) {
       return;
     }
     initialize();
@@ -299,6 +297,7 @@ public class TableView extends FrameLayout {
 
   void invalidateLayout() {
     tableViewFactory.invalidateLayout();
+    updateHeaderViewLineCount();
     requestLayout();
   }
 

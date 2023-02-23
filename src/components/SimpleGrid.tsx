@@ -50,6 +50,7 @@ export type SimpleGridProps = {
     misc: {
       of: string;
     };
+    headerValues: Array<string>;
   };
 };
 
@@ -103,10 +104,14 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
       try {
         const row = JSON.parse(event.nativeEvent.row);
         const col = JSON.parse(event.nativeEvent.col);
-        expandCell({ expand: true, data: { row, col } });
+        expandCell({
+          expand: true,
+          data: { row, col },
+          titles: translations.headerValues,
+        });
       } catch (error) {}
     },
-    [expandCell]
+    [expandCell, translations.headerValues]
   );
 
   const signalSearch = useCallback(

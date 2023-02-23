@@ -48,7 +48,7 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       ReadableArray dataRows = rows.getArray("rows");
       if(dataRows != null) {
         boolean resetData = rows.getBoolean("reset");
-        RowFactory factory = new RowFactory(dataRows, tableView.getColumns(), tableView.imageLoader);
+        RowFactory factory = new RowFactory(dataRows, tableView.getColumns());
         List<DataRow> transformedRows = factory.getRows();
         tableView.setRows(transformedRows, resetData);
       }
