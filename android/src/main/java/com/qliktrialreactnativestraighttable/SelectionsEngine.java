@@ -81,7 +81,7 @@ public class SelectionsEngine {
     String[] items = s.split("/");
     String key = "/" + items[1] + "/" + items[2];
     String val = "/" + items[3];
-    String result [] = {key, val};
+    String[] result = {key, val};
     return result;
   }
 }

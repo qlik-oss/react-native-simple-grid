@@ -94,7 +94,7 @@ public class MiniChartInfo {
 
   MiniChartInfo(ReadableMap data) {
     type = data.hasKey("type") ? data.getString("type") : "";
-    showDots = data.hasKey("showDots") ? data.getBoolean("showDots") : false;
+    showDots = data.hasKey("showDots") && data.getBoolean("showDots");
     yAxis = data.hasKey("yAxis") ? new YAxis(data.getMap("yAxis")) : null;
     colors = data.hasKey("colors") ? new ChartColors(data.getMap("colors")) : null;
   }
