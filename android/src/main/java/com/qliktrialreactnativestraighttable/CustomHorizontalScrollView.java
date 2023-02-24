@@ -1,5 +1,6 @@
 package com.qliktrialreactnativestraighttable;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+@SuppressLint("ViewConstructor")
 public class CustomHorizontalScrollView extends HorizontalScrollView {
   MockHorizontalScrollView horizontalScrollBar;
   MockVerticalScrollView verticalScrollBar;
