@@ -10,7 +10,7 @@ export type ImageCellProps = {
 
 const ImageCell: React.FC<ImageCellProps> = ({ rowData, colData, style }) => {
   const imageUrl = useMemo(() => {
-    if (colData?.representation?.imageSetting === 'label') {
+    if(colData?.representation?.imageSetting === 'label') {
       return rowData.qText;
     }
     const imageIndex = colData?.stylingInfo?.indexOf('imageUrl');

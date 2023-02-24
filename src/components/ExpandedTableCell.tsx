@@ -1,4 +1,4 @@
-import { expandCellAtom } from '../atoms';
+import { expandCellAtom } from '@qlik/react-native-simple-grid/src/atoms';
 import { useAtom } from 'jotai';
 import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';

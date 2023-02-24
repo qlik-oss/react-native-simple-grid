@@ -17,6 +17,6 @@ public class ReactNativeStraightTablePackage implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Arrays.asList(new ReactNativeStraightTableViewManager(), new MiniChartViewManager());
+        return Arrays.<ViewManager>asList(new ReactNativeStraightTableViewManager(), new MiniChartViewManager());
     }
 }

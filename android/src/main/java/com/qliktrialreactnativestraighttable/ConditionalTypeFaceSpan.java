@@ -9,7 +9,7 @@ import android.text.style.TypefaceSpan;
 import androidx.annotation.NonNull;
 
 public class ConditionalTypeFaceSpan extends TypefaceSpan {
-  private final Typeface newType;
+  private Typeface newType;
   private int textColor = TableTheme.defaultTextColor;
 
   public ConditionalTypeFaceSpan(Typeface typeface) {
