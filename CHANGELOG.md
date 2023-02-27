@@ -1,3 +1,11 @@
+## [1.2.5](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.4...v1.2.5) (2023-02-27)
+
+
+### Bug Fixes
+
+* add scrollable area ([#199](https://github.com/qlik-oss/react-native-simple-grid/issues/199)) ([12d6bc8](https://github.com/qlik-oss/react-native-simple-grid/commit/12d6bc8a0edf7bc5f2fd51a3dce298228849dfcd))
+* **MD-4167:** fit to width ios ([#197](https://github.com/qlik-oss/react-native-simple-grid/issues/197)) ([90a9508](https://github.com/qlik-oss/react-native-simple-grid/commit/90a950816befb1bd0b18afef2d99802e313fd3e6))
+
 ## [1.2.4](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.3...v1.2.4) (2023-02-27)
 
 
