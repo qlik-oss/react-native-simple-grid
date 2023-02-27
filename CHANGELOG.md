@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.3...v1.2.4) (2023-02-27)
+
+
+### Bug Fixes
+
+* custom svg for rects ([#196](https://github.com/qlik-oss/react-native-simple-grid/issues/196)) ([65bc079](https://github.com/qlik-oss/react-native-simple-grid/commit/65bc0799db87878d32bba75d32f0fe74f5faaa76))
+
 ## [1.2.3](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.2...v1.2.3) (2023-02-23)
 
 
