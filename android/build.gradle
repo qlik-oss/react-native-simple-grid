@@ -72,5 +72,6 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'// From node_modules
+    implementation 'com.caverock:androidsvg-aar:1.4'
     implementation 'com.github.bumptech.glide:glide:4.14.2'
 }

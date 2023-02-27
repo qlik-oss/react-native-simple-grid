@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SDWebImage
+
 @objc
 class ContainerView: UIView {
   var created = false
@@ -214,7 +216,6 @@ class ContainerView: UIView {
 
       if !created {
         created = true
-
         let tableViewFactory = TableViewFactory(containerView: self,
                                                 columnWidths: columnWidths,
                                                 dataColumns: dataColumns,

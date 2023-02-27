@@ -22,6 +22,7 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
   var selected = false
   let selectedBackgroundColor = ColorParser.fromCSS(cssString: "#009845")
   var prevBackgroundColor = UIColor.clear
+  var svgCoder: SvgCoder?
   
   
   init( selectionBand: SelectionBand?) {
@@ -128,14 +129,18 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
     self.cell = data
     
     guard let urlString = getUrlString(data: data, representedAs: rep, index: index) else { return }
-    guard let url = URL(string: urlString) else {return}
-    if let downloadedImage = SDImageCache.shared.imageFromCache(forKey: urlString) {
-      self.displayImage(with: downloadedImage)
+    if(urlString.starts(with: "data:image/svg+xml,<svg")) {
+      svgCoder = SvgCoder(urlString, with: self.frame.size)
     } else {
-      SDWebImageDownloader.shared.downloadImage(with: url) {(image, data, error, finished) in
-        if let image = image {
-          DispatchQueue.main.async {
-            self.displayImage(with: image)
+      guard let url = URL(string: urlString) else {return}
+      if let downloadedImage = SDImageCache.shared.imageFromCache(forKey: urlString) {
+        self.displayImage(with: downloadedImage)
+      } else {
+        SDWebImageDownloader.shared.downloadImage(with: url) {(image, data, error, finished) in
+          if let image = image {
+            DispatchQueue.main.async {
+              self.displayImage(with: image)
+            }
           }
         }
       }
@@ -353,6 +358,17 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
     UIView.animate(withDuration: 0.3, animations: {
       self.layer.backgroundColor = to.cgColor
     })
+  }
+  
+  override func draw(_ rect: CGRect) {
+    if let svgCoder = svgCoder {
+      guard let context = UIGraphicsGetCurrentContext() else { return }
+      let clipRect = rect.insetBy(dx: svgCoder.padding, dy: 0)
+      context.clip(to: [clipRect])
+      svgCoder.shapes.forEach { shape in
+        shape.draw(context, rect: rect)
+      }
+    }
   }
   
   deinit {

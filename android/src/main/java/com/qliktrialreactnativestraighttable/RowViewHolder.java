@@ -2,6 +2,8 @@ package com.qliktrialreactnativestraighttable;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -24,6 +26,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.caverock.androidsvg.SVG;
 
 public class RowViewHolder extends RecyclerView.ViewHolder  {
   private int startIndex, numColumns;
@@ -73,19 +76,28 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         cellView.setData(cell, dataRow, column);
 
         ClickableImageView imageView = (ClickableImageView) cellView.content;
-        Glide.with(cellView.getContext()).asBitmap().listener(new RequestListener<Bitmap>() {
-          @Override
-          public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-            return false;
-          }
+        if(cell.imageUrl != null) {
+          String svgTag = "data:image/svg+xml,";
+          if(cell.imageUrl.startsWith(svgTag)) {
+            loadSVG(cell, imageView);
+          } else {
+            Glide.with(cellView.getContext()).asBitmap().listener(new RequestListener<Bitmap>() {
+              @Override
+              public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                return false;
+              }
 
-          @Override
-          public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+              @Override
+              public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
 
-            imageView.scaleAndPositionImage(column, resource);
-            return false;
+                imageView.scaleAndPositionImage(column, resource);
+                return false;
+              }
+            }).load(cell.imageUrl).into(imageView);
           }
-        }).load(cell.imageUrl).into(imageView);
+        } else if(cell.qText != null) {
+          loadSVG(cell, imageView);
+        }
       } else if(column.representation.type.equals("miniChart") && !dataProvider.isDataView) {
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
         cellView.setLayoutParams(cellViewLayoutParams);
@@ -117,6 +129,20 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
           textView.setMaxLines(1);
         }
         textView.setGravity(column.textAlignment | Gravity.CENTER_VERTICAL);
+      }
+    }
+  }
+
+  private void loadSVG(DataCell cell, ImageView imageView) {
+    String svgTag = "data:image/svg+xml,";
+    if(cell.qText.startsWith(svgTag)) {
+      try {
+        String svgXML = cell.qText.substring(svgTag.length());
+        SVG svg = SVG.getFromString(svgXML);
+        Drawable drawable = new PictureDrawable(svg.renderToPicture());
+        imageView.setImageDrawable(drawable);
+      } catch (Exception exception) {
+        Log.e("Image", exception.getMessage());
       }
     }
   }

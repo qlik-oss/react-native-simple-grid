@@ -49,6 +49,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
   var numberOfLines = 1
   var isDataView  = true
   var dataRange: CountableRange = 0..<1
+  var isSVG = false
   var columnWidths: ColumnWidths?
   var onExpandedCellEvent: RCTDirectEventBlock?
   var menuTranslations: MenuTranslations?
@@ -104,6 +105,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
     self.dataRange = dataRange
     self.dataColumns = dataColumns
     self.columnWidths = columnWidths
+    self.isSVG = false
     createCells(row: row, withColumns: dataColumns, columnWidths: columnWidths, withRange: dataRange)
     let views = contentView.subviews
     row.cells[dataRange].enumerated().forEach {(index, element) in
