@@ -11,6 +11,7 @@
     "swiftlint": "cd ios && swiftlint autocorrect",
     "javalint": "cd android && ./gradlew lint -x compileDebugJavaWithJavac",
     "ci:install": "yarn install --frozen-lockfile",
+    "pod-install": "cd example/TableApp/ios && pod install",
     "setup-dev": "yarn && cd example/TableApp && yarn"
   },
   "keywords": [
