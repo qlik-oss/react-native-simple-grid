@@ -5,6 +5,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -28,6 +31,8 @@ public class CustomRecyclerView extends RecyclerView {
   public CustomRecyclerView scrollCoupledView = null;
   public MockVerticalScrollView verticalScrollBar = null;
   Paint paint = new Paint();
+
+  Rect hitRect = new Rect();
 
   public CustomRecyclerView(Context context, boolean onlyFirstColumn, DataProvider dp, TableView tv, LinearLayoutManager ll, DragBox db, DragBox firstColumnDb) {
     super(context);
@@ -54,8 +59,29 @@ public class CustomRecyclerView extends RecyclerView {
     firstColumnDb.setScrollListener(this);
   }
 
-  public void setScrollbar(MockVerticalScrollView verticalScrollBar){
+  public void setScrollbar(MockVerticalScrollView verticalScrollBar) {
     this.verticalScrollBar = verticalScrollBar;
+  }
+
+  @Override
+  public boolean onInterceptTouchEvent(MotionEvent e) {
+    if (!hitRect.contains((int) e.getX(), (int) e.getY())) {
+      return false;
+    }
+    return super.onInterceptTouchEvent(e);
+  }
+
+
+  public void updateHitRect(int width, int height) {
+    hitRect = new Rect(0, 0, width - (int) PixelUtils.dpToPx(25), height);
+  }
+
+  public void offsetHitRect(int x) {
+    if (hitRect != null) {
+      int width = hitRect.width();
+      hitRect.left = x;
+      hitRect.right = x + width;
+    }
   }
 
   @Override
@@ -75,14 +101,22 @@ public class CustomRecyclerView extends RecyclerView {
   }
 
   @Override
+  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    super.onSizeChanged(w, h, oldw, oldh);
+    if (hitRect != null) {
+      hitRect.bottom = h;
+    }
+  }
+
+  @Override
   public void requestLayout() {
     super.requestLayout();
     post(measureAndLayout);
-    if(rowCountView == null) {
+    if (rowCountView == null) {
       return;
     }
     post(() -> {
-      if(linearLayout == null || dataProvider == null) {
+      if (linearLayout == null || dataProvider == null) {
         return;
       }
       int windowMin = linearLayout.findFirstVisibleItemPosition() + 1;
@@ -123,7 +157,6 @@ public class CustomRecyclerView extends RecyclerView {
   @Override
   public void onScrollStateChanged(int state) {
     super.onScrollStateChanged(state);
-
     active = state != SCROLL_STATE_IDLE;
   }
 
@@ -159,8 +192,8 @@ public class CustomRecyclerView extends RecyclerView {
 
   }
 
-  public boolean testTextWrap( boolean recursive ) {
-    if(!tableView.cellContentStyle.wrap) {
+  public boolean testTextWrap(boolean recursive) {
+    if (!tableView.cellContentStyle.wrap) {
       // don't test but tell whoever is calling
       // that it's done testing
       return true;
@@ -177,7 +210,7 @@ public class CustomRecyclerView extends RecyclerView {
       maxLines = Math.max(lines, maxLines);
     }
     if (!firstColumnOnly) {
-      int rowHeight =  (maxLines * tableView.cellContentStyle.lineHeight) + CellView.PADDING_X_2;
+      int rowHeight = (maxLines * tableView.cellContentStyle.lineHeight) + CellView.PADDING_X_2;
       tableView.rowHeight = Math.max(rowHeight, tableView.cellContentStyle.themedRowHeight);
     }
 
@@ -192,11 +225,11 @@ public class CustomRecyclerView extends RecyclerView {
         if (tableView.firstColumnView != null) {
           tableView.firstColumnView.requestLayout();
         }
-        if(tableView.rootLayout != null) {
+        if (tableView.rootLayout != null) {
           tableView.rootLayout.requestLayout();
         }
         requestLayout();
-        if(recursive) {
+        if (recursive) {
           dataProvider.notifyDataSetChanged();
         }
       }

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -280,6 +281,9 @@ public class TableView extends FrameLayout {
       return;
     }
     initialize();
+    if(recyclerView != null) {
+      recyclerView.updateHitRect(w, h);
+    }
   }
 
   void createRecyclerView() {
@@ -293,6 +297,15 @@ public class TableView extends FrameLayout {
     verticalScrollBar = tableViewFactory.verticalScrollBar;
     screenGuideView = tableViewFactory.screenGuideView;
     firstColumnView = tableViewFactory.firstColumnRecyclerView;
+
+    scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+      @Override
+      public void onScrollChanged() {
+        if (recyclerView != null) {
+          recyclerView.offsetHitRect(scrollView.getScrollX());
+        }
+      }
+    });
   }
 
   void invalidateLayout() {
@@ -313,4 +326,5 @@ public class TableView extends FrameLayout {
     // avoid drift
     tableViewFactory.updateGrabbers();
   }
+
 }
