@@ -45,15 +45,17 @@ class HorizontalScrollViewDelegate: NSObject, UIScrollViewDelegate {
     if (freezeFirstCol) {
       if rawX <= 0 {
         let x = width - rawX
-        let translation = CGPoint(x: x, y: 0)
         tableView.setWidth(x)
         grabber.setPosition(x)
         containerView.testTruncation()
       }
-      
       let offset = shadowOffsetX/100.0
       updateShadow(offset: offset)
     }
+    else {
+      tableView.horizontalScrollOffset(rawX)
+    }
+    multiColumnTable?.horizontalScrollOffset(rawX)
     
   }
 

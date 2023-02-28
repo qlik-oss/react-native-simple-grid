@@ -451,6 +451,7 @@ class TableViewFactory {
     if(dataColumns.count < 2 ) {
       firstColumnTableView.dataCollectionView?.childCollectionView?.showsVerticalScrollIndicator = true
     } else {
+      multiColumnTableView.dataCollectionView?.childCollectionView?.firstColumnTable = firstColumnTableView
       firstColumnTableView.dataCollectionView?.childCollectionView?.showsVerticalScrollIndicator = false
     }
   }
