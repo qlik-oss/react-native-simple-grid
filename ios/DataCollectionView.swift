@@ -19,7 +19,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   var loading = false
   var onEndReached: RCTDirectEventBlock?
   var onExpandedCell: RCTDirectEventBlock?
-  var childCollectionView: UICollectionView?
+  var childCollectionView: CustomCollectionView?
   var tableTheme: TableTheme?
   var selectionsEngine: SelectionsEngine?
   let reuseIdentifier = "CellIdentifier"
@@ -163,7 +163,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       let fullyVisible = visibleIndexPaths.filter { indexPath in
         let layout = childCollectionView.layoutAttributesForItem(at: indexPath)!
         let half = layout.frame.height / 2
-        var deflatedFrame = layout.frame.insetBy(dx: 0, dy: half).offsetBy(dx: 0, dy: -half/4.0)
+        let deflatedFrame = layout.frame.insetBy(dx: 0, dy: half).offsetBy(dx: 0, dy: -half/4.0)
         return childCollectionView.bounds.intersects(deflatedFrame)
       }
       let firstItem = fullyVisible.first
@@ -179,7 +179,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     dataRows = rows
     setupDataCols()
     let flowLayout = UICollectionViewFlowLayout()
-    let uiCollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+    let uiCollectionView = CustomCollectionView(frame: .zero, collectionViewLayout: flowLayout)
     uiCollectionView.translatesAutoresizingMaskIntoConstraints = false
     
     uiCollectionView.register(DataCellView.self, forCellWithReuseIdentifier: reuseIdentifier)

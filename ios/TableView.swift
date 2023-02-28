@@ -106,4 +106,8 @@ class TableView: UIView {
     self.layer.shadowColor = UIColor.gray.cgColor
     self.layer.shadowOpacity = offset
   }
+  
+  func horizontalScrollOffset(_ x: CGFloat) {
+    dataCollectionView?.childCollectionView?.horizontalScrollOffset(x)
+  }
 }

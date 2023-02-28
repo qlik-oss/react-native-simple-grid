@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {Supernova} from '@qlik/react-native-carbon';
 import theme from './theme.json';
 import {useAtomValue} from 'jotai';
@@ -43,15 +43,19 @@ const Visualization = () => {
 
   return (
     <SafeAreaView style={styles.body} edges={['bottom', 'left', 'right']}>
-      <Supernova
-        sn={supernova}
-        theme={theme}
-        object={model}
-        app={openedApp.data.app}
-        appLayout={openedApp.data.appLayout}
-        jsxComponent={true}
-        properties={properties}
-      />
+      <ScrollView style={{flex: 1}}>
+        <View style={styles.snContainer}>
+          <Supernova
+            sn={supernova}
+            theme={theme}
+            object={model}
+            app={openedApp.data.app}
+            appLayout={openedApp.data.appLayout}
+            jsxComponent={true}
+            properties={properties}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -64,6 +68,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     padding: 8,
     margin: 8,
+  },
+  snContainer: {
+    width: '100%',
+    height: 1000,
   },
 });
 
