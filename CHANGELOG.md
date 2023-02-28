@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.5...v1.2.6) (2023-02-28)
+
+
+### Bug Fixes
+
+* scrollable area for iOS ([#201](https://github.com/qlik-oss/react-native-simple-grid/issues/201)) ([a9ad96a](https://github.com/qlik-oss/react-native-simple-grid/commit/a9ad96a1f4ce597b7543c6e044534052596f32bb))
+
 ## [1.2.5](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.4...v1.2.5) (2023-02-27)
 
 
