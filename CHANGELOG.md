@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.6...v1.2.7) (2023-03-03)
+
+
+### Bug Fixes
+
+* **QB-18315:** fix data race ([#202](https://github.com/qlik-oss/react-native-simple-grid/issues/202)) ([146d67c](https://github.com/qlik-oss/react-native-simple-grid/commit/146d67c3958ed7c4a0d88f0ff55193c5508901c3))
+
 ## [1.2.6](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.5...v1.2.6) (2023-02-28)
 
 
