@@ -170,6 +170,8 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
       let lastItem = fullyVisible.last
       if let totalCellsView = totalCellsView, let first = firstItem, let last = lastItem {
         totalCellsView.updateTotals(first: first, last: last)
+      } else {
+        totalCellsView?.updateZeroTotals()
       }
     }
   }
