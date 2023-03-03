@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.7...v1.2.8) (2023-03-03)
+
+
+### Bug Fixes
+
+* **QB-18309:** show 0 - 0 /(total) instead of NA ([#203](https://github.com/qlik-oss/react-native-simple-grid/issues/203)) ([1fcc74b](https://github.com/qlik-oss/react-native-simple-grid/commit/1fcc74b7b8a93efce10f3b213c5db4fb4f583595))
+
 ## [1.2.7](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.6...v1.2.7) (2023-03-03)
 
 
