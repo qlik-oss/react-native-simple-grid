@@ -217,6 +217,12 @@ public class CustomRecyclerView extends RecyclerView {
     tableView.post(new Runnable() {
       @Override
       public void run() {
+        // double check here, since things could have changed.
+        // this also speeds things up since there will be less notifyDataSetChanged calls
+        int childCount = getChildCount();
+        if(childCount == 0) {
+          return;
+        }
         for (int i = 0; i < childCount; i++) {
           View view = getChildAt(i);
           RowViewHolder viewHolder = (RowViewHolder) getChildViewHolder(view);
