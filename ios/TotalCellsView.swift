@@ -36,7 +36,6 @@ class TotalCellsView: UIView {
 
     self.textView = view
 
-//    addBorder()
   }
 
   func addBorder() {
