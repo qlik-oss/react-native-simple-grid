@@ -18,6 +18,8 @@ public class TableTheme {
 
   static int backgroundColor = Color.WHITE;
 
+  static int HorizontalScrollViewPadding = (int)PixelUtils.dpToPx(50);
+
 
   static void updateFrom(ReadableMap theme) {
     String headerBackgroundColorString = JsonUtils.getString(theme, "headerBackgroundColor", "#404040");
