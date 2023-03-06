@@ -143,6 +143,7 @@ class TableViewFactory {
                                                 selectionsEngine: containerView.selectionsEngine,
                                                 cellStyle: cellStyle,
                                                 columnWidths: columnWidths,
+                                                isDataView: containerView.isDataView,
                                                 range: 0..<1)
     fitDataCollectionView(dataCollectionView, on: firstColumnTableView, withRane: 0..<1)
     wireDataCollectionView(dataCollectionView)
@@ -230,6 +231,7 @@ class TableViewFactory {
                                                 selectionsEngine: containerView.selectionsEngine,
                                                 cellStyle: cellStyle,
                                                 columnWidths: columnWidths,
+                                                isDataView: containerView.isDataView,
                                                 range: 1..<columnWidths.count())
     fitDataCollectionView(dataCollectionView, on: multiColumnTableView, withRane: 0..<1)
     wireDataCollectionView(dataCollectionView)

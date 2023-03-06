@@ -43,6 +43,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
        selectionsEngine: SelectionsEngine,
        cellStyle: CellStyle?,
        columnWidths: ColumnWidths,
+       isDataView: Bool,
        range: CountableRange<Int>) {
     super.init(frame: frame)
     self.columnWidths = columnWidths
@@ -51,6 +52,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     self.cellStyle = cellStyle
     self.dataRange = range
     self.clipsToBounds = false
+    self.isDataView = isDataView
     if let cellContentStyle = cellStyle?.cellContentStyle {
       if let colorString = cellContentStyle.color {
         cellColor = ColorParser.fromCSS(cssString: colorString)
@@ -184,8 +186,12 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     let uiCollectionView = CustomCollectionView(frame: .zero, collectionViewLayout: flowLayout)
     uiCollectionView.translatesAutoresizingMaskIntoConstraints = false
     var tableBgColor:UIColor = .white.withAlphaComponent(0.0)
-    if let bgColor = tableTheme?.backgroundColor {
-      tableBgColor = ColorParser.fromCSS(cssString: bgColor)
+    if !isDataView {
+      if let bgColor = tableTheme?.backgroundColor {
+        tableBgColor = ColorParser.fromCSS(cssString: bgColor)
+      }
+    } else {
+      tableBgColor = .white
     }
     
     uiCollectionView.register(DataCellView.self, forCellWithReuseIdentifier: reuseIdentifier)
@@ -273,7 +279,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   
   func getCellBackgroundColor(index: Int) -> UIColor {
     if(isDataView) {
-      return index % 2 == 0 ? .white.withAlphaComponent(0.0) : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0)
+      return index % 2 == 0 ? .white : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0)
     }
     if let even = tableTheme?.even {
       return (index + 1) % 2 == 0 ? ColorParser.fromCSS(cssString: even) : .clear

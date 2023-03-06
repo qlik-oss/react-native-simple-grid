@@ -110,7 +110,9 @@ public class HeaderViewFactory {
     }
     text.setLayoutParams(params);
     text.setTextColor(tableView.cellContentStyle.color);
-    text.setBackgroundColor(TableTheme.backgroundColor);
+    if(!tableView.isDataView) {
+      text.setBackgroundColor(TableTheme.backgroundColor);
+    }
     text.setZ((int) PixelUtils.dpToPx(headerZ));
     text.setTextSize(tableView.cellContentStyle.fontSize);
     text.setMaxLines(1);
@@ -167,7 +169,9 @@ public class HeaderViewFactory {
   private void buildTotals(Context context) {
     totalsView = new TotalsView(context, tableView);
     totalsView.setDataColumns(dataColumns);
-    totalsView.setBackgroundColor(TableTheme.backgroundColor);
+    if(!tableView.isDataView) {
+      totalsView.setBackgroundColor(TableTheme.backgroundColor);
+    }
 
     int headerHeight = tableView.headerHeight;
     totalsView.setOrientation(LinearLayout.HORIZONTAL);
