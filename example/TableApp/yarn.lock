@@ -1179,9 +1179,9 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@nebula.js/sn-table@file:../../prebuilt/nebula.js-react-native-sn-table-1.14.116.tgz":
-  version "1.14.116"
-  resolved "file:../../prebuilt/nebula.js-react-native-sn-table-1.14.116.tgz#40b47b6054c1b3868be1417a8050e67437d14960"
+"@nebula.js/sn-table@file:../../prebuilt/nebula.js-react-native-sn-table-1.14.121.tgz":
+  version "1.14.121"
+  resolved "file:../../prebuilt/nebula.js-react-native-sn-table-1.14.121.tgz#732730d20345059416bfec28fa3a6790b53cbeee"
 
 "@nebula.js/stardust@2.9.0":
   version "2.9.0"
@@ -1195,10 +1195,10 @@
   resolved "https://registry.yarnpkg.com/@qlik/carbon-core/-/carbon-core-2.0.4.tgz#b57e10ccde240190c3933772b7a8127f24794b8e"
   integrity sha512-Ni/96h5/hFQ52v4b/j50OnKIvYOPRpks8CKT8OHgDP7G48y+Bgb5+X22KZ0iPH9n3b5sDgUu15IU8xnoyTUkbw==
 
-"@qlik/react-native-carbon@2.1.9":
-  version "2.1.9"
-  resolved "https://registry.yarnpkg.com/@qlik/react-native-carbon/-/react-native-carbon-2.1.9.tgz#d5af43f785a404973991a8b2d9d59b8b97f9593e"
-  integrity sha512-AIWLJ/N85TJp0WLTnIBYiKWz62f/R24ZAYETbpPTLuHX8zU7PPWI+HKDNKKtq7EztlVGsq4dIChw59IDzh1iAg==
+"@qlik/react-native-carbon@2.1.16":
+  version "2.1.16"
+  resolved "https://registry.yarnpkg.com/@qlik/react-native-carbon/-/react-native-carbon-2.1.16.tgz#ac177140c08ac45bbbd0087d74ac8e5e7a21c61d"
+  integrity sha512-lRqtyqDmah22q0KcUKQw65PvElfzn1nE945rXYqoMUu6jkLVa/2EpiqVC0B/4A2/zw7DTnYYiLTgrggZHkvhCA==
 
 "@qlik/react-native-helium@1.2.16":
   version "1.2.16"
