@@ -183,12 +183,16 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     let flowLayout = UICollectionViewFlowLayout()
     let uiCollectionView = CustomCollectionView(frame: .zero, collectionViewLayout: flowLayout)
     uiCollectionView.translatesAutoresizingMaskIntoConstraints = false
+    var tableBgColor:UIColor = .white.withAlphaComponent(0.0)
+    if let bgColor = tableTheme?.backgroundColor {
+      tableBgColor = ColorParser.fromCSS(cssString: bgColor)
+    }
     
     uiCollectionView.register(DataCellView.self, forCellWithReuseIdentifier: reuseIdentifier)
     uiCollectionView.delegate = self
     uiCollectionView.dataSource = self
     uiCollectionView.indicatorStyle = .black
-    uiCollectionView.backgroundColor = .white.withAlphaComponent(0.0)
+    uiCollectionView.backgroundColor = tableBgColor
     childCollectionView = uiCollectionView
     addSubview(uiCollectionView)
   }
@@ -246,7 +250,8 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     cell.selectionBand = self.selectionBand
     cell.menuTranslations = self.menuTranslations
     cell.dataCollectionView = self
-    cell.backgroundColor = isDataView ? indexPath.row % 2 == 0 ? .white.withAlphaComponent(0.0) : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0) : .white.withAlphaComponent(0.0)
+    cell.layer.backgroundColor = getCellBackgroundColor(index: indexPath.row).cgColor
+    
     cell.cellColor = cellColor
     cell.onExpandedCellEvent = onExpandedCell
     cell.numberOfLines = maxRowLineCount
@@ -264,6 +269,16 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     }
     
     return cell
+  }
+  
+  func getCellBackgroundColor(index: Int) -> UIColor {
+    if(isDataView) {
+      return index % 2 == 0 ? .white.withAlphaComponent(0.0) : UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0)
+    }
+    if let even = tableTheme?.even {
+      return (index + 1) % 2 == 0 ? ColorParser.fromCSS(cssString: even) : .clear
+    }
+    return .clear
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

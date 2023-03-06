@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import ReactNativeStraightTableViewManager from './ReactNativeStraightTableViewManager';
 import { useUpdateAtom } from 'jotai/utils';
 import {
@@ -6,6 +6,7 @@ import {
   setExpandedCellAtom,
   setSearchingTableColumnAtom,
 } from '../atoms';
+import CarbonTheme from '@qlik/react-native-carbon/src/core/CarbonTheme';
 
 export type SimpleGridLayout = {
   totals: {
@@ -21,6 +22,7 @@ export type ScrollingProps = {
 
 export type SimpleGridProps = {
   theme: any;
+  themeData: any;
   tableData: any;
   style: any;
   layout: {
@@ -94,10 +96,14 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
   clearSelections,
   onHeaderPressed,
   model,
+  themeData,
 }) => {
   const draggingBox = useUpdateAtom(setDragBoxAtom);
   const expandCell = useUpdateAtom(setExpandedCellAtom);
   const searchColumn = useUpdateAtom(setSearchingTableColumnAtom);
+  const carbonTheme = useRef<CarbonTheme>(
+    new CarbonTheme({ theme: themeData })
+  );
 
   const onExpandCell = useCallback(
     (event: any) => {
@@ -181,7 +187,21 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
 
   return (
     <ReactNativeStraightTableViewManager
-      theme={theme}
+      theme={{
+        ...theme,
+        headerBackgroundColor: carbonTheme?.current?.getValue(
+          'object.straightTable.header.backgroundColor',
+          '#F0F0F0'
+        ),
+        backgroundColor: carbonTheme.current?.resolveBackgroundColor(
+          layout,
+          'white'
+        ),
+        even: carbonTheme?.current?.getValue(
+          'object.straightTable.mobile.rows.even.backgroundColor',
+          null
+        ),
+      }}
       cols={{
         header: tableData?.columns,
         footer: layout?.totals.show

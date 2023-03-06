@@ -23,6 +23,8 @@ struct TableTheme: Decodable {
   let borderSelectedColor: String?
   let selectedBackground: String?
   let headerTextColor: String?
+  let backgroundColor: String?
+  let even: String?
 
 }
 

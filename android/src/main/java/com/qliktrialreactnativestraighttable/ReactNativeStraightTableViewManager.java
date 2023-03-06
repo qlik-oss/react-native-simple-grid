@@ -82,7 +82,7 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
 
     @ReactProp(name = "theme")
     public void setTheme(View view, ReadableMap theme) {
-
+      TableTheme.updateFrom(theme);
     }
 
     @ReactProp(name = "translations")

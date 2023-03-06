@@ -396,6 +396,7 @@ class TableViewFactory {
       totalsColView.translatesAutoresizingMaskIntoConstraints = false
       totalsColView.dynamicHeight = totalsColView.heightAnchor.constraint(equalToConstant: height + (PaddedLabel.PaddingSize * 2.0))
       totalsColView.isFirstColumn = first
+      totalsColView.backgroundColor = ColorParser.fromCSS(cssString: containerView.tableTheme?.backgroundColor ?? "white")
       tableView.addSubview(totalsColView)
       tableView.totalView = totalsColView
       var constraints = [

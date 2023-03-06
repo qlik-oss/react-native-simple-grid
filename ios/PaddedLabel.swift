@@ -22,6 +22,7 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   var url: URL?
   var menuTranslations: MenuTranslations?
   var numberOfWords = 0
+  var prevColor: CGColor = UIColor.clear.cgColor
   
   weak var delegate: ExpandedCellProtocol?
   weak var selectionBand: SelectionBand?
@@ -240,12 +241,12 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   
   fileprivate func updateBackground() {
     textColor = selected ? .white : .black
-    animateBackgroundColor(to: selected ? selectedBackgroundColor : .clear)
+    animateBackgroundColor(to: selected ? selectedBackgroundColor.cgColor : prevColor)
   }
   
-  fileprivate func animateBackgroundColor(to: UIColor) {
+  fileprivate func animateBackgroundColor(to: CGColor) {
     UIView.animate(withDuration: 0.3, animations: {
-      self.layer.backgroundColor = to.cgColor
+      self.layer.backgroundColor = to
     })
   }
   
@@ -346,6 +347,11 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       return lineCount
     }
     return numberOfLines
+  }
+  
+  func setBackgroundColor(color: UIColor) {
+    prevColor = color.cgColor;
+    self.layer.backgroundColor = color.cgColor
   }
   
   deinit {
