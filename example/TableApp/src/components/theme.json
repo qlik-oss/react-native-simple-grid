@@ -52,10 +52,6 @@
 			"backgroundColor": "transparent"
 		},
 		"straightTable": {
-			"header": {
-				"color": "white",
-				"backgroundColor": "red"
-			},
 			"content": {
 				"color": "@myColorDark"
 			}

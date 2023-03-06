@@ -320,7 +320,7 @@ class ContainerView: UIView {
   
   override func layoutSubviews() {
     super.layoutSubviews()
-    self.backgroundColor = ColorParser.fromCSS(cssString: tableTheme?.backgroundColor ?? "white")
+    self.backgroundColor = isDataView ? .white : ColorParser.fromCSS(cssString: tableTheme?.backgroundColor ?? "white")
     firstColumnTable?.dataCollectionView?.childCollectionView?.setScrollableArea(self.frame);
     multiColumnTable?.dataCollectionView?.childCollectionView?.setScrollableArea(self.frame);
     updateVScrollPos()

@@ -115,7 +115,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         cellViewLayoutParams.gravity = Gravity.TOP;
         cellView.setLayoutParams(cellViewLayoutParams);
 
-        if(column.representation.type.equals("text") || dataProvider.isDataView) {
+        if(column.representation.type.equals("text") ) {
           cell.indicator = null;
         }
 

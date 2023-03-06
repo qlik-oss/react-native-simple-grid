@@ -60,6 +60,8 @@ public class TableView extends FrameLayout {
   int totalsHeight = 0;
   TableViewFactory tableViewFactory;
 
+  boolean isDataView = false;
+
   TableView(ThemedReactContext context) {
     super(context);
     TableTheme.iconFonts = ReactFontManager.getInstance().getTypeface("fontello", 0, context.getAssets());
@@ -212,6 +214,7 @@ public class TableView extends FrameLayout {
   }
 
   public void setDataView(boolean isDataView) {
+    this.isDataView = isDataView;
     dataProvider.setDataView(isDataView);
   }
 

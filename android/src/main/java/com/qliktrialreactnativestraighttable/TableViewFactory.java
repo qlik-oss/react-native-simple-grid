@@ -185,9 +185,11 @@ public class TableViewFactory {
   }
 
   protected void createTotalsView() {
-    totalsView = headerViewFactory.getTotalsView();
-    if(totalsView != null) {
-      rootLayout.addView(totalsView);
+    if(!tableView.isDataView) {
+      totalsView = headerViewFactory.getTotalsView();
+      if (totalsView != null) {
+        rootLayout.addView(totalsView);
+      }
     }
 
     createRecyclerViews();
@@ -198,7 +200,7 @@ public class TableViewFactory {
     linearLayout.recyclerView = coupledRecyclerView;
 
     coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout, dragBox, firstColumnDragBox);
-    coupledRecyclerView.setBackgroundColor(TableTheme.backgroundColor);
+    coupledRecyclerView.setBackgroundColor(tableView.isDataView ? Color.WHITE : TableTheme.backgroundColor);
     FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     coupledRecyclerView.setLayoutParams(recyclerViewLayoutParams);
     coupledRecyclerView.setZ(0);
@@ -208,7 +210,7 @@ public class TableViewFactory {
 
     CustomLinearLayoutManger firstColumnLinearLayout = new CustomLinearLayoutManger(context);
     firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout, dragBox, firstColumnDragBox);
-    firstColumnRecyclerView.setBackgroundColor(TableTheme.backgroundColor);
+    firstColumnRecyclerView.setBackgroundColor(tableView.isDataView ? Color.WHITE : TableTheme.backgroundColor);
     firstColumnLinearLayout.recyclerView = firstColumnRecyclerView;
     firstColumnRecyclerView.setAdapter(dataProvider);
     FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -220,7 +222,7 @@ public class TableViewFactory {
       coupledRecyclerView.setViewToScrollCouple(firstColumnRecyclerView);
       firstColumnRecyclerView.setViewToScrollCouple(coupledRecyclerView);
       firstColumnRecyclerView.setZ(1);
-      if(totalsCells != null && totalsCells.size() > 0) {
+      if(totalsCells != null && totalsCells.size() > 0 && !tableView.isDataView) {
         firstColumnTotalsCell = HeaderViewFactory.buildFixedTotalsCell(tableView, dataColumns.get(0), totalsCells.get(0), headerViewFactory.topPosition);
         tableView.addView(firstColumnTotalsCell);
       }
@@ -348,6 +350,9 @@ public class TableViewFactory {
   private void updateRecyclerViewMargins() {
     int extraTop = tableView.totalsPosition.equals("top") ? tableView.totalsHeight : 0;
     int extraBottom = tableView.totalsPosition.equals("bottom") ? tableView.totalsHeight : 0;
+    if(tableView.isDataView) {
+      extraTop = extraBottom = 0;
+    }
     int marginTop = tableView.headerHeight + extraTop;
 
     FrameLayout.LayoutParams recyclerViewLayoutParams = (FrameLayout.LayoutParams) coupledRecyclerView.getLayoutParams();
