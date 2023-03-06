@@ -131,7 +131,7 @@ public class TableViewFactory {
     FrameLayout.LayoutParams horizontalFrameLayout = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) PixelUtils.dpToPx(5));
     horizontalFrameLayout.gravity = Gravity.BOTTOM;
     horizontalFrameLayout.bottomMargin = TableTheme.DefaultRowHeight;
-    horizontalFrameLayout.rightMargin = (int) PixelUtils.dpToPx(25);
+    horizontalFrameLayout.rightMargin = TableTheme.HorizontalScrollViewPadding;
 
     horizontalScrollView.setLayoutParams(horizontalFrameLayout);
   }
@@ -170,7 +170,7 @@ public class TableViewFactory {
 
   protected void createRootLayout() {
     this.rootLayout = new RootLayout(context, columnWidths);
-    this.rootLayout.setPadding(0,0, (int) PixelUtils.dpToPx(25),0);
+    this.rootLayout.setPadding(0,0, TableTheme.HorizontalScrollViewPadding, 0);
     this.rootLayout.addView(dragBox);
     this.rootLayout.setZ(PixelUtils.dpToPx(1));
 

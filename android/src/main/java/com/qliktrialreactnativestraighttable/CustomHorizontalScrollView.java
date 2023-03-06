@@ -26,7 +26,7 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
   public int getOverScrollOffset() {
     int scrollRange = computeHorizontalScrollRange();
     int scrollX = computeHorizontalScrollOffset();
-    return scrollX + getMeasuredWidth() - scrollRange + (int) PixelUtils.dpToPx(25);
+    return scrollX + getMeasuredWidth() - scrollRange + TableTheme.HorizontalScrollViewPadding;
   }
 
   @Override
@@ -39,7 +39,7 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
       return;
     }
 
-    horizontalScrollBar.setContentWidth(scrollRange);
+    horizontalScrollBar.setContentWidth(scrollRange + TableTheme.HorizontalScrollViewPadding);
     horizontalScrollBar.setScrollX(scrollX);
 
     verticalScrollBar.setOverScrollOffset(getOverScrollOffset());
