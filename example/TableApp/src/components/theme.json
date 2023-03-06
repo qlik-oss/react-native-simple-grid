@@ -17,7 +17,7 @@
 	"fontSize": "12px",
 	"_cards": true,
 	"color": "@myColorDark",
-	"backgroundColor": "#FFFFFF",
+	"backgroundColor": "blue",
 	"object": {
 		"title": {
 			"main": {
@@ -53,7 +53,8 @@
 		},
 		"straightTable": {
 			"header": {
-				"color": "@myColorDark"
+				"color": "white",
+				"backgroundColor": "red"
 			},
 			"content": {
 				"color": "@myColorDark"

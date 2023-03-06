@@ -81,7 +81,7 @@ public class HeaderViewFactory {
     fixedFirstHeaderCell.setGravity(Gravity.CENTER_VERTICAL);
     fixedFirstHeaderCell.setBackgroundColor(TableTheme.headerBackgroundColor);
 
-    if(topPosition) {
+    if (topPosition) {
       fixedFirstHeaderCell.setOutlineProvider(null);
     }
     return fixedFirstHeaderCell;
@@ -101,7 +101,7 @@ public class HeaderViewFactory {
     }
     text.setPadding(padding, 0, padding, 0);
     FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(column.width, tableView.totalsHeight);
-    if(topPosition) {
+    if (topPosition) {
       params.gravity = Gravity.TOP;
       params.topMargin = tableView.headerHeight;
     } else {
@@ -110,7 +110,7 @@ public class HeaderViewFactory {
     }
     text.setLayoutParams(params);
     text.setTextColor(tableView.cellContentStyle.color);
-    text.setBackgroundColor(Color.WHITE);
+    text.setBackgroundColor(TableTheme.backgroundColor);
     text.setZ((int) PixelUtils.dpToPx(headerZ));
     text.setTextSize(tableView.cellContentStyle.fontSize);
     text.setMaxLines(1);
@@ -167,35 +167,35 @@ public class HeaderViewFactory {
   private void buildTotals(Context context) {
     totalsView = new TotalsView(context, tableView);
     totalsView.setDataColumns(dataColumns);
+    totalsView.setBackgroundColor(TableTheme.backgroundColor);
 
-      int headerHeight = tableView.headerHeight;
-      totalsView.setOrientation(LinearLayout.HORIZONTAL);
-      totalsView.setElevation((int) PixelUtils.dpToPx(headerZ));
-      totalsView.setBackgroundColor(Color.WHITE);
-      FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, tableView.totalsHeight);
-      layoutParams.topMargin = headerHeight;
-      layoutParams.gravity = topPosition ? Gravity.TOP : Gravity.BOTTOM;
-      totalsView.setLayoutParams(layoutParams);
-      if(!topPosition) {
-        totalsView.setOutlineProvider(null);
+    int headerHeight = tableView.headerHeight;
+    totalsView.setOrientation(LinearLayout.HORIZONTAL);
+    totalsView.setElevation((int) PixelUtils.dpToPx(headerZ));
+    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, tableView.totalsHeight);
+    layoutParams.topMargin = headerHeight;
+    layoutParams.gravity = topPosition ? Gravity.TOP : Gravity.BOTTOM;
+    totalsView.setLayoutParams(layoutParams);
+    if (!topPosition) {
+      totalsView.setOutlineProvider(null);
+    }
+    // first add all fillers, then populate with the data
+    int j = 0;
+    for (int i = 0; i < dataColumns.size(); i++) {
+      DataColumn column = dataColumns.get(i);
+      TotalsViewCell text = createTotalsCell(context, column, tableView);
+      if (column.isDim && i == 0) {
+        text.setText(totalsLabel);
       }
-      // first add all fillers, then populate with the data
-      int j = 0;
-      for (int i = 0; i < dataColumns.size(); i++) {
-        DataColumn column = dataColumns.get(i);
-        TotalsViewCell text = createTotalsCell(context, column, tableView);
-        if (column.isDim && i == 0) {
-          text.setText(totalsLabel);
+      if (!column.isDim) {
+        if (j < totalsCells.size()) {
+          text.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+          text.setText(totalsCells.get(j++).qText);
         }
-        if (!column.isDim) {
-          if (j < totalsCells.size()) {
-            text.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-            text.setText(totalsCells.get(j++).qText);
-          }
-        }
-        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
-        totalsView.addView(text, textParams);
       }
+      LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
+      totalsView.addView(text, textParams);
+    }
 
   }
 

@@ -198,6 +198,7 @@ public class TableViewFactory {
     linearLayout.recyclerView = coupledRecyclerView;
 
     coupledRecyclerView = new CustomRecyclerView(context, false, dataProvider, tableView, linearLayout, dragBox, firstColumnDragBox);
+    coupledRecyclerView.setBackgroundColor(TableTheme.backgroundColor);
     FrameLayout.LayoutParams recyclerViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     coupledRecyclerView.setLayoutParams(recyclerViewLayoutParams);
     coupledRecyclerView.setZ(0);
@@ -207,6 +208,7 @@ public class TableViewFactory {
 
     CustomLinearLayoutManger firstColumnLinearLayout = new CustomLinearLayoutManger(context);
     firstColumnRecyclerView = new CustomRecyclerView(context, true, dataProvider, tableView, firstColumnLinearLayout, dragBox, firstColumnDragBox);
+    firstColumnRecyclerView.setBackgroundColor(TableTheme.backgroundColor);
     firstColumnLinearLayout.recyclerView = firstColumnRecyclerView;
     firstColumnRecyclerView.setAdapter(dataProvider);
     FrameLayout.LayoutParams firstColumnViewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);

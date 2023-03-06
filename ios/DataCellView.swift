@@ -144,7 +144,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
             label.textAlignment = getTextAlignment(element, col: col)// element.qNum == nil ? .left : .right
             label.center = CGPoint(x: floor(label.center.x), y: floor(label.center.y))
             let backgroundColor = getBackgroundColor(col: col, element: element, withStyle: styleInfo[index])
-            label.backgroundColor = backgroundColor
+            label.setBackgroundColor(color: backgroundColor)
             label.numberOfLines = numberOfLines
             label.column = index
             label.cell = element

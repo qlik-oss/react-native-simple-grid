@@ -209,7 +209,6 @@ class ContainerView: UIView {
 
   override var bounds: CGRect {
     didSet {
-      self.backgroundColor = .white.withAlphaComponent(0.0)
       guard let dataColumns = dataColumns else {return}
       guard let dataRows = dataRows else {return}
       columnWidths.loadDefaultWidths(bounds, columnCount: dataColumns.count, dataRows: dataRows, dataCols: dataColumns)
@@ -321,7 +320,7 @@ class ContainerView: UIView {
   
   override func layoutSubviews() {
     super.layoutSubviews()
-    self.backgroundColor = .white.withAlphaComponent(0.0)
+    self.backgroundColor = ColorParser.fromCSS(cssString: tableTheme?.backgroundColor ?? "white")
     firstColumnTable?.dataCollectionView?.childCollectionView?.setScrollableArea(self.frame);
     multiColumnTable?.dataCollectionView?.childCollectionView?.setScrollableArea(self.frame);
     updateVScrollPos()
