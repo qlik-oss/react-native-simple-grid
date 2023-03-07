@@ -162,16 +162,22 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
   public void setCellData(DataCell cell, DataRow row, DataColumn column) {
     this.column = column;
     this.cell = cell;
-
+    if(isDataView) {
+      cell.cellForegroundColor = Color.BLACK;
+      tableView.cellContentStyle.color = Color.BLACK;
+    }
     cell.setIsDataView(isDataView);
-    if(cell.indicator != null) {
+    if(cell.indicator != null && cell.type.compareTo("miniChart") != 0) {
       buildSpannableText();
     } else {
       setText(cell.qText);
       textWrapper.countWords(cell.qText);
     }
-    setTextColor(cell.showForeground ? cell.cellForegroundColor : tableView.cellContentStyle.color);
-    setBackgroundColor(cell.showBackground ? cell.cellBackgroundColor : Color.TRANSPARENT);
+
+    if(!isDataView) {
+      setTextColor(cell.showForeground ? cell.cellForegroundColor : tableView.cellContentStyle.color);
+      setBackgroundColor(cell.showBackground ? cell.cellBackgroundColor : Color.TRANSPARENT);
+    }
 
     if(cell.type.equals("url")) {
       setupUrl();
@@ -180,6 +186,10 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
 
   private void buildSpannableText() {
     int textColor = cell.indicator.applySegmentColors ? cell.indicator.color : TableTheme.defaultTextColor;
+    if(isDataView) {
+      textColor = Color.BLACK;
+      cell.indicator.color = Color.BLACK;
+    }
     StringBuilder builder = new StringBuilder(cell.qText);
     Spannable spannable;
     if(cell.indicator.hasIcon) {

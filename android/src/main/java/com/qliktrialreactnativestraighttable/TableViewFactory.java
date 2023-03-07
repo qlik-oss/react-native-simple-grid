@@ -344,6 +344,9 @@ public class TableViewFactory {
   }
 
   private void createHeaderFactory() {
+    if(this.tableView.isDataView) {
+      tableView.headerContentStyle.color = Color.BLACK;
+    }
     this.headerViewFactory = new HeaderViewFactory(dataColumns, totalsCells, dataProvider.totalsLabel, tableView.totalsPosition, tableView, tableView.headerContentStyle, context);
   }
 
