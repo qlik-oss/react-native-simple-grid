@@ -74,10 +74,9 @@ class MiniChartView: UIView, ConstraintCellProtocol {
     miniChart.globalMinValue = rep.globalMin ?? -Double.infinity
     miniChart.yScale = miniChart.maxValue
     miniChart.yAxis = rep.miniChart?.yAxis
-    
+
   }
-  
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
     setNeedsDisplay()
@@ -87,7 +86,7 @@ class MiniChartView: UIView, ConstraintCellProtocol {
     guard let ctx = UIGraphicsGetCurrentContext() else { return }
     ctx.clear(rect)
     ctx.setFillColor(fillColor.cgColor)
-    ctx.fill(rect);
+    ctx.fill(rect)
     miniChart.render(ctx, rect: rect)
   }
 

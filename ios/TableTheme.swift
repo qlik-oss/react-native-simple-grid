@@ -14,7 +14,7 @@ struct TableTheme: Decodable {
   static let HorizontalScrollPadding = 50.0
   static let BorderColor = UIColor.black.withAlphaComponent(0.1)
   static let DarkBorderColor = UIColor.black.withAlphaComponent(0.3)
-  
+
   let rowHeight: Int?
   var headerHeight: Int?
   let borderRadius: Int?
@@ -30,6 +30,6 @@ struct TableTheme: Decodable {
 
 extension TableTheme {
   static func getLineHeight(sizedFont: UIFont) -> CGFloat {
-    return UIFontMetrics(forTextStyle: .headline).scaledFont(for: sizedFont).lineHeight 
+    return UIFontMetrics(forTextStyle: .headline).scaledFont(for: sizedFont).lineHeight
   }
 }

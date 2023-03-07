@@ -19,8 +19,7 @@ class ColumnWidths {
   func count() -> Int {
     return columnWidths.count
   }
-  
-  
+
   func loadDefaultWidths(_ frame: CGRect, columnCount: Int, dataRows: [DataRow], dataCols: [DataColumn]) {
     if !loadFromStorage(columnCount) {
       // 0.75 looks ugly with single column
@@ -31,9 +30,9 @@ class ColumnWidths {
     }
     cleanUpValues()
   }
-  
+
   fileprivate func cleanUpValues() {
-    columnWidths = columnWidths.map{ (element) -> Double in
+    columnWidths = columnWidths.map { (element) -> Double in
       if element < DataCellView.minWidth {
         return DataCellView.minWidth
       }

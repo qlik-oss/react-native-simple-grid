@@ -23,13 +23,13 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   var menuTranslations: MenuTranslations?
   var numberOfWords = 0
   var prevColor: CGColor = UIColor.clear.cgColor
-  
+
   weak var delegate: ExpandedCellProtocol?
   weak var selectionBand: SelectionBand?
   weak var dataCollectionView: DataCollectionView?
-  
+
   private static let numberFormatter = NumberFormatter()
-  
+
   override var text: String? {
     didSet {
       if let text = text {
@@ -41,7 +41,7 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       }
     }
   }
-  
+
   init(frame: CGRect, selectionBand: SelectionBand?) {
     super.init(frame: frame.integral)
     self.selectionBand = selectionBand
@@ -50,52 +50,50 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       sb.notificationCenter.addObserver(self, selector: #selector(onSelectionDragged), name: Notification.Name.onSelectionDragged, object: nil)
     }
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   func getDynamicWidth() -> NSLayoutConstraint {
     return dynamicWidth
   }
-  
+
   func setDynamicWidth(_ newVal: NSLayoutConstraint, value: Double) {
     dynamicWidth = newVal
     dynamicWidthValue = value
   }
-  
+
   override var canBecomeFirstResponder: Bool {
     return true
   }
-  
+
   override func drawText(in rect: CGRect) {
     //       let insets = UIEdgeInsets(top: topInset, left: leftInset, bottom: bottomInset, right: rightInset)
     let r = rect.inset(by: UIEI)
     super.drawText(in: r)
   }
-  
+
   override var intrinsicContentSize: CGSize {
-    get {
-      var contentSize = super.intrinsicContentSize
-      contentSize.height += UIEI.top + UIEI.bottom
-      contentSize.width += UIEI.left + UIEI.right
-      return contentSize
-    }
+    var contentSize = super.intrinsicContentSize
+    contentSize.height += UIEI.top + UIEI.bottom
+    contentSize.width += UIEI.left + UIEI.right
+    return contentSize
   }
-  
+
   func showMenus() {
     isUserInteractionEnabled = true
     let longPress = UILongPressGestureRecognizer(target: self, action: #selector(showMenu))
     self.addGestureRecognizer(longPress)
   }
-  
+
   @objc func showMenu(_ sender: UILongPressGestureRecognizer) {
     self.becomeFirstResponder()
     contextMenu.menuTranslations = self.menuTranslations
     contextMenu.cell = self.cell
     contextMenu.showMenu(sender, view: self)
   }
-  
+
   @objc func handleCopy(_ controller: UIMenuController) {
     let board = UIPasteboard.general
     if self.attributedText != nil {
@@ -106,25 +104,25 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
     controller.setMenuVisible(false, animated: true)
     self.resignFirstResponder()
   }
-  
+
   @objc func handleExpand(_ controller: UIMenuController) {
     guard let cell = self.cell else { return }
     guard let delegate = self.delegate else { return }
-    
+
     delegate.onExpandedCell(cell: cell)
     self.resignFirstResponder()
   }
-  
+
   func makeSelectable(selectionsEngine: SelectionsEngine) {
     isUserInteractionEnabled = true
     self.selectionsEngine = selectionsEngine
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(labelClicked(_:)))
-    
+
     addGestureRecognizer(tapGesture)
     selectionsEngine.addListener(listener: self)
-    
+
   }
-  
+
   @objc func labelClicked(_ sender: UITapGestureRecognizer) {
     let menu = UIMenuController.shared
     if menu.isMenuVisible {
@@ -148,7 +146,7 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       }
     }
   }
-  
+
   func hitTestURL(_ point: CGPoint) -> Bool {
     guard let url = url else {return false}
     guard let attributedText = attributedText else {return false}
@@ -161,7 +159,7 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
     }
     return false
   }
-  
+
   @objc func onTappedSelectionBand(notificaiton: Notification) {
     guard let point = notificaiton.object as? CGPoint else {return}
     guard let parentView = self.selectionBand else {return}
@@ -175,7 +173,7 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       }
     }
   }
-  
+
   @objc func onSelectionDragged(notificaiton: Notification) {
     if !selected {
       guard let envelope = notificaiton.object as? SelectionBandEnvelope else {return}
@@ -188,34 +186,34 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       }
     }
   }
-  
+
   fileprivate func convertLocalFrameToSelectionBandFrame(_ selectionBand: UIView) -> CGRect {
     let convertedFrame = convert(self.frame, from: self.superview)
     // account for the 1 width colunm grabber line
     return convert(convertedFrame, to: selectionBand).insetBy(dx: 0.5, dy: 0).offsetBy(dx: -0.5, dy: 0)
   }
-  
+
   fileprivate func addToSelections() {
     guard let selectionsEngine = self.selectionsEngine else { return }
     let sig = SelectionsEngine.buildSelectionSignator(from: cell!)
     selectionsEngine.addSelection(sig)
     selected = true
     updateBackground()
-    
+
   }
-  
+
   fileprivate func toggleSelection() {
     let sig = SelectionsEngine.buildSelectionSignator(from: cell!)
     if let selectionsEngine = selectionsEngine {
       selectionsEngine.toggleSelected(sig)
     }
   }
-  
+
   func clearSelected() {
     selected = false
     updateBackground()
   }
-  
+
   func toggleSelected(data: String) {
     let sig = SelectionsEngine.signatureKey(from: data)
     let comp = SelectionsEngine.signatureKey(from: cell!)
@@ -224,7 +222,7 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       updateBackground()
     }
   }
-  
+
   func addedToSelection(data: String) {
     let sig = SelectionsEngine.signatureKey(from: data)
     let comp = SelectionsEngine.signatureKey(from: cell!)
@@ -233,23 +231,23 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       updateBackground()
     }
   }
-  
+
   func checkSelected(_ selectionsEngine: SelectionsEngine) {
     selected = selectionsEngine.contains(cell!)
     updateBackground()
   }
-  
+
   fileprivate func updateBackground() {
     textColor = selected ? .white : .black
     animateBackgroundColor(to: selected ? selectedBackgroundColor.cgColor : prevColor)
   }
-  
+
   fileprivate func animateBackgroundColor(to: CGColor) {
     UIView.animate(withDuration: 0.3, animations: {
       self.layer.backgroundColor = to
     })
   }
-  
+
   func setupUrl(_ col: DataColumn, cell: DataCell, index: Int?) {
     guard let representation = col.representation else { return }
     let urlLabelIndex = col.stylingInfo?.firstIndex(of: "urlLabel")
@@ -273,13 +271,13 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       let url = URL(string: encodeUrlText ?? "")
       if let url = url {
         let attributedString = NSMutableAttributedString(string: urlLabel)
-        attributedString.setAttributes([NSAttributedString.Key.link: url], range: NSMakeRange(0, urlLabel.count))
+        attributedString.setAttributes([NSAttributedString.Key.link: url], range: NSRange(location: 0, length: urlLabel.count))
         self.attributedText = attributedString
         self.url = url
       }
     }
   }
-  
+
   func setAttributedText(_ t: String, withIcon: UniChar, element: DataCell) {
     var iconColor = UIColor.black// self.textColor;
     var applyTextColor = false
@@ -296,7 +294,7 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
     }
     let textAttributes = [NSAttributedString.Key.font: self.font, NSAttributedString.Key.foregroundColor: applyTextColor ? iconColor : self.textColor ]
     let iconAttributes = [NSAttributedString.Key.font: iconFont, NSAttributedString.Key.foregroundColor: iconColor]
-    
+
     if showTextValues {
       let attributedString = NSMutableAttributedString(string: t, attributes: textAttributes as [NSAttributedString.Key: Any])
       if right {
@@ -313,7 +311,7 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       self.attributedText = attributedString1
     }
   }
-  
+
   func alignText(from: String) {
     if from == "left" {
       self.textAlignment = .left
@@ -325,15 +323,15 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       self.textAlignment = .natural
     }
   }
-  
+
   func getLineCount(columnWidth: Double) -> Int {
     return getLineCount(true, columnWidth: columnWidth)
   }
-  
+
   func getLineCount(_ update: Bool) -> Int {
     return getLineCount(true, columnWidth: self.frame.width)
   }
-  
+
   func getLineCount(_ update: Bool, columnWidth: Double) -> Int {
     if let font = self.font, let myText = text {
       let width = columnWidth - (PaddedLabel.PaddingSize * 2)
@@ -348,12 +346,12 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
     }
     return numberOfLines
   }
-  
+
   func setBackgroundColor(color: UIColor) {
-    prevColor = color.cgColor;
+    prevColor = color.cgColor
     self.layer.backgroundColor = color.cgColor
   }
-  
+
   deinit {
     if let selectionBand = self.selectionBand {
       selectionBand.notificationCenter.removeObserver(self.onTappedSelectionBand)

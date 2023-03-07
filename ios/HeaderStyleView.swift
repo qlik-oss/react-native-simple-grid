@@ -12,10 +12,10 @@ class HeaderStyleView: UIView {
 
   func updateSize(_ translation: CGPoint, withColumn column: Int) {
     if column < subviews.count {
-      let headerCell = subviews[column] as! HeaderCell
-      headerCell.dynamicWidth.constant = headerCell.dynamicWidth.constant + translation.x
-      headerCell.layoutIfNeeded()
-
+      if let headerCell = subviews[column] as? HeaderCell {
+        headerCell.dynamicWidth.constant += translation.x
+        headerCell.layoutIfNeeded()
+      }
     }
   }
 

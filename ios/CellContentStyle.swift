@@ -16,7 +16,6 @@ struct CellContentStyle: Decodable {
   var wrap: Bool?
 }
 
-
 class CellStyle {
   var cellContentStyle: CellContentStyle?
   var lineHeight = 0.0

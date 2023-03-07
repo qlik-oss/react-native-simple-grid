@@ -94,14 +94,14 @@ class ContainerView: UIView {
       do {
         let json = try JSONSerialization.data(withJSONObject: cols)
         let decodedCols = try JSONDecoder().decode(Cols.self, from: json)
-        if(dataColumns != nil && decodedCols.header?.count != dataColumns?.count) {
+        if dataColumns != nil && decodedCols.header?.count != dataColumns?.count {
           return
         }
         dataColumns = decodedCols.header
         totals = decodedCols.totals
         guard let firstTable = self.firstColumnTable else { return }
         guard let multiTable = self.multiColumnTable else { return }
-        
+
         if let firstTotals = firstTable.totalView, let multiTotals = multiTable.totalView {
           firstTotals.resetTotals(totals)
           multiTotals.resetTotals(totals)
@@ -125,9 +125,8 @@ class ContainerView: UIView {
         NotificationCenter.default.post(name: Notification.Name.onClearSelectionBand, object: nil)
         let json = try JSONSerialization.data(withJSONObject: rows)
         let decodedRows = try JSONDecoder().decode(RowsObject.self, from: json)
-       
-        
-        if(dataRows != nil && decodedRows.rows?.count != 0 && dataRows?.count != 0 && dataRows?[0].cells.count != decodedRows.rows?[0].cells.count) {
+
+        if dataRows != nil && decodedRows.rows?.count != 0 && dataRows?.count != 0 && dataRows?[0].cells.count != decodedRows.rows?[0].cells.count {
           return
         }
         if dataRows == nil || decodedRows.reset == true {
@@ -317,20 +316,20 @@ class ContainerView: UIView {
       layoutIfNeeded()
     }
   }
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
     self.backgroundColor = isDataView ? .white : ColorParser.fromCSS(cssString: tableTheme?.backgroundColor ?? "white")
-    firstColumnTable?.dataCollectionView?.childCollectionView?.setScrollableArea(self.frame);
-    multiColumnTable?.dataCollectionView?.childCollectionView?.setScrollableArea(self.frame);
+    firstColumnTable?.dataCollectionView?.childCollectionView?.setScrollableArea(self.frame)
+    multiColumnTable?.dataCollectionView?.childCollectionView?.setScrollableArea(self.frame)
     updateVScrollPos()
   }
-  
+
   func updateVScrollPos() {
     let totalWidth = columnWidths.getTotalWidth()
     let rawX = firstColumnTable?.horizontalScrolLView?.contentOffset.x ?? 0.0
     var right = max(abs(self.frame.width  -  totalWidth) - rawX, 0)
-    if(totalWidth < frame.width) {
+    if totalWidth < frame.width {
       right = 2.0
     }
     firstColumnTable?.dataCollectionView?.childCollectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: right)

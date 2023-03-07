@@ -22,21 +22,20 @@ class MiniSparkLineChart: MiniChartRenderer {
     horizontalPadding = 16
     verticalPadding = 16
     linePath.removeAllPoints()
-   
+
     clearDots()
     if rect.size.height == 0 {return}
     getBandWidth(rect: rect, data: data)
     resetScales(rect)
-  
+
     var x = horizontalPadding / 2
     var index = 1
     startPath(rows, ctx, x, rect, zeroLine: zeroLine)
     x += padding * 2 + bandWidth
-    
-    
+
     for row in rows.dropFirst() {
       let value = row[1].qNum ?? 1.0
-      
+
       let y = getY(value, rect: rect)
       let x2 = x + padding * 2 + bandWidth
       let vpadding = getVerticalPadding(y, halfLine: zeroLine)
@@ -50,18 +49,16 @@ class MiniSparkLineChart: MiniChartRenderer {
       ctx.addPath(linePath.cgPath)
       ctx.strokePath()
     }
-    
+
     drawDots(ctx)
   }
 
- 
-  
   func getY(_ value: Double, rect: CGRect) -> Double {
     let height = value * scale
     let y = zeroLine - height
     return y
   }
-  
+
   func getVerticalPadding(_ y: Double, halfLine: Double) -> Double {
     let vp = verticalPadding / 2
     return y > halfLine ? -vp : vp
@@ -77,17 +74,17 @@ class MiniSparkLineChart: MiniChartRenderer {
   }
 
   func drawDot(_ index: Int, value: Double, count: Int, x: CGFloat, y: CGFloat) {
-    
+
     if value == maxValue && maxColor != .clear {
       addArc(maxDots, x: x, y: y)
       return
     }
-    
+
     if value == minValue && minColor != .clear {
       addArc(minDots, x: x, y: y)
       return
     }
-    
+
     if index == 0 && firstColor != .clear {
       addArc(firstDot, x: x, y: y)
     }
@@ -114,8 +111,7 @@ class MiniSparkLineChart: MiniChartRenderer {
       return
     }
     let startValue = rows[0][1].qNum ?? 0
-    
-   
+
     let y = getY(startValue, rect: rect)
     let vpadding = getVerticalPadding(y, halfLine: zeroLine)
     linePath.move(to: CGPoint(x: x, y: y + vpadding))
@@ -123,25 +119,25 @@ class MiniSparkLineChart: MiniChartRenderer {
   }
 
   func drawDots(_ ctx: CGContext) {
-    
+
     if showDots {
       mainColor.set()
       ctx.addPath(mainDots.cgPath)
       ctx.fillPath()
     }
-    
+
     if lastColor != .clear {
       lastColor.set()
       ctx.addPath(lastDot.cgPath)
       ctx.fillPath()
     }
-    
+
     if firstColor != .clear {
       firstColor.set()
       ctx.addPath(firstDot.cgPath)
       ctx.fillPath()
     }
-    
+
     if minColor != .clear {
       minColor.set()
       ctx.addPath(minDots.cgPath)

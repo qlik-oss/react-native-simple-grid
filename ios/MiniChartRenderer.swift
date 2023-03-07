@@ -77,18 +77,17 @@ class MiniChartRenderer {
     mainColor.set()
   }
 
- 
   func resetScales(_ rect: CGRect) {
     guard let yAxis = yAxis else {return}
-    if(yAxis.scale == "global") {
-      if(yAxis.position == "zeroBaseline") {
+    if yAxis.scale == "global" {
+      if yAxis.position == "zeroBaseline" {
         let min = min(globalMinValue, 0.0)
         yScale = globalMaxValue - min
       } else {
         yScale = globalMaxValue
       }
     } else {
-      if(yAxis.position == "zeroBaseline") {
+      if yAxis.position == "zeroBaseline" {
         let min = min(minValue, 0.0)
         yScale = maxValue - min
       } else {
@@ -97,32 +96,31 @@ class MiniChartRenderer {
     }
     setScales(rect)
   }
-  
+
   func setScales(_ rect: CGRect) {
     var height = rect.height - verticalPadding
     scale = height / yScale
     zeroLine = minValue < 0.0 ? height + minValue * scale : height
-    if( yAxis?.position == "zeroCenter") {
+    if  yAxis?.position == "zeroCenter" {
       height = rect.height/2.0 - verticalPadding
       scale = height / yScale
       zeroLine = rect.height/2.0 - verticalPadding
     }
   }
-  
+
   func getBandWidth(rect: CGRect, data: Matrix) {
     let count = data.qMatrix?.count ?? 1
     let width = rect.width - DEFAULT_HORIONTAL_PADDING
     totalBandWidth = min(width * 0.1, width / CGFloat(count))
     bandWidth = totalBandWidth * 0.8
     padding = totalBandWidth * 0.1
-        
-    let threshHold = rect.width * 0.4;
+
+    let threshHold = rect.width * 0.4
     let totalWidth = bandWidth * Double(data.qMatrix?.count ?? 1)
-    if (totalWidth < threshHold) {
+    if totalWidth < threshHold {
       horizontalPadding = (rect.width - totalWidth)
     }
   }
-
 
   func render(_ ctx: CGContext, rect: CGRect) {}
 }

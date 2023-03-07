@@ -83,7 +83,7 @@ class SelectionBand: UIView {
     guard let dragBox = self.dragBox else { return false }
     let rect = dragBox.bounds.insetBy(dx: -16, dy: -32) // give the user some space
     if rect.contains(convert(point, to: dragBox)) {
-      return true;
+      return true
     }
     return false
   }
