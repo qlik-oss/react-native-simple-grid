@@ -1,3 +1,13 @@
+## [1.2.9](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.8...v1.2.9) (2023-03-07)
+
+
+### Bug Fixes
+
+* add theme background colors ([58650fd](https://github.com/qlik-oss/react-native-simple-grid/commit/58650fd67f64303ca12ad4de3c83211baa455b25))
+* lint warnings ([481a20e](https://github.com/qlik-oss/react-native-simple-grid/commit/481a20e11c5356c4b78d7515ea2fad97a1d7ac55))
+* **MD-3980:** set padding to 50 dips like iOS ([618ac1d](https://github.com/qlik-oss/react-native-simple-grid/commit/618ac1d078c07dbd184865fb2145e57b8d41fdaf))
+* **MD-3990:** show icon in view data ([6611354](https://github.com/qlik-oss/react-native-simple-grid/commit/66113541a727ba794573613ce902e1e0cfbe0f49))
+
 ## [1.2.8](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.7...v1.2.8) (2023-03-03)
 
 
