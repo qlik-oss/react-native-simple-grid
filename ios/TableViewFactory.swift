@@ -332,6 +332,7 @@ class TableViewFactory {
   func createHeader(forTable table: TableView, withRange: CountableRange<Int>) {
     let header = HeaderView(columnWidths: columnWidths,
                             withRange: withRange,
+                            isDataView: containerView.isDataView,
                             onHeaderPressed: containerView.onHeaderPressed,
                             onSearchColumn: containerView.onSearchColumn)
     let headerHeight = containerView.headerStyle?.lineHeight ?? TableTheme.CellContentHeight

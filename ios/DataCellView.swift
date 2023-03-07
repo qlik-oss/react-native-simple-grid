@@ -159,7 +159,7 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
             if representation.type == "indicator", let indicator = element.indicator {
               let uniChar = DataCellView.iconMap[indicator.icon ?? ""] ?? 0x0
               label.textColor = getForegroundColor(col: col, element: element, withStyle: styleInfo[index])
-              label.setAttributedText(element.qText ?? "", withIcon: uniChar, element: element)
+              label.setAttributedText(element.qText ?? "", withIcon: uniChar, element: element, isDataView: isDataView)
             } else if representation.type == "url" {
               let index = col.stylingInfo?.firstIndex(of: "url")
               label.setupUrl(col, cell: element, index: index)

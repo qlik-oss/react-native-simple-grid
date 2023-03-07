@@ -278,7 +278,7 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
     }
   }
 
-  func setAttributedText(_ t: String, withIcon: UniChar, element: DataCell) {
+  func setAttributedText(_ t: String, withIcon: UniChar, element: DataCell, isDataView: Bool) {
     var iconColor = UIColor.black// self.textColor;
     var applyTextColor = false
     var showTextValues = false
@@ -291,6 +291,12 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       }
       showTextValues = indicator.showTextValues == true
       right = indicator.position != "left" // because it could be nil
+    }
+    // override if it's dataView
+    if(isDataView) {
+      self.textColor = ColorParser.fromCSS(cssString: "#404040")
+      iconColor = self.textColor
+      applyTextColor = false;
     }
     let textAttributes = [NSAttributedString.Key.font: self.font, NSAttributedString.Key.foregroundColor: applyTextColor ? iconColor : self.textColor ]
     let iconAttributes = [NSAttributedString.Key.font: iconFont, NSAttributedString.Key.foregroundColor: iconColor]
