@@ -78,7 +78,7 @@ public class HeaderViewFactory {
     fixedFirstHeaderCell.setLeft(0);
     fixedFirstHeaderCell.setZ(PixelUtils.dpToPx(headerZ));
     fixedFirstHeaderCell.setLayoutParams(layoutParams);
-    fixedFirstHeaderCell.setGravity(Gravity.CENTER_VERTICAL);
+    fixedFirstHeaderCell.setGravity(column.textAlignment | Gravity.CENTER_VERTICAL);
     fixedFirstHeaderCell.setBackgroundColor(TableTheme.headerBackgroundColor);
 
     if (topPosition) {
@@ -94,9 +94,9 @@ public class HeaderViewFactory {
     text.setEllipsize(TextUtils.TruncateAt.END);
     if (column.isDim) {
       text.setText(tableView.totalsLabel);
-      text.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+      text.setGravity(column.textAlignment | Gravity.CENTER_VERTICAL);
     } else {
-      text.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+      text.setGravity(column.textAlignment | Gravity.CENTER_VERTICAL);
       text.setText(totalsCell.qText);
     }
     text.setPadding(padding, 0, padding, 0);
@@ -126,7 +126,9 @@ public class HeaderViewFactory {
   public static HeaderCell createHeaderCell(Context context, DataColumn column, HeaderContentStyle headerContentStyle, TableView tableView) {
     int padding = TableTheme.CellPadding;
     HeaderCell headerCell = new HeaderCell(context, column, tableView);
-    headerCell.setPadding(padding, 0, 0, 0);
+    int leftPadding = column.textAlignment == Gravity.LEFT ? padding : 0;
+    int rightPadding  = column.textAlignment == Gravity.RIGHT ? padding : 0;
+    headerCell.setPadding(leftPadding, 0, rightPadding, 0);
     TextView text = headerCell.cell;
     text.setTypeface(text.getTypeface(), Typeface.BOLD);
     text.setEllipsize(TextUtils.TruncateAt.END);
@@ -135,6 +137,7 @@ public class HeaderViewFactory {
     text.setMaxLines(1);
     text.setTextSize(headerContentStyle.fontSize);
     text.setBackgroundColor(headerContentStyle.backgroundColor);
+    text.setGravity(column.textAlignment | Gravity.CENTER_VERTICAL);
     return headerCell;
   }
 
@@ -160,7 +163,7 @@ public class HeaderViewFactory {
     text.setTypeface(text.getTypeface(), Typeface.BOLD);
     text.setEllipsize(TextUtils.TruncateAt.END);
     text.setTextSize(tableView.cellContentStyle.fontSize);
-    text.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+    text.setGravity(column.textAlignment | Gravity.CENTER_VERTICAL);
     text.setPadding(padding, 0, padding, 0);
     text.setMaxLines(1);
     return text;
@@ -193,7 +196,7 @@ public class HeaderViewFactory {
       }
       if (!column.isDim) {
         if (j < totalsCells.size()) {
-          text.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+          text.setGravity(column.textAlignment | Gravity.CENTER_VERTICAL);
           text.setText(totalsCells.get(j++).qText);
         }
       }
