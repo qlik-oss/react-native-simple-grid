@@ -101,7 +101,6 @@ class HeaderCell: UIView {
     paddedLabel.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: sizedFont)
     paddedLabel.adjustsFontForContentSizeCategory = true
   }
-  
 
   @objc func onPressedHeader(_ sender: UITapGestureRecognizer) {
     setNeedsDisplay()

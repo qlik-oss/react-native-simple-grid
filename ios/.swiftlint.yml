@@ -4,3 +4,5 @@ disabled_rules:
   - function_body_length
   - file_length
   - type_body_length
+  - cyclomatic_complexity
+  - function_parameter_count

@@ -22,27 +22,26 @@ class HorizontalScrollViewDelegate: NSObject, UIScrollViewDelegate {
     guard let columnWidths = self.columnWidths else { return }
     width = columnWidths.columnWidths[0]
   }
-   
 
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     guard let columnWidths = self.columnWidths else { return }
     guard let tableView = self.tableView else { return }
     guard let grabber = self.grabber else { return }
     guard let containerView = self.containerView else { return }
-    
+
     let totalWidth = columnWidths.getTotalWidth()
     let shadowOffsetX = clampScrollPos(Float(scrollView.contentOffset.x))
     let rawX = scrollView.contentOffset.x
     var right = max(abs(scrollView.frame.width  -  totalWidth) - rawX, 0)
-    if (totalWidth < Double(containerView.frame.width)) {
+    if totalWidth < Double(containerView.frame.width) {
       right = 2
     }
 
-    if(rawX >= 0) {
+    if rawX >= 0 {
       tableView.dataCollectionView?.childCollectionView?.scrollIndicatorInsets.right = right
       multiColumnTable?.dataCollectionView?.childCollectionView?.scrollIndicatorInsets.right = right
     }
-    if (freezeFirstCol) {
+    if freezeFirstCol {
       if rawX <= 0 {
         let x = width - rawX
         tableView.setWidth(x)
@@ -51,12 +50,11 @@ class HorizontalScrollViewDelegate: NSObject, UIScrollViewDelegate {
       }
       let offset = shadowOffsetX/100.0
       updateShadow(offset: offset)
-    }
-    else {
+    } else {
       tableView.horizontalScrollOffset(rawX)
     }
     multiColumnTable?.horizontalScrollOffset(rawX)
-    
+
   }
 
   func clampScrollPos(_ x: Float) -> Float {
@@ -67,8 +65,8 @@ class HorizontalScrollViewDelegate: NSObject, UIScrollViewDelegate {
     tableView?.setShadow(offset: min(offset, 0.4))
     tableView?.setNeedsDisplay()
   }
-  
+
   func updateVScroll() {
-    
+
   }
 }

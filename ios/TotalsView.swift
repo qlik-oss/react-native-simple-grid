@@ -17,7 +17,7 @@ class TotalsView: HeaderStyleView {
   weak var columnWidths: ColumnWidths?
   weak var bottomBorder: CALayer?
   weak var topBorder: CALayer?
-  
+
   init(
     withTotals totals: Totals,
     dataColumns: [DataColumn],
@@ -31,10 +31,10 @@ class TotalsView: HeaderStyleView {
       self.dataRange = range
       self.backgroundColor = .white
       createBorders()
-      
+
       addLabels(dataColumns)
     }
-  
+
   func createBorders() {
     let bottomBorder = CALayer()
     bottomBorder.backgroundColor = TableTheme.DarkBorderColor.cgColor
@@ -44,7 +44,7 @@ class TotalsView: HeaderStyleView {
     self.bottomBorder = bottomBorder
     createTopBorder()
   }
-  
+
   func createTopBorder() {
     let topBorder = CALayer()
     topBorder.backgroundColor = TableTheme.DarkBorderColor.cgColor
@@ -52,19 +52,19 @@ class TotalsView: HeaderStyleView {
     topBorder.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: 40, height: 40))
     layer.addSublayer(topBorder)
     self.topBorder = topBorder
-    
+
   }
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   fileprivate func addLabels(_ dataColumns: [DataColumn]) {
     guard let columnWidths = columnWidths else { return }
     guard let totals = totals else { return }
     guard let values = totals.values else { return }
-    
+
     topShadow = totals.position == "bottom"
-    
+
     var prev: PaddedLabel?
     values[dataRange].enumerated().forEach {(index, value) in
       let label = PaddedLabel(frame: CGRect.zero, selectionBand: nil)
@@ -80,7 +80,7 @@ class TotalsView: HeaderStyleView {
       prev = label
     }
   }
-  
+
   func setupConstraints(_ label: PaddedLabel, prev: PaddedLabel?, width: Double, index: Int) {
     label.translatesAutoresizingMaskIntoConstraints = false
     label.dynamicWidth = label.widthAnchor.constraint(equalToConstant: width)
@@ -98,15 +98,13 @@ class TotalsView: HeaderStyleView {
         label.bottomAnchor.constraint(equalTo: self.bottomAnchor)
       ]
     }
-    
-    
+
     constraints.append(label.dynamicWidth)
-    
-    
+
     NSLayoutConstraint.activate(constraints)
     self.addConstraints(constraints)
   }
-  
+
   func resetTotals(_ newTotals: Totals?) {
     if let nt = newTotals {
       totals = nt
@@ -118,38 +116,39 @@ class TotalsView: HeaderStyleView {
       }
     }
   }
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
-    
-    
+
     guard let bottomBorder = bottomBorder else { return }
     guard let topBorder = topBorder else { return }
     CATransaction.begin()
     CATransaction.setDisableActions(true)
-    topBorder.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: frame.width, height:  1))
+    topBorder.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: frame.width, height: 1))
     bottomBorder.frame = CGRect(origin: CGPoint(x: 0, y: frame.height - 1), size: CGSize(width: frame.width, height: 1))
     CATransaction.commit()
   }
-  
+
   override func updateSize(_ translation: CGPoint, withColumn column: Int) {
     if column < subviews.count {
-      let headerCell = subviews[column] as! PaddedLabel
-      headerCell.dynamicWidth.constant = headerCell.dynamicWidth.constant + translation.x
-      headerCell.layoutIfNeeded()
+      if let headerCell = subviews[column] as? PaddedLabel {
+        headerCell.dynamicWidth.constant += translation.x
+        headerCell.layoutIfNeeded()
+      }
     }
   }
-  
+
   func resizeLabels() {
     guard let columnWidths = columnWidths else { return }
-    
+
     columnWidths.columnWidths[dataRange].enumerated().forEach {(index, width) in
-      let headerCell = subviews[index] as! PaddedLabel
-      headerCell.dynamicWidth.constant = width
-      headerCell.layoutIfNeeded()
+      if let headerCell = subviews[index] as? PaddedLabel {
+        headerCell.dynamicWidth.constant = width
+        headerCell.layoutIfNeeded()
+      }
     }
   }
-  
+
   func getMaxLineCount() -> Int {
     var lineCount = 1
     for view in subviews {
@@ -159,5 +158,5 @@ class TotalsView: HeaderStyleView {
     }
     return lineCount
   }
-  
+
 }

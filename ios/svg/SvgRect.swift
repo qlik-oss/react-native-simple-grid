@@ -6,7 +6,7 @@
 //
 
 import Foundation
-public class SvgRect : SvgShape {
+public class SvgRect: SvgShape {
   var position = CGPoint.zero
   var size = CGSize.zero
   override func draw(_ context: CGContext, rect: CGRect) {
@@ -17,7 +17,7 @@ public class SvgRect : SvgShape {
     let y = (self.position.y / self.viewPortSize.height)
     let rw = CGFloat(rect.width) - padding * 2.0
     let rh = CGFloat(rect.height) - padding * 2.0
-    
+
     let path = UIBezierPath(rect: CGRect(x: x * rw + padding,
                                          y: y * rh + padding,
                                          width: widthP * rw,

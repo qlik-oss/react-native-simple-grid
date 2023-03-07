@@ -16,7 +16,7 @@ class TableView: UIView {
   weak var firstGrabber: ColumnResizerView?
   weak var adjacentTable: TableView?
   var needsShadow = false
-  var shaddowOffset:Float = 0.0
+  var shaddowOffset: Float = 0.0
   var isFirst = false
   var dynamicWidth = NSLayoutConstraint()
   var dymaniceLeadingAnchor = NSLayoutConstraint()
@@ -66,7 +66,7 @@ class TableView: UIView {
   }
 
   func repositionGrabbers(_ columnWidths: ColumnWidths, width: Double) {
-    if(!isFirst) {
+    if !isFirst {
       if columnWidths.count() > 1 && !grabbers.isEmpty {
         let range = 1..<columnWidths.count() - 1
         var x = 0.0
@@ -99,14 +99,14 @@ class TableView: UIView {
       resizer()?.setHeight(height)
     }
   }
-  
+
   func setShadow(offset: Float) {
     self.layer.shadowOffset = CGSize(width: 1, height: 1)
     self.layer.shadowRadius = 2
     self.layer.shadowColor = UIColor.gray.cgColor
     self.layer.shadowOpacity = offset
   }
-  
+
   func horizontalScrollOffset(_ x: CGFloat) {
     dataCollectionView?.childCollectionView?.horizontalScrollOffset(x)
   }

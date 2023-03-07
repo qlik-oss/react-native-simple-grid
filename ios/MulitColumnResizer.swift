@@ -1,5 +1,5 @@
 //
-//  MulitColumnResizer.swift
+//  MultiColumnResizer.swift
 //  react-native-simple-grid
 //
 //  Created by Vittorio Cellucci on 2022-11-04.
@@ -9,7 +9,6 @@ import Foundation
 class MultiColumnResizer: ColumnResizerView {
 
   var adjacentGrabber: MultiColumnResizer?
- 
 
   override init( _ columnWidths: ColumnWidths, index: Int, bindTo bindedTableView: TableView) {
     super.init(columnWidths, index: index, bindTo: bindedTableView)
@@ -24,7 +23,7 @@ class MultiColumnResizer: ColumnResizerView {
     guard let data = tableView.dataCollectionView else { return }
     if data.updateSize(translation, withColumn: index) {
       columnWidths.resize(index: index + 1, by: translation)
-      self.centerConstraint.constant  = self.centerConstraint.constant + translation.x
+      self.centerConstraint.constant += translation.x
 
       tableView.grow(by: translation.x)
       tableView.layoutIfNeeded()
@@ -39,11 +38,9 @@ class MultiColumnResizer: ColumnResizerView {
     }
   }
 
-  
-
   func updateAdjacent(by x: Double) {
     if let adjacentGrabber = self.adjacentGrabber {
-      adjacentGrabber.centerConstraint.constant = adjacentGrabber.centerConstraint.constant + x
+      adjacentGrabber.centerConstraint.constant += x
       adjacentGrabber.updateAdjacent(by: x)
     }
     self.layoutIfNeeded()

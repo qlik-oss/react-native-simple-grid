@@ -13,7 +13,6 @@ import Foundation
 //  Created by Vittorio Cellucci on 2022-08-03.
 //
 
-import Foundation
 class MiniDotGraph: MiniSparkLineChart {
 
   override func render(_ ctx: CGContext, rect: CGRect) {

@@ -76,7 +76,6 @@ class HeaderView: HeaderStyleView {
       ]
     }
 
-
     constraints.append(label.dynamicWidth)
 
     NSLayoutConstraint.activate(constraints)
@@ -129,9 +128,10 @@ class HeaderView: HeaderStyleView {
     }
 
     columnWidths.columnWidths[dataRange].enumerated().forEach {(index, width) in
-      let headerCell = subviews[index] as! HeaderCell
-      headerCell.dynamicWidth.constant = width
-      headerCell.layoutIfNeeded()
+      if let headerCell = subviews[index] as? HeaderCell {
+        headerCell.dynamicWidth.constant = width
+        headerCell.layoutIfNeeded()
+      }
     }
   }
 
@@ -145,7 +145,7 @@ class HeaderView: HeaderStyleView {
   func getMaxLineCount() -> Int {
     guard let columnWidths = columnWidths else { return 0 }
     var lineCount = 1
-    subviews.enumerated().forEach{(index, view) in
+    subviews.enumerated().forEach {(index, view) in
       if let headerCell = view as? HeaderCell {
         let width = columnWidths.columnWidths[index + dataRange.lowerBound]
         lineCount = max(headerCell.getLineCount(width), lineCount)

@@ -53,7 +53,7 @@ class TotalCellsView: UIView {
       }
     }
   }
-  
+
   func updateZeroTotals() {
     if let textView = textView {
       textView.text = "0 - 0 of \(totalRows)"

@@ -394,7 +394,7 @@ class TableViewFactory {
 
     if let totals = totals, let headerView = tableView.headerView {
       let totalsColView = TotalsView(withTotals: totals, dataColumns: dataColumns, cellStyle: containerView.cellStyle, columnWidths: columnWidths, withRange: range)
-      let height = containerView.cellStyle?.lineHeight ?? TableTheme.CellContentHeight;
+      let height = containerView.cellStyle?.lineHeight ?? TableTheme.CellContentHeight
       totalsColView.translatesAutoresizingMaskIntoConstraints = false
       totalsColView.dynamicHeight = totalsColView.heightAnchor.constraint(equalToConstant: height + (PaddedLabel.PaddingSize * 2.0))
       totalsColView.isFirstColumn = first
@@ -447,11 +447,11 @@ class TableViewFactory {
       multiColumnTableView.bringSubviewToFront(lastGrabber)
       lastGrabber.layer.zPosition = 2
     }
-    
+
     if let firstGrabber = firstColumnTableView.firstGrabber {
       firstGrabber.superview?.bringSubviewToFront(firstGrabber)
     }
-    if(dataColumns.count < 2 ) {
+    if dataColumns.count < 2 {
       firstColumnTableView.dataCollectionView?.childCollectionView?.showsVerticalScrollIndicator = true
     } else {
       multiColumnTableView.dataCollectionView?.childCollectionView?.firstColumnTable = firstColumnTableView
