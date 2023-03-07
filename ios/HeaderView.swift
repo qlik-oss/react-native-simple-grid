@@ -13,11 +13,13 @@ class HeaderView: HeaderStyleView {
   var onHeaderPressed: RCTDirectEventBlock?
   var onSearchColumn: RCTDirectEventBlock?
   var headerContentStyle: HeaderContentStyle?
+  var isDataView = false
   weak var columnWidths: ColumnWidths?
   weak var bottomBorder: CALayer?
 
   init(columnWidths: ColumnWidths,
        withRange dataRange: CountableRange<Int>,
+       isDataView: Bool,
        onHeaderPressed: RCTDirectEventBlock?,
        onSearchColumn: RCTDirectEventBlock?) {
     super.init(frame: CGRect.zero)
@@ -25,6 +27,7 @@ class HeaderView: HeaderStyleView {
     self.dataRange = dataRange
     self.onHeaderPressed = onHeaderPressed
     self.onSearchColumn = onSearchColumn
+    self.isDataView = isDataView
   }
 
   fileprivate func addBottomBorder() {
@@ -51,11 +54,18 @@ class HeaderView: HeaderStyleView {
     columns[dataRange].enumerated().forEach {(index, column) in
       let label = HeaderCell(dataColumn: column, onHeaderPressed: onHeaderPressed, onSearchColumn: onSearchColumn)
       let fontSize = incomingHeaderStyle?.fontSize ?? 14
-      label.setText(column.label ?? "", textColor: ColorParser.fromCSS(cssString: headerStyle.color ?? "black"), align: getTextAlignment(column), fontSize: Double(fontSize))
+      label.setText(column.label ?? "", textColor: getHeaderTextColor(headerStyle: headerStyle), align: getTextAlignment(column), fontSize: Double(fontSize))
       addSubview(label)
       setupConstraints(label, width: columnWidths.columnWidths[index + dataRange.lowerBound], prev: prev, index: index)
       prev = label
     }
+  }
+  
+  func getHeaderTextColor(headerStyle: HeaderContentStyle) -> UIColor {
+    if(isDataView) {
+      return .black
+    }
+    return ColorParser.fromCSS(cssString: headerStyle.color ?? "black")
   }
 
   func setupConstraints(_ label: HeaderCell, width: Double, prev: HeaderCell?, index: Int) {

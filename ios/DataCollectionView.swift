@@ -53,7 +53,7 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
     self.dataRange = range
     self.clipsToBounds = false
     self.isDataView = isDataView
-    if let cellContentStyle = cellStyle?.cellContentStyle {
+    if let cellContentStyle = cellStyle?.cellContentStyle, !isDataView {
       if let colorString = cellContentStyle.color {
         cellColor = ColorParser.fromCSS(cssString: colorString)
       }
