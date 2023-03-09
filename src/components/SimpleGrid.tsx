@@ -78,6 +78,9 @@ const transformTotals = (layout: any, table: any) => {
       values,
     };
   }
+  if (layout.qHyperCube?.qGrandTotalRow?.length === 0) {
+    totals = null;
+  }
   return totals;
 };
 
