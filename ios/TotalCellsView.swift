@@ -11,9 +11,12 @@ class TotalCellsView: UIView {
   weak var textView: UILabel?
   var totalRows = 0
   let borderColor = UIColor.lightGray.withAlphaComponent(0.2)
+  let numberFormatter = NumberFormatter()
   init(withShadow: Bool) {
     super.init(frame: CGRect.zero)
     self.backgroundColor = .white
+    self.numberFormatter.locale = Locale.current
+    self.numberFormatter.numberStyle = .decimal
     createTextView()
   }
 
@@ -49,7 +52,10 @@ class TotalCellsView: UIView {
   func updateTotals(first: IndexPath, last: IndexPath) {
     if let textView = textView {
       if let f = first.last, let l = last.last {
-        textView.text = "\(f + 1) - \(l + 1) of \(totalRows)"
+        let firstString = numberFormatter.string(from: NSNumber(value: f + 1))
+        let lastString = numberFormatter.string(from: NSNumber(value: l + 1))
+        let totalsString = numberFormatter.string(from: NSNumber(value: totalRows))
+        textView.text = "\(firstString ?? "0") - \(lastString ?? "0") of \(totalsString ?? "0")"
       }
     }
   }

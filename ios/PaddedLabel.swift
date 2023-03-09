@@ -293,10 +293,10 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       right = indicator.position != "left" // because it could be nil
     }
     // override if it's dataView
-    if(isDataView) {
+    if isDataView {
       self.textColor = ColorParser.fromCSS(cssString: "#404040")
       iconColor = self.textColor
-      applyTextColor = false;
+      applyTextColor = false
     }
     let textAttributes = [NSAttributedString.Key.font: self.font, NSAttributedString.Key.foregroundColor: applyTextColor ? iconColor : self.textColor ]
     let iconAttributes = [NSAttributedString.Key.font: iconFont, NSAttributedString.Key.foregroundColor: iconColor]

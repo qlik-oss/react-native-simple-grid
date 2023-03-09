@@ -104,7 +104,7 @@ class ContainerView: UIView {
           multiColumnTable = nil
           dataColumns = decodedCols.header
           totals = decodedCols.totals
-         
+
           layoutTable()
           return
         }
@@ -138,9 +138,9 @@ class ContainerView: UIView {
         let decodedRows = try JSONDecoder().decode(RowsObject.self, from: json)
         if self.dataRows != nil && dataRows?.count != 0 && dataRows?[0].cells.count != dataColumns?.count {
           dataRows = decodedRows.rows
-          return;
+          return
         }
-        
+
         if dataRows == nil || (decodedRows.reset == true) {
           self.dataRows = decodedRows.rows
           if self.dataRows != nil {
@@ -223,7 +223,7 @@ class ContainerView: UIView {
      layoutTable()
     }
   }
-  
+
   func layoutTable() {
     guard let dataColumns = dataColumns else {return}
     guard let dataRows = dataRows else {return}
