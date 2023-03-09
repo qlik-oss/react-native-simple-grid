@@ -103,8 +103,10 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         cellView.setLayoutParams(cellViewLayoutParams);
         cellView.setData(cell, dataRow, column);
         cellView.convertCellContentType("miniChart", column);
+        cellView.setBackgroundColor(cell.cellBackgroundColor);
         MiniChartView miniChartView = (MiniChartView) cellView.content;
         miniChartView.setData(cell, column, cellView);
+        miniChartView.setBackgroundColor(cell.cellBackgroundColor);
       } else {
         cellView.convertCellContentType("text", column);
         ClickableTextView textView = (ClickableTextView) cellView.content;
