@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import type { StyleProp, ViewStyle } from 'react-native';
 import MiniChartViewManager from './MiniChartViewManager';
 
@@ -14,12 +15,15 @@ const MiniChart: React.FC<MiniChartViewManagerProps> = ({
   style,
 }) => {
   return (
-    <MiniChartViewManager
-      // eslint-disable-next-line react-native/no-inline-styles
-      style={[{ flex: 1 }, style]}
-      colData={colData}
-      rowData={rowData}
-    />
+    // eslint-disable-next-line react-native/no-inline-styles
+    <View style={[{ flex: 1 }, style]}>
+      <MiniChartViewManager
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={[{ flex: 1 }]}
+        colData={colData}
+        rowData={rowData}
+      />
+    </View>
   );
 };
 

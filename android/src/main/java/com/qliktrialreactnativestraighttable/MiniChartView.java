@@ -38,6 +38,7 @@ public class MiniChartView extends View implements Content {
     this.dataCell = cell;
     this.dataColumn = column;
     this.cellView = cellView;
+    this.setBackgroundColor(cell.cellBackgroundColor);
     if(miniChartRenderer == null) {
       if (cell.miniChart != null && column.representation != null) {
         if (column.representation.miniChart != null) {
@@ -62,6 +63,7 @@ public class MiniChartView extends View implements Content {
   protected void onDraw(Canvas canvas) {
     if(miniChartRenderer != null){
       canvas.getClipBounds(bounds);
+      canvas.clipRect(bounds);
       miniChartRenderer.resetScales(bounds);
       miniChartRenderer.render(canvas);
     }

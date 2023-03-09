@@ -7,7 +7,7 @@
     "test": "jest",
     "ts-check": "npx tsc",
     "lint": "yarn eslint && yarn swiftlint && yarn javalint",
-    "eslint": "npx eslint ./ --ignore-pattern lib --fix",
+    "eslint": "npx eslint ./ --ignore-pattern lib --max-warnings=0",
     "swiftlint": "cd ios && swiftlint",
     "javalint": "cd android && ./gradlew lint -x compileDebugJavaWithJavac",
     "ci:install": "yarn install --frozen-lockfile",

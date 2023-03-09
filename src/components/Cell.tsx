@@ -25,7 +25,7 @@ const Cell: React.FC<CellProps> = ({ rowData, colData, style }) => {
     if (colData.representation.type === 'image') {
       return (
         <ImageCell
-          style={styles.miniChart}
+          style={styles.imageCell}
           rowData={rowData}
           colData={colData}
         />
@@ -48,8 +48,17 @@ const styles = StyleSheet.create({
     minHeight: 96,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#CCC',
+    borderColor: '#CCCCCC',
+    overflow: 'hidden',
     padding: 4,
+  },
+  imageCell: {
+    minHeight: 96,
+    borderRadius: 4,
+    padding: 4,
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    overflow: 'hidden',
   },
   icon: {
     marginLeft: 8,
