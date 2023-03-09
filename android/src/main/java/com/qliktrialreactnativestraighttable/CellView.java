@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
-@SuppressLint("ViewConstructor")
+
 public class CellView extends RelativeLayout implements SelectionsObserver {
   String type = "";
   Content content = null;
@@ -39,7 +39,7 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
   static final int PADDING = TableTheme.CellPadding;
   static final int PADDING_X_2 = TableTheme.CellPadding * 2;
 
-  @SuppressLint("ClickableViewAccessibility")
+
   CellView(Context context, String type, SelectionsEngine selectionsEngine, TableView tableView, boolean isInFirstColumnRecyclerView, DataColumn dataColumn) {
     super(context);
     this.tableView = tableView;

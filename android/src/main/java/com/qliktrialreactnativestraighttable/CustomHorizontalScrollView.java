@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-@SuppressLint("ViewConstructor")
+
 public class CustomHorizontalScrollView extends HorizontalScrollView {
   MockHorizontalScrollView horizontalScrollBar;
   MockVerticalScrollView verticalScrollBar;

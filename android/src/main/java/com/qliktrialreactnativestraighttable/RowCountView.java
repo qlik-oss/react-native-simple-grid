@@ -15,7 +15,6 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-@SuppressLint("ViewConstructor")
 public class RowCountView extends RelativeLayout {
   final TableView tableView;
   final int margin = (int)PixelUtils.dpToPx(8);

@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.widget.LinearLayout;
 
-@SuppressLint("ViewConstructor")
+
 public class TotalsViewCell extends androidx.appcompat.widget.AppCompatTextView {
   Paint paint = new Paint();
   DataColumn column;

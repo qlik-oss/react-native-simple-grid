@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@SuppressLint("ViewConstructor")
+
 public class TableView extends FrameLayout {
   int totalWidth = -1;
   ReadableArray totalsRows = null;

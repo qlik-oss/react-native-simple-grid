@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-@SuppressLint("ViewConstructor")
+
 public class HeaderView extends AutoLinearLayout{
   final TableView tableView;
   List<DataColumn> dataColumns = null;

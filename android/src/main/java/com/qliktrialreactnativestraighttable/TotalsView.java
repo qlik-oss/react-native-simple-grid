@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-@SuppressLint("ViewConstructor")
+
 public class TotalsView extends AutoLinearLayout{
   List<DataColumn> dataColumns = null;
   final TableView tableView;

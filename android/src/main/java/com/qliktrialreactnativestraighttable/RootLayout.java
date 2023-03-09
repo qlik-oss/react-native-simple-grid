@@ -5,12 +5,15 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 public class RootLayout extends FrameLayout {
-  final ColumnWidths columnWidths;
-  RootLayout(Context context, ColumnWidths columnWidths) {
+  ColumnWidths columnWidths;
+
+  RootLayout(Context context) {
     super(context);
-    this.columnWidths = columnWidths;
   }
 
+  public void setColumnWidths(ColumnWidths columnWidths) {
+    this.columnWidths = columnWidths;
+  }
 
   @Override
   public void requestLayout() {
