@@ -60,9 +60,9 @@ class HeaderView: HeaderStyleView {
       prev = label
     }
   }
-  
+
   func getHeaderTextColor(headerStyle: HeaderContentStyle) -> UIColor {
-    if(isDataView) {
+    if isDataView {
       return .black
     }
     return ColorParser.fromCSS(cssString: headerStyle.color ?? "black")
