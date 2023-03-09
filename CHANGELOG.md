@@ -1,3 +1,12 @@
+## [1.2.10](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.9...v1.2.10) (2023-03-09)
+
+
+### Bug Fixes
+
+* **MD-3922:** respect alignment in android for headers and totals ([946613c](https://github.com/qlik-oss/react-native-simple-grid/commit/946613ccda004fd8b45836a7c48a8b1d747fedfb))
+* **MD-3928:** remove coloring in data view - android ([6054779](https://github.com/qlik-oss/react-native-simple-grid/commit/6054779964da81d843750ced839d160ea03410c9))
+* **MD-3928:** remove coloring in data view - iOS ([bdd68d0](https://github.com/qlik-oss/react-native-simple-grid/commit/bdd68d0122ad1bb48cce490c2a5052913bb5db14))
+
 ## [1.2.9](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.8...v1.2.9) (2023-03-07)
 
 
