@@ -12,6 +12,9 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 @SuppressLint("ViewConstructor")
 public class RowCountView extends RelativeLayout {
   final TableView tableView;
@@ -19,11 +22,16 @@ public class RowCountView extends RelativeLayout {
   RelativeLayout container;
   TextView textView;
 
+  NumberFormat formatter;
+
   public RowCountView(Context context, TableView tableView) {
     super(context);
     int height = tableView.getMeasuredHeight();
     int width = tableView.getMeasuredWidth();
     setElevation(PixelUtils.dpToPx(4));
+
+    Locale locale = getResources().getConfiguration().locale;
+    formatter = NumberFormat.getNumberInstance(locale);
 
     this.tableView = tableView;
 
@@ -50,7 +58,7 @@ public class RowCountView extends RelativeLayout {
   public void update(int windowMin, int windowMax, int total) {
     String ofString = tableView.getTranslation("misc", "of");
 
-    String text = windowMin + " - " + windowMax + " " + ofString + " " + total;
+    String text = formatter.format(windowMin) + " - " + formatter.format(windowMax) + " " + ofString + " " + formatter.format(total);
     textView.setText(text);
     textView.postInvalidate();
   }
