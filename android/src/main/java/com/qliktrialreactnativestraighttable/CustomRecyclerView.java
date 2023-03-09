@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-@SuppressLint("ViewConstructor")
+
 public class CustomRecyclerView extends RecyclerView {
   final LinearLayoutManager linearLayout;
   final DataProvider dataProvider;

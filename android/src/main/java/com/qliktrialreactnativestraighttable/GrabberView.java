@@ -110,7 +110,7 @@ public class GrabberView extends LinearLayout {
     }
   }
 
-  @SuppressLint("ClickableViewAccessibility")
+
   public GrabberView(int column, Context context, CustomHorizontalScrollView scrollView, TableView tableView) {
     super(context);
     this.column = column;

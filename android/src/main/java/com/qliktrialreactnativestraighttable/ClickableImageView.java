@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
-@SuppressLint("ViewConstructor")
+
 public class ClickableImageView extends androidx.appcompat.widget.AppCompatImageView implements Content {
   int imageHeight;
   int imageWidth;

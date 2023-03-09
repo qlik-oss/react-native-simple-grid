@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 
-@SuppressLint("ViewConstructor")
+
 public class MockHorizontalScrollView extends HorizontalScrollView {
   View content;
 

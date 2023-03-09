@@ -17,7 +17,7 @@ import android.widget.Space;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
-@SuppressLint("ViewConstructor")
+
 public class HeaderCell extends LinearLayout {
   String sortIndicatorState = "none";
   Paint paint = new Paint();
@@ -31,7 +31,9 @@ public class HeaderCell extends LinearLayout {
     this.column = column;
     this.tableView = tableView;
     this.cell = new HeaderText(context, column, tableView);
-    this.searchButton = new SearchButton(context, tableView, column);
+    this.searchButton = new SearchButton(context);
+    this.searchButton.setTableView(tableView);
+    this.searchButton.setColumn(column);
 
     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     layoutParams.weight = 1;
@@ -99,7 +101,7 @@ public class HeaderCell extends LinearLayout {
     this.invalidate();
   }
 
-  @SuppressLint("ClickableViewAccessibility")
+
   @Override
   public boolean onTouchEvent(@NonNull MotionEvent e) {
     boolean result = false;
@@ -124,7 +126,7 @@ public class HeaderCell extends LinearLayout {
       this.cell.setMaxLines(maxLineCount, this.column);
     }
   }
-  @SuppressLint("ViewConstructor")
+
   public class HeaderText extends androidx.appcompat.widget.AppCompatTextView {
     DataColumn column;
     TableView tableView;

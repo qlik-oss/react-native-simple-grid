@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-@SuppressLint("ViewConstructor")
+
 public class DragBox extends View {
   final DragBoxEventHandler dragBoxEventHandler;
   final TableView tableView;
@@ -29,7 +29,7 @@ public class DragBox extends View {
   Rect drawBottomFill;
   Paint paint = new Paint();
 
-  @SuppressLint("ClickableViewAccessibility")
+
   public DragBox(Context context, TableView tableView, DragBoxEventHandler dragBoxEventHandler, boolean isFirstColumnBox){
     super(context);
     this.tableView = tableView;
@@ -101,7 +101,7 @@ public class DragBox extends View {
   class TouchListener implements OnTouchListener {
     float dY = 0;
 
-    @SuppressLint("ClickableViewAccessibility")
+
     @Override
     public boolean onTouch(View view, MotionEvent event) {
       if(bounds == null) {

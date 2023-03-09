@@ -1,42 +1,21 @@
 package com.qliktrialreactnativestraighttable;
 
-import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.text.Html;
-import android.text.TextUtils;
-import android.util.Log;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
-import android.graphics.fonts.Font;
-import android.graphics.fonts.FontFamily;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.HashMap;
 
-import kotlin.text.Charsets;
-
-@SuppressLint("ViewConstructor")
 public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements Content {
   DataColumn column;
   final CellView cellView;
@@ -68,7 +47,7 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     }
   }
 
-  @SuppressLint("ClickableViewAccessibility")
+
   @Override
   public boolean handleTouch(MotionEvent e) {
     // Checks to see if there's a link, if there is and the user
