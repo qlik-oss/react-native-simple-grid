@@ -1,3 +1,10 @@
+## [1.2.11](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.10...v1.2.11) (2023-03-10)
+
+
+### Bug Fixes
+
+* **QB-18396:** update table - iOS ([#217](https://github.com/qlik-oss/react-native-simple-grid/issues/217)) ([772b0a3](https://github.com/qlik-oss/react-native-simple-grid/commit/772b0a3e8361065165f5a221868af9bce8fca084))
+
 ## [1.2.10](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.9...v1.2.10) (2023-03-09)
 
 
