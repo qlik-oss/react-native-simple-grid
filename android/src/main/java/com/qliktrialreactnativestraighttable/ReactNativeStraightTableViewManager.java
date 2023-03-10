@@ -107,7 +107,16 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       }
       TableView tableView = (TableView) (view);
       List<DataColumn> dataColumns = processColumns(tableView, source);
-      tableView.setDataColumns(dataColumns);
+      if(tableView.dataProvider.dataColumns != null) {
+        if(tableView.dataProvider.dataColumns.size() != dataColumns.size()) {
+          tableView.resetTable();
+          tableView.setDataColumns(dataColumns);
+        } else {
+          tableView.setDataColumns(dataColumns);
+        }
+      } else {
+        tableView.setDataColumns(dataColumns);
+      }
     }
 
     @ReactProp(name = "isDataView")
@@ -124,6 +133,9 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
 
       TableView tableView = (TableView) (view);
       processRows(tableView, source);
+      if(tableView.needsReset) {
+        tableView.initialize();
+      }
     }
 
     @ReactProp(name = "size")
