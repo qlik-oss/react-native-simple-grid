@@ -13,7 +13,7 @@
     "@nebula.js/sn-table": "file:../../prebuilt/nebula.js-react-native-sn-table-1.14.121.tgz",
     "@nebula.js/stardust": "2.9.0",
     "@qlik/carbon-core": "2.0.4",
-    "@qlik/react-native-carbon": "2.1.16",
+    "@qlik/react-native-carbon": "2.1.18",
     "@qlik/react-native-helium": "1.2.16",
     "@qlik/react-native-simple-grid": "link:../../",
     "@react-native-async-storage/async-storage": "1.17.6",
