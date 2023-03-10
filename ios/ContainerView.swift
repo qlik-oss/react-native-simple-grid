@@ -95,6 +95,17 @@ class ContainerView: UIView {
         let json = try JSONSerialization.data(withJSONObject: cols)
         let decodedCols = try JSONDecoder().decode(Cols.self, from: json)
         if dataColumns != nil && decodedCols.header?.count != dataColumns?.count {
+          // rebuild the table
+          created = false
+          for view in subviews {
+            view.removeFromSuperview()
+          }
+          firstColumnTable = nil
+          multiColumnTable = nil
+          dataColumns = decodedCols.header
+          totals = decodedCols.totals
+         
+          layoutTable()
           return
         }
         dataColumns = decodedCols.header
@@ -125,11 +136,12 @@ class ContainerView: UIView {
         NotificationCenter.default.post(name: Notification.Name.onClearSelectionBand, object: nil)
         let json = try JSONSerialization.data(withJSONObject: rows)
         let decodedRows = try JSONDecoder().decode(RowsObject.self, from: json)
-
-        if dataRows != nil && decodedRows.rows?.count != 0 && dataRows?.count != 0 && dataRows?[0].cells.count != decodedRows.rows?[0].cells.count {
-          return
+        if self.dataRows != nil && dataRows?.count != 0 && dataRows?[0].cells.count != dataColumns?.count {
+          dataRows = decodedRows.rows
+          return;
         }
-        if dataRows == nil || decodedRows.reset == true {
+        
+        if dataRows == nil || (decodedRows.reset == true) {
           self.dataRows = decodedRows.rows
           if self.dataRows != nil {
             if let firstColumnTable = self.firstColumnTable {
@@ -208,37 +220,41 @@ class ContainerView: UIView {
 
   override var bounds: CGRect {
     didSet {
-      guard let dataColumns = dataColumns else {return}
-      guard let dataRows = dataRows else {return}
-      columnWidths.loadDefaultWidths(bounds, columnCount: dataColumns.count, dataRows: dataRows, dataCols: dataColumns)
+     layoutTable()
+    }
+  }
+  
+  func layoutTable() {
+    guard let dataColumns = dataColumns else {return}
+    guard let dataRows = dataRows else {return}
+    columnWidths.loadDefaultWidths(bounds, columnCount: dataColumns.count, dataRows: dataRows, dataCols: dataColumns)
 
-      if !created {
-        created = true
-        let tableViewFactory = TableViewFactory(containerView: self,
-                                                columnWidths: columnWidths,
-                                                dataColumns: dataColumns,
-                                                freezeFirstCol: freezeFirstColumn)
-        tableViewFactory.create()
-        firstColumnTable = tableViewFactory.firstColumnTableView
-        multiColumnTable = tableViewFactory.multiColumnTableView
-        setNeedsLayout()
-        DispatchQueue.main.async {
-          self.horizontalScrollView?.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
-          self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
-          self.testTruncation()
-          self.updateVScrollPos()
-        }
-      } else {
-        guard let firstColumnTable = self.firstColumnTable else { return }
-        guard let multiColumnTable = self.multiColumnTable else { return }
-        hScrollViewDelegate.captureFirstColumnWidth()
-        firstColumnTable.resizeCells()
-        multiColumnTable.resizeCells()
-        DispatchQueue.main.async {
-          self.testTruncation()
-          self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
-          self.updateVScrollPos()
-        }
+    if !created {
+      created = true
+      let tableViewFactory = TableViewFactory(containerView: self,
+                                              columnWidths: columnWidths,
+                                              dataColumns: dataColumns,
+                                              freezeFirstCol: freezeFirstColumn)
+      tableViewFactory.create()
+      firstColumnTable = tableViewFactory.firstColumnTableView
+      multiColumnTable = tableViewFactory.multiColumnTableView
+      setNeedsLayout()
+      DispatchQueue.main.async {
+        self.horizontalScrollView?.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
+        self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
+        self.testTruncation()
+        self.updateVScrollPos()
+      }
+    } else {
+      guard let firstColumnTable = self.firstColumnTable else { return }
+      guard let multiColumnTable = self.multiColumnTable else { return }
+      hScrollViewDelegate.captureFirstColumnWidth()
+      firstColumnTable.resizeCells()
+      multiColumnTable.resizeCells()
+      DispatchQueue.main.async {
+        self.testTruncation()
+        self.firstColumnTable?.dataCollectionView?.postSignalVisibleRows(scrollsToTop: true)
+        self.updateVScrollPos()
       }
     }
   }

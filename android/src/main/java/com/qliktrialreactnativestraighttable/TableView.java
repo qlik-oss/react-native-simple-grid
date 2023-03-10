@@ -38,7 +38,7 @@ public class TableView extends FrameLayout {
   RootLayout rootLayout;
   CustomHorizontalScrollView scrollView;
   MockVerticalScrollView verticalScrollBar;
-  final DragBox dragBox;
+  DragBox dragBox;
   DragBox firstColumnDragBox = null;
   HeaderView headerView = null;
   AutoLinearLayout footerView = null;
@@ -47,7 +47,7 @@ public class TableView extends FrameLayout {
   ScreenGuideView screenGuideView = null;
   SelectionsEngine selectionsEngine = new SelectionsEngine();
   ReadableMap translations;
-  final ColumnWidths columnWidths ;
+  ColumnWidths columnWidths ;
   DataProvider dataProvider;
   boolean isFirstColumnFrozen = false;
   String name = "";
@@ -62,6 +62,8 @@ public class TableView extends FrameLayout {
 
   boolean isDataView = false;
 
+  boolean needsReset = false;
+
   TableView(ThemedReactContext context) {
     super(context);
     TableTheme.iconFonts = ReactFontManager.getInstance().getTypeface("fontello", 0, context.getAssets());
@@ -71,6 +73,32 @@ public class TableView extends FrameLayout {
     firstColumnDragBox = new DragBox(context, this, dragBoxEventHandler, true);
     dragBoxEventHandler.setDragBoxes(dragBox, firstColumnDragBox);
     tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider, dragBox, firstColumnDragBox);
+  }
+
+
+  public void resetTable() {
+    this.removeAllViews();
+    Context context = this.getContext();
+    totalsRows = null;
+    totalsPosition = null;
+    totalsLabel = null;
+    rootLayout = null;
+    firstColumnDragBox = null;
+    headerView = null;
+    footerView = null;
+    recyclerView = null;
+    firstColumnView = null;
+    screenGuideView = null;
+    grabbers = null;
+
+
+    columnWidths = new ColumnWidths(context);
+    dataProvider = new DataProvider(columnWidths, selectionsEngine, this);
+    dragBox = new DragBox(context, this, dragBoxEventHandler, false);
+    firstColumnDragBox = new DragBox(context, this, dragBoxEventHandler, true);
+    dragBoxEventHandler.setDragBoxes(dragBox, firstColumnDragBox);
+    tableViewFactory = new TableViewFactory(this, columnWidths, dataProvider, dragBox, firstColumnDragBox);
+    needsReset = true;
   }
 
   public boolean isInitialized() {
@@ -252,6 +280,7 @@ public class TableView extends FrameLayout {
   };
 
   public void initialize() {
+    needsReset = false;
     columnWidths.loadWidths(totalWidth, dataProvider.dataColumns, dataProvider.rows);
     if(recyclerView == null) {
       createRecyclerView();

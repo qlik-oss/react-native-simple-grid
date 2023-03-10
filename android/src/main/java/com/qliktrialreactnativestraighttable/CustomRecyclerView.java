@@ -116,7 +116,7 @@ public class CustomRecyclerView extends RecyclerView {
       return;
     }
     post(() -> {
-      if (linearLayout == null || dataProvider == null) {
+      if (linearLayout == null || dataProvider == null || dataProvider.dataSize == null) {
         return;
       }
       int windowMin = linearLayout.findFirstVisibleItemPosition() + 1;

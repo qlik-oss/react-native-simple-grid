@@ -225,13 +225,13 @@ class DataCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDe
   }
 
   func appendData(rows: [DataRow]) {
-    DispatchQueue.main.async {
-      self.dataRows = rows
-      self.childCollectionView?.reloadData()
-      self.childCollectionView?.performBatchUpdates({
-        self.signalVisibleRows()
+    DispatchQueue.main.async { [weak self] in
+      self?.dataRows = rows
+      self?.childCollectionView?.reloadData()
+      self?.childCollectionView?.performBatchUpdates({
+        self?.signalVisibleRows()
       })
-      self.loading = false
+      self?.loading = false
     }
   }
 
