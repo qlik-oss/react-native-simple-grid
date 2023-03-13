@@ -1,3 +1,14 @@
+## [1.2.12](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.11...v1.2.12) (2023-03-13)
+
+
+### Bug Fixes
+
+* **MD-3982:** add wrapper view in chart cell ([414668e](https://github.com/qlik-oss/react-native-simple-grid/commit/414668e6a4817212e984d7c5800cb21b50f359ab))
+* **MD-3986:** format totals - Android ([0e26ecf](https://github.com/qlik-oss/react-native-simple-grid/commit/0e26ecf797b88d5d1cb85fd2fc4164589aa7641b))
+* **MD-3986:** format totals - ios ([ca9ec6c](https://github.com/qlik-oss/react-native-simple-grid/commit/ca9ec6c74ead4222cc84202032af74c03d46e5d4))
+* **MD-4101:** fixed background color for mini charts - Android ([61efc5a](https://github.com/qlik-oss/react-native-simple-grid/commit/61efc5ace1d6dba8bdaf39ea7529ee25b288a1f4))
+* **MD-4102:** null out totals when gradtotal row is zero ([0a19313](https://github.com/qlik-oss/react-native-simple-grid/commit/0a19313e4eab7e65786f0c7fa3f5e2da1bb3ffe6))
+
 ## [1.2.11](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.10...v1.2.11) (2023-03-10)
 
 
