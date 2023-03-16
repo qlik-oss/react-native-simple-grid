@@ -203,12 +203,7 @@ public class CustomRecyclerView extends RecyclerView {
       return false;
     }
     int maxLines = 0;
-    for (int i = 0; i < childCount; i++) {
-      View view = getChildAt(i);
-      RowViewHolder viewHolder = (RowViewHolder) getChildViewHolder(view);
-      int lines = viewHolder.initialMeasure();
-      maxLines = Math.max(lines, maxLines);
-    }
+    maxLines = getMaxLinesFromChildren(childCount, maxLines);
     if (!firstColumnOnly) {
       int rowHeight = (maxLines * tableView.cellContentStyle.lineHeight) + CellView.PADDING_X_2;
       tableView.rowHeight = Math.max(rowHeight, tableView.cellContentStyle.themedRowHeight);
@@ -223,24 +218,38 @@ public class CustomRecyclerView extends RecyclerView {
         if(childCount == 0) {
           return;
         }
-        for (int i = 0; i < childCount; i++) {
-          View view = getChildAt(i);
-          RowViewHolder viewHolder = (RowViewHolder) getChildViewHolder(view);
-          viewHolder.initializeHeight(tableView.rowHeight, tableView.cellContentStyle);
-        }
-        if (tableView.firstColumnView != null) {
-          tableView.firstColumnView.requestLayout();
-        }
-        if (tableView.rootLayout != null) {
-          tableView.rootLayout.requestLayout();
-        }
-        requestLayout();
-        if (recursive) {
-          dataProvider.notifyDataSetChanged();
-        }
+        try {
+          for (int i = 0; i < childCount; i++) {
+            View view = getChildAt(i);
+            RowViewHolder viewHolder = (RowViewHolder) getChildViewHolder(view);
+            viewHolder.initializeHeight(tableView.rowHeight, tableView.cellContentStyle);
+          }
+          if (tableView.firstColumnView != null) {
+            tableView.firstColumnView.requestLayout();
+          }
+          if (tableView.rootLayout != null) {
+            tableView.rootLayout.requestLayout();
+          }
+          requestLayout();
+          if (recursive) {
+            dataProvider.notifyDataSetChanged();
+          }
+        } catch(Exception ignored) {}
       }
     });
 
     return true;
+  }
+
+  private int getMaxLinesFromChildren(int childCount, int maxLines) {
+    for (int i = 0; i < childCount; i++) {
+      try {
+        View view = getChildAt(i);
+        RowViewHolder viewHolder = (RowViewHolder) getChildViewHolder(view);
+        int lines = viewHolder.initialMeasure();
+        maxLines = Math.max(lines, maxLines);
+      } catch (Exception ignored) {}
+    }
+    return maxLines;
   }
 }

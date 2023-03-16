@@ -26,9 +26,11 @@ public class Indicator {
   }
 
   private void parseColor(ReadableMap data) {
-    if (data.hasKey("color")) {
-      color = Color.parseColor(data.getString("color"));
-    }
+    try {
+      if (data.hasKey("color")) {
+        color = Color.parseColor(data.getString("color"));
+      }
+    } catch (Exception ignored){}
     getIcon(data);
   }
 

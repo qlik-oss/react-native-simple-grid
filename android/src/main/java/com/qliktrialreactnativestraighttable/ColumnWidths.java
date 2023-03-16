@@ -50,7 +50,7 @@ public class ColumnWidths {
       runningTotal += col.width;
     }
 
-    if (runningTotal < frameWidth) {
+    if (runningTotal < frameWidth && !dataColumns.isEmpty()) {
       int defaultWidth = (int) (frameWidth / dataColumns.size());
       for (DataColumn column : dataColumns) {
         column.width = defaultWidth;

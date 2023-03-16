@@ -89,11 +89,17 @@ class ColumnWidths {
       return DataCellView.minWidth
     }
     let dataCol = dataCols[index]
-    if dataCol.representation?.type != "text" {
+    if dataCol.representation?.type != "text" && dataCol.representation?.type != "url" {
       return DataCellView.minWidth * 1.5
     }
     let totalCount = dataRows.reduce(0) { partialResult, row in
-      return partialResult + row.cells[index].qText!.count
+      var text = ""
+      if dataCol.representation?.type == "url" {
+        text = getTextFromUrl(dataCol, row.cells[index])
+      } else {
+        text = row.cells[index].qText ?? ""
+      }
+      return partialResult + text.count
     }
     let average = totalCount / (dataRows.count)
     let tempLabel = UILabel()
@@ -116,4 +122,11 @@ class ColumnWidths {
     columnWidths[index] += by.x
   }
 
+  func getTextFromUrl(_ col: DataColumn, _ cell: DataCell) -> String {
+    guard let stylingInfo = col.stylingInfo else { return cell.qText ?? "" }
+    if let index = stylingInfo.firstIndex(of: "urlLabel") {
+      return cell.qAttrExps?.qValues?[index].qText ?? cell.qText ?? ""
+    }
+    return cell.qText ?? ""
+  }
 }

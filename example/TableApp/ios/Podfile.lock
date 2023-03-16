@@ -315,7 +315,7 @@ PODS:
     - RCTTypeSafety
     - React
     - ReactCommon/turbomodule/core
-  - react-native-simple-grid (1.2.8):
+  - react-native-simple-grid (1.2.12):
     - React-Core
     - SDWebImage (~> 5.8)
   - React-perflogger (0.68.5)
@@ -639,7 +639,7 @@ SPEC CHECKSUMS:
   React-jsinspector: eb202e43b3879aba9a14f3f65788aec85d4e1ea9
   React-logger: 98f663b292a60967ebbc6d803ae96c1381183b6d
   react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
-  react-native-simple-grid: e8904d667fc52c8b8678759ffbe7e52855c26378
+  react-native-simple-grid: e46af81bac0142a3edd3eb27319e5bdafa26fe23
   React-perflogger: 0458a87ea9a7342079e7a31b0d32b3734fb8415f
   React-RCTActionSheet: 22538001ea2926dea001111dd2846c13a0730bc9
   React-RCTAnimation: 732ce66878d4aa151d56a0d142b1105aa12fd313

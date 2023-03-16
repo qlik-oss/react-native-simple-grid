@@ -3,6 +3,7 @@ package com.qliktrialreactnativestraighttable;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -78,35 +79,41 @@ public class TotalsView extends AutoLinearLayout{
     // Update totals in case of moved columns
     j = 0;
     for(int i = 0; i < getChildCount(); i++) {
-      TotalsViewCell viewCell = (TotalsViewCell) getChildAt(i);
-      viewCell.setText("");
+      View view = getChildAt(i);
+      if(view != null) {
+        TotalsViewCell viewCell = (TotalsViewCell) getChildAt(i);
+        viewCell.setText("");
 
-      if(i > dataProvider.dataColumns.size() - 1) {
-        removeView(viewCell);
-        continue;
-      }
+        if (i > dataProvider.dataColumns.size() - 1) {
+          removeView(viewCell);
+          continue;
+        }
 
-      DataColumn column = dataProvider.dataColumns.get(i);
-      viewCell.setColumn(column);
-      if(!column.isDim && j < dataProvider.totalsCells.size()) {
-        String newText = dataProvider.totalsCells.get(j).qText;
-        viewCell.setText(newText != null && newText.length() > 0 ? newText : "");
-        j++;
+        DataColumn column = dataProvider.dataColumns.get(i);
+        viewCell.setColumn(column);
+        if (!column.isDim && j < dataProvider.totalsCells.size()) {
+          String newText = dataProvider.totalsCells.get(j).qText;
+          viewCell.setText(newText != null && newText.length() > 0 ? newText : "");
+          j++;
+        }
       }
     }
 
     DataColumn firstColumn = dataProvider.dataColumns.get(0);
-    TotalsViewCell firstTotalsCell = (TotalsViewCell) getChildAt(0);
-    if(tableView.isFirstColumnFrozen) {
-      firstTotalsCell = tableView.tableViewFactory.firstColumnTotalsCell;
-    }
-    if (firstColumn.isDim) {
-      firstTotalsCell.setText(tableView.totalsLabel);
-      firstTotalsCell.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
-    } else {
-      TotalsCell totalsCell = dataProvider.totalsCells.get(0);
-      firstTotalsCell.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-      firstTotalsCell.setText(totalsCell.qText);
+    View view = getChildAt(0);
+    if(view != null) {
+      TotalsViewCell firstTotalsCell = (TotalsViewCell) getChildAt(0);
+      if (tableView.isFirstColumnFrozen) {
+        firstTotalsCell = tableView.tableViewFactory.firstColumnTotalsCell;
+      }
+      if (firstColumn.isDim) {
+        firstTotalsCell.setText(tableView.totalsLabel);
+        firstTotalsCell.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+      } else {
+        TotalsCell totalsCell = dataProvider.totalsCells.get(0);
+        firstTotalsCell.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+        firstTotalsCell.setText(totalsCell.qText);
+      }
     }
   }
 }
