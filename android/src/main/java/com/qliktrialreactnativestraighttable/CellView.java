@@ -220,14 +220,16 @@ public class CellView extends RelativeLayout implements SelectionsObserver {
     ViewGroup.LayoutParams params = getLayoutParams();
     params.width = newWidth;
     setLayoutParams(params);
-    if(type.equals("image") && column.representation.imageSize.equals("fill") || column.representation.imageSize.equals("fitWidth")) {
-      ViewGroup.LayoutParams wrapperParams = wrapper.getLayoutParams();
-      ViewGroup.LayoutParams contentParams = ((View) content).getLayoutParams();
-      wrapperParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-      contentParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-      wrapper.setLayoutParams(wrapperParams);
-      ((ClickableImageView) content).setLayoutParams(contentParams);
-      ((ClickableImageView) content).scaleAndPositionImage(column);
+    if(column.representation.imageSize != null) {
+      if (type.equals("image") && column.representation.imageSize.equals("fill") || column.representation.imageSize.equals("fitWidth")) {
+        ViewGroup.LayoutParams wrapperParams = wrapper.getLayoutParams();
+        ViewGroup.LayoutParams contentParams = ((View) content).getLayoutParams();
+        wrapperParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        contentParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        wrapper.setLayoutParams(wrapperParams);
+        ((ClickableImageView) content).setLayoutParams(contentParams);
+        ((ClickableImageView) content).scaleAndPositionImage(column);
+      }
     }
   }
 
