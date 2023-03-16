@@ -35,12 +35,14 @@ public class MiniChartInfo {
     int color;
     boolean valid = false;
     public MiniChartColor(ReadableMap data) {
-      colorValue = data.hasKey("color") ? data.getString("color") : "none";
-      index = data.hasKey("index") ? data.getInt("index") : 0;
-      if(!colorValue.equals("none")) {
-        color = Color.parseColor(colorValue);
-        valid = true;
-      }
+        try {
+          colorValue = data.hasKey("color") ? data.getString("color") : "none";
+          index = data.hasKey("index") ? data.getInt("index") : 0;
+          if (!colorValue.equals("none")) {
+            color = Color.parseColor(colorValue);
+            valid = true;
+          }
+        } catch (Exception ignored){}
     }
 
     public JSONObject toEvent() throws JSONException {
