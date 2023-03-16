@@ -124,8 +124,10 @@ class ColumnWidths {
 
   func getTextFromUrl(_ col: DataColumn, _ cell: DataCell) -> String {
     guard let stylingInfo = col.stylingInfo else { return cell.qText ?? "" }
-    if let index = stylingInfo.firstIndex(of: "urlLabel") {
-      return cell.qAttrExps?.qValues?[index].qText ?? cell.qText ?? ""
+    if col.representation?.urlPosition == "dimension" {
+      if let index = stylingInfo.firstIndex(of: "urlLabel") {
+        return cell.qAttrExps?.qValues?[index].qText ?? cell.qText ?? ""
+      }
     }
     return cell.qText ?? ""
   }

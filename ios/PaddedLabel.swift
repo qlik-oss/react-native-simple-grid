@@ -152,7 +152,13 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
     guard let attributedText = attributedText else {return false}
     var rect = attributedText.boundingRect(with: CGSize(width: frame.width, height: .greatestFiniteMagnitude),
                                            options: [.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
-    rect = CGRect(origin: CGPoint.zero, size: CGSize(width: rect.width + (PaddedLabel.PaddingSize), height: self.bounds.height))
+    rect = CGRect(origin: CGPoint.zero, size: CGSize(width: rect.width + (PaddedLabel.PaddingSize), height: rect.height))
+    // move it to the center
+    let centerY = self.bounds.midY
+    let rectY = rect.midY
+    let offsetY = centerY - rectY
+    rect.origin.y += offsetY
+
     if rect.contains(point) {
       UIApplication.shared.open(url)
       return true
@@ -252,13 +258,13 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
     guard let representation = col.representation else { return }
     let urlLabelIndex = col.stylingInfo?.firstIndex(of: "urlLabel")
     var urlLabel = ""
-    if let urlLabelIndex = urlLabelIndex {
+    if representation.urlPosition == "dimension", let urlLabelIndex = urlLabelIndex {
       urlLabel = cell.qAttrExps?.qValues?[urlLabelIndex].qText ?? ""
     } else {
       urlLabel = representation.urlPosition == "dimension" ? (representation.linkUrl ?? "") : (cell.qText ?? "")
     }
     var urlText = cell.qText
-    if let attrIndex = index {
+    if representation.urlPosition == "attribute", let attrIndex = index {
       urlText = cell.qAttrExps?.qValues?[attrIndex].qText
     }
     if urlLabel.isEmpty {
