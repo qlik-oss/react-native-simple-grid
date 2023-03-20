@@ -144,14 +144,14 @@ class ContainerView: UIView {
         if dataRows == nil || (decodedRows.reset == true) {
           self.dataRows = decodedRows.rows
           if self.dataRows != nil {
-            
-            if(self.firstColumnTable == nil && self.multiColumnTable == nil && frame.size.width != 0) {
+
+            if self.firstColumnTable == nil && self.multiColumnTable == nil && frame.size.width != 0 {
               DispatchQueue.main.async {  [weak self] in
                 self?.layoutTable()
                 return
               }
             }
-            
+
             if let firstColumnTable = self.firstColumnTable {
               firstColumnTable.dataCollectionView?.dataSize = dataSize
               firstColumnTable.dataCollectionView?.appendData(rows: dataRows!)
