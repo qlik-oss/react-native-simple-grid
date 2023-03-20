@@ -1,3 +1,12 @@
+## [1.2.13](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.12...v1.2.13) (2023-03-20)
+
+
+### Bug Fixes
+
+* **MD-4198:** added more null/zero checks ([d9785a1](https://github.com/qlik-oss/react-native-simple-grid/commit/d9785a1ee3738ff71794a5207ada138dcf49ae1a))
+* **QB-18506:** check for null imageSize ([ef5d5d0](https://github.com/qlik-oss/react-native-simple-grid/commit/ef5d5d0391e5f3acfb8746daf54c0f245106b823))
+* **QB-18507:** use url position ([f62ddd5](https://github.com/qlik-oss/react-native-simple-grid/commit/f62ddd5da9bf0873b9ccd2b18e720ca57a1b3491))
+
 ## [1.2.12](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.11...v1.2.12) (2023-03-13)
 
 
