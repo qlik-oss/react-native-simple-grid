@@ -1195,10 +1195,10 @@
   resolved "https://registry.yarnpkg.com/@qlik/carbon-core/-/carbon-core-2.0.4.tgz#b57e10ccde240190c3933772b7a8127f24794b8e"
   integrity sha512-Ni/96h5/hFQ52v4b/j50OnKIvYOPRpks8CKT8OHgDP7G48y+Bgb5+X22KZ0iPH9n3b5sDgUu15IU8xnoyTUkbw==
 
-"@qlik/react-native-carbon@2.1.16":
-  version "2.1.16"
-  resolved "https://registry.yarnpkg.com/@qlik/react-native-carbon/-/react-native-carbon-2.1.16.tgz#ac177140c08ac45bbbd0087d74ac8e5e7a21c61d"
-  integrity sha512-lRqtyqDmah22q0KcUKQw65PvElfzn1nE945rXYqoMUu6jkLVa/2EpiqVC0B/4A2/zw7DTnYYiLTgrggZHkvhCA==
+"@qlik/react-native-carbon@2.1.18":
+  version "2.1.18"
+  resolved "https://registry.yarnpkg.com/@qlik/react-native-carbon/-/react-native-carbon-2.1.18.tgz#6dce749d8036eced084764a440dfcae84b9f288a"
+  integrity sha512-bOLBZ86GrsbfkvrNrB8eJ4M2hHgiOU5aOXQNiwzHXgXPgKAI63O3yPTzccvRRan1CbsFNDSo1J0trTFMHEu7ng==
 
 "@qlik/react-native-helium@1.2.16":
   version "1.2.16"
@@ -1206,8 +1206,7 @@
   integrity sha512-F2ooCVg9Yv99xATZCePA3WdQCNd1jlvxpWb83GzzF/EOmDyvdV6KkX9gm1aC2jiR386bsyZ20akB4kA6Hdo6pA==
 
 "@qlik/react-native-simple-grid@link:../..":
-  version "0.0.0"
-  uid ""
+  version "1.2.12"
 
 "@react-native-async-storage/async-storage@1.17.6":
   version "1.17.6"
@@ -6443,10 +6442,10 @@ react-native-paper@4.12.1:
     color "^3.1.2"
     react-native-iphone-x-helper "^1.3.1"
 
-react-native-reanimated@2.8.0:
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.8.0.tgz#93c06ca84d91fb3865110b0857c49a24e316130e"
-  integrity sha512-kJvf/UWLBMaGCs9X66MKq5zdFMgwx8D0nHnolbHR7s8ZnbLdb7TlQ/yuzIXqn/9wABfnwtNRI3CyaP1aHWMmZg==
+react-native-reanimated@2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.10.0.tgz#ed53be66bbb553b5b5e93e93ef4217c87b8c73db"
+  integrity sha512-jKm3xz5nX7ABtHzzuuLmawP0pFWP77lXNdIC6AWOceBs23OHUaJ29p4prxr/7Sb588GwTbkPsYkDqVFaE3ezNQ==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.16.7"
     "@babel/preset-typescript" "^7.16.7"
