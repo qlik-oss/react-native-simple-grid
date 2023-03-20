@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useMemo } from 'react';
-import { StyleProp, View, ViewStyle, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 export type ImageCellProps = {

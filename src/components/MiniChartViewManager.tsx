@@ -1,4 +1,5 @@
-import { requireNativeComponent, ViewStyle, StyleProp } from 'react-native';
+import { requireNativeComponent } from 'react-native';
+import type { ViewStyle, StyleProp } from 'react-native';
 
 type MiniChartProps = {
   colData: any;
