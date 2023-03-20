@@ -59,7 +59,7 @@ jobs:
       - uses: ./.github/actions/cancel_workflow
       - uses: ./.github/actions/yarn_install
       - run: yarn javalint
-      - uses: yutailang0119/action-android-lint@v2
+      - uses: yutailang0119/action-android-lint@v3
         with:
           report-path: android/build/reports/*.xml
         continue-on-error: false
