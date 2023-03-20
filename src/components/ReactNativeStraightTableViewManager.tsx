@@ -1,4 +1,5 @@
-import { requireNativeComponent, ViewStyle } from 'react-native';
+import { requireNativeComponent } from 'react-native';
+import type { ViewStyle } from 'react-native';
 
 type ReactNativeStraightTableProps = {
   style: ViewStyle;
