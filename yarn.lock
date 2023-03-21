@@ -1670,9 +1670,9 @@
     "@octokit/openapi-types" "^11.2.0"
 
 "@qlik/react-native-carbon@^2.1.16":
-  version "2.1.18"
-  resolved "https://registry.yarnpkg.com/@qlik/react-native-carbon/-/react-native-carbon-2.1.18.tgz#6dce749d8036eced084764a440dfcae84b9f288a"
-  integrity sha512-bOLBZ86GrsbfkvrNrB8eJ4M2hHgiOU5aOXQNiwzHXgXPgKAI63O3yPTzccvRRan1CbsFNDSo1J0trTFMHEu7ng==
+  version "2.1.19"
+  resolved "https://registry.yarnpkg.com/@qlik/react-native-carbon/-/react-native-carbon-2.1.19.tgz#6c1c044c929a4fff9ac3f242cb516a0a15dfb6a6"
+  integrity sha512-iB0XLJcmon89ucVnZbfLlS8N/C6O9Xk4xUOUXB2EPcKdCylVQQtBt2Mv15um2alnzF0emK5RbSCld0+qvdx0jw==
 
 "@react-native-community/cli-debugger-ui@^5.0.1":
   version "5.0.1"
