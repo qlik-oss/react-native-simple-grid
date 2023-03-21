@@ -170,7 +170,7 @@ public class TableViewFactory {
 
   protected void createRootLayout() {
     this.rootLayout = new RootLayout(context);
-    this.rootLayout.setColunmWidths(columnWidths);
+    this.rootLayout.setColumnWidths(columnWidths);
     this.rootLayout.setPadding(0,0, TableTheme.HorizontalScrollViewPadding, 0);
     this.rootLayout.addView(dragBox);
     this.rootLayout.setZ(PixelUtils.dpToPx(1));
