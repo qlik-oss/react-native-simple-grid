@@ -1,3 +1,11 @@
+## [1.2.14](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.13...v1.2.14) (2023-03-21)
+
+
+### Bug Fixes
+
+* **MD-4206:** rebuild table when initially empty ([d4cd8bf](https://github.com/qlik-oss/react-native-simple-grid/commit/d4cd8bf15b11db771abe5032ee4447e2d250638b))
+* resolve linting issues ([18bcc82](https://github.com/qlik-oss/react-native-simple-grid/commit/18bcc82482f08f95fc21808341f174cf827690e6))
+
 ## [1.2.13](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.12...v1.2.13) (2023-03-20)
 
 
