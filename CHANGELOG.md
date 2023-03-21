@@ -1,3 +1,10 @@
+## [1.2.15](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.14...v1.2.15) (2023-03-21)
+
+
+### Bug Fixes
+
+* typo when setting column width ([63fa929](https://github.com/qlik-oss/react-native-simple-grid/commit/63fa92963bbd474bf8c2dbf309a49170ee00d486))
+
 ## [1.2.14](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.13...v1.2.14) (2023-03-21)
 
 
