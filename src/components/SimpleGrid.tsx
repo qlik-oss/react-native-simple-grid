@@ -117,6 +117,7 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
           expand: true,
           data: { row, col },
           titles: translations.headerValues,
+          viewData: layout?.isDataView,
         });
       } catch (error) {}
     },

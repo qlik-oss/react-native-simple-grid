@@ -42,7 +42,7 @@ const TextCell: React.FC<TextCellProps> = ({ rowData, colData }) => {
   const iconStyle = useMemo(() => {
     let name;
     let color;
-    if (colData?.representation.type === 'text') {
+    if (colData?.representation.type === 'text' || colData?.representation.type === 'image') {
       return;
     }
     if (rowData?.indicator?.icon) {
