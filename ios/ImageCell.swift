@@ -110,9 +110,26 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
     if let img = imageView?.image {
       let board = UIPasteboard.general
       board.image = img
+    } else {
+        copySVGToClipBoard(format: format)
     }
     controller.setMenuVisible(false, animated: true)
     self.resignFirstResponder()
+  }
+  
+  func copySVGToClipBoard(format: UIGraphicsImageRendererFormat) {
+    
+    let newSize = CGSize(width: frame.size.width * format.scale, height: frame.size.height *  format.scale)
+    let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+    let renderer = UIGraphicsImageRenderer(size: newSize, format: format)
+    let img = renderer.image { ctx in
+      // awesome drawing code
+      drawSVG(ctx.cgContext, rect: rect, paddingMultplier: 2.0)
+    }
+
+    let board = UIPasteboard.general
+    board.image = img
+   
   }
 
   @objc func handleExpand(_ controller: UIMenuController) {
@@ -377,12 +394,16 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
   }
 
   override func draw(_ rect: CGRect) {
+    guard let context = UIGraphicsGetCurrentContext() else { return }
+    drawSVG(context, rect: rect, paddingMultplier: 1.0)
+  }
+  
+  func drawSVG(_ context: CGContext, rect: CGRect, paddingMultplier: CGFloat) {
     if let svgCoder = svgCoder {
-      guard let context = UIGraphicsGetCurrentContext() else { return }
       let clipRect = rect.insetBy(dx: svgCoder.padding, dy: 0)
       context.clip(to: [clipRect])
       svgCoder.shapes.forEach { shape in
-        shape.draw(context, rect: rect)
+        shape.draw(context, rect: rect, paddingMultiplier: paddingMultplier)
       }
     }
   }
