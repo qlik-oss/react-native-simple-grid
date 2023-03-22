@@ -3,8 +3,11 @@ package com.qliktrialreactnativestraighttable;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -241,6 +244,19 @@ public class ClickableImageView extends androidx.appcompat.widget.AppCompatImage
     ImageShare imageShare = new ImageShare();
     if(bitmap != null) {
       imageShare.share(bitmap, getContext());
+    } else {
+      Drawable drawable = getDrawable();
+      if(drawable != null) {
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+
+        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmp);
+        canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_OVER);
+        drawable.setBounds(0, 0, width, height);
+        drawable.draw(canvas);
+        imageShare.share(bmp, getContext());
+      }
     }
   }
 
