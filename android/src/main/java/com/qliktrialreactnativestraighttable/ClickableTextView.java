@@ -145,10 +145,15 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
       cell.cellForegroundColor = Color.BLACK;
       tableView.cellContentStyle.color = Color.BLACK;
     }
+    
+   
     cell.setIsDataView(isDataView);
     if(cell.indicator != null && cell.type.compareTo("miniChart") != 0) {
       buildSpannableText();
     } else {
+      if(column.representation != null && column.representation.type.compareTo("image") == 0) {
+        cell.qText = getImageLabel(cell, row, column); 
+      }
       setText(cell.qText);
       textWrapper.countWords(cell.qText);
     }
@@ -161,6 +166,22 @@ public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextVi
     if(cell.type.equals("url")) {
       setupUrl();
     }
+  }
+  
+  private String getImageLabel(DataCell cell, DataRow row, DataColumn column) {
+    if(column.representation != null && column.stylingInfo != null) {
+      int index = column.stylingInfo.indexOf("imageLabel");
+      if(index == -1) {
+        index = column.stylingInfo.indexOf("imageUrl");
+      }
+      if(index != -1 && cell.qAttrExpValues != null) {
+        qValue value = cell.qAttrExpValues.values.get(index);
+        if(value != null) {
+          return value.qText;
+        }
+      }
+    }
+    return "";
   }
 
   private void buildSpannableText() {
