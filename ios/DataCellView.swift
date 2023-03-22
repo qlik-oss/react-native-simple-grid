@@ -163,6 +163,9 @@ class DataCellView: UICollectionViewCell, ExpandedCellProtocol {
             } else if representation.type == "url" {
               let index = col.stylingInfo?.firstIndex(of: "url")
               label.setupUrl(col, cell: element, index: index)
+            } else if representation.type == "image" {
+              // can fall down here if view data
+              label.setImageLabel(col, cell: element)
             } else {
               label.text = element.qText
               label.textColor = getForegroundColor(col: col, element: element, withStyle: styleInfo[index])
