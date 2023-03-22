@@ -4,6 +4,7 @@ export type ExpandCellAtom = {
   expand: boolean;
   data?: any;
   titles?: Array<String>;
+  viewData?: boolean;
 };
 
 export type DragBoxAtom = {

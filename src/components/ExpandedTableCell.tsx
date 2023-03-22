@@ -45,6 +45,7 @@ const ExpandedTableCell = () => {
               style={styles.cell}
               colData={item}
               rowData={expandedCell.data.row.cells[index]}
+              viewData={expandedCell.viewData}
             />
           </DataTable.Row>
         ))}

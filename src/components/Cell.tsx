@@ -10,9 +10,10 @@ export type CellProps = {
   rowData: any;
   colData: any;
   style?: StyleProp<ViewStyle>;
+  viewData?: boolean;
 };
 
-const Cell: React.FC<CellProps> = ({ rowData, colData, style }) => {
+const Cell: React.FC<CellProps> = ({ rowData, colData, style, viewData }) => {
   const getCell = useCallback(() => {
     if (colData.representation.type === 'miniChart') {
       return (
@@ -23,7 +24,7 @@ const Cell: React.FC<CellProps> = ({ rowData, colData, style }) => {
         />
       );
     }
-    if (colData.representation.type === 'image') {
+    if (colData.representation.type === 'image' && !viewData) {
       return (
         <ImageCell
           style={styles.imageCell}
