@@ -12,7 +12,7 @@ public class SvgShape {
   public var viewPortSize = CGSize.zero
   public var padding: CGFloat = 6.0
 
-  func draw(_ context: CGContext, rect: CGRect) {}
+  func draw(_ context: CGContext, rect: CGRect, paddingMultiplier: CGFloat) {}
 }
 
 public class SvgParser: NSObject, XMLParserDelegate {

@@ -9,7 +9,7 @@ import Foundation
 public class SvgRect: SvgShape {
   var position = CGPoint.zero
   var size = CGSize.zero
-  override func draw(_ context: CGContext, rect: CGRect) {
+  override func draw(_ context: CGContext, rect: CGRect, paddingMultiplier: CGFloat) {
     // get percentage
     let widthP = (self.size.width/self.viewPortSize.width)
     let heightP = (self.size.height/self.viewPortSize.height)
