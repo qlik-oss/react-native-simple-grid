@@ -283,14 +283,14 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
       }
     }
   }
-  
+
   func setImageLabel(_ col: DataColumn, cell: DataCell) {
-    if(setLabelFromStyle(style: "imageLabel", col: col, cell: cell)) {
-      return;
+    if setLabelFromStyle(style: "imageLabel", col: col, cell: cell) {
+      return
     }
-    let _ = setLabelFromStyle(style: "imageUrl", col: col, cell: cell)
+    _ = setLabelFromStyle(style: "imageUrl", col: col, cell: cell)
   }
-  
+
   func setLabelFromStyle(style: String, col: DataColumn, cell: DataCell) -> Bool {
     if let imageIndex = col.stylingInfo?.firstIndex(of: style) {
       if let text = cell.qAttrExps?.qValues?[imageIndex].qText {
