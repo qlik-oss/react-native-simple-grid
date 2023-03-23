@@ -116,9 +116,9 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
     controller.setMenuVisible(false, animated: true)
     self.resignFirstResponder()
   }
-  
+
   func copySVGToClipBoard(format: UIGraphicsImageRendererFormat) {
-    
+
     let newSize = CGSize(width: frame.size.width * format.scale, height: frame.size.height *  format.scale)
     let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
     let renderer = UIGraphicsImageRenderer(size: newSize, format: format)
@@ -129,7 +129,7 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
 
     let board = UIPasteboard.general
     board.image = img
-   
+
   }
 
   @objc func handleExpand(_ controller: UIMenuController) {
@@ -397,7 +397,7 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
     guard let context = UIGraphicsGetCurrentContext() else { return }
     drawSVG(context, rect: rect, paddingMultplier: 1.0)
   }
-  
+
   func drawSVG(_ context: CGContext, rect: CGRect, paddingMultplier: CGFloat) {
     if let svgCoder = svgCoder {
       let clipRect = rect.insetBy(dx: svgCoder.padding, dy: 0)
