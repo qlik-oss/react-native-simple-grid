@@ -1,3 +1,15 @@
+## [1.2.16](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.15...v1.2.16) (2023-03-23)
+
+
+### Bug Fixes
+
+* lint issues ([6244129](https://github.com/qlik-oss/react-native-simple-grid/commit/624412903a89e5203f60c90038e377c056fe35bf))
+* lint issues ([f58aec6](https://github.com/qlik-oss/react-native-simple-grid/commit/f58aec65cbe03b15e84a85c6be86cc8fdef2f2f9))
+* **MD-4210:** check for image type in text when in viewdata ([3abcb5a](https://github.com/qlik-oss/react-native-simple-grid/commit/3abcb5af221449f763d137a86107756d1056f4dd))
+* **MD-4218:** copy paste svg android ([6dff211](https://github.com/qlik-oss/react-native-simple-grid/commit/6dff2112c809f9932303fbe0034d41de3bd7b6f0))
+* **MD-4218:** copy paste svg iOS ([14c162c](https://github.com/qlik-oss/react-native-simple-grid/commit/14c162ca508102f814b371296ce1d3ec78101a3a))
+* **MD-4219:** check for view data ([72f5e4c](https://github.com/qlik-oss/react-native-simple-grid/commit/72f5e4c6e7defe124c2feb36d902cb1363fc88a1))
+
 ## [1.2.15](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.14...v1.2.15) (2023-03-21)
 
 
