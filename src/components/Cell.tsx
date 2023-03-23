@@ -37,7 +37,7 @@ const Cell: React.FC<CellProps> = ({ rowData, colData, style, viewData }) => {
       return <UrlCell rowData={rowData} colData={colData} />;
     }
     return <TextCell rowData={rowData} colData={colData} />;
-  }, [rowData, colData]);
+  }, [colData, viewData, rowData]);
 
   return <View style={style}>{getCell()}</View>;
 };

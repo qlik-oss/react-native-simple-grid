@@ -121,7 +121,7 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
         });
       } catch (error) {}
     },
-    [expandCell, translations.headerValues]
+    [expandCell, layout?.isDataView, translations.headerValues]
   );
 
   const signalSearch = useCallback(
