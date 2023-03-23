@@ -143,6 +143,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         SVG svg = SVG.getFromString(svgXML);
         Drawable drawable = new PictureDrawable(svg.renderToPicture());
         imageView.setImageDrawable(drawable);
+        imageView.setPadding((int) PixelUtils.dpToPx(8), 0, (int) PixelUtils.dpToPx(8), 0);
       } catch (Exception exception) {
         Log.e("Image", exception.getMessage());
       }
