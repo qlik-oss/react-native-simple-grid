@@ -1,3 +1,10 @@
+## [1.2.17](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.16...v1.2.17) (2023-03-24)
+
+
+### Bug Fixes
+
+* **MD-4222:** add padding to imageView if it's svg ([d2e710c](https://github.com/qlik-oss/react-native-simple-grid/commit/d2e710ca4289aacb42a5fe21e287a1096a8e86d9))
+
 ## [1.2.16](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.15...v1.2.16) (2023-03-23)
 
 
