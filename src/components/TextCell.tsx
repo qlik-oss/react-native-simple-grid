@@ -63,7 +63,7 @@ const TextCell: React.FC<TextCellProps> = ({ rowData, colData }) => {
           style={[styles.icon]}
           name={iconStyle.name}
           color={iconStyle.color}
-          size={16}
+          size={20}
         />
       ) : null}
     </View>
@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginLeft: 8,
+    alignSelf: 'center',
   },
 });
 

@@ -15,7 +15,7 @@ class ColumnResizerView: UIView {
   var centerConstraint = NSLayoutConstraint()
   var index = 0
   var linePath = UIBezierPath()
-  var lineWidth:CGFloat = 1.0
+  var lineWidth: CGFloat = 1.0
   weak var tableView: TableView?
   weak var adjacentTable: TableView?
   weak var button: ResizerButtonView?
