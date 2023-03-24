@@ -159,7 +159,7 @@ class TableViewFactory {
     resizer.headerView = firstColumnTableView.headerView
     resizer.totalsView = firstColumnTableView.totalView
     resizer.selectionsBand = firstColumnTableView.dataCollectionView?.selectionBand
-
+    resizer.lineWidth = 2.0
     resizer.translatesAutoresizingMaskIntoConstraints = false
     resizer.borderColor = ColorParser.fromCSS(cssString: containerView.tableTheme?.borderBackgroundColor ?? "lightgray")
     containerView.hScrollViewDelegate.grabber = resizer
