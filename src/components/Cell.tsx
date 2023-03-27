@@ -15,7 +15,7 @@ export type CellProps = {
 
 const Cell: React.FC<CellProps> = ({ rowData, colData, style, viewData }) => {
   const getCell = useCallback(() => {
-    if (colData.representation.type === 'miniChart') {
+    if (colData.representation.type === 'miniChart' && !viewData) {
       return (
         <MiniChart
           style={styles.miniChart}
