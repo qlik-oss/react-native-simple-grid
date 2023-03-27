@@ -316,6 +316,9 @@ public class TableView extends FrameLayout {
     if(recyclerView != null) {
       recyclerView.updateHitRect(w, h);
     }
+    if(firstColumnView != null) {
+      firstColumnView.updateHitRect(w, h);
+    }
   }
 
   void createRecyclerView() {
