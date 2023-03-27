@@ -285,6 +285,13 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   }
 
   func setImageLabel(_ col: DataColumn, cell: DataCell) {
+    if let qText = cell.qText {
+      if qText.starts(with: "data:image/svg+xml") {
+        self.text = qText
+        return
+      }
+    }
+    
     if setLabelFromStyle(style: "imageLabel", col: col, cell: cell) {
       return
     }
@@ -292,6 +299,8 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   }
 
   func setLabelFromStyle(style: String, col: DataColumn, cell: DataCell) -> Bool {
+    
+    
     if let imageIndex = col.stylingInfo?.firstIndex(of: style) {
       if let text = cell.qAttrExps?.qValues?[imageIndex].qText {
         self.text = text
