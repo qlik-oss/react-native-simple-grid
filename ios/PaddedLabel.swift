@@ -291,7 +291,7 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
         return
       }
     }
-    
+
     if setLabelFromStyle(style: "imageLabel", col: col, cell: cell) {
       return
     }
@@ -299,8 +299,7 @@ class PaddedLabel: UILabel, SelectionsListener, ConstraintCellProtocol {
   }
 
   func setLabelFromStyle(style: String, col: DataColumn, cell: DataCell) -> Bool {
-    
-    
+
     if let imageIndex = col.stylingInfo?.firstIndex(of: style) {
       if let text = cell.qAttrExps?.qValues?[imageIndex].qText {
         self.text = text

@@ -29,7 +29,7 @@ class TotalCellsView: UIView {
       textView.removeFromSuperview()
     }
     let view = UILabel()
-    view.text = "NA"
+    view.text = ""
     view.textAlignment = .right
     view.font = UIFont.systemFont(ofSize: 14)
     addSubview(view)
