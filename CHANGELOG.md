@@ -1,3 +1,10 @@
+## [1.2.18](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.17...v1.2.18) (2023-03-29)
+
+
+### Bug Fixes
+
+* **MD-4117:** increase line wdith ([#247](https://github.com/qlik-oss/react-native-simple-grid/issues/247)) ([108b4b2](https://github.com/qlik-oss/react-native-simple-grid/commit/108b4b277be3c0e73694930f66d1714adc03a37a))
+
 ## [1.2.17](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.16...v1.2.17) (2023-03-24)
 
 
