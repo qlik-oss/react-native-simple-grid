@@ -28,6 +28,16 @@ const iconMap = new Map([
   ['dot', 'circle'],
 ]);
 
+const extractText = ({rowData, colData}) => {
+  if(colData.representation?.type === 'image') {
+    const index = colData.stylingInfo?.findIndex((item: any) => item === 'imageLabel');
+    if (index !== -1 && index < rowData.qAttrExps?.qValues?.length) {
+      return rowData.qAttrExps.qValues[index].qText; 
+    }
+  }
+  return rowData.qText;
+}
+
 const TextCell: React.FC<TextCellProps> = ({ rowData, colData }) => {
   const extendedTextStyle = useMemo(() => {
     let color;
@@ -57,13 +67,13 @@ const TextCell: React.FC<TextCellProps> = ({ rowData, colData }) => {
 
   return (
     <View style={styles.textRow}>
-      <Text style={[styles.textCol2, extendedTextStyle]}>{rowData.qText}</Text>
+      <Text style={[styles.textCol2, extendedTextStyle]}>{extractText({rowData, colData})}</Text>
       {iconStyle?.name ? (
         <MaterialIcons
           style={[styles.icon]}
           name={iconStyle.name}
           color={iconStyle.color}
-          size={16}
+          size={20}
         />
       ) : null}
     </View>
@@ -88,6 +98,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginLeft: 8,
+    alignSelf: 'center',
   },
 });
 

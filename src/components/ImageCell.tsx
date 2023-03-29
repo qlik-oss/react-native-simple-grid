@@ -11,7 +11,6 @@ export type ImageCellProps = {
 };
 
 const ImageCell: React.FC<ImageCellProps> = ({ rowData, colData, style }) => {
-  console.log('row data', rowData);
   const imageUrl = useMemo(() => {
     if (colData?.representation?.imageSetting === 'label') {
       return rowData.qText;
@@ -23,8 +22,6 @@ const ImageCell: React.FC<ImageCellProps> = ({ rowData, colData, style }) => {
     return rowData.qText;
   }, [colData, rowData]);
 
-  console.log(rowData);
-
   const xmlSVG = useMemo(() => {
     if (rowData?.qText?.startsWith('data:image/svg+xml,')) {
       return rowData.qText.substring('data:image/svg+xml,'.length);
@@ -32,7 +29,6 @@ const ImageCell: React.FC<ImageCellProps> = ({ rowData, colData, style }) => {
     return null;
   }, [rowData]);
 
-  console.log(xmlSVG);
   return (
     <View style={style}>
       {xmlSVG !== null ? (
