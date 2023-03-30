@@ -85,7 +85,7 @@ public class ColumnWidths {
   public int resizeColumnByAverage(DataColumn column, List<DataRow> rows, boolean shouldAddWidth, float frameWidth) {
     int runningTotal = 0;
     Paint paint = new Paint();
-    if(column != null ) {
+    if(column != null  && rows != null) {
       for (DataRow row : rows) {
         if (row != null) {
           String text = column.columnIndex < row.cells.size() ? row.cells.get(column.columnIndex).qText : null;

@@ -225,12 +225,12 @@ public class DataProvider extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       return;
     }
 
-    dataColumns = dataColumns.stream().peek(col -> {
-      DataColumn column = dataColumns.stream()
-        .filter(dataCol -> dataCol.dataColIdx == col.dataColIdx)
-        .findAny()
-        .orElse(col);
-      col.width = column.width == 0 ? columnWidths.resizeColumnByAverage(column, rows, true, tableView.totalWidth) : column.width;
+    dataColumns = cols.stream().peek(col -> {
+        DataColumn column = cols.stream()
+          .filter(dataCol -> dataCol.dataColIdx == col.dataColIdx)
+          .findAny()
+          .orElse(col);
+          col.width = column.width == 0 ? columnWidths.resizeColumnByAverage(column, rows, true, tableView.totalWidth) : column.width;
     }).collect(Collectors.toList());
   }
 
