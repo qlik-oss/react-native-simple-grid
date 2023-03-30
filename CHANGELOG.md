@@ -1,3 +1,10 @@
+## [1.2.20](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.19...v1.2.20) (2023-03-30)
+
+
+### Bug Fixes
+
+* **MD-4227:** update naming ([#256](https://github.com/qlik-oss/react-native-simple-grid/issues/256)) ([bb178b8](https://github.com/qlik-oss/react-native-simple-grid/commit/bb178b838d986f0ab4c7e5f64f53f22faa55cea7))
+
 ## [1.2.19](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.18...v1.2.19) (2023-03-30)
 
 
