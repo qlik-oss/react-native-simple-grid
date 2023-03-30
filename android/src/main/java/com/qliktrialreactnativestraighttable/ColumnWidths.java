@@ -85,32 +85,35 @@ public class ColumnWidths {
   public int resizeColumnByAverage(DataColumn column, List<DataRow> rows, boolean shouldAddWidth, float frameWidth) {
     int runningTotal = 0;
     Paint paint = new Paint();
-    for(DataRow row : rows) {
-      if (row != null) {
-        String text = column.columnIndex < row.cells.size() ? row.cells.get(column.columnIndex).qText : null;
-        if(text != null) {
-          runningTotal += text.length();
-        } else {
-          // give it something
-          runningTotal += DataProvider.minWidth;
+    if(column != null ) {
+      for (DataRow row : rows) {
+        if (row != null) {
+          String text = column.columnIndex < row.cells.size() ? row.cells.get(column.columnIndex).qText : null;
+          if (text != null) {
+            runningTotal += text.length();
+          } else {
+            // give it something
+            runningTotal += DataProvider.minWidth;
+          }
         }
       }
-    }
 
-    int averageTextSize = rows.size() > 0 ? runningTotal / rows.size() : 1;
-    // Create a string with max text
-    String tempString = new String(new char[averageTextSize]).replace("\0", "X");
-    if(column.representation.type.equals("image")) {
-      return (int) (DataProvider.minWidth * 1.5f);
-    }
+      int averageTextSize = rows.size() > 0 ? runningTotal / rows.size() : 1;
+      // Create a string with max text
+      String tempString = new String(new char[averageTextSize]).replace("\0", "X");
+      if (column.representation.type.equals("image")) {
+        return (int) (DataProvider.minWidth * 1.5f);
+      }
 
-    float width = paint.measureText(tempString, 0, tempString.length());
-    width = Math.max(DataProvider.minWidth * 1.5f, PixelUtils.dpToPx(width));
-    width = Math.min(width, frameWidth * 0.75f);
-    if(shouldAddWidth) {
-      widths.add((int)width);
+      float width = paint.measureText(tempString, 0, tempString.length());
+      width = Math.max(DataProvider.minWidth * 1.5f, PixelUtils.dpToPx(width));
+      width = Math.min(width, frameWidth * 0.75f);
+      if (shouldAddWidth) {
+        widths.add((int) width);
+      }
+      return (int) width;
     }
-    return (int)width;
+    return 0;
   }
 
   public void updateWidths(List<DataColumn> columns) {
