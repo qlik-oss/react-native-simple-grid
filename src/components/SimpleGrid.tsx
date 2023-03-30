@@ -30,7 +30,7 @@ export type SimpleGridProps = {
     isDataView: boolean;
     totals: any;
     qInfo: {
-      name?: string
+      name?: string;
     },
     qHyperCube: {
       qGrandTotalRow: number;
