@@ -31,7 +31,7 @@ export type SimpleGridProps = {
     totals: any;
     qInfo: {
       name?: string;
-    },
+    };
     qHyperCube: {
       qGrandTotalRow: number;
       qSize: number;
