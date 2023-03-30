@@ -29,6 +29,9 @@ export type SimpleGridProps = {
     scrolling: ScrollingProps;
     isDataView: boolean;
     totals: any;
+    qInfo: {
+      name?: string;
+    };
     qHyperCube: {
       qGrandTotalRow: number;
       qSize: number;
@@ -225,7 +228,7 @@ const SimpleGrid: React.FC<SimpleGridProps> = ({
       freezeFirstColumn={layout?.scrolling?.keepFirstColumnInView}
       cellContentStyle={contentStyle.cellStyle}
       headerContentStyle={contentStyle.headerStyle}
-      name={name}
+      name={layout?.qInfo?.name || name}
       isDataView={layout?.isDataView}
       translations={translations}
       onExpandCell={onExpandCell}
