@@ -200,43 +200,45 @@ public class TableView extends FrameLayout {
   }
 
   public void setDataColumns(List<DataColumn> cols) {
-    dataProvider.setDataColumns(cols);
-    columnWidths.updateWidths(cols);
+    if(cols != null) {
+      dataProvider.setDataColumns(cols);
+      columnWidths.updateWidths(cols);
 
-    TotalsView totalsView = getTotalsView();
-    if(totalsView != null) {
-      totalsView.updateTotals(cols, dataProvider);
-    }
-
-    if(headerView != null) {
-      // Create new headers & grabbers when there are new columns
-      int headerCellCount = headerView.getChildCount();
-      if(dataProvider.dataColumns.size() > headerCellCount) {
-        tableViewFactory.createMoreGrabbers(dataProvider.dataColumns.size() - headerCellCount);
-        for(int i = headerCellCount; i < dataProvider.dataColumns.size(); i++) {
-          DataColumn column = dataProvider.dataColumns.get(i);
-          HeaderCell headerCell = HeaderViewFactory.createHeaderCell(getContext(), column, headerContentStyle, this);
-          LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
-          headerView.addView(headerCell, layoutParams);
-        }
-      } else {
-        headerView.removeViews(dataProvider.dataColumns.size(), headerCellCount - dataProvider.dataColumns.size());
-        tableViewFactory.grabbers.subList(dataProvider.dataColumns.size(), tableViewFactory.grabbers.size()).forEach(grabber -> {
-          rootLayout.removeView(grabber);
-        });
-        tableViewFactory.grabbers = tableViewFactory.grabbers.subList(0, dataProvider.dataColumns.size());
-        columnWidths.updateWidths();
+      TotalsView totalsView = getTotalsView();
+      if (totalsView != null) {
+        totalsView.updateTotals(cols, dataProvider);
       }
-      headerView.update(cols);
-    }
 
-    if(tableViewFactory.firstColumnHeaderCell != null && cols.size() > 0) {
-      tableViewFactory.firstColumnHeaderCell.setColumn(cols.get(0));
-    }
+      if (headerView != null) {
+        // Create new headers & grabbers when there are new columns
+        int headerCellCount = headerView.getChildCount();
+        if (dataProvider.dataColumns.size() > headerCellCount) {
+          tableViewFactory.createMoreGrabbers(dataProvider.dataColumns.size() - headerCellCount);
+          for (int i = headerCellCount; i < dataProvider.dataColumns.size(); i++) {
+            DataColumn column = dataProvider.dataColumns.get(i);
+            HeaderCell headerCell = HeaderViewFactory.createHeaderCell(getContext(), column, headerContentStyle, this);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
+            headerView.addView(headerCell, layoutParams);
+          }
+        } else {
+          headerView.removeViews(dataProvider.dataColumns.size(), headerCellCount - dataProvider.dataColumns.size());
+          tableViewFactory.grabbers.subList(dataProvider.dataColumns.size(), tableViewFactory.grabbers.size()).forEach(grabber -> {
+            rootLayout.removeView(grabber);
+          });
+          tableViewFactory.grabbers = tableViewFactory.grabbers.subList(0, dataProvider.dataColumns.size());
+          columnWidths.updateWidths();
+        }
+        headerView.update(cols);
+      }
 
-    if(grabbers != null) {
-      for(GrabberView grabberView : grabbers) {
-        grabberView.setDataProvider(dataProvider);
+      if (tableViewFactory.firstColumnHeaderCell != null && cols.size() > 0) {
+        tableViewFactory.firstColumnHeaderCell.setColumn(cols.get(0));
+      }
+
+      if (grabbers != null) {
+        for (GrabberView grabberView : grabbers) {
+          grabberView.setDataProvider(dataProvider);
+        }
       }
     }
   }
