@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.1.0" type="baseline" client="gradle" dependencies="true" name="AGP (7.1.0)" variant="all" version="7.1.0">
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.tools.build:gradle than 7.1.0 is available: 7.4.2. (There is also a newer version of 7.1.𝑥 available, if upgrading to 7.4.2 is difficult: 7.1.3)"
+        errorLine1="        classpath(&quot;com.android.tools.build:gradle:7.1.0&quot;)"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="13"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw operations: Use `Canvas.getClipBounds(Rect)` instead of `Canvas.getClipBounds()` which allocates a temporary `Rect`"
+        errorLine1="    Rect rect = canvas.getClipBounds();"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/ScreenGuideView.java"
+            line="51"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="            dataProvider.notifyDataSetChanged();"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/CustomRecyclerView.java"
+            line="235"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="    dataProvider.notifyDataSetChanged();"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/TableViewFactory.java"
+            line="87"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_baseline_arrow_downward_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_baseline_arrow_downward_24.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_baseline_arrow_drop_down_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_baseline_arrow_drop_down_24.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_baseline_arrow_drop_up_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_baseline_arrow_drop_up_24.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_baseline_arrow_upward_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_baseline_arrow_upward_24.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `CellView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class CellView extends RelativeLayout implements SelectionsObserver {"
+        errorLine2="             ~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/CellView.java"
+            line="26"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `ClickableImageView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class ClickableImageView extends androidx.appcompat.widget.AppCompatImageView implements Content {"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/ClickableImageView.java"
+            line="30"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `ClickableTextView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class ClickableTextView extends androidx.appcompat.widget.AppCompatTextView implements Content {"
+        errorLine2="             ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/ClickableTextView.java"
+            line="19"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `CustomHorizontalScrollView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class CustomHorizontalScrollView extends HorizontalScrollView {"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/CustomHorizontalScrollView.java"
+            line="16"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `CustomRecyclerView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class CustomRecyclerView extends RecyclerView {"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/CustomRecyclerView.java"
+            line="23"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `DragBox` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class DragBox extends View {"
+        errorLine2="             ~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/DragBox.java"
+            line="17"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `GrabberView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class GrabberView extends LinearLayout {"
+        errorLine2="             ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/GrabberView.java"
+            line="18"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `HeaderCell` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class HeaderCell extends LinearLayout {"
+        errorLine2="             ~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/HeaderCell.java"
+            line="21"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `HeaderView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class HeaderView extends AutoLinearLayout{"
+        errorLine2="             ~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/HeaderView.java"
+            line="11"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `RowCountView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class RowCountView extends RelativeLayout {"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/RowCountView.java"
+            line="18"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `TableView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class TableView extends FrameLayout {"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/TableView.java"
+            line="33"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `TotalsView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class TotalsView extends AutoLinearLayout{"
+        errorLine2="             ~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/TotalsView.java"
+            line="14"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `TotalsViewCell` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class TotalsViewCell extends androidx.appcompat.widget.AppCompatTextView {"
+        errorLine2="             ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/TotalsViewCell.java"
+            line="12"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `CellView` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="  public boolean onTouchEvent(MotionEvent event) {"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/CellView.java"
+            line="121"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``DragBox`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="    this.setOnTouchListener(new DragBox.TouchListener());"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/DragBox.java"
+            line="36"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`TouchListener#onTouch` should call `View#performClick` when a click is detected"
+        errorLine1="    public boolean onTouch(View view, MotionEvent event) {"
+        errorLine2="                   ~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/DragBox.java"
+            line="106"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`TouchListener#onTouch` should call `View#performClick` when a click is detected"
+        errorLine1="    public boolean onTouch(View view, MotionEvent motionEvent) {"
+        errorLine2="                   ~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/GrabberView.java"
+            line="42"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``GrabberButton`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="    grabberButton.setOnTouchListener(new TouchListener());"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/GrabberView.java"
+            line="122"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `HeaderCell` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="  public boolean onTouchEvent(@NonNull MotionEvent e) {"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/qliktrialreactnativestraighttable/HeaderCell.java"
+            line="106"
+            column="18"/>
+    </issue>
+
+</issues>

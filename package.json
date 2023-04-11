@@ -5,9 +5,10 @@
   "main": "src/index",
   "scripts": {
     "test": "jest",
-    "ts-check": "npx tsc",
-    "lint": "yarn eslint && yarn swiftlint && yarn javalint",
-    "eslint": "npx eslint ./ --max-warnings=0",
+    "build": "yarn tsc",
+    "ts-check": "yarn tsc --noEmit",
+    "lint": "yarn jslint && yarn swiftlint && yarn javalint",
+    "jslint": "yarn eslint ./ --max-warnings=0",
     "swiftlint": "cd ios && swiftlint --strict",
     "javalint": "cd android && ./gradlew lint -x compileDebugJavaWithJavac",
     "ci:install": "yarn install --frozen-lockfile",
@@ -79,5 +80,6 @@
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
     ]
-  }
+  },
+  "packageManager": "yarn@1.22.19"
 }
