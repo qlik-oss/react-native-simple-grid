@@ -39,6 +39,7 @@ android {
         }
     }
     lintOptions {
+        baseline file("lint-baseline.xml")
         disable 'GradleDependency'
         checkDependencies true
         ignoreTestSources true
