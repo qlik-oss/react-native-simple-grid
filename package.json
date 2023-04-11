@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "yarn tsc",
+    "checks": "yarn ts-check && yarn jslint && yarn swiftlint && yarn javalint",
     "ts-check": "yarn tsc --noEmit",
-    "lint": "yarn jslint && yarn swiftlint && yarn javalint",
     "jslint": "yarn eslint ./ --max-warnings=0",
     "swiftlint": "cd ios && swiftlint --strict",
     "javalint": "cd android && ./gradlew lint -x compileDebugJavaWithJavac",
