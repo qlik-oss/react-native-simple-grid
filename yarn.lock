@@ -1692,9 +1692,9 @@
     config-chain "^1.1.11"
 
 "@qlik/react-native-carbon@^2.1.16":
-  version "2.1.20"
-  resolved "https://registry.yarnpkg.com/@qlik/react-native-carbon/-/react-native-carbon-2.1.20.tgz#331bc22f6067da2e5b24e8ae16600b6c3316e691"
-  integrity sha512-tLzZw+4tV16EZPiVue0DL2xKTWlxN3keh6OkzZnViH5DUbCAFgWSBPy5KxQ0K9Z5IBWQbGrrislCsA+ywNbTMA==
+  version "2.1.21"
+  resolved "https://registry.yarnpkg.com/@qlik/react-native-carbon/-/react-native-carbon-2.1.21.tgz#b5e035feece59871f5258f2c060d7fb2a21d533c"
+  integrity sha512-AXxARP3DnuQx3HZEs1LqPDp3y0/NP6lup//5OWjZZD4+IyCp9VuDlRDjlFi9P7sEel5xwa43wIo8LRhOhqv+jg==
 
 "@react-native-community/cli-debugger-ui@^5.0.1":
   version "5.0.1"
