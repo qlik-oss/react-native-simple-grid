@@ -134,7 +134,7 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       }
 
       TableView tableView = (TableView) (view);
-      if(processRows(tableView, source)) {
+      if(!processRows(tableView, source)) {
         // prevent table from being initialized if data is invalid.
         return;
       }
