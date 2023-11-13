@@ -9,7 +9,6 @@ import Foundation
 class MultiColumnResizer: ColumnResizerView {
 
   var adjacentGrabber: MultiColumnResizer?
-  // swiftlint:disable unneeded_override
   override init( _ columnWidths: ColumnWidths, index: Int, bindTo bindedTableView: TableView) {
     super.init(columnWidths, index: index, bindTo: bindedTableView)
   }
