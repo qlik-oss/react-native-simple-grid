@@ -44,14 +44,16 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       return new TableView(reactContext);
     }
 
-    private void processRows(TableView tableView, ReadableMap rows) {
+    private boolean processRows(TableView tableView, ReadableMap rows) {
       ReadableArray dataRows = rows.getArray("rows");
       if(dataRows != null) {
         boolean resetData = rows.getBoolean("reset");
         RowFactory factory = new RowFactory(dataRows, tableView.getColumns());
         List<DataRow> transformedRows = factory.getRows();
         tableView.setRows(transformedRows, resetData);
+        return true;
       }
+      return false;
     }
 
     private List<DataColumn> processColumns(TableView tableView, ReadableMap cols) {
@@ -132,7 +134,10 @@ public class ReactNativeStraightTableViewManager extends SimpleViewManager<View>
       }
 
       TableView tableView = (TableView) (view);
-      processRows(tableView, source);
+      if(processRows(tableView, source)) {
+        // prevent table from being initialized if data is invalid.
+        return;
+      }
       if(tableView.needsReset) {
         tableView.initialize();
       }
