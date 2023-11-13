@@ -10,10 +10,6 @@ class MultiColumnResizer: ColumnResizerView {
 
   var adjacentGrabber: MultiColumnResizer?
 
-  override init( _ columnWidths: ColumnWidths, index: Int, bindTo bindedTableView: TableView) {
-    super.init(columnWidths, index: index, bindTo: bindedTableView)
-  }
-
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
