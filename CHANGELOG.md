@@ -1,3 +1,10 @@
+## [1.2.21](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.20...v1.2.21) (2023-11-13)
+
+
+### Bug Fixes
+
+* **QB-23259:** check for valid data when rows are submitted ([#291](https://github.com/qlik-oss/react-native-simple-grid/issues/291)) ([3f64470](https://github.com/qlik-oss/react-native-simple-grid/commit/3f64470a1ebc0f2282110275cf86cfc244c97bdb))
+
 ## [1.2.20](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.19...v1.2.20) (2023-03-30)
 
 
