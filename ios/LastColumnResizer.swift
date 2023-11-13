@@ -7,6 +7,10 @@
 
 import Foundation
 class LastColumnResizer: MultiColumnResizer {
+  override init(_ columnWidths: ColumnWidths, index: Int, bindTo bindedTableView: TableView) {
+    super.init(columnWidths, index: index, bindTo: bindedTableView)
+  }
+
   override func didPan(_ translation: CGPoint) {
     guard let tableView = self.tableView else { return }
     guard let data = tableView.dataCollectionView else { return }
