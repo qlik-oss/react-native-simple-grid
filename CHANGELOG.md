@@ -1,3 +1,10 @@
+## [1.2.22](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.21...v1.2.22) (2023-11-13)
+
+
+### Bug Fixes
+
+* add deprecation warning ([939c3f1](https://github.com/qlik-oss/react-native-simple-grid/commit/939c3f15ffd3e5c1ac7525b69caf1e7b26ec5ae9))
+
 ## [1.2.21](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.20...v1.2.21) (2023-11-13)
 
 
