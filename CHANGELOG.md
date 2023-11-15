@@ -1,3 +1,10 @@
+## [1.2.23](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.22...v1.2.23) (2023-11-15)
+
+
+### Bug Fixes
+
+* android table crash when invalid json ([#293](https://github.com/qlik-oss/react-native-simple-grid/issues/293)) ([612d937](https://github.com/qlik-oss/react-native-simple-grid/commit/612d9377cfb104eac8495502c5794b861e6e603f))
+
 ## [1.2.22](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.21...v1.2.22) (2023-11-13)
 
 
