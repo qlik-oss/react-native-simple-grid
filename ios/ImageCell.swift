@@ -23,6 +23,7 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
   let selectedBackgroundColor = ColorParser.fromCSS(cssString: "#009845")
   var prevBackgroundColor = UIColor.clear
   var svgCoder: SvgCoder?
+  var cellImageUrl: String?
 
   init( selectionBand: SelectionBand?) {
     self.selectionBand = selectionBand
@@ -143,19 +144,28 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
     self.representation = rep
     self.cell = data
 
+    self.imageView?.removeFromSuperview()
+    self.imageView = nil
+    self.selected = self.selectionsEngine?.contains(data) ?? false
+    updateBackground(animated: false)
+
     guard let urlString = getUrlString(data: data, representedAs: rep, index: index) else { return }
     if urlString.starts(with: "data:image/svg+xml,<svg") {
       svgCoder = SvgCoder(urlString, with: self.frame.size)
     } else {
       guard let url = URL(string: urlString) else {return}
-      if let downloadedImage = SDImageCache.shared.imageFromCache(forKey: urlString) {
-        self.displayImage(with: downloadedImage)
+      cellImageUrl = urlString
+      if let downloadedImage = SDImageCache.shared.imageFromCache(
+        forKey: SDWebImageManager.shared.cacheKey(for: url)) {
+          self.displayImage(with: downloadedImage, forUrl: urlString)
       } else {
         SDWebImageDownloader.shared.downloadImage(with: url) {(image, _, _, _) in
           if let image = image {
             DispatchQueue.main.async {
-              self.displayImage(with: image)
+                self.displayImage(with: image, forUrl: urlString)
             }
+
+            SDImageCache.shared.storeImage(toMemory: image, forKey: SDWebImageManager.shared.cacheKey(for: url))
           }
         }
       }
@@ -184,8 +194,11 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
     super.layoutSubviews()
   }
 
-  func displayImage(with image: UIImage) {
-    if self.imageView == nil {
+  func displayImage(with image: UIImage, forUrl: String) {
+    if forUrl == cellImageUrl {
+      self.imageView?.removeFromSuperview()
+      self.imageView = nil
+
       let imageView = UIImageView()
       imageView.image = image
       addSubview(imageView)
@@ -253,7 +266,6 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
 
       NSLayoutConstraint.activate(constraints)
       addConstraints(constraints)
-
     }
   }
 
@@ -288,6 +300,7 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
   func setupConstraints(imageView: UIImageView) {
     imageView.translatesAutoresizingMaskIntoConstraints = false
     guard let rep = self.representation else { return }
+
     if rep.imageSize == "fitHeight" {
       fitToHeight(imageView, rep)
     } else if rep.imageSize == "alwaysFit" {
@@ -383,8 +396,13 @@ class ImageCell: UIView, ConstraintCellProtocol, SelectionsListener {
     }
   }
 
-  fileprivate func updateBackground() {
-    animateBackgroundColor(to: selected ? selectedBackgroundColor : prevBackgroundColor)
+  fileprivate func updateBackground(animated: Bool = true) {
+    let color = selected ? selectedBackgroundColor : prevBackgroundColor
+    if animated {
+      animateBackgroundColor(to: color)
+    } else {
+      self.layer.backgroundColor = color.cgColor
+    }
   }
 
   fileprivate func animateBackgroundColor(to: UIColor) {
