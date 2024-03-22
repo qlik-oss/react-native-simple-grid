@@ -1,3 +1,10 @@
+## [1.2.24](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.23...v1.2.24) (2024-03-22)
+
+
+### Bug Fixes
+
+* **QB-23425:** ensure images do not repeat and image caching is used ([#294](https://github.com/qlik-oss/react-native-simple-grid/issues/294)) ([7305525](https://github.com/qlik-oss/react-native-simple-grid/commit/730552581a11eeba41878ce95c00c846e22f4274))
+
 ## [1.2.23](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.22...v1.2.23) (2023-11-15)
 
 
