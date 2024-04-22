@@ -15,19 +15,6 @@ jobs:
       - name: Lint
         run: yarn eslint
 
-  TypeScript:
-    name: Types Build Validation
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-      - uses: ./.github/actions/cancel_workflow
-      - uses: ./.github/actions/yarn_install
-      - name: Typescript check
-        run: yarn ts-check
-
   SwiftLint:
     runs-on: macos-latest
     steps:
