@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@nebula.js/sn-table": "file:../../prebuilt/nebula.js-react-native-sn-table-1.14.121.tgz",
+    "@nebula.js/sn-table": "file:../../packages/react-native-sn-table",
     "@nebula.js/stardust": "2.9.0",
     "@qlik/carbon-core": "2.0.4",
     "@qlik/react-native-carbon": "2.1.18",
@@ -59,6 +59,7 @@
     "babel-jest": "26.6.3",
     "eslint": "7.32.0",
     "jest": "26.6.3",
+    "jest-environment-jsdom": "^29.7.0",
     "metro-react-native-babel-preset": "0.67.0",
     "react-test-renderer": "17.0.2",
     "typescript": "4.7.3"
