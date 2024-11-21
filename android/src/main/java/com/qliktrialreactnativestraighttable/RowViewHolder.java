@@ -148,7 +148,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         Log.e("Image", exception.getMessage());
       }
     }else {
-      Glide.with(cellView.getContext()).load(cell.qText).into(imageView);
+      Glide.with(cellView.getContext()).load(cell.qText).diskCacheStrategy(diskCacheStrategy.DATA).into(imageView);
     }
   }
 
