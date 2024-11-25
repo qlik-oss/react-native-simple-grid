@@ -22,6 +22,8 @@ jobs:
         with:
           fetch-depth: 1
       - uses: ./.github/actions/cancel_workflow
+      - name: Install SwiftLint
+        run: brew install swiftlint
       - name: swiftlint
         run: |
           function stripPWD() {
