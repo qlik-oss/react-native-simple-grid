@@ -1,0 +1,442 @@
+{
+  "SNTable_Accessibility_NavigationInstructions": {
+    "id": "SNTable.Accessibility.NavigationInstructions",
+    "locale": {
+      "de-DE": "Verwenden Sie die Pfeiltasten, um in den Tabellenzellen zu navigieren, und die Tabulatortaste, um zu den Paginierungssteuerungen zu wechseln. Alle Angaben zur Tastaturnavigation finden Sie in der Dokumentation.",
+      "en-US": "Use arrow keys to navigate in table cells and tab to move to pagination controls. For the full range of keyboard navigation, see the documentation.",
+      "es-ES": "Use las teclas de flecha para navegar en las celdas de la tabla y la pestaña para moverse a los controles de paginación. Para conocer la gama completa de navegación con teclado, consulte la documentación.",
+      "fr-FR": "Utilisez les touches fléchées pour parcourir les cellules du tableau et la tabulation pour accéder aux commandes de pagination. Pour connaître la gamme complète des commandes de navigation au clavier, voir la documentation.",
+      "it-IT": "Utilizzare i tasti freccia per navigare nelle celle della tabella e il tasto TAB per passare ai controlli di paginazione. Per informazioni complete sulla navigazione da tastiera, vedere la documentazione.",
+      "ja-JP": "矢印キーで表のセル内を移動し、タブ キーでページネーション コントロールに移動します。キーボード ナビゲーションの全範囲については、ドキュメントをご覧ください。",
+      "ko-KR": "화살표 키를 사용하여 테이블 셀을 탐색하고 탭을 사용하여 페이지 매김 컨트롤로 이동합니다. 전체 키보드 탐색 범위는 설명서를 참조하십시오.",
+      "nl-NL": "Gebruik de pijltjestoetsen om te navigeren in tabelcellen en de Tab-toets om naar besturingselementen voor paginering te gaan. Raadpleeg de documentatie voor een volledig overzicht van de toetsenbordnavigatie.",
+      "pl-PL": "Użyj klawiszy strzałek do poruszania się po komórkach tabeli oraz tabulatora do poruszania się po elementach sterujących stronami. Pełne informacje o nawigacji przy użyciu klawiatury zawiera dokumentacja.",
+      "pt-BR": "Use as setas para navegar nas células da tabela e Tab para mover para os controles de paginação. Para toda a gama de navegação do teclado, consulte a documentação.",
+      "ru-RU": "Используйте клавиши со стрелками для перемещения по ячейкам таблицы и клавишу табуляции для перехода к элементам управления разбивки на страницы. Полный перечень возможностей навигации с помощью клавиатуры см. в документации.",
+      "sv-SE": "Använd piltangenterna för att navigera i tabellcellerna och tabbtangenten för att flytta till pagineringskontrollerna. Se dokumentationen för komplett information om tangentbordsnavigering.",
+      "tr-TR": "Tablo hücrelerinde gezinmek için ok tuşlarını, sayfalandırma kontrollerine geçmek için sekmeyi kullanın. Tam kapsamlı klavye gezintisi için belgelere bakın.",
+      "zh-CN": "使用箭头键在表格单元格中导航，使用 tab 键移动到分页控件。有关键盘导航的完整范围，请参阅文档。",
+      "zh-TW": "使用方向鍵以在表格儲存格中導覽，並使用 Tab 以前往分頁控制。如需完整的鍵盤導覽，請參閱文件。"
+    }
+  },
+  "SNTable_Accessibility_RowsAndColumns": {
+    "id": "SNTable.Accessibility.RowsAndColumns",
+    "locale": {
+      "de-DE": "Es werden {0} Zeilen und {1} Spalten angezeigt.",
+      "en-US": "Showing {0} rows and {1} columns.",
+      "es-ES": "Mostrando {0} filas y {1} columnas.",
+      "fr-FR": "Affichage de {0} lignes et de {1} colonnes.",
+      "it-IT": "Visualizzazione di {0} righe e {1} colonne.",
+      "ja-JP": "{0} 行 {1} 列を表示しています。",
+      "ko-KR": "{0}개의 행과 {1}개의 열을 표시합니다.",
+      "nl-NL": "{0} rijen en {1} kolommen worden getoond.",
+      "pl-PL": "Wyświetlane wiersze: {0} i kolumny: {1}.",
+      "pt-BR": "Mostrando {0} linhas e {1} colunas.",
+      "ru-RU": "Показаны строки ({0}) и столбцы ({1}).",
+      "sv-SE": "Visar {0} rader och {1} kolumner.",
+      "tr-TR": "{0} satır ve {1} sütun gösteriliyor.",
+      "zh-CN": "正在显示 {0} 行，{1} 列。",
+      "zh-TW": "顯示 {0} 列和 {1} 欄。"
+    }
+  },
+  "SNTable_Pagination_DisplayedRowsLabel": {
+    "id": "SNTable.Pagination.DisplayedRowsLabel",
+    "locale": {
+      "de-DE": "{0} von {1}",
+      "en-US": "{0} of {1}",
+      "es-ES": "{0} de {1}",
+      "fr-FR": "{0} sur {1}",
+      "it-IT": "{0} di {1}",
+      "ja-JP": "{0} / {1}",
+      "ko-KR": "{1}의 {0}",
+      "nl-NL": "{0} van {1}",
+      "pl-PL": "{0} z {1}",
+      "pt-BR": "{0} de {1}",
+      "ru-RU": "{0} из {1}",
+      "sv-SE": "{0} av {1}",
+      "tr-TR": "{0} / {1}",
+      "zh-CN": "{0} / {1}",
+      "zh-TW": "{0} / {1}"
+    }
+  },
+  "SNTable_Pagination_FirstPage": {
+    "id": "SNTable.Pagination.FirstPage",
+    "locale": {
+      "de-DE": "Zur ersten Seite",
+      "en-US": "Go to the first page",
+      "es-ES": "Ir a la primera página",
+      "fr-FR": "Accéder à la première page",
+      "it-IT": "Vai alla prima pagina",
+      "ja-JP": "最初のページに移動",
+      "ko-KR": "첫 페이지로 이동",
+      "nl-NL": "Ga naar de eerste pagina",
+      "pl-PL": "Przejdź do pierwszej strony",
+      "pt-BR": "Ir para a primeira página",
+      "ru-RU": "Перейти к первой странице",
+      "sv-SE": "Gå till första sidan",
+      "tr-TR": "İlk sayfaya git",
+      "zh-CN": "转到第一页",
+      "zh-TW": "移至第一頁"
+    }
+  },
+  "SNTable_Pagination_LastPage": {
+    "id": "SNTable.Pagination.LastPage",
+    "locale": {
+      "de-DE": "Zur letzten Seite",
+      "en-US": "Go to the last page",
+      "es-ES": "Ir a la última página",
+      "fr-FR": "Accéder à la dernière page",
+      "it-IT": "Vai all'ultima pagina",
+      "ja-JP": "最後のページに移動",
+      "ko-KR": "마지막 페이지로 이동",
+      "nl-NL": "Ga naar de laatste pagina",
+      "pl-PL": "Przejdź do ostatniej strony",
+      "pt-BR": "Ir para a última página",
+      "ru-RU": "Перейти к последней странице",
+      "sv-SE": "Gå till sista sidan",
+      "tr-TR": "Son sayfaya git",
+      "zh-CN": "转到最后一页",
+      "zh-TW": "移至最後一頁"
+    }
+  },
+  "SNTable_Pagination_NextPage": {
+    "id": "SNTable.Pagination.NextPage",
+    "locale": {
+      "de-DE": "Zur nächsten Seite",
+      "en-US": "Go to the next page",
+      "es-ES": "Ir a la página siguiente",
+      "fr-FR": "Accéder à la page suivante",
+      "it-IT": "Vai alla pagina successiva",
+      "ja-JP": "次のページに移動",
+      "ko-KR": "다음 페이지로 이동",
+      "nl-NL": "Ga naar de volgende pagina",
+      "pl-PL": "Przejdź do następnej strony",
+      "pt-BR": "Ir para a próxima página",
+      "ru-RU": "Перейти к следующей странице",
+      "sv-SE": "Gå till nästa sida",
+      "tr-TR": "Sonraki sayfaya git",
+      "zh-CN": "转到下一页",
+      "zh-TW": "移至下一頁"
+    }
+  },
+  "SNTable_Pagination_PageStatusReport": {
+    "id": "SNTable.Pagination.PageStatusReport",
+    "locale": {
+      "de-DE": "Die Seite wurde geändert. Seite {0} von {1} wird angezeigt.",
+      "en-US": "Page has changed. Showing page {0} of {1}.",
+      "es-ES": "La página ha cambiado. Mostrando página {0} de {1}.",
+      "fr-FR": "La page a changé. Affichage de la page {0} sur {1}.",
+      "it-IT": "La pagina è cambiata. Visualizzazione pagina {0} di {1}.",
+      "ja-JP": "ページが変更されました。{1} ページ中の {0} ページ目を表示しています。",
+      "ko-KR": "페이지가 변경되었습니다. {1}의 {0} 페이지를 보여 줍니다.",
+      "nl-NL": "Pagina is gewijzigd. Pagina {0} van {1} wordt weergeven.",
+      "pl-PL": "Strona się zmieniła Wyświetlanie strony {0} z {1}.",
+      "pt-BR": "A página mudou. Mostrando página {0} de {1}.",
+      "ru-RU": "Страница изменилась. Показана страница {0} из {1}.",
+      "sv-SE": "Sidan har ändrats. Visar sida {0} av {1}.",
+      "tr-TR": "Sayfa değişti. Sayfa {0} / {1} gösteriliyor.",
+      "zh-CN": "页面已更改。显示页面 {0} / {1}。",
+      "zh-TW": "頁面已變更。顯示第 {0} 頁，共 {1} 頁。"
+    }
+  },
+  "SNTable_Pagination_PreviousPage": {
+    "id": "SNTable.Pagination.PreviousPage",
+    "locale": {
+      "de-DE": "Zur vorherigen Seite",
+      "en-US": "Go to the previous page",
+      "es-ES": "Ir a la página anterior",
+      "fr-FR": "Accéder à la page précédente",
+      "it-IT": "Vai alla pagina precedente",
+      "ja-JP": "前のページに移動",
+      "ko-KR": "이전 페이지로 이동",
+      "nl-NL": "Ga naar de vorige pagina",
+      "pl-PL": "Przejdź do poprzedniej strony",
+      "pt-BR": "Ir para a página anterior",
+      "ru-RU": "Перейти к предыдущей странице",
+      "sv-SE": "Gå till föregående sida",
+      "tr-TR": "Önceki sayfaya git",
+      "zh-CN": "转到前一页",
+      "zh-TW": "移至上一頁"
+    }
+  },
+  "SNTable_Pagination_RowsPerPage": {
+    "id": "SNTable.Pagination.RowsPerPage",
+    "locale": {
+      "de-DE": "Zeilen pro Seite",
+      "en-US": "Rows per page",
+      "es-ES": "Filas por página",
+      "fr-FR": "Lignes par page",
+      "it-IT": "Righe per pagina",
+      "ja-JP": "ページあたりの行数",
+      "ko-KR": "페이지별 행 수",
+      "nl-NL": "Rijen per pagina",
+      "pl-PL": "Wierszy na stronę",
+      "pt-BR": "Linhas por página",
+      "ru-RU": "Строк на странице",
+      "sv-SE": "Rader per sida",
+      "tr-TR": "Sayfa başına satır sayısı",
+      "zh-CN": "每页行数",
+      "zh-TW": "每頁列數"
+    }
+  },
+  "SNTable_Pagination_RowsPerPageChange": {
+    "id": "SNTable.Pagination.RowsPerPageChange",
+    "locale": {
+      "de-DE": "Zeilen pro Seite wurden in {0} geändert. Jetzt wird die erste Seite angezeigt.",
+      "en-US": "Rows per page has changed to {0}. Now showing the first page.",
+      "es-ES": "El número de filas por página ha cambiado a {0}. Mostrando ahora la primera página.",
+      "fr-FR": "Le nombre de lignes par page a été remplacé par {0}. Affichage en cours de la première page.",
+      "it-IT": "Le righe per pagina sono cambiate a {0}. Viene ora mostrata la prima pagina.",
+      "ja-JP": "ページあたりの行数が {0} に変更されました。現在、最初のページを表示しています。",
+      "ko-KR": "페이지당 행 수가 {0}(으)로 변경되었습니다. 이제 첫 페이지를 보여 줍니다.",
+      "nl-NL": "Aantal rijen per pagina is gewijzigd naar {0}. De eerste pagina wordt nu weergegeven.",
+      "pl-PL": "Liczba wierszy na stronę została zmieniona na {0}. Wyświetlana jest pierwsza strona.",
+      "pt-BR": "Linhas por página mudou para {0}. Agora mostrando a primeira página.",
+      "ru-RU": "Количество строк на странице изменилось на {0}. Теперь отображается первая страница.",
+      "sv-SE": "Rader per sida har ändrats till {0}. Nu visas första sidan.",
+      "tr-TR": "Sayfa başına satır sayısı {0} olarak değiştirildi. Şimdi ilk sayfa gösteriliyor.",
+      "zh-CN": "每页行数已更改为 {0}。现在显示第一页。",
+      "zh-TW": "每頁列數已變更為 {0}。現在顯示第一頁。"
+    }
+  },
+  "SNTable_Pagination_SelectPage": {
+    "id": "SNTable.Pagination.SelectPage",
+    "locale": {
+      "de-DE": "Seite auswählen",
+      "en-US": "Select page",
+      "es-ES": "Seleccionar página",
+      "fr-FR": "Sélectionner une page",
+      "it-IT": "Seleziona pagina",
+      "ja-JP": "ページを選択",
+      "ko-KR": "페이지 선택",
+      "nl-NL": "Pagina selecteren",
+      "pl-PL": "Wybierz stronę",
+      "pt-BR": "Selecionar página",
+      "ru-RU": "Выберите страницу",
+      "sv-SE": "Välj sida",
+      "tr-TR": "Sayfa seç",
+      "zh-CN": "选择页面",
+      "zh-TW": "選取頁面"
+    }
+  },
+  "SNTable_SelectionLabel_DeselectedValue": {
+    "id": "SNTable.SelectionLabel.DeselectedValue",
+    "locale": {
+      "de-DE": "Die Werteauswahl ist aufgehoben.",
+      "en-US": "Value is deselected.",
+      "es-ES": "El valor no está seleccionado.",
+      "fr-FR": "La valeur est désélectionnée.",
+      "it-IT": "Il valore è deselezionato.",
+      "ja-JP": "値が選択解除されました。",
+      "ko-KR": "값이 선택 취소되었습니다.",
+      "nl-NL": "Selectie van waarde opgeheven.",
+      "pl-PL": "Wartość nie jest zaznaczona.",
+      "pt-BR": "O valor está desmarcado.",
+      "ru-RU": "Выбор значения отменен.",
+      "sv-SE": "Val av värde har tagits bort.",
+      "tr-TR": "Değer seçimi iptal edildi.",
+      "zh-CN": "值已取消选择。",
+      "zh-TW": "值已取消選取。"
+    }
+  },
+  "SNTable_SelectionLabel_ExitedSelectionMode": {
+    "id": "SNTable.SelectionLabel.ExitedSelectionMode",
+    "locale": {
+      "de-DE": "Die Werteauswahl ist aufgehoben. Auswahlmodus beendet.",
+      "en-US": "Value is deselected. Exited selection mode.",
+      "es-ES": "El valor no está seleccionado. Salió del modo de selección.",
+      "fr-FR": "La valeur est désélectionnée. Mode de sélection désactivé.",
+      "it-IT": "Il valore è deselezionato. Uscita dalla modalità selezione.",
+      "ja-JP": "値が選択解除されました。選択モードを終了しました。",
+      "ko-KR": "값이 선택 취소되었습니다. 선택 모드를 종료했습니다.",
+      "nl-NL": "Selectie van waarde opgeheven. Selectiemodus afgesloten.",
+      "pl-PL": "Wartość nie jest zaznaczona. Zakończono tryb wyboru.",
+      "pt-BR": "O valor está desmarcado. Modo de seleção encerrado.",
+      "ru-RU": "Выбор значения отменен. Выполнен выход из режима выборки.",
+      "sv-SE": "Val av värde har tagits bort. Lämnade urvalsläge.",
+      "tr-TR": "Değer seçimi iptal edildi. Seçim modundan çıkıldı.",
+      "zh-CN": "值已取消选择。已退出选择模式。",
+      "zh-TW": "值已取消選取。輸入的選取模式。"
+    }
+  },
+  "SNTable_SelectionLabel_NotSelectedValue": {
+    "id": "SNTable.SelectionLabel.NotSelectedValue",
+    "locale": {
+      "de-DE": "Wert ist nicht ausgewählt.",
+      "en-US": "Value is not selected.",
+      "es-ES": "El valor no está seleccionado.",
+      "fr-FR": "La valeur n'est pas sélectionnée.",
+      "it-IT": "Il valore non è selezionato.",
+      "ja-JP": "値が選択されていません。",
+      "ko-KR": "값이 선택되지 않았습니다.",
+      "nl-NL": "Waarde is niet geselecteerd.",
+      "pl-PL": "Wartość nie jest wybrana.",
+      "pt-BR": "O valor não está selecionado.",
+      "ru-RU": "Значение не выбрано.",
+      "sv-SE": "Värdet är inte valt.",
+      "tr-TR": "Değer seçilmedi.",
+      "zh-CN": "未选择值。",
+      "zh-TW": "未選取值。"
+    }
+  },
+  "SNTable_SelectionLabel_OneSelectedValue": {
+    "id": "SNTable.SelectionLabel.OneSelectedValue",
+    "locale": {
+      "de-DE": "Aktuell ist ein Wert ausgewählt.",
+      "en-US": "Currently there is one selected value.",
+      "es-ES": "Actualmente hay un valor seleccionado.",
+      "fr-FR": "Actuellement, une valeur est sélectionnée.",
+      "it-IT": "Attualmente è presente un solo valore selezionato.",
+      "ja-JP": "現在、値が 1 つ選択されています。",
+      "ko-KR": "현재 하나의 값이 선택되었습니다.",
+      "nl-NL": "Er is momenteel één waarde geselecteerd.",
+      "pl-PL": "Aktualnie jest jedna wybrana wartość.",
+      "pt-BR": "Atualmente, há um valor selecionado.",
+      "ru-RU": "В настоящее время выбрано одно значение.",
+      "sv-SE": "Just nu är ett värde valt.",
+      "tr-TR": "Şu anda seçili bir değer var.",
+      "zh-CN": "当前有一个已选择的值。",
+      "zh-TW": "目前有一個選取的值。"
+    }
+  },
+  "SNTable_SelectionLabel_SelectedValue": {
+    "id": "SNTable.SelectionLabel.SelectedValue",
+    "locale": {
+      "de-DE": "Wert ist ausgewählt.",
+      "en-US": "Value is selected.",
+      "es-ES": "El valor está seleccionado.",
+      "fr-FR": "La valeur est sélectionnée.",
+      "it-IT": "Il valore è selezionato.",
+      "ja-JP": "値が選択されました。",
+      "ko-KR": "값이 선택되었습니다.",
+      "nl-NL": "Waarde is geselecteerd.",
+      "pl-PL": "Wartość jest wybrana.",
+      "pt-BR": "O valor está selecionado.",
+      "ru-RU": "Значение выбрано.",
+      "sv-SE": "Värdet är valt.",
+      "tr-TR": "Değer seçildi.",
+      "zh-CN": "已选择值。",
+      "zh-TW": "已選取值。"
+    }
+  },
+  "SNTable_SelectionLabel_SelectedValues": {
+    "id": "SNTable.SelectionLabel.SelectedValues",
+    "locale": {
+      "de-DE": "Aktuell sind {0} Werte ausgewählt.",
+      "en-US": "Currently there are {0} selected values.",
+      "es-ES": "Actualmente hay {0} valores seleccionados.",
+      "fr-FR": "Actuellement, {0} valeurs sont sélectionnées.",
+      "it-IT": "Attualmente sono presenti {0} valori selezionati.",
+      "ja-JP": "現在、値が {0} つ選択されています。",
+      "ko-KR": "현재 {0}개의 값이 선택되었습니다.",
+      "nl-NL": "Er zijn momenteel {0} geselecteerde waarden.",
+      "pl-PL": "Liczba aktualnie wybranych wartości: {0}.",
+      "pt-BR": "Atualmente, há {0} valores selecionados.",
+      "ru-RU": "В настоящее время выбраны значения: {0}.",
+      "sv-SE": "Just nu är {0} värden valda.",
+      "tr-TR": "Şu anda seçili {0} değer var.",
+      "zh-CN": "当前有 {0} 个已选择的值。",
+      "zh-TW": "目前有 {0} 個選取的值。"
+    }
+  },
+  "SNTable_SelectionLabel_SelectionsConfirmed": {
+    "id": "SNTable.SelectionLabel.SelectionsConfirmed",
+    "locale": {
+      "de-DE": "Auswahl bestätigt.",
+      "en-US": "Selections confirmed.",
+      "es-ES": "Confirmadas las selecciones.",
+      "fr-FR": "Sélections confirmées.",
+      "it-IT": "Selezioni confermate.",
+      "ja-JP": "選択が確定されました。",
+      "ko-KR": "선택 내용이 확인되었습니다.",
+      "nl-NL": "Selecties bevestigd.",
+      "pl-PL": "Potwierdzono wybory.",
+      "pt-BR": "Seleções confirmadas.",
+      "ru-RU": "Выборки подтверждены.",
+      "sv-SE": "Valen har bekräftats.",
+      "tr-TR": "Seçimler onaylandı.",
+      "zh-CN": "选择已确认。",
+      "zh-TW": "選項已確認。"
+    }
+  },
+  "SNTable_SelectionLabel_selected": {
+    "id": "SNTable.SelectionLabel.selected",
+    "locale": {
+      "de-DE": "Ausgewählt",
+      "en-US": "Selected",
+      "es-ES": "Seleccionado",
+      "fr-FR": "Sélectionné",
+      "it-IT": "Selezionato",
+      "ja-JP": "選択済み",
+      "ko-KR": "선택됨",
+      "nl-NL": "Geselecteerd",
+      "pl-PL": "Wybrane",
+      "pt-BR": "Selecionado",
+      "ru-RU": "Выбрано",
+      "sv-SE": "Urval",
+      "tr-TR": "Seçildi",
+      "zh-CN": "已选择",
+      "zh-TW": "已選取"
+    }
+  },
+  "SNTable_SortLabel_PressSpaceToSort": {
+    "id": "SNTable.SortLabel.PressSpaceToSort",
+    "locale": {
+      "de-DE": "Drücken Sie die Leertaste, um nach dieser Spalte zu sortieren",
+      "en-US": "Press space to sort on this column",
+      "es-ES": "Pulse la barra espaciadora para ordenar en esta columna.",
+      "fr-FR": "Appuyez sur Espace pour trier en fonction de cette colonne.",
+      "it-IT": "Premere la barra spaziatrice per ordinare questa colonna",
+      "ja-JP": "スペース キーを押して、この列をソートします",
+      "ko-KR": "이 열을 정렬하려면 스페이스바를 누르십시오.",
+      "nl-NL": "Druk op de spatiebalk om sorteren in deze kolom in te schakelen",
+      "pl-PL": "Naciśnij spację, aby posortować według tej kolumny",
+      "pt-BR": "Pressione espaço para classificar por esta coluna",
+      "ru-RU": "Нажмите пробел, чтобы отсортировать по этому столбцу",
+      "sv-SE": "Tryck på Blanksteg om du vill sortera efter den här kolumnen",
+      "tr-TR": "Bu sütunda sıralama yapmak için boşluk tuşuna basın.",
+      "zh-CN": "按下空格键以在该列上排序。",
+      "zh-TW": "在此欄按下空格鍵以進行排序"
+    }
+  },
+  "SNTable_SortLabel_SortedAscending": {
+    "id": "SNTable.SortLabel.SortedAscending",
+    "locale": {
+      "de-DE": "In aufsteigender Reihenfolge sortiert.",
+      "en-US": "Sorted in ascending order.",
+      "es-ES": "Ordenado por orden ascendente.",
+      "fr-FR": "Tri dans l'ordre croissant.",
+      "it-IT": "Ordinato in ordine crescente.",
+      "ja-JP": "昇順で並べ替えられます。",
+      "ko-KR": "오름차순으로 정렬되었습니다.",
+      "nl-NL": "Gesorteerd in oplopende volgorde.",
+      "pl-PL": "Posortowane rosnąco.",
+      "pt-BR": "Classificado em ordem crescente.",
+      "ru-RU": "Сортировка в порядке возрастания.",
+      "sv-SE": "Sorterat i stigande ordning.",
+      "tr-TR": "Artan düzende sıralanmıştır.",
+      "zh-CN": "已按升序排列。",
+      "zh-TW": "已依遞增順序排序。"
+    }
+  },
+  "SNTable_SortLabel_SortedDescending": {
+    "id": "SNTable.SortLabel.SortedDescending",
+    "locale": {
+      "de-DE": "In absteigender Reihenfolge sortiert.",
+      "en-US": "Sorted in descending order.",
+      "es-ES": "Ordenado por orden descendente.",
+      "fr-FR": "Tri dans l'ordre décroissant.",
+      "it-IT": "Ordinato in ordine decrescente.",
+      "ja-JP": "降順で並べ替えられます。",
+      "ko-KR": "내림차순으로 정렬되었습니다.",
+      "nl-NL": "Gesorteerd in aflopende volgorde.",
+      "pl-PL": "Posortowane malejąco.",
+      "pt-BR": "Classificado em ordem decrescente.",
+      "ru-RU": "Сортировка в порядке убывания.",
+      "sv-SE": "Sorterat i fallande ordning.",
+      "tr-TR": "Azalan düzende sıralanmıştır.",
+      "zh-CN": "已按降序排列。",
+      "zh-TW": "已依遞減順序排序。"
+    }
+  }
+}
