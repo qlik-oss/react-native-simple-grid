@@ -1,3 +1,10 @@
+## [1.2.25](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.24...v1.2.25) (2024-11-28)
+
+
+### Bug Fixes
+
+* QB-30077 image loading issue on android  ([#299](https://github.com/qlik-oss/react-native-simple-grid/issues/299)) ([b047eb0](https://github.com/qlik-oss/react-native-simple-grid/commit/b047eb05edb1a0077d5ae568d7149e514b631e89))
+
 ## [1.2.24](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.23...v1.2.24) (2024-03-22)
 
 
