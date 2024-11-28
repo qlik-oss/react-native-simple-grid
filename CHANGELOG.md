@@ -1,3 +1,10 @@
+## [1.2.26](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.25...v1.2.26) (2024-11-28)
+
+
+### Bug Fixes
+
+* Image loading url issue, added missing argument ([#301](https://github.com/qlik-oss/react-native-simple-grid/issues/301)) ([7525dbb](https://github.com/qlik-oss/react-native-simple-grid/commit/7525dbb489f515c932c125ce75ded6e7e4e04520))
+
 ## [1.2.25](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.24...v1.2.25) (2024-11-28)
 
 
