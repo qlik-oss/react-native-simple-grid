@@ -79,7 +79,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         if(cell.imageUrl != null) {
           String svgTag = "data:image/svg+xml,";
           if(cell.imageUrl.startsWith(svgTag)) {
-            loadSVG(cell, imageView);
+            loadSVG(cell, imageView, cellView);
           } else {
             Glide.with(cellView.getContext()).asBitmap().listener(new RequestListener<Bitmap>() {
               @Override
@@ -96,7 +96,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
             }).load(cell.imageUrl).into(imageView);
           }
         } else if(cell.qText != null) {
-          loadSVG(cell, imageView);
+          loadSVG(cell, imageView, cellView);
         }
       } else if(column.representation.type.equals("miniChart") && !dataProvider.isDataView) {
         LinearLayout.LayoutParams cellViewLayoutParams = new LinearLayout.LayoutParams(column.width, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -135,7 +135,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
     }
   }
 
-  private void loadSVG(DataCell cell, ImageView imageView) {
+  private void loadSVG(DataCell cell, ImageView imageView, CellView cellView) {
     String svgTag = "data:image/svg+xml,";
     if(cell.qText.startsWith(svgTag)) {
       try {
@@ -148,7 +148,7 @@ public class RowViewHolder extends RecyclerView.ViewHolder  {
         Log.e("Image", exception.getMessage());
       }
     }else {
-      Glide.with(cellView.getContext()).load(cell.qText).diskCacheStrategy(diskCacheStrategy.DATA).into(imageView);
+      Glide.with(cellView.getContext()).load(cell.qText).into(imageView);
     }
   }
 
