@@ -2032,10 +2032,10 @@
     "@pnpm/network.ca-file" "^1.0.1"
     config-chain "^1.1.11"
 
-"@qlik/react-native-carbon@^2.1.16":
-  version "2.1.21"
-  resolved "https://registry.yarnpkg.com/@qlik/react-native-carbon/-/react-native-carbon-2.1.21.tgz#b5e035feece59871f5258f2c060d7fb2a21d533c"
-  integrity sha512-AXxARP3DnuQx3HZEs1LqPDp3y0/NP6lup//5OWjZZD4+IyCp9VuDlRDjlFi9P7sEel5xwa43wIo8LRhOhqv+jg==
+"@qlik/react-native-carbon@2.1.22":
+  version "2.1.22"
+  resolved "https://registry.yarnpkg.com/@qlik/react-native-carbon/-/react-native-carbon-2.1.22.tgz#78c333a4e543f6ff39190b02486bc9dde91557d3"
+  integrity sha512-XHh0oTFmA4zQ5BiEayMsb7s147yUo4PosqtS4DHLDZ9gJ2tX+QTx2mV0txPQzarL+ihp2ZUWFgRPYsHL2ZZphQ==
 
 "@react-native-community/cli-clean@^9.2.1":
   version "9.2.1"
