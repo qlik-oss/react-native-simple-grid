@@ -30,6 +30,7 @@ import {useWindowDimensions} from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
+//Testing lint issue
 const App = () => {
   const openedApp = useAtomValue(loadableOpenAppAtom);
   const dims = useWindowDimensions();
