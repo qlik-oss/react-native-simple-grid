@@ -40,6 +40,7 @@ const App = () => {
     }
   }, [openedApp]);
 
+  //testing lint issue 
   const supernovaState = useAtomValue(supernovaStateAtom);
   const resetSupernovaState = useResetAtom(supernovaStateAtom);
   const resetTooltipState = useResetAtom(supernovaToolTipStateAtom);
