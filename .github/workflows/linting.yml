@@ -7,7 +7,7 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: ./.github/actions/cancel_workflow
@@ -18,7 +18,7 @@ jobs:
   SwiftLint:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: ./.github/actions/cancel_workflow
@@ -42,11 +42,11 @@ jobs:
   JavaLint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: ./.github/actions/cancel_workflow
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: |
@@ -56,7 +56,7 @@ jobs:
         if: steps.changes.outputs.java == 'true'
       - run: yarn javalint
         if: steps.changes.outputs.java == 'true'
-      - uses: yutailang0119/action-android-lint@v3
+      - uses: yutailang0119/action-android-lint@v4
         if: steps.changes.outputs.java == 'true'
         with:
           report-path: android/build/reports/*.xml
