@@ -7,7 +7,7 @@ on:
       - synchronize
 
 jobs:
-  main:
+  lint-pr:
     runs-on: ubuntu-latest
     steps:
       - name: Semantic pull request
