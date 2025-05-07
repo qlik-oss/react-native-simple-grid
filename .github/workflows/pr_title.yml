@@ -5,15 +5,23 @@ on:
       - opened
       - edited
       - synchronize
+      - reopened
+      - labeled
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint-pr:
     runs-on: ubuntu-latest
     steps:
+      # Please look up the latest version from
+      # https://github.com/amannn/action-semantic-pull-request/releases
       - name: Semantic pull request
-        uses: amannn/action-semantic-pull-request@v5
+        uses: amannn/action-semantic-pull-request@v5.2.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
         with:
           # Configure additional validation for the subject based on a regex.
           # This example ensures the subject doesn't start with an uppercase character.
@@ -25,15 +33,5 @@ jobs:
             The subject "{subject}" found in the pull request title "{title}"
             didn't match the configured pattern. Please ensure that the subject
             doesn't start with an uppercase character.
-          # For work-in-progress PRs you can typically use draft pull requests
-          # from Github. However, private repositories on the free plan don't have
-          # this option and therefore this action allows you to opt-in to using the
-          # special "[WIP]" prefix to indicate this state. This will avoid the
-          # validation of the PR title and the pull request checks remain pending.
-          # Note that a second check will be reported if this is enabled.
           wip: true
-          # When using "Squash and merge" on a PR with only one commit, GitHub
-          # will suggest using that commit message instead of the PR title for the
-          # merge commit, and it's easy to commit this by mistake. Enable this option
-          # to also validate the commit message for one commit PRs.
           validateSingleCommit: true
