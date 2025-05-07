@@ -1,7 +1,7 @@
 /**
  * @format
  */
-import 'react-native-gesture-handler';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {enableCarbon} from '@qlik/react-native-carbon';
 enableCarbon();
 import React from 'react';
@@ -33,4 +33,4 @@ export default function Main() {
   );
 }
 
-AppRegistry.registerComponent(appName, () => Main);
+AppRegistry.registerComponent(appName, () => gestureHandlerRootHOC(Main));
