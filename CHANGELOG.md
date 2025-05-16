@@ -1,3 +1,10 @@
+## [1.2.27](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.26...v1.2.27) (2025-05-16)
+
+
+### Bug Fixes
+
+* **CMI-45:** react native upgrade ([#308](https://github.com/qlik-oss/react-native-simple-grid/issues/308)) ([2174cfa](https://github.com/qlik-oss/react-native-simple-grid/commit/2174cfae73236d782e7789fcc0006caf7dd9159c))
+
 ## [1.2.26](https://github.com/qlik-oss/react-native-simple-grid/compare/v1.2.25...v1.2.26) (2024-11-28)
 
 
