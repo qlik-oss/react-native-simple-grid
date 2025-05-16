@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 
+import androidx.appcompat.content.res.AppCompatResources;
 
 public class SearchButton extends androidx.appcompat.widget.AppCompatImageButton {
   final Drawable icon;
@@ -17,7 +18,7 @@ public class SearchButton extends androidx.appcompat.widget.AppCompatImageButton
   public SearchButton(Context context) {
     super(context);
     this.context = context;
-    this.icon = context.getDrawable(R.drawable.ic_searchicon);
+    this.icon = AppCompatResources.getDrawable(context, R.drawable.ic_searchicon);
     this.setImageDrawable(icon);
     this.setBackgroundColor(defaultColor);
   }
